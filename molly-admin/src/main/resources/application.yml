@@ -1,0 +1,46 @@
+server:
+  port: 18891
+
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: molly-admin
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+    locale: zh_CN
+
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog-master.xml
+
+
+
+info:
+  app:
+    name: ${customize.swagger.title}
+    description: ${customize.swagger.description}
+    version: ${customize.swagger.version}
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+    shutdown:
+      enabled: true
+
