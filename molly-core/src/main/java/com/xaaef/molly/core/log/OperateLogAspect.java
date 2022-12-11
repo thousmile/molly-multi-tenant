@@ -30,9 +30,6 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @AllArgsConstructor
-@Import({
-        LogStorageServiceAdapter.class
-})
 public class OperateLogAspect {
 
     private final LogStorageService logStorage;

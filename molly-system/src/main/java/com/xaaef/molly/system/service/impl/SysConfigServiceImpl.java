@@ -1,9 +1,9 @@
 package com.xaaef.molly.system.service.impl;
 
-import com.xaaef.molly.core.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.system.entity.SysConfig;
 import com.xaaef.molly.system.repository.SysConfigRepository;
 import com.xaaef.molly.system.service.SysConfigService;
+import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

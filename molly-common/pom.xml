@@ -7,6 +7,7 @@
         <artifactId>molly-multi-tenant</artifactId>
         <groupId>com.xaaef.molly</groupId>
         <version>1.0.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <packaging>jar</packaging>
@@ -34,6 +35,11 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-jwt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-captcha</artifactId>
         </dependency>
 
         <dependency>

@@ -1,6 +1,6 @@
 package com.xaaef.molly.system.service.impl;
 
-import com.xaaef.molly.core.base.service.impl.BaseServiceImpl;
+import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.system.entity.SysDictData;
 import com.xaaef.molly.system.repository.SysDictDataRepository;
 import com.xaaef.molly.system.service.SysDictDataService;
@@ -24,6 +24,6 @@ import org.springframework.stereotype.Service;
 public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictDataRepository, SysDictData, Long>
         implements SysDictDataService {
 
-    
+
 
 }

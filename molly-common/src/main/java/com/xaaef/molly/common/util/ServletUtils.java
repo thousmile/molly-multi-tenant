@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestAttributes;
@@ -69,7 +70,7 @@ public class ServletUtils {
      * @return
      */
     public static UserAgent getUserAgent() {
-        String ua = getRequest().getHeader("User-Agent");
+        String ua = getRequest().getHeader(HttpHeaders.USER_AGENT);
         return UserAgentUtil.parse(ua);
     }
 
@@ -80,7 +81,7 @@ public class ServletUtils {
      * @return
      */
     public static UserAgent getUserAgent(HttpServletRequest request) {
-        String ua = request.getHeader("User-Agent");
+        String ua = request.getHeader(HttpHeaders.USER_AGENT);
         return UserAgentUtil.parse(ua);
     }
 
@@ -113,6 +114,14 @@ public class ServletUtils {
      */
     public static CustomRequestInfo getRequestInfo() {
         var request = getRequest();
+        return getRequestInfo(request);
+    }
+
+
+    /**
+     * 获取 Http Request 客户端的参数
+     */
+    public static CustomRequestInfo getRequestInfo(HttpServletRequest request) {
         var fullPath = getFullPath(request);
         var userAgent = getUserAgent(request);
         var browser = StrUtil.format("{} {}", userAgent.getBrowser(), userAgent.getVersion());
@@ -142,7 +151,8 @@ public class ServletUtils {
             response.setStatus(HttpStatus.OK.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-            response.getWriter().print(string);
+            response.getWriter().println(string);
+            response.getWriter().flush();
         } catch (IOException e) {
             e.printStackTrace();
             log.error("renderString: {}", e.getMessage());

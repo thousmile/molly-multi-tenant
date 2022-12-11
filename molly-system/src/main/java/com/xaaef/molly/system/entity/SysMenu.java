@@ -2,7 +2,7 @@ package com.xaaef.molly.system.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xaaef.molly.common.domain.TreeNode;
-import com.xaaef.molly.core.base.BaseEntity;
+import com.xaaef.molly.core.tenant.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,7 +1,6 @@
 package com.xaaef.molly.system.service;
 
-import com.xaaef.molly.core.base.service.BaseService;
-import com.xaaef.molly.system.entity.SysDictType;
+import com.xaaef.molly.core.tenant.base.service.BaseService;
 import com.xaaef.molly.system.entity.SysMenu;
 
 /**
@@ -15,6 +14,6 @@ import com.xaaef.molly.system.entity.SysMenu;
 
 public interface SysMenuService extends BaseService<SysMenu, Long> {
 
-    
+
 
 }

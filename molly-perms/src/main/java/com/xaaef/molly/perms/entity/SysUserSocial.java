@@ -1,6 +1,6 @@
 package com.xaaef.molly.perms.entity;
 
-import com.xaaef.molly.core.base.BaseEntity;
+import com.xaaef.molly.core.tenant.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,16 +35,19 @@ public class SysUserSocial extends BaseEntity {
     /**
      * 头像
      */
+    @Column(nullable = false)
     private Long userId;
 
     /**
      * 社交账号唯一ID
      */
+    @Column(nullable = false)
     private String openId;
 
     /**
      * we_chat. 微信  tencent_qq. 腾讯QQ
      */
+    @Column(nullable = false)
     private String socialType;
 
 }

@@ -2,6 +2,7 @@ package com.xaaef.molly.core.auth.service.impl;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.signers.JWTSigner;
@@ -12,12 +13,10 @@ import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.auth.jwt.JwtTokenProperties;
 import com.xaaef.molly.core.auth.jwt.JwtTokenValue;
 import com.xaaef.molly.core.auth.service.JwtTokenService;
-import com.xaaef.molly.core.redis.util.RedisCacheUtils;
-import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
+import com.xaaef.molly.core.redis.RedisCacheUtils;
+import com.xaaef.molly.core.tenant.util.TenantUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -27,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static com.xaaef.molly.common.util.JsonUtils.DEFAULT_DATE_TIME_PATTERN;
 import static com.xaaef.molly.core.auth.consts.LoginConst.*;
+import static com.xaaef.molly.core.auth.enums.OAuth2Error.TOKEN_FORMAT_ERROR;
 
 
 /**
@@ -40,20 +40,18 @@ import static com.xaaef.molly.core.auth.consts.LoginConst.*;
  */
 
 @Slf4j
-@Service
-@AllArgsConstructor
 public class JwtTokenServiceImpl implements JwtTokenService {
 
     private final JwtTokenProperties props;
 
     private final RedisCacheUtils cacheUtils;
 
-    private JWTSigner signer;
+    private final JWTSigner signer;
 
-
-    @PostConstruct
-    public void getSigner() {
-        signer = JWTSignerUtil.hs256(props.getSecret().getBytes());
+    public JwtTokenServiceImpl(JwtTokenProperties props, RedisCacheUtils cacheUtils) {
+        this.props = props;
+        this.cacheUtils = cacheUtils;
+        this.signer = JWTSignerUtil.hs256(props.getSecret().getBytes());
     }
 
 
@@ -68,18 +66,16 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
 
     @Override
-    public void setLoginUser(String loginId, JwtLoginUser loginUser) {
-        loginUser.setLoginId(loginId);
-
-        String loginKey = LOGIN_TOKEN_KEY + loginId;
+    public void setLoginUser(JwtLoginUser loginUser) {
+        String loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
 
         // 将随机id 跟 当前登录的用户关联，在一起！
         cacheUtils.setObject(loginKey, loginUser, Duration.ofSeconds(props.getTokenExpired()));
 
         // 判断是否开启 单点登录
         if (props.getSso()) {
-            String onlineUserKey = ONLINE_USER_KEY + loginUser.getUsername();
-
+            // 拼接，当前在线用户 online_user:master:admin
+            String onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, loginUser.getTenantId(), loginUser.getUsername());
             String oldLoginKey = cacheUtils.getString(onlineUserKey);
             // 判断用户名。是否已经登录了！
             if (StringUtils.isNotBlank(oldLoginKey)) {
@@ -100,18 +96,20 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             }
 
             // 保存 在线用户
-            cacheUtils.setString(onlineUserKey, loginId, Duration.ofSeconds(props.getTokenExpired()));
+            cacheUtils.setString(onlineUserKey, loginUser.getLoginId(), Duration.ofSeconds(props.getTokenExpired()));
         }
     }
 
 
     @Override
     public JwtLoginUser validate(String bearerToken) throws JwtAuthException {
+        var tokenStr = bearerToken.substring(props.getTokenType().length());
         JWT jwt = null;
         try {
-            jwt = JWTUtil.parseToken(bearerToken);
+            jwt = JWTUtil.parseToken(tokenStr);
         } catch (Exception e) {
-            throw new JwtAuthException(e.getMessage());
+            log.error(e.getMessage());
+            throw new JwtAuthException(TOKEN_FORMAT_ERROR);
         }
         // 获取到 用户的唯一登录ID
         var loginId = jwt.getPayloads().getStr(JWT.SUBJECT);
@@ -136,24 +134,26 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             }
             throw new JwtAuthException("当前登录用户不存在");
         }
-        jwtUser.setLoginId(loginId);
+
         return jwtUser;
     }
 
 
     @Override
     public JwtTokenValue refresh() {
-        var loginUser = JwtSecurityUtils.getLoginUser();
+        var oldLoginUser = JwtSecurityUtils.getLoginUser();
+
+        String loginKey = LOGIN_TOKEN_KEY + oldLoginUser.getLoginId();
 
         // 移除登录的用户。根据tokenId
-        removeLoginUser(loginUser.getLoginId());
+        removeLoginUser(loginKey);
 
         // 生成一个随机ID 跟当前用户关联
         String loginId = IdUtil.simpleUUID();
-
         var token = createJwtStr(loginId);
+        oldLoginUser.setLoginId(loginId);
 
-        setLoginUser(loginId, loginUser);
+        setLoginUser(oldLoginUser);
 
         return JwtTokenValue.builder()
                 .header(props.getTokenHeader())
@@ -167,8 +167,9 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     @Override
     public void logout() {
         var loginUser = JwtSecurityUtils.getLoginUser();
+        String loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
         // 移除登录的用户。根据tokenId
-        removeLoginUser(loginUser.getLoginId());
+        removeLoginUser(loginKey);
     }
 
 
@@ -180,9 +181,11 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public Set<String> getOnlineUsers() {
-        return Objects.requireNonNull(cacheUtils.keys(ONLINE_USER_KEY + "*"))
+        String onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, TenantUtils.getTenantId(), "*");
+        String onlineUserKeyPrefix = StrUtil.format("{}{}:", ONLINE_USER_KEY, TenantUtils.getTenantId());
+        return Objects.requireNonNull(cacheUtils.keys(onlineUserKey))
                 .stream()
-                .map(r -> r.replaceAll(ONLINE_USER_KEY, ""))
+                .map(r -> r.replaceAll(onlineUserKeyPrefix, ""))
                 .collect(Collectors.toSet());
     }
 

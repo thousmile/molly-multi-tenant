@@ -1,6 +1,6 @@
 package com.xaaef.molly.system.service;
 
-import com.xaaef.molly.core.base.service.BaseService;
+import com.xaaef.molly.core.tenant.base.service.BaseService;
 import com.xaaef.molly.system.entity.SysTenant;
 
 /**
@@ -14,6 +14,6 @@ import com.xaaef.molly.system.entity.SysTenant;
 
 public interface SysTenantService extends BaseService<SysTenant, String> {
 
-    
+
 
 }

@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+
+    <changeSet id="1670648236176-1" author="WangChenChen (generated)">
+        <createTable tableName="china_area" remarks="中国行政区域">
+            <column name="area_code" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_china_area"/>
+            </column>
+            <column name="level" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_code" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="zip_code" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city_code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="short_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="merger_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pinyin" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lng" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lat" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="1670648236176-3" author="WangChenChen (generated)">
+        <createTable tableName="sys_config">
+            <column name="config_id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_sys_config"/>
+            </column>
+            <column name="create_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="config_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="config_key" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="config_value" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="config_type" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+
+
+    <changeSet id="1670648236176-5" author="WangChenChen (generated)">
+        <createTable tableName="sys_dict_data">
+            <column name="dict_code" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_sys_dict_data"/>
+            </column>
+            <column name="create_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dict_sort" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dict_label" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dict_value" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_key" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_default" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="1670648236176-6" author="WangChenChen (generated)">
+        <createTable tableName="sys_dict_type">
+            <column name="type_id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_sys_dict_type"/>
+            </column>
+            <column name="create_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_key" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+
+    <changeSet id="1670648236176-7" author="WangChenChen (generated)">
+        <createTable tableName="sys_menu">
+            <column name="menu_id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_sys_menu"/>
+            </column>
+            <column name="create_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="menu_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="perms" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="component" type="VARCHAR(255)"/>
+            <column name="icon" type="VARCHAR(255)"/>
+            <column name="sort" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="path" type="VARCHAR(255)"/>
+            <column name="target" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="menu_type" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visible" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+
+    <changeSet id="1670648236176-10" author="WangChenChen (generated)">
+        <createTable tableName="sys_template">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_sys_template"/>
+            </column>
+            <column name="create_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+
+    <changeSet id="1670648236176-11" author="WangChenChen (generated)">
+        <createTable tableName="sys_tenant">
+            <column name="tenant_id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_sys_tenant"/>
+            </column>
+            <column name="create_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="logo" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="linkman" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_code" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expired" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="1670648236176-14" author="WangChenChen (generated)">
+        <addUniqueConstraint columnNames="city_code" constraintName="uc_china_area_citycode" tableName="china_area"/>
+    </changeSet>
+
+    <changeSet id="1670648236176-15" author="WangChenChen (generated)">
+        <addUniqueConstraint columnNames="config_key" constraintName="uc_sys_config_configkey" tableName="sys_config"/>
+    </changeSet>
+
+    <changeSet id="1670648236176-19" author="WangChenChen (generated)">
+        <addUniqueConstraint columnNames="type_key" constraintName="uc_sys_dict_type_typekey"
+                             tableName="sys_dict_type"/>
+    </changeSet>
+
+
+</databaseChangeLog>

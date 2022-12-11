@@ -1,6 +1,7 @@
 package com.xaaef.molly.core.web;
 
 import com.xaaef.molly.common.util.JsonUtils;
+import com.xaaef.molly.core.tenant.MultiTenantTenantIdInterceptor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -27,20 +28,19 @@ import java.util.TimeZone;
 @Slf4j
 @Configuration
 @Import({
-        TenantIdInterceptor.class,
         GlobalExceptionHandler.class
 })
 @AllArgsConstructor
 public class CustomSpringWebConfig implements WebMvcConfigurer {
 
-    private final TenantIdInterceptor tenantIdInterceptor;
+    private final MultiTenantTenantIdInterceptor tenantIdInterceptor;
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tenantIdInterceptor);
         WebMvcConfigurer.super.addInterceptors(registry);
     }
-
 
 
     @Bean

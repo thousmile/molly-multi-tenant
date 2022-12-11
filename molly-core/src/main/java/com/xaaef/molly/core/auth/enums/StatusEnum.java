@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Objects;
+
 /**
  * <p>
  * 0.禁用
@@ -21,17 +23,17 @@ import lombok.ToString;
 @ToString
 public enum StatusEnum {
 
-    DISABLE(0, "禁用"),
+    DISABLE((byte) 0, "禁用"),
 
-    NORMAL(1, "正常");
+    NORMAL((byte) 1, "正常");
 
-    StatusEnum(int code, String description) {
+    StatusEnum(Byte code, String description) {
         this.code = code;
         this.description = description;
     }
 
     @JsonValue
-    private final int code;
+    private final Byte code;
 
     private final String description;
 
@@ -40,9 +42,9 @@ public enum StatusEnum {
      * 用于 spring mvc 实体参数绑定
      */
     @JsonCreator
-    public static StatusEnum create(Integer value) {
+    public static StatusEnum create(Byte value) {
         for (var v : values()) {
-            if (v.code == value) {
+            if (Objects.equals(v.code, value)) {
                 return v;
             }
         }

@@ -1,6 +1,6 @@
 package com.xaaef.molly.perms.service;
 
-import com.xaaef.molly.core.base.service.BaseService;
+import com.xaaef.molly.core.tenant.base.service.BaseService;
 import com.xaaef.molly.perms.entity.SysUser;
 
 /**

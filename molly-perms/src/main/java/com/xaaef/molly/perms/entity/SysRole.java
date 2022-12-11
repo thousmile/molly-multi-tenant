@@ -1,6 +1,6 @@
 package com.xaaef.molly.perms.entity;
 
-import com.xaaef.molly.core.base.BaseEntity;
+import com.xaaef.molly.core.tenant.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,12 +33,14 @@ public class SysRole extends BaseEntity {
     /**
      * 部门 名称
      */
+    @Column(nullable = false)
     private String roleName;
 
     /**
      * 排序
      */
-    private Integer sort;
+    @Column(nullable = false)
+    private Long sort;
 
     /**
      * 部门描述

@@ -1,6 +1,6 @@
 package com.xaaef.molly.perms.entity;
 
-import com.xaaef.molly.core.base.BaseEntity;
+import com.xaaef.molly.core.tenant.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,51 +37,61 @@ public class SysUser extends BaseEntity {
     /**
      * 头像
      */
+    @Column(nullable = false)
     private String avatar;
 
     /**
      * 用户名
      */
+    @Column(nullable = false, unique = true)
     private String username;
 
     /**
      * 手机号码
      */
+    @Column(nullable = false, unique = true)
     private String mobile;
 
     /**
      * 邮箱
      */
+    @Column(nullable = false, unique = true)
     private String email;
 
     /**
      * 昵称
      */
+    @Column(nullable = false)
     private String nickname;
 
     /**
      * 密码
      */
+    @Column(nullable = false)
     private String password;
 
     /**
      * 性别[ 0.女  1.男  2.未知]
      */
+    @Column(nullable = false)
     private Byte gender;
 
     /**
      * 是否管理员 0. 普通用户  1. 管理员
      */
+    @Column(nullable = false)
     private Byte adminFlag;
 
     /**
      * 状态 【0.禁用 1.正常】
      */
+    @Column(nullable = false)
     private Byte status;
 
     /**
      * 所属部门
      */
+    @Column(nullable = false)
     private Long deptId;
 
     /**

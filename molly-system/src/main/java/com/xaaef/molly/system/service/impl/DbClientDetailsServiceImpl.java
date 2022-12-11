@@ -1,7 +1,7 @@
 package com.xaaef.molly.system.service.impl;
 
-import com.xaaef.molly.core.base.service.BaseService;
-import com.xaaef.molly.core.base.service.impl.BaseServiceImpl;
+import com.xaaef.molly.core.tenant.base.service.BaseService;
+import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.system.entity.DbClientDetails;
 import com.xaaef.molly.system.repository.DbClientDetailsRepository;
 import com.xaaef.molly.system.service.DbClientDetailsService;

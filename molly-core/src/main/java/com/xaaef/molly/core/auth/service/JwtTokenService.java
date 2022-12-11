@@ -27,7 +27,7 @@ public interface JwtTokenService {
      * @param loginId
      * @param loginUser
      */
-    void setLoginUser(String loginId, JwtLoginUser loginUser);
+    void setLoginUser(JwtLoginUser loginUser);
 
 
     /**

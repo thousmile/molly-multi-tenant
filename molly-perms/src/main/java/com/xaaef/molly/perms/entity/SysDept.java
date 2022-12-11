@@ -1,6 +1,6 @@
 package com.xaaef.molly.perms.entity;
 
-import com.xaaef.molly.core.base.BaseEntity;
+import com.xaaef.molly.core.tenant.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,27 +35,32 @@ public class SysDept extends BaseEntity {
     /**
      * 部门上级
      */
+    @Column(nullable = false)
     private Long parentId;
 
     /**
      * 部门 名称
      */
+    @Column(nullable = false)
     private String deptName;
 
     /**
      * 部门 领导名称
      */
+    @Column(nullable = false)
     private String leader;
 
     /**
      * 部门 领导手机号
      */
+    @Column(nullable = false)
     private String leaderMobile;
 
     /**
      * 排序
      */
-    private Integer sort;
+    @Column(nullable = false)
+    private Long sort;
 
     /**
      * 部门描述
@@ -65,6 +70,7 @@ public class SysDept extends BaseEntity {
     /**
      * 祖级列表
      */
+    @Column(nullable = false)
     private String ancestors;
 
 }

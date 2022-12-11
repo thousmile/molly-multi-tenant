@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
@@ -41,7 +40,6 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-@ConditionalOnMissingBean(LogStorageService.class)
 public class LogStorageServiceAdapter implements LogStorageService {
 
     @Value("${spring.application.name}")

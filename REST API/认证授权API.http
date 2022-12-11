@@ -1,0 +1,74 @@
+## 安全认证
+
+### 获取验证码
+###  http://localhost:18891/auth/captcha/codes?codeKey=5jXzuwcoUzbtnHNh
+GET {{baseUrl}}/auth/captcha/codes?codeKey=5jXzuwcoUzbtnHNh
+x-tenant-id: {{tenantId}}
+
+
+### 密码模式登录
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0
+
+{
+  "username": "admin",
+  "password": "admin",
+  "codeKey": "5jXzuwcoUzbtnHNh",
+  "codeText": "xpks0"
+}
+
+> {%
+client.global.set("tokenValue", response.body.data.access_token);
+client.global.set("refreshToken", response.body.data.refresh_token);
+%}
+
+
+### 退出登录
+POST {{baseUrl}}/auth/logout
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+
+### 刷新token
+GET {{baseUrl}}/auth/refresh
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+
+### 获取登录的用户信息
+GET {{baseUrl}}/auth/login/user
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+
+
+### 获取用户列表
+GET {{baseUrl}}/pms/user
+Content-Type: application/json
+x-tenant-id: google
+Authorization: Bearer {{tokenValue}}
+
+
+
+
+### 创建租户
+POST {{baseUrl}}/sys/tenant
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+{
+  "tenantId": "google",
+  "logo": "http://google.com/google.png",
+  "name": "Google",
+  "email": "Google@gmail.com",
+  "linkman": "拉里佩奇",
+  "contactNumber": "1521332423",
+  "areaCode": "12312321",
+  "address": "美国硅谷"
+}

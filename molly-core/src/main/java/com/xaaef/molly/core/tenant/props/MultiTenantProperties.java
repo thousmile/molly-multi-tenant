@@ -4,6 +4,7 @@ import com.xaaef.molly.core.tenant.enums.DbStyle;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -20,7 +21,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "multi.tenant")
 public class MultiTenantProperties {
 
-
     /**
      * 数据库名称前缀
      */
@@ -34,15 +34,27 @@ public class MultiTenantProperties {
 
 
     /**
-     * 多租户的类型。默认是 schema
+     * 多租户的类型。默认是 Table
      */
-    private DbStyle dbStyle = DbStyle.SCHEMA;
+    private DbStyle dbStyle = DbStyle.Table;
 
 
     /**
      * 创建表结构
      */
     private Boolean createTable = Boolean.TRUE;
+
+
+    /**
+     * 其他 数据库 创建表结构的 Liquibase 文件地址
+     */
+    private String otherChangeLog = "classpath:db/changelog-other.xml";
+
+
+    /**
+     * 主 数据库 创建表结构的 Liquibase 文件地址
+     */
+    private String masterChangeLog = "classpath:db/changelog-master.xml";
 
 
 }

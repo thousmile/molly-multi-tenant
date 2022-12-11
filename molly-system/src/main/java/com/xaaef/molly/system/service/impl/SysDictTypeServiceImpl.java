@@ -1,6 +1,6 @@
 package com.xaaef.molly.system.service.impl;
 
-import com.xaaef.molly.core.base.service.impl.BaseServiceImpl;
+import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.system.entity.SysDictType;
 import com.xaaef.molly.system.repository.SysDictTypeRepository;
 import com.xaaef.molly.system.service.SysDictTypeService;

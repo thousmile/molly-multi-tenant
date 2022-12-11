@@ -1,6 +1,6 @@
 package com.xaaef.molly.system.entity;
 
-import com.xaaef.molly.core.base.BaseEntity;
+import com.xaaef.molly.core.tenant.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,7 +40,7 @@ public class SysConfig extends BaseEntity {
     /**
      * 参数键名
      */
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String configKey;
 
     /**

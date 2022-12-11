@@ -1,7 +1,8 @@
 package com.xaaef.molly.core.tenant;
 
+import com.xaaef.molly.common.util.RectRangeUtils;
 import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
-import com.xaaef.molly.core.tenant.utils.TenantUtils;
+import com.xaaef.molly.core.tenant.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
@@ -32,7 +33,8 @@ public class CustomTenantResolver implements CurrentTenantIdentifierResolver,
 
     @Override
     public String resolveCurrentTenantIdentifier() {
-        return Optional.ofNullable(TenantUtils.getTenantId()).orElse(props.getDefaultTenantId());
+        String tenantId = TenantUtils.getTenantId();
+        return Optional.ofNullable(tenantId).orElse(props.getDefaultTenantId());
     }
 
 

@@ -1,6 +1,6 @@
 package com.xaaef.molly.system.entity;
 
-import com.xaaef.molly.core.base.BaseEntity;
+import com.xaaef.molly.core.tenant.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,11 +34,13 @@ public class SysTemplate extends BaseEntity {
     /**
      * 租户 logo
      */
+    @Column(nullable = false)
     private String name;
 
     /**
      * 租户名称
      */
+    @Column(nullable = false)
     private String description;
 
 }

@@ -2,6 +2,7 @@ package com.xaaef.molly.core.auth.jwt;
 
 import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -17,9 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Component
 @ConfigurationProperties(prefix = "jwt.token")
 public class JwtTokenProperties {
 
@@ -49,6 +48,11 @@ public class JwtTokenProperties {
     private Integer promptExpired = 600;
 
     /**
+     * 验证码 过期时间 单位(秒)
+     */
+    private Integer captchaExpired = 180;
+
+    /**
      * 秘钥
      */
     private String secret = "2N321lIkh$*!IfNt4&5!YZykD$7@ApaM8r@b@r@&4CZ7eqKe!s";
@@ -61,6 +65,8 @@ public class JwtTokenProperties {
     /**
      * 需要排除的URL
      */
-    private String[] excludePath;
+    private String[] excludePath = {
+            "/open/**"
+    };
 
 }

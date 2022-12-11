@@ -22,8 +22,16 @@ spring:
 
   liquibase:
     enabled: true
-    change-log: classpath:db/changelog-master.xml
+    change-log: ${multi.tenant.master-change-log}
 
+
+# 多租户配置
+multi:
+  tenant:
+    create-table: true
+    db-style: database
+    master-change-log: classpath:db/changelog-master.xml
+    other-change-log: classpath:db/changelog-other.xml
 
 
 info:
@@ -43,4 +51,3 @@ management:
       show-details: ALWAYS
     shutdown:
       enabled: true
-

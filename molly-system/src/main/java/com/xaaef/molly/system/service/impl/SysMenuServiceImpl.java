@@ -1,6 +1,6 @@
 package com.xaaef.molly.system.service.impl;
 
-import com.xaaef.molly.core.base.service.impl.BaseServiceImpl;
+import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.system.entity.SysMenu;
 import com.xaaef.molly.system.repository.SysMenuRepository;
 import com.xaaef.molly.system.service.SysMenuService;

@@ -1,6 +1,6 @@
 package com.xaaef.molly.perms.service.impl;
 
-import com.xaaef.molly.core.base.service.impl.BaseServiceImpl;
+import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.perms.entity.SysRole;
 import com.xaaef.molly.perms.repository.SysRoleRepository;
 import com.xaaef.molly.perms.service.SysRoleService;

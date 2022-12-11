@@ -12,12 +12,11 @@ package com.xaaef.molly.core.tenant.enums;
 public enum DbStyle {
 
     // 数据库（DataBase）
-    DATABASE,
+    DataBase,
 
     // 模式（Schema）
-    SCHEMA,
+    Schema,
 
     // 数据表（Table）
-    TABLE
-
+    Table;
 }
