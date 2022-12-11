@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
+@Component
 @ConfigurationProperties(prefix = "multi.tenant")
 public class MultiTenantProperties {
 
@@ -34,9 +35,11 @@ public class MultiTenantProperties {
 
 
     /**
-     * 多租户的类型。默认是 Table
+     * 多租户的类型。
+     *
+     * 一定要在配置文件里指定....
      */
-    private DbStyle dbStyle = DbStyle.Table;
+    private DbStyle dbStyle;
 
 
     /**

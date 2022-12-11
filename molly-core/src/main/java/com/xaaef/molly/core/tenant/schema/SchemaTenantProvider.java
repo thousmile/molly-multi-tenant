@@ -2,9 +2,13 @@ package com.xaaef.molly.core.tenant.schema;
 
 import com.xaaef.molly.core.tenant.DataSourceManager;
 import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
+import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -26,7 +30,14 @@ import static org.hibernate.cfg.AvailableSettings.MULTI_TENANT_CONNECTION_PROVID
 
 
 @Slf4j
+@Component
+@ConditionalOnProperty(prefix = "multi.tenant", name = "db-style", havingValue = "schema")
 public class SchemaTenantProvider implements MultiTenantConnectionProvider, HibernatePropertiesCustomizer {
+
+    @PostConstruct
+    public void init(){
+        log.info("multi tenant use schema .....");
+    }
 
     private final DataSource dataSource;
 

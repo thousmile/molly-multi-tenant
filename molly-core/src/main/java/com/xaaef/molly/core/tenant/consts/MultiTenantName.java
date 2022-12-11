@@ -12,9 +12,6 @@ package com.xaaef.molly.core.tenant.consts;
 
 public class MultiTenantName {
 
-    // 数据库 前缀。 易于区分数据库名称
-    private final static String TENANT_ID_PREFIX = "molly_";
-
     // http 租户请求头
     public final static String X_TENANT_ID = "x-tenant-id";
 

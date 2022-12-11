@@ -2,14 +2,19 @@ package com.xaaef.molly.core.tenant.database;
 
 import com.xaaef.molly.core.tenant.DataSourceManager;
 import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
+import jakarta.annotation.PreDestroy;
 import liquibase.Liquibase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,6 +31,8 @@ import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
 
 
 @Slf4j
+@Component
+@ConditionalOnProperty(prefix = "multi.tenant", name = "db-style", havingValue = "DataBase")
 public class DatabaseDataSourceManager implements DataSourceManager {
 
     private static final Map<String, DataSource> DATA_SOURCE_MAP = new ConcurrentHashMap<>();
@@ -133,5 +140,20 @@ public class DatabaseDataSourceManager implements DataSourceManager {
         }
     }
 
+
+    @PreDestroy
+    public void preDestroy() {
+        log.info("Close the tenant data source ...");
+        DATA_SOURCE_MAP.values().forEach(r -> {
+            if (masterDataSource instanceof Closeable hds) {
+                try {
+                    hds.close();
+                    log.info("Successfully close");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
 }

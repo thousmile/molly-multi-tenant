@@ -2,15 +2,24 @@ package com.xaaef.molly.core.tenant.table;
 
 import com.xaaef.molly.core.tenant.DataSourceManager;
 import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import javax.sql.DataSource;
 
 
 @Slf4j
 @AllArgsConstructor
+@ConditionalOnProperty(prefix = "multi.tenant", name = "db-style", havingValue = "Table")
 public class TableDataSourceManager implements DataSourceManager {
+
+    @PostConstruct
+    public void init(){
+        // 执行相关业务
+        log.info("multi tenant use table .....");
+    }
 
     // 默认租户的数据源
     private final DataSource dataSource;

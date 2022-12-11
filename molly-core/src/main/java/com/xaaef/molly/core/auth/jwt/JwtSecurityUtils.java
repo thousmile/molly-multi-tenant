@@ -1,9 +1,13 @@
 package com.xaaef.molly.core.auth.jwt;
 
+import com.xaaef.molly.core.auth.exception.JwtNoLoginException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Objects;
 
 /**
  * <p>
@@ -22,6 +26,15 @@ public class JwtSecurityUtils {
      */
     public static Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+
+    /**
+     * 经过认证！
+     */
+    public static boolean isAuthenticated() {
+        var auth = getAuthentication();
+        return auth != null && !(auth instanceof AnonymousAuthenticationToken) && auth.isAuthenticated();
     }
 
 
@@ -56,7 +69,7 @@ public class JwtSecurityUtils {
         try {
             return (JwtLoginUser) getAuthentication().getPrincipal();
         } catch (Exception e) {
-            throw new RuntimeException("获取用户信息异常");
+            throw new JwtNoLoginException("用户暂无登录！", e);
         }
     }
 

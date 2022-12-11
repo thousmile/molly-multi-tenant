@@ -2,14 +2,17 @@ package com.xaaef.molly.core.tenant.schema;
 
 import com.xaaef.molly.core.tenant.DataSourceManager;
 import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
+import jakarta.annotation.PostConstruct;
 import liquibase.Liquibase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.DirectoryResourceAccessor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -29,8 +32,17 @@ import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
 
 
 @Slf4j
+@Component
 @AllArgsConstructor
+@ConditionalOnProperty(prefix = "multi.tenant", name = "db-style", havingValue = "Schema")
 public class SchemaDataSourceManager implements DataSourceManager {
+
+
+    @PostConstruct
+    public void init(){
+        // 执行相关业务
+        System.out.println("SchemaDataSourceManager.........");
+    }
 
     // 默认租户的数据源
     private final DataSource dataSource;

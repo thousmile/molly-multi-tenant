@@ -23,6 +23,9 @@ public class CoreTest {
     public void test1() {
         String admin = JwtSecurityUtils.encryptPassword("admin");
         System.out.println(admin);
+
+        String apple = JwtSecurityUtils.encryptPassword("apple");
+        System.out.println(apple);
     }
 
 
