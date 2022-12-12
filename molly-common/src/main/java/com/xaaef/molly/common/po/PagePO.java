@@ -45,4 +45,12 @@ public class PagePO implements java.io.Serializable {
      */
     private LocalDate endDate;
 
+    public Integer getPageIndex() {
+        if (pageIndex == null || pageIndex <= 1) {
+            return 0;
+        } else {
+            return pageIndex - 1;
+        }
+    }
+
 }

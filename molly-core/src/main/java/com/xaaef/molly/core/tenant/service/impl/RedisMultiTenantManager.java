@@ -1,7 +1,9 @@
 package com.xaaef.molly.core.tenant.service.impl;
 
 import com.xaaef.molly.core.redis.RedisCacheUtils;
+import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
 import com.xaaef.molly.core.tenant.service.MultiTenantManager;
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,14 @@ import static com.xaaef.molly.core.tenant.consts.MultiTenantName.X_TENANT_ID;
 public class RedisMultiTenantManager implements MultiTenantManager {
 
     private final RedisCacheUtils cacheUtils;
+
+    private final MultiTenantProperties props;
+
+    @Override
+    public String getDefaultTenantId() {
+        return props.getDefaultTenantId();
+    }
+
 
     @Override
     public boolean existById(String tenantId) {
@@ -42,6 +52,14 @@ public class RedisMultiTenantManager implements MultiTenantManager {
     @Override
     public void removeTenantId(String tenantId) {
         cacheUtils.deleteHashKey(X_TENANT_ID, tenantId);
+    }
+
+
+
+    @PostConstruct
+    public void init() {
+        // 添加默认租户
+        addTenantId(props.getDefaultTenantId());
     }
 
 

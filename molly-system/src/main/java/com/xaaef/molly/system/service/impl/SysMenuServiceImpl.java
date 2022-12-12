@@ -25,4 +25,5 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuRepository, SysMe
         implements SysMenuService {
 
 
+
 }

@@ -62,9 +62,9 @@ public class LogStorageServiceAdapter implements LogStorageService {
         loginLog.setUserId(loginUser.getUserId());
         loginLog.setTenantId(loginUser.getTenantId());
         loginLog.setCreateTime(loginUser.getLoginTime());
-        loginLog.setGrantType(loginUser.getGrantType());
+        loginLog.setGrantType(loginUser.getGrantType().getCode());
         loginLog.setId(IdUtil.getSnowflakeNextId());
-        log.info("登录日志: {}", JsonUtils.toFormatJson(loginLog));
+        log.info("登录日志: \n{}", JsonUtils.toFormatJson(loginLog));
     }
 
 
@@ -117,7 +117,7 @@ public class LogStorageServiceAdapter implements LogStorageService {
         operLog.setTenantId(userInfo.getTenantId());
         operLog.setCreateTime(LocalDateTime.now());
         operLog.setId(IdUtil.getSnowflakeNextId());
-        log.info("操作日志: {}", JsonUtils.toFormatJson(operLog));
+        log.info("操作日志: \n{}", JsonUtils.toFormatJson(operLog));
     }
 
 

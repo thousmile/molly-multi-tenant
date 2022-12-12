@@ -3,19 +3,24 @@ package com.xaaef.molly.core.auth.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.core.auth.enums.GrantType;
+import com.xaaef.molly.core.auth.enums.UserType;
 import com.xaaef.molly.core.auth.exception.JwtAuthException;
 import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
+import com.xaaef.molly.core.auth.jwt.JwtTokenProperties;
 import com.xaaef.molly.core.auth.jwt.JwtTokenValue;
 import com.xaaef.molly.core.auth.po.LoginFormPO;
 import com.xaaef.molly.core.auth.service.JwtTokenService;
 import com.xaaef.molly.core.auth.service.LineCaptchaService;
 import com.xaaef.molly.core.auth.service.UserLoginService;
 import com.xaaef.molly.core.log.service.LogStorageService;
+import com.xaaef.molly.core.tenant.service.MultiTenantManager;
 import com.xaaef.molly.core.tenant.util.TenantUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -35,6 +40,8 @@ public class UserLoginServiceImpl implements UserLoginService {
     private final LogStorageService logStorageService;
 
     public final LineCaptchaService captchaService;
+
+    public final MultiTenantManager tenantManager;
 
     /**
      * 登录表单获取 Token
@@ -60,16 +67,18 @@ public class UserLoginServiceImpl implements UserLoginService {
 
         var target = new JwtLoginUser();
         BeanUtils.copyProperties(authResult.getPrincipal(), target);
-        target.setGrantType(GrantType.PASSWORD.getCode());
+        target.setGrantType(GrantType.PASSWORD);
         target.setLoginTime(LocalDateTime.now());
         target.setTenantId(TenantUtils.getTenantId());
+
+        var userType = StringUtils.equals(tenantManager.getDefaultTenantId(), target.getTenantId())
+                ? UserType.SYSTEM : UserType.TENANT;
+        target.setUserType(userType);
 
         // 生成一个随机ID 跟当前用户关联
         String loginId = IdUtil.simpleUUID();
         String token = tokenService.createJwtStr(loginId);
         target.setLoginId(loginId);
-
-        var props = tokenService.getProps();
 
         tokenService.setLoginUser(target);
 
@@ -78,6 +87,8 @@ public class UserLoginServiceImpl implements UserLoginService {
 
         // 删除 redis 中的 验证码
         captchaService.delete(po.getCodeKey());
+
+        var props = tokenService.getProps();
 
         return JwtTokenValue.builder()
                 .header(props.getTokenHeader())

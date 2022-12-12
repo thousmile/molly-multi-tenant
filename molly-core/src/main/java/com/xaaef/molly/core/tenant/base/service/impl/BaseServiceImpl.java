@@ -1,6 +1,5 @@
 package com.xaaef.molly.core.tenant.base.service.impl;
 
-import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.tenant.base.BaseEntity;
 import com.xaaef.molly.core.tenant.base.service.BaseService;
@@ -34,16 +33,11 @@ public class BaseServiceImpl<R extends JpaRepository<T, ID>, T extends BaseEntit
     protected R baseReps;
 
 
-    private JwtLoginUser getLoginUser() {
-        return JwtSecurityUtils.getLoginUser();
-    }
-
-
     /**
      * 插入时 填写
      */
     protected void saveFill(T entity) {
-        var userId = getLoginUser().getUserId();
+        var userId = JwtSecurityUtils.getLoginUser().getUserId();
         if (null == entity.getCreateUser() && userId != null) {
             entity.setCreateUser(userId);
         }
@@ -59,7 +53,7 @@ public class BaseServiceImpl<R extends JpaRepository<T, ID>, T extends BaseEntit
      * 修改时 填写
      */
     protected void updateFill(T entity) {
-        var userId = getLoginUser().getUserId();
+        var userId = JwtSecurityUtils.getLoginUser().getUserId();
         entity.setCreateTime(null);
         entity.setCreateUser(null);
         if (userId != null) {
@@ -74,20 +68,24 @@ public class BaseServiceImpl<R extends JpaRepository<T, ID>, T extends BaseEntit
         return baseReps.findAll();
     }
 
+
     @Override
     public List<T> findAllById(Iterable<ID> ids) {
         return baseReps.findAllById(ids);
     }
+
 
     @Override
     public <S extends T> List<S> findAll(Example<S> example) {
         return baseReps.findAll(example);
     }
 
+
     @Override
     public <S extends T> List<S> findAll(Example<S> example, Sort sort) {
         return baseReps.findAll(example, sort);
     }
+
 
     @Override
     public Page<T> findPage(Pageable pageable) {
@@ -99,9 +97,22 @@ public class BaseServiceImpl<R extends JpaRepository<T, ID>, T extends BaseEntit
         return baseReps.findAll(example, pageable);
     }
 
+
     @Override
     public Optional<T> findById(ID id) {
         return baseReps.findById(id);
+    }
+
+
+    @Override
+    public T getById(ID id) {
+        return findById(id).get();
+    }
+
+
+    @Override
+    public boolean existsById(ID id) {
+        return baseReps.existsById(id);
     }
 
 

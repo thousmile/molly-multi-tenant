@@ -1,0 +1,58 @@
+### 创建租户
+POST {{baseUrl}}/sys/tenant
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+{
+  "tenantId": "apple",
+  "logo": "https://apple.com/apple.png",
+  "name": "apple",
+  "email": "apple@gmail.com",
+  "linkman": "乔布斯",
+  "contactNumber": "1521332423",
+  "areaCode": "123123221311",
+  "address": "美国硅谷"
+}
+
+
+### 修改租户
+PUT {{baseUrl}}/sys/tenant
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+{
+  "tenantId": "apple",
+  "logo": "https://apple.com/apple.png",
+  "name": "apple",
+  "email": "apple@gmail.com",
+  "linkman": "史蒂夫·乔布斯",
+  "contactNumber": "1521332423",
+  "areaCode": "123123221311",
+  "address": "美国-加利福尼亚州-库比蒂诺"
+}
+
+
+### 获取租户详情
+GET {{baseUrl}}/sys/tenant/apple
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+
+
+### 租户是否存在
+GET {{baseUrl}}/sys/tenant/exist/apple1
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+
+
+### 删除租户
+DELETE {{baseUrl}}/sys/tenant/apple
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+

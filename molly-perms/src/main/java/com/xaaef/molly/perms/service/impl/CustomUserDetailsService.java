@@ -1,7 +1,9 @@
 package com.xaaef.molly.perms.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.xaaef.molly.core.auth.enums.AdminFlag;
 import com.xaaef.molly.core.auth.enums.StatusEnum;
+import com.xaaef.molly.core.auth.enums.UserType;
 import com.xaaef.molly.perms.entity.SysUser;
 import com.xaaef.molly.perms.repository.SysUserRepository;
 import com.xaaef.molly.core.auth.jwt.StringGrantedAuthority;
@@ -46,7 +48,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .username(dbUser.getUsername())
                 .nickname(dbUser.getNickname())
                 .password(dbUser.getPassword())
-                .status(StatusEnum.create(dbUser.getStatus()))
+                .status(StatusEnum.get(dbUser.getStatus()))
+                .adminFlag(AdminFlag.get(dbUser.getAdminFlag()))
                 .authorities(Set.of())
                 .build();
     }

@@ -31,6 +31,8 @@ multi:
     db-style: schema
     master-change-log: classpath:db/changelog-master.xml
     other-change-log: classpath:db/changelog-other.xml
+    prefix: molly_
+    default-tenant-id: master
 
 
 info:

@@ -15,8 +15,11 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.io.Closeable;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
 
@@ -88,6 +91,21 @@ public class SchemaDataSourceManager implements DataSourceManager {
             liquibase.update(tenantId);
             // 关闭链接
             conn1.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void deleteTable(String tenantId) {
+        log.info("tenantId: {} delete table ...", tenantId);
+        String tenantDbName = multiTenantProperties.getPrefix() + tenantId;
+        String sql = String.format("DROP DATABASE %s ;", tenantDbName);
+        try {
+            var conn = getTempConnection(tenantDbName);
+            conn.createStatement().execute(sql);
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

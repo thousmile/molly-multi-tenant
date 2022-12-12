@@ -42,7 +42,7 @@ public enum StatusEnum {
      * 用于 spring mvc 实体参数绑定
      */
     @JsonCreator
-    public static StatusEnum create(Byte value) {
+    public static StatusEnum get(Byte value) {
         for (var v : values()) {
             if (Objects.equals(v.code, value)) {
                 return v;

@@ -5,10 +5,7 @@ import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.service.SysTenantService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @AllArgsConstructor
@@ -16,14 +13,41 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sys/tenant")
 public class TenantController {
 
-    public final SysTenantService tenantService;
+    public final SysTenantService baseService;
+
+
+    @GetMapping("/{id}")
+    public JsonResult<SysTenant> findById(@PathVariable("id") String id) {
+        return JsonResult.success(baseService.getById(id));
+    }
+
+
+    @GetMapping("/exist/{id}")
+    public JsonResult<Boolean> existById(@PathVariable("id") String id) {
+        return JsonResult.success(baseService.existsById(id));
+    }
 
 
     @PostMapping
     public JsonResult<SysTenant> save(@RequestBody SysTenant tenant) {
         return JsonResult.success(
-                tenantService.save(tenant)
+                baseService.save(tenant)
         );
+    }
+
+
+    @PutMapping
+    public JsonResult<SysTenant> updateById(@RequestBody SysTenant tenant) {
+        return JsonResult.success(
+                baseService.updateById(tenant)
+        );
+    }
+
+
+    @DeleteMapping("/{id}")
+    public JsonResult<String> deleteById(@PathVariable("id") String id) {
+        baseService.deleteById(id);
+        return JsonResult.success();
     }
 
 

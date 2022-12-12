@@ -1,8 +1,5 @@
 package com.xaaef.molly.core.tenant;
 
-import com.xaaef.molly.common.util.RectRangeUtils;
-import com.xaaef.molly.core.auth.exception.JwtNoLoginException;
-import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
 import com.xaaef.molly.core.tenant.util.TenantUtils;
@@ -11,11 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.hibernate.cfg.AvailableSettings.MULTI_TENANT_IDENTIFIER_RESOLVER;
@@ -42,7 +37,7 @@ public class CustomTenantResolver implements CurrentTenantIdentifierResolver,
 
     @Override
     public String resolveCurrentTenantIdentifier() {
-        log.info("resolveCurrentTenantIdentifier {} ................",TenantUtils.getTenantId());
+        log.info("resolveCurrentTenantIdentifier {} ................", TenantUtils.getTenantId());
         // 如果当前是 master 库，直接放过。任何用户都可以进入 master 库，读取一些公共的数据，如: 全局配置，权限菜单
         if (StringUtils.equals(props.getDefaultTenantId(), TenantUtils.getTenantId())) {
             return TenantUtils.getTenantId();

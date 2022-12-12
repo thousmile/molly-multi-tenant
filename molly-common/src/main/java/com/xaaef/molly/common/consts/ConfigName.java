@@ -15,6 +15,12 @@ public class ConfigName {
     /**
      * 用户默认密码
      */
+    public static final String REDIS_CACHE_KEY = "sys_config_cache";
+
+
+    /**
+     * 用户默认密码
+     */
     public static final String USER_DEFAULT_PASSWORD = "user_default_password";
 
 

@@ -20,17 +20,17 @@ import lombok.ToString;
 @ToString
 public enum UserType {
 
-    TENANT(0, "租户用户"),
+    TENANT((byte) 0, "租户用户"),
 
-    SYSTEM(1, "系统用户");
+    SYSTEM((byte) 1, "系统用户");
 
-    UserType(int code, String description) {
+    UserType(byte code, String description) {
         this.code = code;
         this.description = description;
     }
 
     @JsonCreator
-    public static UserType get(int code) {
+    public static UserType get(byte code) {
         if (TENANT.code == code) {
             return TENANT;
         } else if (SYSTEM.code == code) {
@@ -41,7 +41,7 @@ public enum UserType {
     }
 
     @JsonValue
-    private final int code;
+    private final byte code;
 
     private final String description;
 

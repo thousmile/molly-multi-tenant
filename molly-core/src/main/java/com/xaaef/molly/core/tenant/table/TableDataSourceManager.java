@@ -54,4 +54,10 @@ public class TableDataSourceManager implements DataSourceManager {
     }
 
 
+    @Override
+    public void deleteTable(String tenantId) {
+        log.warn("TenantId: {} No need to delete table structures", tenantId);
+    }
+
+
 }

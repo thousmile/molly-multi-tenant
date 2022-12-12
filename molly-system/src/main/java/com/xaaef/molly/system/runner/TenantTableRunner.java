@@ -35,8 +35,6 @@ public class TenantTableRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         var props = dataSourceManager.getMultiTenantProperties();
-        // 添加默认租户
-        tenantManager.addTenantId(props.getDefaultTenantId());
         long count = tenantReps.count();
         // 如果是 table 模式，就无需创建表结构。
         var flag = props.getCreateTable() && props.getDbStyle() != DbStyle.Table;

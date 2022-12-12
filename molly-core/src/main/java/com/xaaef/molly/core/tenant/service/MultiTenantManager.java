@@ -15,6 +15,15 @@ import java.util.Set;
 public interface MultiTenantManager {
 
     /**
+     * TODO 获取默认租户
+     *
+     * @author WangChenChen
+     * @date 2022/12/11 9:46
+     */
+    String getDefaultTenantId();
+
+
+    /**
      * TODO 根据租户ID 判断当前租户是否存在
      *
      * @author WangChenChen

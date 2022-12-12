@@ -43,6 +43,15 @@ public interface DataSourceManager {
 
 
     /**
+     * TODO 租户删除表结构
+     *
+     * @author WangChenChen
+     * @date 2022/12/11 11:04
+     */
+    void deleteTable(String tenantId);
+
+
+    /**
      * TODO 获取多租户信息
      *
      * @author WangChenChen

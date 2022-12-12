@@ -25,4 +25,5 @@ public class SysTemplateServiceImpl extends BaseServiceImpl<SysTemplateRepositor
         implements SysTemplateService {
 
 
+
 }

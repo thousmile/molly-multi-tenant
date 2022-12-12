@@ -1,7 +1,10 @@
 package com.xaaef.molly.core.auth.jwt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.xaaef.molly.core.auth.enums.AdminFlag;
+import com.xaaef.molly.core.auth.enums.GrantType;
 import com.xaaef.molly.core.auth.enums.StatusEnum;
+import com.xaaef.molly.core.auth.enums.UserType;
 import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -37,7 +40,7 @@ public class JwtLoginUser implements UserDetails {
     /**
      * 认证授权方式
      */
-    private String grantType;
+    private GrantType grantType;
 
     /**
      * 用户唯一ID
@@ -68,6 +71,16 @@ public class JwtLoginUser implements UserDetails {
      * 用户状态， [ 0.禁用 1.正常 2.被删除 ]
      */
     private StatusEnum status;
+
+    /**
+     * 是否管理员 0. 普通用户  1. 管理员
+     */
+    private AdminFlag adminFlag;
+
+    /**
+     * 用户类型 0. 租户用户  1. 系统用户
+     */
+    private UserType userType;
 
     /**
      * 登录时间
@@ -197,11 +210,28 @@ public class JwtLoginUser implements UserDetails {
         this.loginTime = loginTime;
     }
 
-    public String getGrantType() {
+
+    public GrantType getGrantType() {
         return grantType;
     }
 
-    public void setGrantType(String grantType) {
+    public void setGrantType(GrantType grantType) {
         this.grantType = grantType;
+    }
+
+    public AdminFlag getAdminFlag() {
+        return adminFlag;
+    }
+
+    public void setAdminFlag(AdminFlag adminFlag) {
+        this.adminFlag = adminFlag;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 }

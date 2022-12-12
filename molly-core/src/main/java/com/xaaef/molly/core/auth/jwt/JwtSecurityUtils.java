@@ -1,5 +1,7 @@
 package com.xaaef.molly.core.auth.jwt;
 
+import com.xaaef.molly.core.auth.enums.AdminFlag;
+import com.xaaef.molly.core.auth.enums.UserType;
 import com.xaaef.molly.core.auth.exception.JwtNoLoginException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,6 +41,24 @@ public class JwtSecurityUtils {
 
 
     /**
+     * 当前登录的用户，是否 Master 系统的用户
+     */
+    public static boolean isMasterUser() {
+        return JwtSecurityUtils.isAuthenticated() &&
+                JwtSecurityUtils.getLoginUser().getUserType() == UserType.SYSTEM;
+    }
+
+
+    /**
+     * 当前登录的用户，是否 管理员
+     */
+    public static boolean isAdminUser() {
+        return JwtSecurityUtils.isAuthenticated() &&
+                JwtSecurityUtils.getLoginUser().getAdminFlag() == AdminFlag.YES;
+    }
+
+
+    /**
      * 获取用户 租户ID
      **/
     public static String getTenantId() {
@@ -66,10 +86,10 @@ public class JwtSecurityUtils {
      * 获取用户
      **/
     public static JwtLoginUser getLoginUser() {
-        try {
+        if (isAuthenticated()) {
             return (JwtLoginUser) getAuthentication().getPrincipal();
-        } catch (Exception e) {
-            throw new JwtNoLoginException("用户暂无登录！", e);
+        } else {
+            throw new JwtNoLoginException("用户暂无登录！", new RuntimeException());
         }
     }
 

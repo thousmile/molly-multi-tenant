@@ -22,7 +22,6 @@ import java.util.Objects;
 
 public class TenantUtils {
 
-
     private final static ThreadLocal<String> TENANT_ID_THREAD_LOCAL = new NamedInheritableThreadLocal<>("TENANT_ID_THREAD_LOCAL");
 
 

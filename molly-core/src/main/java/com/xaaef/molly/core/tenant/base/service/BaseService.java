@@ -2,6 +2,7 @@ package com.xaaef.molly.core.tenant.base.service;
 
 
 import com.xaaef.molly.core.tenant.base.BaseEntity;
+import com.xaaef.molly.core.tenant.util.TenantUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Sort;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 
 /**
@@ -27,9 +30,12 @@ public interface BaseService<T extends BaseEntity, ID> {
 
     List<T> findAll();
 
+
     List<T> findAllById(Iterable<ID> ids);
 
+
     <S extends T> List<S> findAll(Example<S> example);
+
 
     <S extends T> List<S> findAll(Example<S> example, Sort sort);
 
@@ -41,6 +47,12 @@ public interface BaseService<T extends BaseEntity, ID> {
 
 
     Optional<T> findById(ID id);
+
+
+    T getById(ID id);
+
+
+    boolean existsById(ID id);
 
 
     T save(T entity);

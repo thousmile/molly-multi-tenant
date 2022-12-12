@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Objects;
+
 /**
  * <p>
  * 0.租户用户
@@ -20,22 +22,22 @@ import lombok.ToString;
 @ToString
 public enum AdminFlag {
 
-    NO(0, "非管理员"),
+    NO((byte) 0, "非管理员"),
 
-    YES(1, "是管理员");
+    YES((byte) 1, "是管理员");
 
-    AdminFlag(int code, String description) {
+    AdminFlag(Byte code, String description) {
         this.code = code;
         this.description = description;
     }
 
     @JsonValue
-    private final int code;
+    private final Byte code;
 
     private final String description;
 
     @JsonCreator
-    public static AdminFlag get(Integer value) {
+    public static AdminFlag get(byte value) {
         for (var v : values()) {
             if (v.code == value) {
                 return v;
