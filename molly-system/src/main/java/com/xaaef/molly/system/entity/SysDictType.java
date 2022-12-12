@@ -15,7 +15,7 @@ import lombok.*;
  */
 
 @Entity
-@Table(name = "sys_dict_type")
+@Table(name = "comm_dict_type")
 @Getter
 @Setter
 @Builder

@@ -5,7 +5,6 @@ import com.xaaef.molly.core.tenant.MultiTenantTenantIdInterceptor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,9 +26,6 @@ import java.util.TimeZone;
 
 @Slf4j
 @Configuration
-@Import({
-        GlobalExceptionHandler.class
-})
 @AllArgsConstructor
 public class CustomSpringWebConfig implements WebMvcConfigurer {
 

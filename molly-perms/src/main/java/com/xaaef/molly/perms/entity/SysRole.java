@@ -15,7 +15,7 @@ import lombok.*;
  */
 
 @Entity
-@Table(name = "sys_role")
+@Table(name = "pms_role")
 @Getter
 @Setter
 @Builder
@@ -33,13 +33,11 @@ public class SysRole extends BaseEntity {
     /**
      * 部门 名称
      */
-    @Column(nullable = false)
     private String roleName;
 
     /**
      * 排序
      */
-    @Column(nullable = false)
     private Long sort;
 
     /**

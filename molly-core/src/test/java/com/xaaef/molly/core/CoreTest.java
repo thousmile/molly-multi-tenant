@@ -31,6 +31,8 @@ public class CoreTest {
 
     @Test
     public void test2() {
+        int i = 2 % 100;
+        System.out.println(i);
     }
 
 

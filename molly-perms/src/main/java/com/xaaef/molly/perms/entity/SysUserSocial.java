@@ -17,7 +17,7 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "sys_user_social")
+@Table(name = "pms_user_social")
 @Getter
 @Setter
 @Builder
@@ -35,19 +35,16 @@ public class SysUserSocial extends BaseEntity {
     /**
      * 头像
      */
-    @Column(nullable = false)
     private Long userId;
 
     /**
      * 社交账号唯一ID
      */
-    @Column(nullable = false)
     private String openId;
 
     /**
      * we_chat. 微信  tencent_qq. 腾讯QQ
      */
-    @Column(nullable = false)
     private String socialType;
 
 }

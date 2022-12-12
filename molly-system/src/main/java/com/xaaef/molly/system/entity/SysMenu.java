@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 @Entity
-@Table(name = "sys_menu")
+@Table(name = "comm_menu")
 @Getter
 @Setter
 @Builder

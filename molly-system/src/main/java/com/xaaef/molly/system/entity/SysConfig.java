@@ -16,7 +16,7 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "sys_config")
+@Table(name = "comm_config")
 @Getter
 @Setter
 @Builder

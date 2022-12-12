@@ -2,7 +2,7 @@
 <project version="4">
   <component name="PersistenceUnitSettings">
     <persistence-units>
-      <persistence-unit name="Default" defaultIncludeChangeLogFile="molly-admin/src/main/resources/db/changelog-master.xml">
+      <persistence-unit name="Default">
         <packages>
           <package value="com.xaaef.molly" />
         </packages>

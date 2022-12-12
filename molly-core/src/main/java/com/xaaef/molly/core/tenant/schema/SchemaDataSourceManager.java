@@ -37,13 +37,6 @@ import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
 @ConditionalOnProperty(prefix = "multi.tenant", name = "db-style", havingValue = "Schema")
 public class SchemaDataSourceManager implements DataSourceManager {
 
-
-    @PostConstruct
-    public void init(){
-        // 执行相关业务
-        System.out.println("SchemaDataSourceManager.........");
-    }
-
     // 默认租户的数据源
     private final DataSource dataSource;
 

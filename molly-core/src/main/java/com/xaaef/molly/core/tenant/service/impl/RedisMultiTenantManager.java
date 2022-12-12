@@ -2,13 +2,17 @@ package com.xaaef.molly.core.tenant.service.impl;
 
 import com.xaaef.molly.core.redis.RedisCacheUtils;
 import com.xaaef.molly.core.tenant.service.MultiTenantManager;
+import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Set;
 
 import static com.xaaef.molly.core.tenant.consts.MultiTenantName.X_TENANT_ID;
+
 
 @Slf4j
 @Component
@@ -38,6 +42,13 @@ public class RedisMultiTenantManager implements MultiTenantManager {
     @Override
     public void removeTenantId(String tenantId) {
         cacheUtils.deleteHashKey(X_TENANT_ID, tenantId);
+    }
+
+
+    @PreDestroy
+    public void preDestroy() {
+        cacheUtils.deleteKey(X_TENANT_ID);
+        log.info("delete the tenantId in redis ...");
     }
 
 

@@ -5,8 +5,12 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <include file="db/sys.xml"/>
+    <include file="db/changelog/common.xml"/>
 
-    <include file="db/pms.xml"/>
+    <include file="db/changelog/sys.xml"/>
+
+    <include file="db/changelog/pms.xml"/>
+    
+    <include file="db/changelog/pms_init.xml"/>
 
 </databaseChangeLog>

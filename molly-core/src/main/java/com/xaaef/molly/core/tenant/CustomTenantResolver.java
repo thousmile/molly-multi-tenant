@@ -42,6 +42,7 @@ public class CustomTenantResolver implements CurrentTenantIdentifierResolver,
 
     @Override
     public String resolveCurrentTenantIdentifier() {
+        log.info("resolveCurrentTenantIdentifier {} ................",TenantUtils.getTenantId());
         // 如果当前是 master 库，直接放过。任何用户都可以进入 master 库，读取一些公共的数据，如: 全局配置，权限菜单
         if (StringUtils.equals(props.getDefaultTenantId(), TenantUtils.getTenantId())) {
             return TenantUtils.getTenantId();

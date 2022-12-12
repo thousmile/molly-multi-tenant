@@ -17,7 +17,7 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "sys_dept")
+@Table(name = "pms_dept")
 @Getter
 @Setter
 @Builder
@@ -35,31 +35,26 @@ public class SysDept extends BaseEntity {
     /**
      * 部门上级
      */
-    @Column(nullable = false)
     private Long parentId;
 
     /**
      * 部门 名称
      */
-    @Column(nullable = false)
     private String deptName;
 
     /**
      * 部门 领导名称
      */
-    @Column(nullable = false)
     private String leader;
 
     /**
      * 部门 领导手机号
      */
-    @Column(nullable = false)
     private String leaderMobile;
 
     /**
      * 排序
      */
-    @Column(nullable = false)
     private Long sort;
 
     /**
@@ -70,7 +65,6 @@ public class SysDept extends BaseEntity {
     /**
      * 祖级列表
      */
-    @Column(nullable = false)
     private String ancestors;
 
 }

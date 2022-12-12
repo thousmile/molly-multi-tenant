@@ -4,9 +4,12 @@ import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.tenant.base.BaseEntity;
 import com.xaaef.molly.core.tenant.base.service.BaseService;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +33,11 @@ public class BaseServiceImpl<R extends JpaRepository<T, ID>, T extends BaseEntit
     @Autowired
     protected R baseReps;
 
+
     private JwtLoginUser getLoginUser() {
         return JwtSecurityUtils.getLoginUser();
     }
+
 
     /**
      * 插入时 填写
@@ -69,6 +74,30 @@ public class BaseServiceImpl<R extends JpaRepository<T, ID>, T extends BaseEntit
         return baseReps.findAll();
     }
 
+    @Override
+    public List<T> findAllById(Iterable<ID> ids) {
+        return baseReps.findAllById(ids);
+    }
+
+    @Override
+    public <S extends T> List<S> findAll(Example<S> example) {
+        return baseReps.findAll(example);
+    }
+
+    @Override
+    public <S extends T> List<S> findAll(Example<S> example, Sort sort) {
+        return baseReps.findAll(example, sort);
+    }
+
+    @Override
+    public Page<T> findPage(Pageable pageable) {
+        return baseReps.findAll(pageable);
+    }
+
+    @Override
+    public <S extends T> Page<S> findPage(Example<S> example, Pageable pageable) {
+        return baseReps.findAll(example, pageable);
+    }
 
     @Override
     public Optional<T> findById(ID id) {

@@ -19,7 +19,7 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "china_area")
+@Table(name = "comm_china_area")
 @Getter
 @Setter
 @Builder

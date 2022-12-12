@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 /**
  * <p>
@@ -19,7 +18,7 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "sys_user")
+@Table(name = "pms_user")
 @Getter
 @Setter
 @Builder
@@ -31,67 +30,56 @@ public class SysUser extends BaseEntity {
      * 用户唯一id
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
     /**
      * 头像
      */
-    @Column(nullable = false)
     private String avatar;
 
     /**
      * 用户名
      */
-    @Column(nullable = false, unique = true)
     private String username;
 
     /**
      * 手机号码
      */
-    @Column(nullable = false, unique = true)
     private String mobile;
 
     /**
      * 邮箱
      */
-    @Column(nullable = false, unique = true)
     private String email;
 
     /**
      * 昵称
      */
-    @Column(nullable = false)
     private String nickname;
 
     /**
      * 密码
      */
-    @Column(nullable = false)
     private String password;
 
     /**
      * 性别[ 0.女  1.男  2.未知]
      */
-    @Column(nullable = false)
     private Byte gender;
 
     /**
      * 是否管理员 0. 普通用户  1. 管理员
      */
-    @Column(nullable = false)
     private Byte adminFlag;
 
     /**
      * 状态 【0.禁用 1.正常】
      */
-    @Column(nullable = false)
     private Byte status;
 
     /**
      * 所属部门
      */
-    @Column(nullable = false)
     private Long deptId;
 
     /**

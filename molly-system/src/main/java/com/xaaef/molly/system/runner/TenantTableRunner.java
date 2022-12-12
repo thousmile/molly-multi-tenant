@@ -41,7 +41,8 @@ public class TenantTableRunner implements ApplicationRunner {
         // 如果是 table 模式，就无需创建表结构。
         var flag = props.getCreateTable() && props.getDbStyle() != DbStyle.Table;
         int pageSize = 100;
-        for (int i = 0; i < (count / pageSize); i++) {
+        long pageCount = (count / pageSize) + 1;
+        for (int i = 0; i < pageCount; i++) {
             var pageRequest = PageRequest.of(i, pageSize);
             tenantReps.findAllByIncludeTenantId(pageRequest).stream()
                     .filter(tenantId -> !StringUtils.equals(tenantId, props.getDefaultTenantId()))

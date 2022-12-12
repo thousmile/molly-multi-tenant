@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DatabaseMigrationSettings">
+  <component name="DatabaseMigrationSettings" liquibaseFileType="SQL">
     <database-infos>
       <database-info>
         <option name="enabled" value="true" />
