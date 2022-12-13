@@ -10,9 +10,30 @@ Authorization: Bearer {{tokenValue}}
   "name": "apple",
   "email": "apple@gmail.com",
   "linkman": "乔布斯",
-  "contactNumber": "1521332423",
+  "contactNumber": "15999999999",
   "areaCode": "123123221311",
-  "address": "美国硅谷"
+  "address": "美国硅谷",
+  "templateIds": [
+    1
+  ]
+}
+
+
+### 创建租户
+POST {{baseUrl}}/sys/tenant
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+{
+  "tenantId": "google",
+  "logo": "https://google.com/google.png",
+  "name": "google",
+  "email": "google@gmail.com",
+  "linkman": "拉里·佩奇",
+  "contactNumber": "1521332466",
+  "areaCode": "123123221311",
+  "address": "美国加利福尼亚州圣克拉拉县山景市"
 }
 
 
@@ -32,6 +53,16 @@ Authorization: Bearer {{tokenValue}}
   "areaCode": "123123221311",
   "address": "美国-加利福尼亚州-库比蒂诺"
 }
+
+
+
+### 获取租户列表
+GET {{baseUrl}}/sys/tenant/query
+Content-Type: application/json
+#x-tenant-id: {{tenantId}}
+x-tenant-id: apple
+Authorization: Bearer {{tokenValue}}
+
 
 
 ### 获取租户详情

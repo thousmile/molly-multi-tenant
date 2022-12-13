@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+
+    <!-- [ 权限 ] 角色表 -->
+    <changeSet id="1670814175-1" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `pms_role`
+            (
+                `role_id`          bigint(20) NOT NULL AUTO_INCREMENT COMMENT '角色id',
+                `role_name`        varchar(255) NOT NULL COMMENT '角色名',
+                `sort`             int(11) NOT NULL COMMENT '排序',
+                `description`      varchar(255) NOT NULL COMMENT '部门描述',
+                `create_time`      datetime     NOT NULL COMMENT '创建时间',
+                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
+                `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
+                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
+                PRIMARY KEY (`role_id`) USING BTREE
+            ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 权限 ] 角色表';
+        </sql>
+    </changeSet>
+
+
+    <!-- [ 权限 ] 角色和菜单权限表 -->
+    <changeSet id="1670814175-2" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `pms_role_menu`
+            (
+                `role_id` bigint(20) NOT NULL COMMENT '角色ID',
+                `menu_id` bigint(20) NOT NULL COMMENT '菜单ID'
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 权限 ] 角色和菜单权限表';
+        </sql>
+    </changeSet>
+
+
+    <!--[ 权限 ] 部门表-->
+    <changeSet id="1670814646-1" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `pms_dept`
+            (
+                `dept_id`          bigint(20) NOT NULL AUTO_INCREMENT COMMENT '部门 ID',
+                `parent_id`        bigint(20) NOT NULL DEFAULT '0' COMMENT '父主键',
+                `dept_name`        varchar(50)  NOT NULL COMMENT '部门名',
+                `leader`           varchar(50)  NOT NULL COMMENT '部门领导名称',
+                `leader_mobile`    varchar(50)  NOT NULL COMMENT '领导手机号码',
+                `sort`             tinyint(4) NOT NULL COMMENT '排序',
+                `description`      varchar(255) NOT NULL COMMENT '部门描述',
+                `ancestors`        varchar(255) NOT NULL COMMENT '祖先级别',
+                `create_time`      datetime     NOT NULL COMMENT '创建时间',
+                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
+                `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
+                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
+                PRIMARY KEY (`dept_id`) USING BTREE
+            ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 权限 ] 部门表';
+        </sql>
+    </changeSet>
+
+
+    <!-- [ 权限 ] 用户表 -->
+    <changeSet id="1670814338-1" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `pms_user`
+            (
+                `user_id`          bigint(20) NOT NULL COMMENT '用户ID',
+                `avatar`           varchar(255) NOT NULL COMMENT '头像',
+                `username`         varchar(50)  NOT NULL COMMENT '账号',
+                `mobile`           varchar(50)  NOT NULL COMMENT '手机号码',
+                `email`            varchar(50)  NOT NULL COMMENT '邮箱',
+                `nickname`         varchar(100) NOT NULL COMMENT '用户名称',
+                `password`         varchar(255) NOT NULL COMMENT '密码',
+                `gender`           tinyint(4) NOT NULL COMMENT '性别[ 0.女  1.男  2.未知]',
+                `dept_id`          bigint(20) NOT NULL COMMENT '部门ID',
+                `status`           tinyint(1) NOT NULL COMMENT '状态 【0.禁用 1.正常 2.锁定 】',
+                `admin_flag`       tinyint(1) NOT NULL COMMENT '0. 普通用户  1. 管理员',
+                `expired`          datetime DEFAULT NULL COMMENT '过期时间，如果为空，就是默认',
+                `create_time`      datetime     NOT NULL COMMENT '创建时间',
+                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
+                `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
+                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
+                PRIMARY KEY (`user_id`) USING BTREE,
+                UNIQUE KEY `UK_pms_user_mobile` (`mobile`) USING BTREE,
+                UNIQUE KEY `UK_pms_user_username` (`username`) USING BTREE,
+                UNIQUE KEY `UK_pms_user_email` (`email`) USING BTREE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 权限 ] 用户表';
+        </sql>
+    </changeSet>
+
+
+    <!-- [ 权限 ] 用户和角色表 -->
+    <changeSet id="1670814338-2" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `pms_user_role`
+            (
+                `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+                `role_id` bigint(20) NOT NULL COMMENT '角色ID'
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 权限 ] 用户和角色表';
+        </sql>
+    </changeSet>
+
+
+    <!-- [ 权限 ] 用户社交平台登录 -->
+    <changeSet id="1670814470-4" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `pms_user_social`
+            (
+                `social_id`        bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户社交ID',
+                `user_id`          bigint(20) NOT NULL COMMENT '用户唯一ID',
+                `open_id`          varchar(100) NOT NULL DEFAULT '' COMMENT '社交账号唯一ID',
+                `social_type`      varchar(20)  NOT NULL COMMENT 'we_chat. 微信  tencent_qq. 腾讯QQ',
+                `create_time`      datetime     NOT NULL COMMENT '创建时间',
+                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
+                `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
+                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
+                PRIMARY KEY (`social_id`) USING BTREE,
+                UNIQUE KEY `UK_pms_user_social_open_id` (`open_id`) USING BTREE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 权限 ] 用户社交平台登录';
+        </sql>
+    </changeSet>
+
+
+</databaseChangeLog>

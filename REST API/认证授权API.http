@@ -16,7 +16,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Fi
   "username": "admin",
   "password": "123456",
   "codeKey": "5jXzuwcoUzbtnHNh",
-  "codeText": "tj2yf"
+  "codeText": "ry2oo"
 }
 
 > {%
@@ -46,18 +46,3 @@ x-tenant-id: {{tenantId}}
 Authorization: Bearer {{tokenValue}}
 
 
-
-### 获取用户列表
-GET {{baseUrl}}/pms/user
-Content-Type: application/json
-x-tenant-id: {{tenantId}}
-#x-tenant-id: apple
-Authorization: Bearer {{tokenValue}}
-
-
-### 获取用户列表
-GET {{baseUrl}}/sys/config/query
-Content-Type: application/json
-x-tenant-id: {{tenantId}}
-# x-tenant-id: apple
-Authorization: Bearer {{tokenValue}}

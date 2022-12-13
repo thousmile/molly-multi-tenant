@@ -1,0 +1,24 @@
+### 获取全局配置列表
+GET {{baseUrl}}/sys/config/query
+Content-Type: application/json
+#x-tenant-id: {{tenantId}}
+x-tenant-id: google
+Authorization: Bearer {{tokenValue}}
+
+
+### 获取用户列表
+GET {{baseUrl}}/pms/user
+Content-Type: application/json
+#x-tenant-id: {{tenantId}}
+x-tenant-id: apple
+Authorization: Bearer {{tokenValue}}
+
+
+
+### 获取局配置数据
+GET {{baseUrl}}/pms/role
+Content-Type: application/json
+# x-tenant-id: {{tenantId}}
+x-tenant-id: google
+Authorization: Bearer {{tokenValue}}
+
