@@ -1,7 +1,7 @@
 package com.xaaef.molly.core.web;
 
 import com.xaaef.molly.common.util.JsonUtils;
-import com.xaaef.molly.core.tenant.MultiTenantTenantIdInterceptor;
+import com.xaaef.molly.core.tenant.TenantIdInterceptor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +19,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.xaaef.molly.core.auth.consts.JwtConst.LOGIN_URL;
+import static com.xaaef.molly.core.auth.consts.JwtConst.WHITE_LIST;
 
 
 @Slf4j
@@ -29,12 +31,18 @@ import java.util.TimeZone;
 @AllArgsConstructor
 public class CustomSpringWebConfig implements WebMvcConfigurer {
 
-    private final MultiTenantTenantIdInterceptor tenantIdInterceptor;
+    private final TenantIdInterceptor tenantIdInterceptor;
 
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tenantIdInterceptor);
+        // 登录接口，也需要，添加租户ID
+        var whiteList = Arrays.stream(WHITE_LIST)
+                .filter(s -> !LOGIN_URL.equals(s))
+                .collect(Collectors.toList());
+        registry.addInterceptor(tenantIdInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns(whiteList);
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 

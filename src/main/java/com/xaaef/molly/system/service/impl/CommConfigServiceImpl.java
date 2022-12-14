@@ -1,10 +1,11 @@
 package com.xaaef.molly.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.core.redis.RedisCacheUtils;
 import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.system.entity.CommConfig;
-import com.xaaef.molly.system.repository.CommConfigRepository;
+import com.xaaef.molly.system.mapper.CommConfigMapper;
 import com.xaaef.molly.system.service.CommConfigService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,13 +39,14 @@ import static com.xaaef.molly.core.auth.jwt.JwtSecurityUtils.isMasterUser;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class CommConfigServiceImpl extends BaseServiceImpl<CommConfigRepository, CommConfig, Long>
+public class CommConfigServiceImpl extends BaseServiceImpl<CommConfigMapper, CommConfig>
         implements CommConfigService {
 
     private final RedisCacheUtils cacheUtils;
 
+
     @Override
-    public CommConfig save(CommConfig entity) {
+    public boolean save(CommConfig entity) {
         if (!isMasterUser()) {
             throw new RuntimeException("非系统用户，不允许新增配置！");
         }
@@ -52,7 +55,7 @@ public class CommConfigServiceImpl extends BaseServiceImpl<CommConfigRepository,
 
 
     @Override
-    public CommConfig updateById(CommConfig entity) {
+    public boolean updateById(CommConfig entity) {
         if (!isMasterUser()) {
             throw new RuntimeException("非系统用户，不允许修改配置！");
         }
@@ -66,18 +69,17 @@ public class CommConfigServiceImpl extends BaseServiceImpl<CommConfigRepository,
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteById(Long id) {
+    public boolean removeById(Serializable id) {
         if (!isMasterUser()) {
             throw new RuntimeException("非系统用户，不允许删除配置！");
         }
-        var optional = super.findById(id);
-        if (optional.isEmpty()) {
+        var entity = super.getById(id);
+        if (entity != null) {
             throw new RuntimeException("配置不存在！");
         }
-        var entity = optional.get();
         String key = String.format("%s:%s", REDIS_CACHE_KEY, entity.getConfigKey());
         cacheUtils.deleteKey(key);
-        super.deleteById(entity.getConfigId());
+        return super.removeById(entity.getConfigId());
     }
 
 
@@ -87,10 +89,13 @@ public class CommConfigServiceImpl extends BaseServiceImpl<CommConfigRepository,
         if (cacheUtils.hasKey(key)) {
             return cacheUtils.getString(key);
         }
-        var configValue = baseReps.findOneByConfigKey(configKey);
-        if (StringUtils.isNotBlank(configValue)) {
-            cacheUtils.setString(key, configValue, Duration.ofHours(1));
-            return configValue;
+        var wrapper = new LambdaQueryWrapper<CommConfig>()
+                .select(CommConfig::getConfigValue)
+                .eq(CommConfig::getConfigKey, configKey);
+        var config = baseMapper.selectOne(wrapper);
+        if (config != null && StringUtils.isNotBlank(config.getConfigValue())) {
+            cacheUtils.setString(key, config.getConfigValue(), Duration.ofHours(1));
+            return config.getConfigValue();
         }
         return null;
     }
@@ -102,11 +107,13 @@ public class CommConfigServiceImpl extends BaseServiceImpl<CommConfigRepository,
         return JsonUtils.toListPojo(str, String.class);
     }
 
+
     @Override
     public Map<String, Object> findValueMapByKey(String configKey) {
         String str = findValueByKey(configKey);
         return JsonUtils.toMap(str, String.class, Object.class);
     }
+
 
     @Override
     public Integer findValueIntByKey(String configKey) {
@@ -114,11 +121,13 @@ public class CommConfigServiceImpl extends BaseServiceImpl<CommConfigRepository,
         return Integer.parseInt(str);
     }
 
+
     @Override
     public Double findValueDoubleByKey(String configKey) {
         String str = findValueByKey(configKey);
         return Double.parseDouble(str);
     }
+
 
     @Override
     public LocalDateTime findValueDateTimeByKey(String configKey) {
@@ -126,11 +135,13 @@ public class CommConfigServiceImpl extends BaseServiceImpl<CommConfigRepository,
         return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_PATTERN));
     }
 
+
     @Override
     public LocalTime findValueTimeByKey(String configKey) {
         String str = findValueByKey(configKey);
         return LocalTime.parse(str, DateTimeFormatter.ofPattern(DEFAULT_TIME_PATTERN));
     }
+
 
     @Override
     public LocalDate findValueDateByKey(String configKey) {

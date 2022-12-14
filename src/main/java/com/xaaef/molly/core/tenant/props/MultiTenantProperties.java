@@ -23,16 +23,29 @@ import org.springframework.stereotype.Component;
 public class MultiTenantProperties {
 
     /**
+     * 是否开启租户模式
+     */
+    private Boolean enable = true;
+
+    /**
+     * 是否开启租户模式
+     */
+    private Boolean enableProject = false;
+
+    /**
      * 数据库名称前缀
      */
     private String prefix = "molly_";
-
 
     /**
      * 默认租户ID
      */
     private String defaultTenantId = "master";
 
+    /**
+     * 默认 项目ID
+     */
+    private String defaultProjectId = "master";
 
     /**
      * 多租户的类型。

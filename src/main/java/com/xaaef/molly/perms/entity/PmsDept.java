@@ -1,7 +1,9 @@
 package com.xaaef.molly.perms.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.core.tenant.base.BaseEntity;
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -17,8 +19,7 @@ import lombok.experimental.Accessors;
  */
 
 
-@Entity
-@Table(name = "pms_dept")
+@TableName("pms_dept")
 @Getter
 @Setter
 @Builder
@@ -30,8 +31,7 @@ public class PmsDept extends BaseEntity {
     /**
      * 部门 ID
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableId(type = IdType.AUTO)
     private Long deptId;
 
     /**

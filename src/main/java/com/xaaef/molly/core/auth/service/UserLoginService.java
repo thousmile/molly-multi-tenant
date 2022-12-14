@@ -3,7 +3,7 @@ package com.xaaef.molly.core.auth.service;
 import com.xaaef.molly.core.auth.exception.JwtAuthException;
 import com.xaaef.molly.core.auth.jwt.JwtTokenValue;
 import com.xaaef.molly.core.auth.po.LoginFormPO;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.AuthenticationException;
 
 

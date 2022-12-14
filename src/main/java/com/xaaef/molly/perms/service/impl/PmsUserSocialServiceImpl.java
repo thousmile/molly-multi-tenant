@@ -2,7 +2,7 @@ package com.xaaef.molly.perms.service.impl;
 
 import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.perms.entity.PmsUserSocial;
-import com.xaaef.molly.perms.repository.PmsUserSocialRepository;
+import com.xaaef.molly.perms.mapper.PmsUserSocialMapper;
 import com.xaaef.molly.perms.service.PmsUserSocialService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class PmsUserSocialServiceImpl extends BaseServiceImpl<PmsUserSocialRepository, PmsUserSocial, Long>
+public class PmsUserSocialServiceImpl extends BaseServiceImpl<PmsUserSocialMapper, PmsUserSocial>
         implements PmsUserSocialService {
 
 

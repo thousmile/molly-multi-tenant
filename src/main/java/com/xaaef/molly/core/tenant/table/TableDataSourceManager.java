@@ -2,7 +2,7 @@ package com.xaaef.molly.core.tenant.table;
 
 import com.xaaef.molly.core.tenant.DatabaseManager;
 import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
-import jakarta.annotation.PostConstruct;
+import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

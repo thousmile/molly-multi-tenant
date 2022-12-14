@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xaaef.molly.system.mapper.SysTemplateMapper">
+
+    <resultMap id="BaseResultMap" type="SysTemplate">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="BIGINT"/>
+        <result property="lastUpdateTime" column="last_update_time" jdbcType="TIMESTAMP"/>
+        <result property="lastUpdateUser" column="last_update_user" jdbcType="BIGINT"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        `id`,`name`,`description`,
+        create_time,create_user,last_update_time,
+        last_update_user
+    </sql>
+
+
+    <insert id="insertByMenus">
+        insert into sys_template_menu (template_id, menu_id) values
+        <foreach collection='menus' item='item' index='index' separator=','>
+            (#{id},#{item})
+        </foreach>
+    </insert>
+
+
+    <resultMap id="BaseProxyResultMap" type="SysTemplateProxy">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="selectListByTenantIds" resultMap="BaseProxyResultMap">
+        SELECT tt.tenant_id, t.id, t.`name`, t.description
+        FROM sys_tenant_template AS tt
+        LEFT JOIN sys_template AS t ON tt.template_id = t.id
+        WHERE tt.tenant_id IN
+        <foreach collection='tenantIds' item='item' index='index' open='(' separator=',' close=')'>
+            #{item}
+        </foreach>
+    </select>
+
+
+</mapper>

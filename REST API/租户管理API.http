@@ -31,9 +31,12 @@ Authorization: Bearer {{tokenValue}}
   "name": "google",
   "email": "google@gmail.com",
   "linkman": "拉里·佩奇",
-  "contactNumber": "1521332466",
+  "contactNumber": "15213324660",
   "areaCode": "123123221311",
-  "address": "美国加利福尼亚州圣克拉拉县山景市"
+  "address": "美国加利福尼亚州圣克拉拉县山景市",
+  "templateIds": [
+    1
+  ]
 }
 
 
@@ -59,8 +62,8 @@ Authorization: Bearer {{tokenValue}}
 ### 获取租户列表
 GET {{baseUrl}}/sys/tenant/query
 Content-Type: application/json
-#x-tenant-id: {{tenantId}}
-x-tenant-id: apple
+x-tenant-id: {{tenantId}}
+#x-tenant-id: apple
 Authorization: Bearer {{tokenValue}}
 
 

@@ -2,7 +2,7 @@ package com.xaaef.molly.core.auth.po;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>

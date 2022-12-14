@@ -12,7 +12,7 @@ import com.xaaef.molly.system.entity.CommMenu;
  * @date 2022/12/9 15:33
  */
 
-public interface CommMenuService extends BaseService<CommMenu, Long> {
+public interface CommMenuService extends BaseService<CommMenu> {
 
 
 

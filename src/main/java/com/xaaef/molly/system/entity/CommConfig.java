@@ -1,8 +1,11 @@
 package com.xaaef.molly.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.core.tenant.base.BaseEntity;
-import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -15,11 +18,11 @@ import lombok.*;
  */
 
 
-@Entity
-@Table(name = "comm_config")
+@TableName("comm_config")
 @Getter
 @Setter
 @Builder
+@Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommConfig extends BaseEntity {
@@ -27,32 +30,27 @@ public class CommConfig extends BaseEntity {
     /**
      * 参数主键
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableId(type = IdType.AUTO)
     private Long configId;
 
     /**
      * 参数名称
      */
-    @Column(nullable = false)
     private String configName;
 
     /**
      * 参数键名
      */
-    @Column(nullable = false, unique = true)
     private String configKey;
 
     /**
      * 参数键值
      */
-    @Column(nullable = false)
     private String configValue;
 
     /**
      * 系统内置（1.是 0.否）
      */
-    @Column(nullable = false)
     private Byte configType;
 
 }

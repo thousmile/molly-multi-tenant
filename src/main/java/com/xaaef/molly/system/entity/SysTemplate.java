@@ -1,8 +1,14 @@
 package com.xaaef.molly.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.core.tenant.base.BaseEntity;
-import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
+
+import java.util.Set;
 
 
 /**
@@ -15,11 +21,11 @@ import lombok.*;
  * @date 2021/7/5 9:31
  */
 
-@Entity
-@Table(name = "sys_template")
+@TableName("sys_template")
 @Getter
 @Setter
 @Builder
+@Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class SysTemplate extends BaseEntity {
@@ -27,20 +33,23 @@ public class SysTemplate extends BaseEntity {
     /**
      * 模板 ID
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
      * 租户 logo
      */
-    @Column(nullable = false)
     private String name;
 
     /**
      * 租户名称
      */
-    @Column(nullable = false)
     private String description;
+
+    /**
+     * 菜单 Id
+     */
+    @TableField(exist = false)
+    private Set<Long> menuIds;
 
 }

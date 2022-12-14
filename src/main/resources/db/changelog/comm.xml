@@ -3,8 +3,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd"
-        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <!-- 中国行政区域 -->
     <changeSet id="1670812786-1" author="WangChenChen (generated)">
@@ -54,7 +53,7 @@
             ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 通用 ] 参数配置表';
 
             INSERT INTO `comm_config` (`create_time`, `create_user`, `last_update_time`, `last_update_user`,
-                                      `config_name`, `config_key`, `config_value`, `config_type`)
+                                       `config_name`, `config_key`, `config_value`, `config_type`)
             VALUES ('2021-07-14 11:48:16', 19980817, '2021-07-14 11:48:16', 19980817, '用户管理-账号初始密码',
                     'user_default_password', '123456', 1),
                    ('2021-07-16 14:28:41', 19980817, '2022-09-19 14:47:26', 19980817, '租户默认logo',

@@ -12,16 +12,26 @@ spring:
     time-zone: GMT+8
     default-property-inclusion: non_null
     locale: zh_CN
-
-
-  jpa:
-    hibernate:
-      ddl-auto: none
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
 
 
   liquibase:
     enabled: true
     change-log: ${multi.tenant.master-change-log}
+
+
+# mybatis-plus 自动配置
+mybatis-plus:
+  type-aliases-package: com.xaaef.molly.*.entity
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 
 # 多租户配置

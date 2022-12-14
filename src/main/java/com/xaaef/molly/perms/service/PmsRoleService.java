@@ -12,7 +12,7 @@ import com.xaaef.molly.perms.entity.PmsRole;
  * @date 2022/12/9 15:33
  */
 
-public interface PmsRoleService extends BaseService<PmsRole, Long> {
+public interface PmsRoleService extends BaseService<PmsRole> {
 
 
 }

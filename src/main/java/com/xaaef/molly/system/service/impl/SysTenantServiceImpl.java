@@ -2,24 +2,28 @@ package com.xaaef.molly.system.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.core.auth.enums.AdminFlag;
 import com.xaaef.molly.core.auth.enums.GenderType;
 import com.xaaef.molly.core.auth.enums.StatusEnum;
-import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.tenant.DatabaseManager;
 import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.core.tenant.service.MultiTenantManager;
+import com.xaaef.molly.core.tenant.util.TenantUtils;
 import com.xaaef.molly.perms.entity.PmsDept;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.entity.PmsUser;
-import com.xaaef.molly.perms.repository.PmsDeptRepository;
-import com.xaaef.molly.perms.repository.PmsRoleRepository;
-import com.xaaef.molly.perms.repository.PmsUserRepository;
+import com.xaaef.molly.perms.mapper.PmsDeptMapper;
+import com.xaaef.molly.perms.mapper.PmsRoleMapper;
+import com.xaaef.molly.perms.mapper.PmsUserMapper;
 import com.xaaef.molly.system.entity.SysTenant;
+import com.xaaef.molly.system.mapper.SysTenantMapper;
 import com.xaaef.molly.system.po.CreateTenantPO;
 import com.xaaef.molly.system.po.TenantCreatedSuccessVO;
-import com.xaaef.molly.system.repository.SysTenantRepository;
 import com.xaaef.molly.system.service.CommConfigService;
+import com.xaaef.molly.system.service.SysTemplateService;
 import com.xaaef.molly.system.service.SysTenantService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +31,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.xaaef.molly.common.consts.ConfigName.*;
 import static com.xaaef.molly.core.auth.jwt.JwtSecurityUtils.*;
@@ -46,8 +54,7 @@ import static com.xaaef.molly.core.auth.jwt.JwtSecurityUtils.*;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantRepository, SysTenant, String>
-        implements SysTenantService {
+public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTenant> implements SysTenantService {
 
     private final MultiTenantManager tenantManager;
 
@@ -55,11 +62,13 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantRepository, S
 
     private final CommConfigService configService;
 
-    private final PmsUserRepository userReps;
+    private final SysTemplateService templateService;
 
-    private final PmsDeptRepository deptReps;
+    private final PmsUserMapper userMapper;
 
-    private final PmsRoleRepository roleReps;
+    private final PmsDeptMapper deptMapper;
+
+    private final PmsRoleMapper roleMapper;
 
 
     /**
@@ -71,7 +80,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantRepository, S
 
 
     @Override
-    public SysTenant save(SysTenant entity) {
+    public boolean save(SysTenant entity) {
         if (!isMasterUser()) {
             throw new RuntimeException("只有系统用户，才能创建租户！");
         }
@@ -99,23 +108,57 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantRepository, S
     }
 
 
+    @Override
+    public IPage<SysTenant> pageKeywords(SearchPO params) {
+        IPage<SysTenant> result = super.pageKeywords(params,
+                SysTenant::getName,
+                SysTenant::getLinkman,
+                SysTenant::getAddress
+        );
+        var collect = result.getRecords().stream().map(SysTenant::getTenantId).collect(Collectors.toSet());
+        if (collect.isEmpty()) {
+            return result;
+        }
+        var templateMap = templateService.listByTenantIds(collect);
+        if (collect.isEmpty()) {
+            return result;
+        }
+        result.getRecords().forEach(t -> {
+            t.setTemplates(templateMap.get(t.getTenantId()));
+        });
+        return result;
+    }
+
+
+    @Override
+    public IPage<SysTenant> simplePageKeywords(SearchPO params) {
+        var wrapper = super.getKeywordsQueryWrapper2(
+                params,
+                SysTenant::getName,
+                SysTenant::getLinkman,
+                SysTenant::getAddress
+        );
+        wrapper.lambda().select(
+                SysTenant::getTenantId,
+                SysTenant::getLogo,
+                SysTenant::getName,
+                SysTenant::getLinkman
+        );
+        Page<SysTenant> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
+        return super.page(pageRequest, wrapper);
+    }
+
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public TenantCreatedSuccessVO create(CreateTenantPO po) {
         if (!isMasterUser()) {
             throw new RuntimeException("只有系统用户，才能创建租户！");
         }
+
         // 如果 管理员 用户名为空，就随机给一个
         if (StringUtils.isBlank(po.getAdminUsername())) {
-            // 随机生产一个 10 位的字符串。
-            do {
-                po.setAdminUsername(getUUIDSuffix());
-            }
-            while (userReps.existsByUsername(po.getAdminUsername()));
-        } else {
-            if (userReps.existsByUsername(po.getAdminUsername())) {
-                throw new RuntimeException(String.format("管理员的用户名 %s 已经存在了！", po.getAdminUsername()));
-            }
+            po.setAdminUsername(getUUIDSuffix());
         }
 
         // 管理员邮箱,如果不填写，默认使用商户邮箱
@@ -153,54 +196,60 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantRepository, S
         // 保存租户
         this.save(sysTenant);
 
-        var pmsDept = new PmsDept()
-                .setParentId(0L)
-                .setDeptName(po.getName())
-                .setLeader(po.getAdminNickname())
-                .setLeaderMobile(po.getAdminMobile())
-                .setSort(1L)
-                .setDescription(po.getName())
-                .setAncestors("0");
-        super.saveFill(pmsDept);
+        // 新创建的 租户 创建表结构
+        dataSourceManager.createTable(sysTenant.getTenantId());
 
-        // 保存部门
-        deptReps.saveAndFlush(pmsDept);
+        // 将 新创建的 租户ID 保存到 redis 中
+        tenantManager.addTenantId(sysTenant.getTenantId());
 
         // 租户默认角色名称
         String roleName = Objects.requireNonNull(configService.findValueByKey(TENANT_DEFAULT_ROLE_NAME), "管理员");
 
-        var pmsRole = new PmsRole()
-                .setRoleName(String.format("%s %s", po.getName(), roleName))
-                .setSort(1L);
-        pmsRole.setDescription(pmsRole.getRoleName());
-        super.saveFill(pmsRole);
-        // 保存角色
-        roleReps.saveAndFlush(pmsRole);
+        // 委托，新的租户id。初始化数据
+        this.delegate(sysTenant.getTenantId(), () -> {
 
-        var password = encryptPassword(po.getAdminPwd());
+            var pmsDept = new PmsDept()
+                    .setParentId(0L)
+                    .setDeptName(po.getName())
+                    .setLeader(po.getAdminNickname())
+                    .setLeaderMobile(po.getAdminMobile())
+                    .setSort(1L)
+                    .setDescription(po.getName())
+                    .setAncestors("0");
 
-        var pmsUser = new PmsUser()
-                .setUserId(10001L)
-                .setAvatar(sysTenant.getLogo())
-                .setUsername(po.getAdminUsername())
-                .setMobile(po.getAdminMobile())
-                .setEmail(po.getAdminEmail())
-                .setNickname(po.getAdminNickname())
-                .setPassword(password)
-                .setGender(GenderType.FEMALE.getCode())
-                .setAdminFlag(AdminFlag.YES.getCode())
-                .setStatus(StatusEnum.NORMAL.getCode())
-                .setDeptId(pmsDept.getDeptId());
-        super.saveFill(pmsUser);
-        userReps.saveAndFlush(pmsUser);
+            // 保存部门
+            deptMapper.insert(pmsDept);
 
-        // 保存关联
-        userReps.updateUserRoles(pmsUser.getUserId(), pmsRole.getRoleId());
+            var pmsRole = new PmsRole()
+                    .setRoleName(String.format("%s %s", po.getName(), roleName))
+                    .setSort(1L);
+            pmsRole.setDescription(pmsRole.getRoleName());
 
-        // 将 新创建的 租户ID 保存到 redis 中
-        tenantManager.addTenantId(sysTenant.getTenantId());
-        // 新创建的 租户 创建表结构
-        dataSourceManager.createTable(sysTenant.getTenantId());
+            // 保存角色
+            roleMapper.insert(pmsRole);
+
+            var password = encryptPassword(po.getAdminPwd());
+
+            var pmsUser = new PmsUser()
+                    .setUserId(10001L)
+                    .setAvatar(sysTenant.getLogo())
+                    .setUsername(po.getAdminUsername())
+                    .setMobile(po.getAdminMobile())
+                    .setEmail(po.getAdminEmail())
+                    .setNickname(po.getAdminNickname())
+                    .setPassword(password)
+                    .setGender(GenderType.FEMALE.getCode())
+                    .setAdminFlag(AdminFlag.YES.getCode())
+                    .setStatus(StatusEnum.NORMAL.getCode())
+                    .setDeptId(pmsDept.getDeptId());
+
+            userMapper.insert(pmsUser);
+
+            // 保存关联
+            userMapper.insertByRoles(pmsUser.getUserId(), Set.of(pmsRole.getRoleId()));
+
+            return true;
+        });
 
         return TenantCreatedSuccessVO.builder()
                 .adminMobile(po.getAdminMobile())
@@ -211,20 +260,35 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantRepository, S
     }
 
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean updateTemplate(String tenantId, Set<Long> templateIds) {
+        // 先删除拥有的，模板ID
+        baseMapper.deleteHaveTemplates(tenantId);
+        if (templateIds.isEmpty()) {
+            return true;
+        }
+        // 租户新增，权限模板
+        return baseMapper.insertByTemplates(tenantId, templateIds) > 0;
+    }
+
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteById(String id) {
+    public boolean removeById(Serializable id) {
+        var tenantId = String.valueOf(id);
         if (isMasterUser() && isAdminUser()) {
-            if (!existsById(id)) {
-                return;
+            if (!this.exist(SysTenant::getTenantId, tenantId)) {
+                return false;
             }
-            super.deleteById(id);
-            tenantManager.removeTenantId(id);
-            dataSourceManager.deleteTable(id);
+            var flag = super.removeById(tenantId);
+            tenantManager.removeTenantId(tenantId);
+            dataSourceManager.deleteTable(tenantId);
+            return flag;
         } else {
             throw new RuntimeException("非系统管理员，无法删除租户！");
         }
+
     }
 
 

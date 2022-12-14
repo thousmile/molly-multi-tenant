@@ -3,15 +3,15 @@ package com.xaaef.molly.core.tenant.service.impl;
 import com.xaaef.molly.core.redis.RedisCacheUtils;
 import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
 import com.xaaef.molly.core.tenant.service.MultiTenantManager;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-import static com.xaaef.molly.core.tenant.consts.MultiTenantName.X_TENANT_ID;
+import static com.xaaef.molly.core.tenant.consts.MbpConst.X_TENANT_ID;
 
 
 @Slf4j

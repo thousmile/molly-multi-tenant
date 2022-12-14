@@ -1,16 +1,18 @@
 package com.xaaef.molly.core.tenant.base.service;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.xaaef.molly.common.po.SearchPO;
+import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.tenant.base.BaseEntity;
 import com.xaaef.molly.core.tenant.util.TenantUtils;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -26,51 +28,134 @@ import java.util.function.Supplier;
  */
 
 
-public interface BaseService<T extends BaseEntity, ID> {
+public interface BaseService<T extends BaseEntity> extends IService<T> {
 
-    List<T> findAll();
-
-
-    List<T> findAllById(Iterable<ID> ids);
-
-
-    <S extends T> List<S> findAll(Example<S> example);
-
-
-    <S extends T> List<S> findAll(Example<S> example, Sort sort);
-
-
-    Page<T> findPage(Pageable pageable);
-
-
-    <S extends T> Page<S> findPage(Example<S> example, Pageable pageable);
-
-
-    Optional<T> findById(ID id);
+    /**
+     * 委托其他租户执行，此方法
+     * <p>
+     * 如: 新增租户的时候，客户端传入的 租户id是 : master
+     * 新增完成租户后，需要初始化一些，用户数据。就需要插入 新的租户ID 所属的库中了。
+     * 执行完成后，再将租户ID设置为，原始的 master
+     *
+     * @author WangChenChen
+     * @date 2022/12/14 16:33
+     */
+    default <S> S delegate(String targetTenant, Supplier<S> fun) {
+        var originalTenantId = TenantUtils.getTenantId();
+        TenantUtils.setTenantId(targetTenant);
+        var result = fun.get();
+        TenantUtils.setTenantId(originalTenantId);
+        return result;
+    }
 
 
-    T getById(ID id);
+    /**
+     * 插入时 填写
+     */
+    default <S extends BaseEntity> void saveFill(S entity) {
+        var userId = JwtSecurityUtils.getLoginUser().getUserId();
+        if (null == entity.getCreateUser() && userId != null) {
+            entity.setCreateUser(userId);
+        }
+        if (null == entity.getLastUpdateUser() && userId != null) {
+            entity.setLastUpdateUser(userId);
+        }
+        entity.setCreateTime(LocalDateTime.now());
+        entity.setLastUpdateTime(LocalDateTime.now());
+    }
 
 
-    boolean existsById(ID id);
+    /**
+     * 修改时 填写
+     */
+    default <S extends BaseEntity> void updateFill(S entity) {
+        var userId = JwtSecurityUtils.getLoginUser().getUserId();
+        entity.setCreateTime(null);
+        entity.setCreateUser(null);
+        if (userId != null) {
+            entity.setLastUpdateUser(userId);
+        }
+        entity.setLastUpdateTime(LocalDateTime.now());
+    }
 
 
-    T save(T entity);
+    /**
+     * 根据关键字查询
+     *
+     * @param params
+     * @param columns 实体类字段
+     * @author Wang Chen Chen
+     * @date 2021/8/25 9:41
+     */
+    IPage<T> pageKeywords(SearchPO params, SFunction<T, ?>... columns);
 
 
-    Collection<T> saveBatch(Collection<T> entity);
+    /**
+     * 根据关键字查询
+     *
+     * @param params
+     * @param columns 实体类字段
+     * @author Wang Chen Chen
+     * @date 2021/8/25 9:41
+     */
+    IPage<T> pageKeywords(SearchPO params, List<SFunction<T, ?>> columns);
 
 
-    T updateById(T entity);
+    /**
+     * 根据 条件 查询全部
+     *
+     * @author Wang Chen Chen
+     * @date 2021/8/25 9:41
+     */
+    List<T> listByEq(SFunction<T, ?> column, Object value);
 
 
-    Collection<T> updateByIdBatch(Collection<T> arr);
+    /**
+     * 根据 多条件 查询全部
+     *
+     * @param columns
+     * @author Wang Chen Chen
+     * @date 2021/8/25 9:41
+     */
+    List<T> listByEq(Map<SFunction<T, ?>, Object> columns);
 
 
-    void deleteById(ID id);
+    /**
+     * 根据 多条件 查询全部
+     *
+     * @param values
+     * @author Wang Chen Chen
+     * @date 2021/8/25 9:41
+     */
+    List<T> listByIn(SFunction<T, ?> column, Collection<?> values);
 
 
-    void deleteAllById(Collection<ID> ids);
+    /**
+     * 根据 字段 判断，是否存在
+     *
+     * @author Wang Chen Chen
+     * @date 2021/8/25 9:41
+     */
+    boolean exist(SFunction<T, ?> column, Object value);
+
+
+    /**
+     * 根据 字段 判断，数量
+     *
+     * @return
+     * @author Wang Chen Chen
+     * @date 2021/8/25 9:41
+     */
+    long count(SFunction<T, ?> column, Object value);
+
+
+    /**
+     * 根据 字段 判断，是否存在
+     *
+     * @author Wang Chen Chen
+     * @date 2021/8/25 9:41
+     */
+    T getOne(SFunction<T, ?> column, Object value);
 
 
 }

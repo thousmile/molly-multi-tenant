@@ -1,8 +1,11 @@
 package com.xaaef.molly.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.core.tenant.base.BaseEntity;
-import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -14,11 +17,11 @@ import lombok.*;
  * @date 2021/7/15 10:42
  */
 
-@Entity
-@Table(name = "comm_dict_type")
+@TableName("comm_dict_type")
 @Getter
 @Setter
 @Builder
+@Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommDictType extends BaseEntity {
@@ -26,26 +29,22 @@ public class CommDictType extends BaseEntity {
     /**
      * 字典类型 ID
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableId(type = IdType.AUTO)
     private Long typeId;
 
     /**
      * 字典类型名
      */
-    @Column(nullable = false)
     private String typeName;
 
     /**
      * 字典类型关键字
      */
-    @Column(unique = true, nullable = false)
     private String typeKey;
 
     /**
      * 字典描述
      */
-    @Column(nullable = false)
     private String description;
 
 }

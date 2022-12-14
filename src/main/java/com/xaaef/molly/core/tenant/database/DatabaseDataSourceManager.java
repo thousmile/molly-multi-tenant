@@ -2,7 +2,7 @@ package com.xaaef.molly.core.tenant.database;
 
 import com.xaaef.molly.core.tenant.DatabaseManager;
 import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
-import jakarta.annotation.PreDestroy;
+import javax.annotation.PreDestroy;
 import liquibase.Liquibase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;

@@ -13,7 +13,7 @@ import com.xaaef.molly.system.entity.CommDictType;
  * @date 2022/12/9 15:33
  */
 
-public interface CommDictTypeService extends BaseService<CommDictType, Long> {
+public interface CommDictTypeService extends BaseService<CommDictType> {
 
 
 

@@ -19,7 +19,7 @@ import java.util.Map;
  */
 
 
-public interface CommConfigService extends BaseService<CommConfig, Long> {
+public interface CommConfigService extends BaseService<CommConfig> {
 
 
     /**

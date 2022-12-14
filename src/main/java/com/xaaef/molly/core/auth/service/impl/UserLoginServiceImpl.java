@@ -15,7 +15,7 @@ import com.xaaef.molly.core.auth.service.UserLoginService;
 import com.xaaef.molly.core.log.service.LogStorageService;
 import com.xaaef.molly.core.tenant.service.MultiTenantManager;
 import com.xaaef.molly.core.tenant.util.TenantUtils;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

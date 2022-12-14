@@ -1,6 +1,6 @@
 package com.xaaef.molly.perms.po;
 
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 

@@ -1,10 +1,9 @@
 package com.xaaef.molly.system.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -18,11 +17,11 @@ import lombok.*;
  */
 
 
-@Entity
-@Table(name = "comm_china_area")
+@TableName("comm_china_area")
 @Getter
 @Setter
 @Builder
+@Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommChinaArea implements java.io.Serializable {
@@ -30,67 +29,57 @@ public class CommChinaArea implements java.io.Serializable {
     /**
      * 行政代码 [ 唯一 ]
      */
-    @Id
+    @TableId
     private Long areaCode;
 
     /**
      * 级别
      */
-    @Column(nullable = false)
     private Integer level;
 
     /**
      * 父级行政代码
      */
-    @Column(nullable = false)
     private Long parentCode;
 
     /**
      * 邮政编码
      */
-    @Column(nullable = false)
     private Integer zipCode;
 
     /**
      * 区号
      */
-    @Column(nullable = false, unique = true)
     private String cityCode;
 
     /**
      * 名称
      */
-    @Column(nullable = false)
     private String name;
 
     /**
      * 简称
      */
-    @Column(nullable = false)
     private String shortName;
 
     /**
      * 组合名
      */
-    @Column(nullable = false)
     private String mergerName;
 
     /**
      * 拼音
      */
-    @Column(nullable = false)
     private String pinyin;
 
     /**
      * 经度
      */
-    @Column(nullable = false)
     private Double lng;
 
     /**
      * 纬度
      */
-    @Column(nullable = false)
     private Double lat;
 
 }

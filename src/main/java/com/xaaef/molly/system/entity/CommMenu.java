@@ -1,10 +1,14 @@
 package com.xaaef.molly.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xaaef.molly.common.domain.TreeNode;
 import com.xaaef.molly.core.tenant.base.BaseEntity;
-import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -19,11 +23,11 @@ import java.util.List;
  * @date 2021/7/5 9:31
  */
 
-@Entity
-@Table(name = "comm_menu")
+@TableName("comm_menu")
 @Getter
 @Setter
 @Builder
+@Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommMenu extends BaseEntity implements TreeNode<CommMenu> {
@@ -31,26 +35,22 @@ public class CommMenu extends BaseEntity implements TreeNode<CommMenu> {
     /**
      * 菜单 ID
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableId(type = IdType.AUTO)
     private Long menuId;
 
     /**
      * 上级菜单
      */
-    @Column(nullable = false)
     private Long parentId;
 
     /**
      * 菜单 名称
      */
-    @Column(nullable = false)
     private String menuName;
 
     /**
      * 权限标识
      */
-    @Column(nullable = false)
     private String perms;
 
     /**
@@ -66,7 +66,6 @@ public class CommMenu extends BaseEntity implements TreeNode<CommMenu> {
     /**
      * 排序
      */
-    @Column(nullable = false)
     private Integer sort;
 
     /**
@@ -77,25 +76,22 @@ public class CommMenu extends BaseEntity implements TreeNode<CommMenu> {
     /**
      * 0.租户用户   1. 系统用户   2.全部
      */
-    @Column(nullable = false)
     private Byte target;
 
     /**
      * 菜单类型（0.菜单 1.按钮）
      */
-    @Column(nullable = false)
     private Byte menuType;
 
     /**
      * 菜单状态（1.显示 0.隐藏）
      */
-    @Column(nullable = false)
     private Byte visible;
 
     /**
      * 子节点
      */
-    @Transient
+    @TableField(exist = false)
     private List<CommMenu> children;
 
 

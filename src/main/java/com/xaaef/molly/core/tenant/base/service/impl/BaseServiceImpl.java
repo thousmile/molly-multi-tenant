@@ -1,25 +1,33 @@
 package com.xaaef.molly.core.tenant.base.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.tenant.base.BaseEntity;
 import com.xaaef.molly.core.tenant.base.service.BaseService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.transaction.annotation.Transactional;
+import org.apache.commons.lang3.StringUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+
+import static com.xaaef.molly.core.tenant.consts.MbpConst.CREATE_TIME;
 
 
 /**
  * <p>
+ * 基础
  * </p>
  *
  * @author Wang Chen Chen<932560435@qq.com>
@@ -27,138 +35,127 @@ import java.util.Optional;
  */
 
 @Slf4j
-public class BaseServiceImpl<R extends JpaRepository<T, ID>, T extends BaseEntity, ID> implements BaseService<T, ID> {
-
-    @Autowired
-    protected R baseReps;
-
-
-    /**
-     * 插入时 填写
-     */
-    protected <F extends BaseEntity> void saveFill(F entity) {
-        var userId = JwtSecurityUtils.getLoginUser().getUserId();
-        if (null == entity.getCreateUser() && userId != null) {
-            entity.setCreateUser(userId);
-        }
-        if (null == entity.getLastUpdateUser() && userId != null) {
-            entity.setLastUpdateUser(userId);
-        }
-        entity.setCreateTime(LocalDateTime.now());
-        entity.setLastUpdateTime(LocalDateTime.now());
-    }
-
-
-    /**
-     * 修改时 填写
-     */
-    protected void updateFill(T entity) {
-        var userId = JwtSecurityUtils.getLoginUser().getUserId();
-        entity.setCreateTime(null);
-        entity.setCreateUser(null);
-        if (userId != null) {
-            entity.setLastUpdateUser(userId);
-        }
-        entity.setLastUpdateTime(LocalDateTime.now());
-    }
+public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> extends ServiceImpl<M, T> implements BaseService<T> {
 
 
     @Override
-    public List<T> findAll() {
-        return baseReps.findAll();
-    }
-
-
-    @Override
-    public List<T> findAllById(Iterable<ID> ids) {
-        return baseReps.findAllById(ids);
-    }
-
-
-    @Override
-    public <S extends T> List<S> findAll(Example<S> example) {
-        return baseReps.findAll(example);
-    }
-
-
-    @Override
-    public <S extends T> List<S> findAll(Example<S> example, Sort sort) {
-        return baseReps.findAll(example, sort);
-    }
-
-
-    @Override
-    public Page<T> findPage(Pageable pageable) {
-        return baseReps.findAll(pageable);
-    }
-
-    @Override
-    public <S extends T> Page<S> findPage(Example<S> example, Pageable pageable) {
-        return baseReps.findAll(example, pageable);
-    }
-
-
-    @Override
-    public Optional<T> findById(ID id) {
-        return baseReps.findById(id);
-    }
-
-
-    @Override
-    public T getById(ID id) {
-        return findById(id).get();
-    }
-
-
-    @Override
-    public boolean existsById(ID id) {
-        return baseReps.existsById(id);
-    }
-
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public T save(T entity) {
+    public boolean save(T entity) {
         saveFill(entity);
-        return baseReps.save(entity);
+        return baseMapper.insert(entity) > 0;
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    public Collection<T> saveBatch(Collection<T> entity) {
-        entity.forEach(this::saveFill);
-        return baseReps.saveAll(entity);
+    public boolean saveBatch(Collection<T> entityList) {
+        entityList.forEach(this::saveFill);
+        return super.saveBatch(entityList);
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    public T updateById(T entity) {
+    public boolean updateById(T entity) {
         updateFill(entity);
-        return baseReps.saveAndFlush(entity);
+        return super.updateById(entity);
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    public Collection<T> updateByIdBatch(Collection<T> arr) {
-        arr.forEach(this::updateFill);
-        return baseReps.saveAllAndFlush(arr);
+    public boolean update(T entity, Wrapper<T> updateWrapper) {
+        updateFill(entity);
+        return super.update(entity, updateWrapper);
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteById(ID id) {
-        baseReps.deleteById(id);
+    public boolean updateBatchById(Collection<T> entityList) {
+        entityList.forEach(this::updateFill);
+        return super.updateBatchById(entityList);
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteAllById(Collection<ID> ids) {
-        baseReps.deleteAllById(ids);
+    public boolean exist(SFunction<T, ?> column, Object value) {
+        var wrapper = new LambdaQueryWrapper<T>().eq(column, value);
+        return super.count(wrapper) > 0;
+    }
+
+
+    @Override
+    public long count(SFunction<T, ?> column, Object value) {
+        var wrapper = new LambdaQueryWrapper<T>().eq(column, value);
+        return super.count(wrapper);
+    }
+
+
+    @Override
+    public T getOne(SFunction<T, ?> column, Object value) {
+        return super.getOne(new LambdaQueryWrapper<T>().eq(column, value));
+    }
+
+
+    protected QueryWrapper<T> getKeywordsQueryWrapper2(SearchPO params, SFunction<T, ?>... columns) {
+        return getKeywordsQueryWrapper(params, columns);
+    }
+
+
+    protected QueryWrapper<T> getKeywordsQueryWrapper(SearchPO params, SFunction<T, ?>[] columns) {
+        var wrapper = new QueryWrapper<T>();
+        // 开始时间是否为空
+        if (ObjectUtils.isNotEmpty(params.getStartDate())) {
+            // 如果结束时间是否为空
+            if (ObjectUtils.isNotEmpty(params.getEndDate())) {
+                wrapper.between(CREATE_TIME, params.getStartDate(), params.getEndDate());
+            } else {
+                wrapper.between(CREATE_TIME, params.getStartDate(), LocalDate.now());
+            }
+        }
+        if (StringUtils.isNotBlank(params.getKeywords()) && columns != null && columns.length > 0) {
+            for (int i = 0; i < columns.length; i++) {
+                if (i == 0)
+                    wrapper.lambda().like(columns[i], params.getKeywords());
+                else
+                    wrapper.lambda().or().like(columns[i], params.getKeywords());
+            }
+        }
+        return wrapper;
+    }
+
+
+    @Override
+    public IPage<T> pageKeywords(SearchPO params, SFunction<T, ?>... columns) {
+        Page<T> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
+        QueryWrapper<T> wrapper = getKeywordsQueryWrapper(params, columns);
+        return super.page(pageRequest, wrapper);
+    }
+
+
+    @Override
+    public IPage<T> pageKeywords(SearchPO params, List<SFunction<T, ?>> columns) {
+        Page<T> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
+        QueryWrapper<T> wrapper = getKeywordsQueryWrapper(params, columns.toArray(SFunction[]::new));
+        return super.page(pageRequest, wrapper);
+    }
+
+
+    @Override
+    public List<T> listByEq(SFunction<T, ?> column, Object value) {
+        return super.list(new LambdaQueryWrapper<T>().eq(column, value));
+    }
+
+
+    @Override
+    public List<T> listByEq(Map<SFunction<T, ?>, Object> columns) {
+        var wrapper = new LambdaQueryWrapper<T>();
+        columns.forEach(wrapper::eq);
+        return super.list(wrapper);
+    }
+
+
+    @Override
+    public List<T> listByIn(SFunction<T, ?> column, Collection<?> values) {
+        var wrapper = new LambdaQueryWrapper<T>()
+                .in(column, values);
+        return super.list(wrapper);
     }
 
 

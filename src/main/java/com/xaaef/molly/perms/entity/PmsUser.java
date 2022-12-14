@@ -1,7 +1,9 @@
 package com.xaaef.molly.perms.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.core.tenant.base.BaseEntity;
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -18,8 +20,7 @@ import java.time.LocalDateTime;
  */
 
 
-@Entity
-@Table(name = "pms_user")
+@TableName("pms_user")
 @Getter
 @Setter
 @Builder
@@ -31,7 +32,7 @@ public class PmsUser extends BaseEntity {
     /**
      * 用户唯一id
      */
-    @Id
+    @TableId(type = IdType.AUTO)
     private Long userId;
 
     /**

@@ -3,6 +3,7 @@ package com.xaaef.molly.perms.controller;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.perms.entity.PmsUser;
 import com.xaaef.molly.perms.service.PmsUserService;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/pms/user")
+@Api(tags = "[ 权限 ] 用户")
 @AllArgsConstructor
 public class PmsUserController {
 
@@ -29,9 +31,7 @@ public class PmsUserController {
 
     @GetMapping
     public JsonResult<List<PmsUser>> list() {
-        return JsonResult.success(
-                userService.findAll()
-        );
+        return JsonResult.success(userService.list());
     }
 
 }
