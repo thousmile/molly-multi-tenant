@@ -58,9 +58,16 @@ public class SysTemplateServiceImpl extends BaseServiceImpl<SysTemplateMapper, S
     @Override
     public boolean save(SysTemplate entity) {
         boolean result = super.save(entity);
-        if (entity.getMenuIds() != null && entity.getMenuIds().size() > 0) {
-            baseMapper.insertByMenus(entity.getId(), entity.getMenuIds());
-        }
+        updateMenus(entity.getId(), entity.getMenuIds());
+        return result;
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean updateById(SysTemplate entity) {
+        boolean result = super.updateById(entity);
+        updateMenus(entity.getId(), entity.getMenuIds());
         return result;
     }
 

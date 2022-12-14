@@ -42,14 +42,10 @@ import java.util.stream.Collectors;
 @Component
 public class LogStorageServiceAdapter implements LogStorageService {
 
-    @Value("${spring.application.name}")
-    private String appName;
-
 
     @Async
     @Override
     public void asyncLoginSave(JwtLoginUser loginUser, CustomRequestInfo request) {
-        assert request != null;
         var loginLog = new LoginLog();
         loginLog.setRequestUrl(request.getRequestUrl());
         loginLog.setRequestIp(request.getIp());
@@ -68,55 +64,9 @@ public class LogStorageServiceAdapter implements LogStorageService {
     }
 
 
-    @Async
+
     @Override
-    public void asyncOperateSave(JoinPoint joinPoint, Object resp, Throwable e, long timeCost, CustomRequestInfo request) {
-        assert request != null;
-        var signature = (MethodSignature) joinPoint.getSignature();
-        var annotation = signature.getMethod().getAnnotation(OperateLog.class);
-        var operLog = new OperLog();
-        // 全类名，方法名称
-        var methodName = String.format("%s.%s()", signature.getDeclaringTypeName(), signature.getName());
-        var userInfo = JwtSecurityUtils.getLoginUser();
-        operLog.setStatus(HttpStatus.OK.value());
-        if (e != null) {
-            operLog.setErrorLog(e.getMessage());
-            operLog.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
-        operLog.setTitle(annotation.title());
-        operLog.setOperType(annotation.type().name());
-        operLog.setServiceName(appName);
-        operLog.setMethod(methodName);
-        if (joinPoint.getArgs() != null) {
-            var params = new LinkedList<>();
-            for (Object arg : joinPoint.getArgs()) {
-                if (arg instanceof BindingResult
-                        || arg instanceof HttpServletRequest
-                        || arg instanceof HttpServletResponse
-                        || arg instanceof HttpHeaders
-                ) {
-                    log.debug("spring mvc 对象...");
-                } else {
-                    params.add(arg);
-                }
-            }
-            var methodArgs = params.stream()
-                    .map(r -> BeanUtil.beanToMap(r, false, true))
-                    .collect(Collectors.toList());
-            operLog.setMethodArgs(methodArgs);
-        }
-        operLog.setRequestUrl(request.getRequestUrl());
-        operLog.setRequestMethod(request.getMethod());
-        operLog.setRequestIp(request.getIp());
-        operLog.setAddress(request.getAddress());
-        Map<String, Object> responseResultMap = BeanUtil.beanToMap(resp, false, true);
-        operLog.setResponseResult(responseResultMap);
-        operLog.setTimeCost(timeCost);
-        operLog.setUserId(userInfo.getUserId());
-        operLog.setNickname(userInfo.getNickname());
-        operLog.setTenantId(userInfo.getTenantId());
-        operLog.setCreateTime(LocalDateTime.now());
-        operLog.setId(IdUtil.getSnowflakeNextId());
+    public void asyncOperateSave(OperLog operLog) {
         log.info("操作日志: \n{}", JsonUtils.toFormatJson(operLog));
     }
 

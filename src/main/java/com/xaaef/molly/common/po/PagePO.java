@@ -1,9 +1,12 @@
 package com.xaaef.molly.common.po;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -28,29 +31,25 @@ public class PagePO implements java.io.Serializable {
     /**
      * 当前第几页
      */
+    @ApiModelProperty(value = "当前第几页")
     private Integer pageIndex;
 
     /**
      * 每页多少条数据
      */
+    @ApiModelProperty(value = "每页多少条")
     private Integer pageSize;
 
     /**
      * 开始日期
      */
+    @ApiModelProperty(value = "开始日期")
     private LocalDate startDate;
 
     /**
      * 结束日期
      */
+    @ApiModelProperty(value = "结束日期")
     private LocalDate endDate;
-
-    public Integer getPageIndex() {
-        if (pageIndex == null || pageIndex <= 1) {
-            return 0;
-        } else {
-            return pageIndex - 1;
-        }
-    }
 
 }

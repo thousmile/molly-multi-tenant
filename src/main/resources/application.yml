@@ -31,7 +31,6 @@ mybatis-plus:
   type-aliases-package: com.xaaef.molly.*.entity
   configuration:
     default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 
 # 多租户配置

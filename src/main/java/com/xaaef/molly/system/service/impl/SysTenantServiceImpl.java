@@ -11,7 +11,6 @@ import com.xaaef.molly.core.auth.enums.StatusEnum;
 import com.xaaef.molly.core.tenant.DatabaseManager;
 import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.core.tenant.service.MultiTenantManager;
-import com.xaaef.molly.core.tenant.util.TenantUtils;
 import com.xaaef.molly.perms.entity.PmsDept;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.entity.PmsUser;
@@ -80,35 +79,6 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
 
 
     @Override
-    public boolean save(SysTenant entity) {
-        if (!isMasterUser()) {
-            throw new RuntimeException("只有系统用户，才能创建租户！");
-        }
-        if (StringUtils.isBlank(entity.getTenantId())) {
-            do {
-                entity.setTenantId(getUUIDSuffix());
-            }
-            while (tenantManager.existById(entity.getTenantId()));
-        } else {
-            if (tenantManager.existById(entity.getTenantId())) {
-                throw new RuntimeException(String.format("租户ID %s 已经存在了！", entity.getTenantId()));
-            }
-        }
-        if (entity.getExpired() == null) {
-            entity.setExpired(LocalDateTime.now().plusYears(10));
-        }
-        if (entity.getStatus() == null) {
-            entity.setStatus(StatusEnum.NORMAL.getCode());
-        }
-        if (entity.getLogo() == null) {
-            var defaultLogoPath = configService.findValueByKey(TENANT_DEFAULT_LOGO);
-            entity.setLogo(defaultLogoPath);
-        }
-        return super.save(entity);
-    }
-
-
-    @Override
     public IPage<SysTenant> pageKeywords(SearchPO params) {
         IPage<SysTenant> result = super.pageKeywords(params,
                 SysTenant::getName,
@@ -146,6 +116,38 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         );
         Page<SysTenant> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
         return super.page(pageRequest, wrapper);
+    }
+
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean save(SysTenant entity) {
+        if (!isMasterUser()) {
+            throw new RuntimeException("只有系统用户，才能创建租户！");
+        }
+        if (StringUtils.isBlank(entity.getTenantId())) {
+            do {
+                entity.setTenantId(getUUIDSuffix());
+            }
+            while (tenantManager.existById(entity.getTenantId()));
+        } else {
+            if (tenantManager.existById(entity.getTenantId())) {
+                throw new RuntimeException(String.format("租户ID %s 已经存在了！", entity.getTenantId()));
+            }
+        }
+        if (entity.getExpired() == null) {
+            entity.setExpired(LocalDateTime.now().plusYears(10));
+        }
+        if (entity.getStatus() == null) {
+            entity.setStatus(StatusEnum.NORMAL.getCode());
+        }
+        if (entity.getLogo() == null) {
+            var defaultLogoPath = configService.findValueByKey(TENANT_DEFAULT_LOGO);
+            entity.setLogo(defaultLogoPath);
+        }
+        updateTemplate(entity.getTenantId(), entity.getTemplateIds());
+        return super.save(entity);
     }
 
 
@@ -262,10 +264,24 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
 
     @Transactional(rollbackFor = Exception.class)
     @Override
+    public boolean updateById(SysTenant entity) {
+        if (!isMasterUser()) {
+            throw new RuntimeException("只有系统用户，才能修改租户！");
+        }
+        updateTemplate(entity.getTenantId(), entity.getTemplateIds());
+        return super.updateById(entity);
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
     public boolean updateTemplate(String tenantId, Set<Long> templateIds) {
+        if (!isMasterUser()) {
+            throw new RuntimeException("只有系统用户，才能修改租户权限！");
+        }
         // 先删除拥有的，模板ID
         baseMapper.deleteHaveTemplates(tenantId);
-        if (templateIds.isEmpty()) {
+        if (templateIds == null || templateIds.isEmpty()) {
             return true;
         }
         // 租户新增，权限模板
@@ -276,19 +292,17 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean removeById(Serializable id) {
-        var tenantId = String.valueOf(id);
-        if (isMasterUser() && isAdminUser()) {
-            if (!this.exist(SysTenant::getTenantId, tenantId)) {
-                return false;
-            }
-            var flag = super.removeById(tenantId);
-            tenantManager.removeTenantId(tenantId);
-            dataSourceManager.deleteTable(tenantId);
-            return flag;
-        } else {
+        if (!isMasterUser() && !isAdminUser()) {
             throw new RuntimeException("非系统管理员，无法删除租户！");
         }
-
+        var tenantId = String.valueOf(id);
+        if (!this.exist(SysTenant::getTenantId, tenantId)) {
+            return false;
+        }
+        var flag = super.removeById(tenantId);
+        tenantManager.removeTenantId(tenantId);
+        dataSourceManager.deleteTable(tenantId);
+        return flag;
     }
 
 

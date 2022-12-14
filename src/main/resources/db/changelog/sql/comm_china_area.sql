@@ -1,3 +1,22 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : 本地-MySQL-8.0
+ Source Server Type    : MySQL
+ Source Server Version : 80025
+ Source Host           : localhost:3306
+ Source Schema         : molly_master
+
+ Target Server Type    : MySQL
+ Target Server Version : 80025
+ File Encoding         : 65001
+
+ Date: 14/12/2022 20:58:27
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
 -- ----------------------------
 -- Records of comm_china_area
 -- ----------------------------
@@ -4163,3 +4182,4 @@ INSERT INTO `comm_china_area` VALUES (7214252931370, 3, 7213431434442, 000237, '
 INSERT INTO `comm_china_area` VALUES (7214257038265, 3, 7214088135938, 000200, '02', '仁爱区', '仁爱', '台湾省-基隆市-仁爱区', 'Ren’ai Dist.', 121.741526, 25.122105);
 INSERT INTO `comm_china_area` VALUES (7214287996814, 3, 7210805025214, 000652, '05', '水林乡', '水林', '台湾省-云林县-水林乡', 'Shuilin Township', 120.480738, 23.664943);
 
+SET FOREIGN_KEY_CHECKS = 1;

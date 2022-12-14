@@ -14,7 +14,7 @@ Authorization: Bearer {{tokenValue}}
   "areaCode": "123123221311",
   "address": "美国硅谷",
   "templateIds": [
-    1
+    10001
   ]
 }
 
@@ -35,7 +35,7 @@ Authorization: Bearer {{tokenValue}}
   "areaCode": "123123221311",
   "address": "美国加利福尼亚州圣克拉拉县山景市",
   "templateIds": [
-    1
+    10001
   ]
 }
 

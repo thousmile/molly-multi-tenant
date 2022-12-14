@@ -2,6 +2,7 @@ package com.xaaef.molly.core.log.service;
 
 import com.xaaef.molly.common.domain.CustomRequestInfo;
 import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
+import com.xaaef.molly.core.log.domain.OperLog;
 import org.aspectj.lang.JoinPoint;
 
 /**
@@ -34,9 +35,7 @@ public interface LogStorageService {
      * @author Wang Chen Chen
      * @date 2021/8/11 15:30
      */
-    void asyncOperateSave(JoinPoint joinPoint, Object resp,
-                          Throwable e, long timeCost,
-                          CustomRequestInfo request);
+    void asyncOperateSave(OperLog operLog);
 
 
 }

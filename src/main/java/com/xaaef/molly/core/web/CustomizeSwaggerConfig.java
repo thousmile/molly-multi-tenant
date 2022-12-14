@@ -5,6 +5,8 @@ import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
 import com.xaaef.molly.core.web.props.CustomizeSwaggerProperties;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType;
@@ -22,7 +24,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.*;
-import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
@@ -47,9 +48,10 @@ import static springfox.documentation.service.ParameterType.HEADER;
  * @date 2021/10/21 11:29
  */
 
+
+@Slf4j
 @Configuration
 @EnableSwagger2
-@AllArgsConstructor
 @Import(BeanValidatorPluginsConfiguration.class)
 @EnableConfigurationProperties(CustomizeSwaggerProperties.class)
 public class CustomizeSwaggerConfig {
@@ -58,19 +60,45 @@ public class CustomizeSwaggerConfig {
 
     private final JwtTokenProperties tokenProperties;
 
-    private final MultiTenantProperties tenantProperties;
+    public CustomizeSwaggerConfig(CustomizeSwaggerProperties props,
+                                  JwtTokenProperties tokenProperties) {
+        this.props = props;
+        this.tokenProperties = tokenProperties;
+    }
+
+    @Value("${server.port}")
+    private Integer serverPort;
+
 
     @Bean(value = "orderApi")
     @Order(value = 1)
     public Docket groupRestApi() {
+        log.info("http://localhost:{}/doc.html", serverPort);
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(groupApiInfo())
+                .groupName("REST API")
                 .select()
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
                 .build()
-                .securityContexts(List.of(securityContext()))
-                .securitySchemes(List.of(bearerTokenApiKey()));
+                .securityContexts(List.of(
+                        SecurityContext.builder()
+                                .securityReferences(
+                                        List.of(
+                                                new SecurityReference("BearerToken",
+                                                        new AuthorizationScope[]{
+                                                                new AuthorizationScope("global", "accessEverything")
+                                                        })
+                                        )
+                                )
+                                .forPaths(PathSelectors.regex("^(?!auth).*$"))
+                                .build()
+                ))
+                .securitySchemes(
+                        List.of(
+                                new ApiKey("jwt token", tokenProperties.getTokenHeader(), "header")
+                        )
+                );
     }
 
 
@@ -82,57 +110,6 @@ public class CustomizeSwaggerConfig {
                 .termsOfServiceUrl("https://xaaef.com")
                 .version(props.getVersion())
                 .build();
-    }
-
-
-    private ApiKey bearerTokenApiKey() {
-        return new ApiKey(tokenProperties.getTokenHeader(), tokenProperties.getTokenHeader(), "header");
-    }
-
-
-    private SecurityContext securityContext() {
-        return SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.regex("^(?!auth).*$"))
-                .build();
-    }
-
-
-    private List<RequestParameter> requestParameters() {
-        var list = new ArrayList<RequestParameter>();
-        if (tenantProperties.getEnable()) {
-            list.add(
-                    new RequestParameterBuilder()
-                            .name(X_TENANT_ID)
-                            .description("租户ID")
-                            .required(true)
-                            .in(HEADER)
-                            .query(b -> b.defaultValue(tenantProperties.getDefaultTenantId()).allowEmptyValue(false))
-                            .build()
-            );
-        }
-        if (tenantProperties.getEnableProject()) {
-            list.add(
-                    new RequestParameterBuilder()
-                            .name(X_PROJECT_ID)
-                            .description("项目ID")
-                            .required(true)
-                            .in(HEADER)
-                            .query(b -> b.defaultValue(tenantProperties.getDefaultProjectId()).allowEmptyValue(false))
-                            .build()
-            );
-        }
-        return list;
-    }
-
-
-    List<SecurityReference> defaultAuth() {
-        return List.of(
-                new SecurityReference("BearerToken",
-                        new AuthorizationScope[]{
-                                new AuthorizationScope("global", "accessEverything")
-                        })
-        );
     }
 
 
