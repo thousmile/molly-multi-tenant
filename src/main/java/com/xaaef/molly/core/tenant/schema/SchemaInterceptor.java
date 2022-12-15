@@ -13,7 +13,6 @@ import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statements;
 import net.sf.jsqlparser.util.TablesNamesFinder;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.springframework.stereotype.Component;
 
@@ -56,28 +55,27 @@ public class SchemaInterceptor extends JsqlParserSupport implements InnerInterce
             // 切换数据库
             switchSchema(conn, props.getDefaultTenantId());
         } else {
-            var tenantId = getCurrentTenantId();
             // 切换数据库
-            switchSchema(conn, tenantId);
+            switchSchema(conn, getCurrentTenantId());
         }
         InnerInterceptor.super.beforePrepare(sh, conn, transactionTimeout);
     }
 
 
     private String getCurrentTenantId() {
-        // 如果当前是 master 库，直接放过。任何用户都可以进入 master 库，读取一些公共的数据，如: 全局配置，权限菜单
-        if (StringUtils.equals(props.getDefaultTenantId(), TenantUtils.getTenantId())) {
-            return TenantUtils.getTenantId();
-        }
-        // 如果当前已经登录了用户。如果是登录接口，就可以操作任何数据库
+        // 判断当前此请求，是否已经登录。
         if (JwtSecurityUtils.isAuthenticated()) {
-            // 此用户是 master 库中的用户，就可以操作任何一个 租户的数据。
-            // 否则就只能操作 自己 的数据库
-            return StringUtils.equals(props.getDefaultTenantId(), JwtSecurityUtils.getTenantId()) ?
-                    TenantUtils.getTenantId() :
-                    JwtSecurityUtils.getTenantId();
+            // 判断登录的用户类型。
+            // 系统用户:  可以操作任何一个 租户 的数据库。
+            // 租户用户:  只能操作 所在租户 的数据库
+            if (JwtSecurityUtils.isMasterUser()) {
+                return TenantUtils.getTenantId();
+            } else {
+                return JwtSecurityUtils.getTenantId();
+            }
         }
-        return Optional.ofNullable(TenantUtils.getTenantId()).orElse(props.getDefaultTenantId());
+        return Optional.ofNullable(TenantUtils.getTenantId())
+                .orElse(props.getDefaultTenantId());
     }
 
 
@@ -113,6 +111,9 @@ public class SchemaInterceptor extends JsqlParserSupport implements InnerInterce
     }
 
 
+    /**
+     * 过滤 公共的表。
+     */
     private static boolean ignoreTable(Set<String> tableName) {
         return CollectionUtil.containsAny(TENANT_IGNORE_TABLES, tableName);
     }

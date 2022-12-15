@@ -1,5 +1,6 @@
 package com.xaaef.molly.perms.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -29,6 +30,7 @@ public class ResetPasswordVO {
      *
      * @date 2021/5/21 15:43
      */
+    @ApiModelProperty(value = "用户ID不能为空！")
     @NotNull(message = "用户ID不能为空!")
     private Long userId;
 
@@ -37,6 +39,7 @@ public class ResetPasswordVO {
      *
      * @date 2021/5/21 15:43
      */
+    @ApiModelProperty(value = "新密码长度要大于6位！")
     @NotNull(message = "新密码不能为空!")
     @Length(min = 5, message = "新密码长度要大于6位!")
     private String newPwd;

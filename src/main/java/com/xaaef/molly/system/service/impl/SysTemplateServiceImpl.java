@@ -1,14 +1,15 @@
 package com.xaaef.molly.system.service.impl;
 
+import cn.hutool.core.lang.tree.TreeNode;
+import cn.hutool.core.lang.tree.TreeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xaaef.molly.common.util.TreeNodeUtils;
 import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
-import com.xaaef.molly.system.entity.CommMenu;
+import com.xaaef.molly.system.entity.SysMenu;
 import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.entity.SysTemplateProxy;
 import com.xaaef.molly.system.enums.MenuTargetEnum;
 import com.xaaef.molly.system.mapper.SysTemplateMapper;
-import com.xaaef.molly.system.service.CommMenuService;
+import com.xaaef.molly.system.service.SysMenuService;
 import com.xaaef.molly.system.service.SysTemplateService;
 import com.xaaef.molly.system.vo.UpdateMenusVO;
 import lombok.AllArgsConstructor;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
 public class SysTemplateServiceImpl extends BaseServiceImpl<SysTemplateMapper, SysTemplate>
         implements SysTemplateService {
 
-    private final CommMenuService menuService;
+    private final SysMenuService menuService;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -77,21 +78,16 @@ public class SysTemplateServiceImpl extends BaseServiceImpl<SysTemplateMapper, S
         // 当前模板，已经拥有的菜单ID
         var haveHashSet = baseMapper.selectByTemplateId(templateId);
 
-        var wrapper = new LambdaQueryWrapper<CommMenu>();
-        wrapper.select(CommMenu::getMenuId, CommMenu::getParentId, CommMenu::getMenuName, CommMenu::getSort)
-                .ne(CommMenu::getTarget, MenuTargetEnum.SYSTEM.getCode());
+        // 获取 非系统菜单
+        var wrapper = new LambdaQueryWrapper<SysMenu>();
+        wrapper.select(SysMenu::getMenuId, SysMenu::getParentId, SysMenu::getMenuName, SysMenu::getSort)
+                .ne(SysMenu::getTarget, MenuTargetEnum.SYSTEM.getCode());
 
-        // 获取全部的菜单
-        var all = menuService.list(wrapper)
-                .stream().map(r -> new UpdateMenusVO.MenuIdName(
-                        r.getMenuId(),
-                        r.getParentId(),
-                        r.getSort(),
-                        r.getMenuName(), null)
-                )
+        var menus = menuService.list(wrapper)
+                .stream().map(r -> new TreeNode<>(r.getMenuId(), r.getParentId(), r.getMenuName(), r.getSort()))
                 .collect(Collectors.toList());
 
-        var roots = TreeNodeUtils.findRoots(all);
+        var roots = TreeUtil.build(menus, 0L);
         return UpdateMenusVO.builder().have(haveHashSet).all(roots).build();
     }
 

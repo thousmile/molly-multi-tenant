@@ -5,12 +5,24 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <include file="db/changelog/comm.xml"/>
 
     <include file="db/changelog/sys.xml"/>
 
+
     <include file="db/changelog/pms.xml"/>
 
-    <include file="db/changelog/pms_init.xml"/>
+
+
+    <!-- 初始化 租户，权限模板 -->
+    <changeSet id="1671072286-1" author="WangChenChen (generated)">
+        <sqlFile path="db/changelog/sql/tenant_init.sql"/>
+    </changeSet>
+
+
+    <!-- 初始化 用户，角色，部门， -->
+    <changeSet id="1671072305-1" author="WangChenChen (generated)">
+        <sqlFile path="db/changelog/sql/pms_init.sql"/>
+    </changeSet>
+
 
 </databaseChangeLog>

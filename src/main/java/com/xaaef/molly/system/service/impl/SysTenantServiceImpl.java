@@ -11,6 +11,7 @@ import com.xaaef.molly.core.auth.enums.StatusEnum;
 import com.xaaef.molly.core.tenant.DatabaseManager;
 import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.core.tenant.service.MultiTenantManager;
+import com.xaaef.molly.core.tenant.util.TenantUtils;
 import com.xaaef.molly.perms.entity.PmsDept;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.entity.PmsUser;
@@ -21,7 +22,7 @@ import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
 import com.xaaef.molly.system.po.CreateTenantPO;
 import com.xaaef.molly.system.po.TenantCreatedSuccessVO;
-import com.xaaef.molly.system.service.CommConfigService;
+import com.xaaef.molly.system.service.SysConfigService;
 import com.xaaef.molly.system.service.SysTemplateService;
 import com.xaaef.molly.system.service.SysTenantService;
 import lombok.AllArgsConstructor;
@@ -33,8 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.common.consts.ConfigName.*;
@@ -59,7 +60,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
 
     private final DatabaseManager dataSourceManager;
 
-    private final CommConfigService configService;
+    private final SysConfigService configService;
 
     private final SysTemplateService templateService;
 
@@ -119,7 +120,6 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     }
 
 
-
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean save(SysTenant entity) {
@@ -143,7 +143,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
             entity.setStatus(StatusEnum.NORMAL.getCode());
         }
         if (entity.getLogo() == null) {
-            var defaultLogoPath = configService.findValueByKey(TENANT_DEFAULT_LOGO);
+            var defaultLogoPath = Optional.ofNullable(configService.getValueByKey(TENANT_DEFAULT_LOGO))
+                    .orElse("https://images.xaaef.com/molly_master_logo.png");
             entity.setLogo(defaultLogoPath);
         }
         updateTemplate(entity.getTenantId(), entity.getTemplateIds());
@@ -180,7 +181,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
 
         // 默认密码
         if (StringUtils.isBlank(po.getAdminPwd())) {
-            var password = configService.findValueByKey(USER_DEFAULT_PASSWORD);
+            var password = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD)).orElse("123456");
             po.setAdminPwd(password);
         }
 
@@ -205,7 +206,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         tenantManager.addTenantId(sysTenant.getTenantId());
 
         // 租户默认角色名称
-        String roleName = Objects.requireNonNull(configService.findValueByKey(TENANT_DEFAULT_ROLE_NAME), "管理员");
+        String roleName = Optional.ofNullable(configService.getValueByKey(TENANT_DEFAULT_ROLE_NAME)).orElse("管理员");
 
         // 委托，新的租户id。初始化数据
         this.delegate(sysTenant.getTenantId(), () -> {

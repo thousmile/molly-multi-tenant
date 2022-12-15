@@ -1,5 +1,6 @@
 package com.xaaef.molly.perms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class PmsRoleProxy implements java.io.Serializable {
     /**
      * 用户id
      */
+    @JsonIgnore
     private Long userId;
 
     /**

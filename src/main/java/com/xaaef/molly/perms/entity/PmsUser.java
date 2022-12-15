@@ -1,6 +1,7 @@
 package com.xaaef.molly.perms.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.core.tenant.base.BaseEntity;
@@ -8,6 +9,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * <p>
@@ -90,5 +92,16 @@ public class PmsUser extends BaseEntity {
      */
     private LocalDateTime expired;
 
+    /**
+     * 部门信息
+     */
+    @TableField(exist = false)
+    private PmsDept dept;
+
+    /**
+     * 角色名称，列表
+     */
+    @TableField(exist = false)
+    private Set<PmsRole> roles;
 
 }

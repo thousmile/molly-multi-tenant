@@ -5,8 +5,8 @@ import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.core.log.LogType;
 import com.xaaef.molly.core.log.OperateLog;
-import com.xaaef.molly.system.entity.CommDictType;
-import com.xaaef.molly.system.service.CommDictTypeService;
+import com.xaaef.molly.system.entity.SysDictType;
+import com.xaaef.molly.system.service.SysDictTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -33,30 +33,30 @@ import java.util.List;
 public class SysDictTypeController {
 
 
-    private CommDictTypeService baseService;
+    private SysDictTypeService baseService;
 
 
     @ApiOperation(value = "单个查询", notes = "根据Id查询")
     @GetMapping("/{id}")
-    public JsonResult<CommDictType> findById(@PathVariable("id") Long id) {
+    public JsonResult<SysDictType> findById(@PathVariable("id") Long id) {
         return JsonResult.success(baseService.getById(id));
     }
 
 
     @ApiOperation(value = "查询所有", notes = "查询所有")
     @GetMapping("/list")
-    public JsonResult<List<CommDictType>> list() {
+    public JsonResult<List<SysDictType>> list() {
         return JsonResult.success(baseService.list());
     }
 
 
     @ApiOperation(value = "分页", notes = "分页 查询所有")
     @GetMapping("/query")
-    public JsonResult<Pagination<CommDictType>> pageQuery(SearchPO params) {
+    public JsonResult<Pagination<SysDictType>> pageQuery(SearchPO params) {
         var page = baseService.pageKeywords(
                 params,
-                CommDictType::getTypeName,
-                CommDictType::getDescription
+                SysDictType::getTypeName,
+                SysDictType::getDescription
         );
         return JsonResult.success(page.getTotal(), page.getRecords());
     }
@@ -65,7 +65,7 @@ public class SysDictTypeController {
     @ApiOperation(value = "新增", notes = "不需要添加id")
     @OperateLog(title = "[字典类型]新增", type = LogType.INSERT)
     @PostMapping()
-    public JsonResult<CommDictType> create(@RequestBody CommDictType entity) {
+    public JsonResult<SysDictType> create(@RequestBody SysDictType entity) {
         baseService.save(entity);
         return JsonResult.success(entity);
     }
@@ -74,7 +74,7 @@ public class SysDictTypeController {
     @ApiOperation(value = "修改", notes = "修改必须要id")
     @OperateLog(title = "[字典类型]修改", type = LogType.UPDATE)
     @PutMapping()
-    public JsonResult<Boolean> update(@RequestBody CommDictType entity) {
+    public JsonResult<Boolean> update(@RequestBody SysDictType entity) {
         var flag = baseService.updateById(entity);
         return JsonResult.success(flag);
     }

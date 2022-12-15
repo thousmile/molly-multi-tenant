@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xaaef.molly.perms.entity.PmsDept;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,23 @@ import java.util.Set;
  */
 
 public interface PmsDeptMapper extends BaseMapper<PmsDept> {
+
+    // 根据部门ID，查询 子孙 部门
+    @Select("select * from pms_dept where find_in_set(#{deptId}, ancestors)")
+    List<PmsDept> selectChildDept(Long deptId);
+
+
+    // 根据部门ID，查询 子孙 部门id
+    @Select("select dept_id from pms_dept where find_in_set(#{deptId}, ancestors)")
+    Set<Long> selectChildDeptId(Long deptId);
+
+
+    /**
+     * 修改子元素关系
+     *
+     * @param depts 子元素
+     */
+    int updateChildDept(@Param("depts") List<PmsDept> depts);
 
 
     /**
@@ -38,13 +56,6 @@ public interface PmsDeptMapper extends BaseMapper<PmsDept> {
     int insertByMenus(@Param("id") Long id,
                       @Param("menus") Set<Long> menus);
 
-
-    /**
-     * 修改子元素关系
-     *
-     * @param depts 子元素
-     */
-    int updateChildDept(@Param("depts") List<PmsDept> depts);
 
 
 }

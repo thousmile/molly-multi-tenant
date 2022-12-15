@@ -11,18 +11,26 @@ import com.xaaef.molly.core.auth.po.LoginFormPO;
 import com.xaaef.molly.core.auth.service.JwtTokenService;
 import com.xaaef.molly.core.auth.service.LineCaptchaService;
 import com.xaaef.molly.core.auth.service.UserLoginService;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.security.authentication.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -42,6 +50,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
 @Slf4j
+@Api(tags = "[ 认证 ] 用户认证")
 @RestController
 @AllArgsConstructor
 public class AuthController {
@@ -58,6 +67,7 @@ public class AuthController {
      * @author WangChenChen
      * @date 2022/12/11 8:58
      */
+    @ApiOperation(value = "[json]用户登录", notes = "RequestBody Json 方式登录")
     @PostMapping(value = LOGIN_URL, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public JsonResult<JwtTokenValue> login(@RequestBody @Validated LoginFormPO user,
                                            HttpServletRequest request, BindingResult br) {
@@ -75,6 +85,7 @@ public class AuthController {
      * @author WangChenChen
      * @date 2022/12/11 8:58
      */
+    @ApiOperation(value = "[FormData]用户登录", notes = "Form Data 用户登录")
     @PostMapping(value = LOGIN_URL, consumes = APPLICATION_FORM_URLENCODED_VALUE, produces = APPLICATION_FORM_URLENCODED_VALUE)
     public JsonResult<JwtTokenValue> login2(@Validated LoginFormPO user,
                                             HttpServletRequest request, BindingResult br) {
@@ -116,6 +127,7 @@ public class AuthController {
      * @author WangChenChen
      * @date 2022/12/11 8:58
      */
+    @ApiOperation(value = "退出登录", notes = "退出登录")
     @PostMapping(LOGOUT_URL)
     public JsonResult<String> logout() {
         jwtTokenService.logout();
@@ -129,6 +141,7 @@ public class AuthController {
      * @author WangChenChen
      * @date 2022/12/11 8:58
      */
+    @ApiOperation(value = "登录的用户信息", notes = "获取登录的用户信息")
     @GetMapping(LOGIN_USER_URL)
     public JsonResult<JwtLoginUser> loginUser() {
         var auth = JwtSecurityUtils.getLoginUser();
@@ -143,6 +156,7 @@ public class AuthController {
      * @author WangChenChen
      * @date 2022/12/11 8:58
      */
+    @ApiOperation(value = "刷新 token", notes = "刷新 token")
     @GetMapping(REFRESH_URL)
     public JsonResult<JwtTokenValue> refresh() {
         var refresh = jwtTokenService.refresh();
@@ -156,9 +170,10 @@ public class AuthController {
      * @author WangChenChen
      * @date 2022/12/11 8:58
      */
+    @ApiOperation(value = "获取验证码", notes = "获取验证码")
     @GetMapping(CAPTCHA_CODES_URL)
     public void imageVerifyCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String codeKey = request.getParameter("codeKey");
+        var codeKey = request.getParameter("codeKey");
         if (StringUtils.isBlank(codeKey) || StringUtils.length(codeKey) < 16) {
             ServletUtils.renderError(response, JsonResult.fail("参数codeKey 必须填写！并且长度要大于16位字符"));
             return;

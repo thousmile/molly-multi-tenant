@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xaaef.molly.system.mapper.SysMenuMapper">
+
+    <resultMap id="BaseResultMap" type="SysMenu">
+        <id property="menuId" column="menu_id" jdbcType="INTEGER"/>
+        <result property="menuName" column="menu_name" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="perms" column="perms" jdbcType="VARCHAR"/>
+        <result property="component" column="component" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="sort" column="sort" jdbcType="TINYINT"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="menuType" column="menu_type" jdbcType="TINYINT"/>
+        <result property="visible" column="visible" jdbcType="TINYINT"/>
+        <result property="target" column="target" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUser" column="create_user" jdbcType="BIGINT"/>
+        <result property="lastUpdateTime" column="last_update_time" jdbcType="TIMESTAMP"/>
+        <result property="lastUpdateUser" column="last_update_user" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        menu_id,menu_name,parent_id,
+        perms,component,icon,sort,
+        `path`,menu_type,`visible`,
+        target,create_time,create_user,
+        last_update_time,last_update_user
+    </sql>
+
+
+    <!--    查询租户所有权限-->
+    <select id="selectByTenantId" resultMap="BaseResultMap">
+        SELECT m.*
+        FROM sys_menu AS m
+                 LEFT JOIN sys_template_menu AS tm ON tm.menu_id = m.menu_id
+                 LEFT JOIN sys_tenant_template AS tt ON tt.template_id = tm.template_id
+        WHERE tt.tenant_id = #{tenantId}
+    </select>
+
+
+    <!--    查询租户所有权限-->
+    <select id="selectPermsByTenantId" resultType="java.lang.String">
+        SELECT m.perms
+        FROM sys_menu AS m
+                 LEFT JOIN sys_template_menu AS tm ON tm.menu_id = m.menu_id
+                 LEFT JOIN sys_tenant_template AS tt ON tt.template_id = tm.template_id
+        WHERE tt.tenant_id = #{tenantId}
+    </select>
+
+
+</mapper>

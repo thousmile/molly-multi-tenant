@@ -34,5 +34,4 @@ public interface SysTemplateMapper extends BaseMapper<SysTemplate> {
     // 根据 租户id 获取关联的模板
     List<SysTemplateProxy> selectListByTenantIds(@Param("tenantIds") Set<String> tenantIds);
 
-
 }

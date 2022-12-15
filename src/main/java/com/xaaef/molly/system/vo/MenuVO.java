@@ -1,7 +1,6 @@
 package com.xaaef.molly.system.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.xaaef.molly.common.domain.TreeNode;
 import lombok.*;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuVO implements java.io.Serializable, TreeNode<MenuVO> {
+public class MenuVO implements java.io.Serializable {
 
     /**
      * 菜单 ID

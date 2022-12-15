@@ -1,5 +1,6 @@
 package com.xaaef.molly.system.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,11 +27,13 @@ public class ButtonVO implements java.io.Serializable {
     /**
      * 标识符
      */
+    @ApiModelProperty(value = "按钮权限 标识符！")
     private String perms;
 
     /**
      * 标题
      */
+    @ApiModelProperty(value = "按钮权限 标题！")
     private String title;
 
 }

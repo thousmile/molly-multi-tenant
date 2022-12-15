@@ -6,7 +6,7 @@ spring:
   profiles:
     active: dev
   application:
-    name: molly-admin
+    name: molly-multi-tenant
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8

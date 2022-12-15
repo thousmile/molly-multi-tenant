@@ -5,7 +5,9 @@ import com.xaaef.molly.core.auth.enums.AdminFlag;
 import com.xaaef.molly.core.auth.enums.GrantType;
 import com.xaaef.molly.core.auth.enums.StatusEnum;
 import com.xaaef.molly.core.auth.enums.UserType;
+import com.xaaef.molly.perms.entity.PmsRoleProxy;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
@@ -22,6 +24,9 @@ import java.util.Collection;
  */
 
 @ToString
+@Getter
+@Setter
+@Accessors(chain = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -87,21 +92,15 @@ public class JwtLoginUser implements UserDetails {
      */
     private LocalDateTime loginTime;
 
+    /**
+     * 角色列表
+     */
+    private Collection<PmsRoleProxy> roles;
 
     /**
      * 权限列表
      */
     private Collection<StringGrantedAuthority> authorities;
-
-
-    @Override
-    public Collection<StringGrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Collection<StringGrantedAuthority> authorities) {
-        this.authorities = authorities;
-    }
 
     @JsonIgnore
     @Override
@@ -144,94 +143,4 @@ public class JwtLoginUser implements UserDetails {
     }
 
 
-    public String getLoginId() {
-        return loginId;
-    }
-
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public StatusEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusEnum status) {
-        this.status = status;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public LocalDateTime getLoginTime() {
-        return loginTime;
-    }
-
-    public void setLoginTime(LocalDateTime loginTime) {
-        this.loginTime = loginTime;
-    }
-
-
-    public GrantType getGrantType() {
-        return grantType;
-    }
-
-    public void setGrantType(GrantType grantType) {
-        this.grantType = grantType;
-    }
-
-    public AdminFlag getAdminFlag() {
-        return adminFlag;
-    }
-
-    public void setAdminFlag(AdminFlag adminFlag) {
-        this.adminFlag = adminFlag;
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
-    }
 }

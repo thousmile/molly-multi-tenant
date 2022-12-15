@@ -1,6 +1,7 @@
 package com.xaaef.molly.system.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,16 +26,19 @@ public class DictDataVO implements java.io.Serializable {
     /**
      * 字典排序
      */
+    @ApiModelProperty(value = "字典排序！")
     private Integer dictSort;
 
     /**
      * 字典标签
      */
+    @ApiModelProperty(value = "字典标签！")
     private String dictLabel;
 
     /**
      * 字典键值
      */
+    @ApiModelProperty(value = "字典键值！")
     private Object dictValue;
 
     /**
@@ -46,6 +50,7 @@ public class DictDataVO implements java.io.Serializable {
     /**
      * 是否默认（1.是 0.否）
      */
+    @ApiModelProperty(value = "是否默认！")
     private Boolean isDefault;
 
 }

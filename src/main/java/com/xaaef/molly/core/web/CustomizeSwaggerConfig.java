@@ -1,5 +1,6 @@
 package com.xaaef.molly.core.web;
 
+import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import com.xaaef.molly.core.auth.jwt.JwtTokenProperties;
 import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
 import com.xaaef.molly.core.web.props.CustomizeSwaggerProperties;
@@ -15,12 +16,14 @@ import org.springframework.boot.actuate.endpoint.web.*;
 import org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
+import org.springframework.security.web.util.UrlUtils;
 import org.springframework.util.StringUtils;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.*;
@@ -52,6 +55,7 @@ import static springfox.documentation.service.ParameterType.HEADER;
 @Slf4j
 @Configuration
 @EnableSwagger2
+@AllArgsConstructor
 @Import(BeanValidatorPluginsConfiguration.class)
 @EnableConfigurationProperties(CustomizeSwaggerProperties.class)
 public class CustomizeSwaggerConfig {
@@ -60,20 +64,24 @@ public class CustomizeSwaggerConfig {
 
     private final JwtTokenProperties tokenProperties;
 
-    public CustomizeSwaggerConfig(CustomizeSwaggerProperties props,
-                                  JwtTokenProperties tokenProperties) {
-        this.props = props;
-        this.tokenProperties = tokenProperties;
-    }
-
-    @Value("${server.port}")
-    private Integer serverPort;
+    private final ServerProperties sp;
 
 
     @Bean(value = "orderApi")
     @Order(value = 1)
     public Docket groupRestApi() {
-        log.info("http://localhost:{}/doc.html", serverPort);
+        String requestURI = "/doc.html";
+        if (StringUtils.hasText(sp.getServlet().getContextPath())) {
+            requestURI = sp.getServlet().getContextPath() + requestURI;
+        }
+        String docUrl = UrlUtils.buildFullRequestUrl(
+                sp.getSsl() == null ? "http" : "https",
+                "localhost",
+                sp.getPort(),
+                requestURI,
+                null
+        );
+        log.info("Knife4j Swagger2 API Doc {}", docUrl);
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(groupApiInfo())
                 .groupName("REST API")
@@ -81,24 +89,8 @@ public class CustomizeSwaggerConfig {
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
                 .build()
-                .securityContexts(List.of(
-                        SecurityContext.builder()
-                                .securityReferences(
-                                        List.of(
-                                                new SecurityReference("BearerToken",
-                                                        new AuthorizationScope[]{
-                                                                new AuthorizationScope("global", "accessEverything")
-                                                        })
-                                        )
-                                )
-                                .forPaths(PathSelectors.regex("^(?!auth).*$"))
-                                .build()
-                ))
-                .securitySchemes(
-                        List.of(
-                                new ApiKey("jwt token", tokenProperties.getTokenHeader(), "header")
-                        )
-                );
+                .securityContexts(List.of(securityContext()))
+                .securitySchemes(List.of(apiKey()));
     }
 
 
@@ -110,6 +102,27 @@ public class CustomizeSwaggerConfig {
                 .termsOfServiceUrl("https://xaaef.com")
                 .version(props.getVersion())
                 .build();
+    }
+
+
+    private ApiKey apiKey() {
+        return new ApiKey("BearerToken", tokenProperties.getTokenHeader(), "header");
+    }
+
+
+    private SecurityContext securityContext() {
+        return SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .forPaths(PathSelectors.regex("^(?!auth).*$"))
+                .build();
+    }
+
+
+    List<SecurityReference> defaultAuth() {
+        var scopes = new AuthorizationScope[]{
+                new AuthorizationScope("global", "accessEverything")
+        };
+        return CollectionUtils.newArrayList(new SecurityReference("BearerToken", scopes));
     }
 
 
@@ -141,6 +154,5 @@ public class CustomizeSwaggerConfig {
         return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath)
                 || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
     }
-
 
 }

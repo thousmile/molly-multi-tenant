@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "[ 系统 ] 租户权限模板")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/template")
+@RequestMapping("/sys/template")
 public class SysTemplateController {
 
     private final SysTemplateService baseService;

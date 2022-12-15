@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Collection;
 import java.util.Set;
 
 
@@ -34,6 +35,14 @@ public interface PmsRoleMapper extends BaseMapper<PmsRole> {
      * @date 2022/3/22 18:14
      */
     Set<PmsRoleProxy> selectListByUserIds(@Param("userIds") Set<Long> userIds);
+
+
+    @Select("select menu_id from pms_role_menu where role_id = #{roleId}")
+    Set<Long> selectMenuIdByRoleId(Long roleId);
+
+
+    Set<Long> selectMenuIdByRoleIds(Set<Long> roleIds);
+
 
 
 }

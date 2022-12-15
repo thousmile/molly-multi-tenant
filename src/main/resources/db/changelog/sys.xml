@@ -28,29 +28,18 @@
                 PRIMARY KEY (`tenant_id`) USING BTREE,
                 UNIQUE KEY `tenant_id_unique_lkmnrf213jlnr` (`tenant_id`) USING BTREE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 租户 ] 租户表';
-
-
-            INSERT INTO `sys_tenant` (`tenant_id`, `create_time`, `create_user`, `last_update_time`,
-                                      `last_update_user`, `logo`, `name`, `email`, `linkman`,
-                                      `contact_number`, `area_code`, `address`, `status`, `expired`)
-            VALUES ('master', '2022-12-12 10:07:26', 19980817, '2022-12-12 10:07:32', 19980817,
-                    'https://images.xaaef.com/molly_master_logo.png', 'master', 'master@qq.com', 'master',
-                    '0755-1234567', 440307000000, '平湖街道 城市山海大厦', 1, '6666-12-12 00:00:00');
         </sql>
     </changeSet>
 
 
     <!-- [ 租户 ] 租户和权限模板表 -->
-    <changeSet id="1670813888-2" author="WangChenChen (generated)">
+    <changeSet id="1671072305-1" author="WangChenChen (generated)">
         <sql stripComments="true">
             CREATE TABLE `sys_tenant_template`
             (
                 `tenant_id`   varchar(20) NOT NULL COMMENT '租户ID',
                 `template_id` bigint(20) NOT NULL COMMENT '模板 ID'
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 租户 ] 租户和权限模板表';
-
-            INSERT INTO `sys_tenant_template` (`tenant_id`, `template_id`)
-            VALUES ('master', 10001);
         </sql>
     </changeSet>
 
@@ -69,12 +58,6 @@
                 `last_update_user` bigint(20) NOT NULL COMMENT '最后一次，修改人',
                 PRIMARY KEY (`id`) USING BTREE
             ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 租户 ] 权限模板表';
-
-            INSERT INTO `sys_template` (`id`, `name`, `description`, `create_time`, `create_user`, `last_update_time`,
-                                        `last_update_user`)
-            VALUES (10001, '全部模块', '全部模块', '2022-06-10 22:58:39', 19980817, '2022-06-10 22:58:39',
-                    19980817);
-
         </sql>
     </changeSet>
 
@@ -88,6 +71,147 @@
                 `menu_id`     bigint(20) NOT NULL COMMENT '菜单ID'
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 租户 ] 模板和菜单权限表';
         </sql>
+    </changeSet>
+
+
+
+    <!-- 中国行政区域 -->
+    <changeSet id="1670812786-1" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `china_area`
+            (
+                `area_code`   bigint(20) unsigned NOT NULL COMMENT '行政代码 [ 唯一 ]',
+                `level`       tinyint(3) unsigned NOT NULL COMMENT '层级 1.省级  2.城市  3.区域',
+                `parent_code` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '父级行政代码',
+                `zip_code`    mediumint(6) unsigned zerofill NOT NULL DEFAULT '000000' COMMENT '邮政编码',
+                `city_code`   char(6)        NOT NULL DEFAULT '' COMMENT '区号',
+                `name`        varchar(50)    NOT NULL DEFAULT '' COMMENT '名称',
+                `short_name`  varchar(50)    NOT NULL DEFAULT '' COMMENT '简称',
+                `merger_name` varchar(50)    NOT NULL DEFAULT '' COMMENT '组合名',
+                `pinyin`      varchar(30)    NOT NULL DEFAULT '' COMMENT '拼音',
+                `lng`         decimal(10, 6) NOT NULL DEFAULT '0.000000' COMMENT '经度',
+                `lat`         decimal(10, 6) NOT NULL DEFAULT '0.000000' COMMENT '纬度',
+                PRIMARY KEY (`area_code`) USING BTREE,
+                UNIQUE KEY `idx` (`area_code`) USING BTREE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 通用 ] 中国行政地区表';
+        </sql>
+    </changeSet>
+
+
+    <!-- 初始化 中国行政区域 -->
+    <changeSet id="1670812786-2" author="WangChenChen (generated)">
+        <sqlFile path="db/changelog/sql/china_area.sql"/>
+    </changeSet>
+
+
+    <!--[ 通用 ]全局配置-->
+    <changeSet id="1670812792-1" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `sys_config`
+            (
+                `config_id`        bigint(20) NOT NULL AUTO_INCREMENT COMMENT '参数主键',
+                `config_name`      varchar(100) NOT NULL DEFAULT '' COMMENT '参数名称',
+                `config_key`       varchar(100) NOT NULL DEFAULT '' COMMENT '参数键名',
+                `config_value`     text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '参数键值',
+                `config_type`      tinyint(1) NOT NULL DEFAULT '0' COMMENT '系统内置（1.是 0.否）',
+                `create_time`      datetime     NOT NULL COMMENT '创建时间',
+                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
+                `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
+                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
+                PRIMARY KEY (`config_id`) USING BTREE,
+                UNIQUE KEY `config_key` (`config_key`) USING BTREE
+            ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 通用 ] 参数配置表';
+        </sql>
+    </changeSet>
+
+
+    <!-- 初始化 全局配置-->
+    <changeSet id="1670812792-2" author="WangChenChen (generated)">
+        <sqlFile path="db/changelog/sql/sys_config.sql"/>
+    </changeSet>
+
+
+    <!--[ 通用 ] 字典类型表-->
+    <changeSet id="1670812891-1" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `sys_dict_type`
+            (
+                `type_id`          bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典类型 ID',
+                `type_name`        varchar(50)  NOT NULL COMMENT '字典类型名',
+                `type_key`         varchar(50)  NOT NULL COMMENT '字典类型关键字',
+                `description`      varchar(255) NOT NULL COMMENT '部门描述',
+                `create_time`      datetime     NOT NULL COMMENT '创建时间',
+                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
+                `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
+                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
+                PRIMARY KEY (`type_id`) USING BTREE
+            ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 通用 ] 字典类型表';
+        </sql>
+    </changeSet>
+
+
+    <!-- 初始化 字典类型表-->
+    <changeSet id="1670812891-2" author="WangChenChen (generated)">
+        <sqlFile path="db/changelog/sql/sys_dict_type.sql"/>
+    </changeSet>
+
+
+    <!--[ 通用 ] 字典数据表-->
+    <changeSet id="1670813871-1" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `sys_dict_data`
+            (
+                `dict_code`        bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典编码',
+                `dict_sort`        tinyint(4) NOT NULL DEFAULT '0' COMMENT '字典排序',
+                `dict_label`       varchar(100) NOT NULL DEFAULT '' COMMENT '字典标签',
+                `dict_value`       varchar(100) NOT NULL DEFAULT '' COMMENT '字典键值',
+                `type_key`         varchar(50)  NOT NULL DEFAULT '' COMMENT '字典类型',
+                `is_default`       tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否默认（1.是 0.否）',
+                `create_user`      bigint(20) NOT NULL COMMENT '创建者',
+                `create_time`      datetime     NOT NULL COMMENT '创建时间',
+                `last_update_user` bigint(20) NOT NULL COMMENT '更新者',
+                `last_update_time` datetime     NOT NULL COMMENT '更新时间',
+                PRIMARY KEY (`dict_code`) USING BTREE
+            ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 通用 ] 字典数据表';
+        </sql>
+    </changeSet>
+
+
+    <!-- 初始化 字典数据表-->
+    <changeSet id="1670813871-2" author="WangChenChen (generated)">
+        <sqlFile path="db/changelog/sql/sys_dict_data.sql"/>
+    </changeSet>
+
+
+    <!--[ 通用 ] 菜单权限表-->
+    <changeSet id="1670815177-1" author="WangChenChen (generated)">
+        <sql stripComments="true">
+            CREATE TABLE `sys_menu`
+            (
+                `menu_id`          bigint(20) NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
+                `menu_name`        varchar(255) NOT NULL COMMENT '菜单名称',
+                `parent_id`        bigint(20) NOT NULL DEFAULT '0' COMMENT '父主键',
+                `perms`            varchar(255) NOT NULL COMMENT '权限标识',
+                `component`        varchar(255) NOT NULL DEFAULT '#' COMMENT '组件',
+                `icon`             varchar(255) NOT NULL DEFAULT '#' COMMENT '菜单图标',
+                `path`             varchar(255) NOT NULL DEFAULT '#' COMMENT '路由地址',
+                `sort`             int(11) NOT NULL COMMENT '排序',
+                `menu_type`        tinyint(1) NOT NULL DEFAULT '1' COMMENT '菜单类型（1.菜单 2.按钮）',
+                `visible`          tinyint(1) NOT NULL DEFAULT '1' COMMENT '菜单状态（1.显示 0.隐藏）',
+                `target`           tinyint(1) NOT NULL DEFAULT '2' COMMENT '0.租户用户   1. 系统用户   2.全部用户',
+                `create_time`      datetime     NOT NULL COMMENT '创建时间',
+                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
+                `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
+                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
+                PRIMARY KEY (`menu_id`) USING BTREE
+            ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 通用 ] 菜单权限表';
+        </sql>
+    </changeSet>
+
+
+    <!-- 初始化 菜单权限表 -->
+    <changeSet id="1670815177-2" author="WangChenChen (generated)">
+        <sqlFile path="db/changelog/sql/sys_menu.sql"/>
     </changeSet>
 
 

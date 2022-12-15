@@ -4,9 +4,13 @@ package com.xaaef.molly.core.tenant;
 import cn.hutool.core.util.StrUtil;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.common.util.ServletUtils;
+import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.tenant.service.MultiTenantManager;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.xaaef.molly.core.tenant.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -50,10 +54,21 @@ public class TenantIdInterceptor implements HandlerInterceptor {
              * GET https://www.baidu.com/hello?x-tenant-id=master
              * */
             tenantId = request.getParameter(X_TENANT_ID);
-            if (StringUtils.isEmpty(tenantId)) {
-                var err = StrUtil.format("请求头或者URL参数中必须添加 {}", X_TENANT_ID);
-                ServletUtils.renderError(response, JsonResult.fail(err));
-                return false;
+        }
+        if (StringUtils.isEmpty(tenantId)) {
+            // 判断当前此请求，是否已经登录。
+            if (JwtSecurityUtils.isAuthenticated()) {
+                // 判断登录的用户类型。
+                // 系统用户:  必须添加 租户ID.
+                // 租户用户:  租户ID 在登录的时候，已经确定了
+                if (JwtSecurityUtils.isMasterUser()) {
+                    return writeError(response);
+                } else {
+                    TenantUtils.setTenantId(JwtSecurityUtils.getTenantId());
+                    tenantId = JwtSecurityUtils.getTenantId();
+                }
+            } else {
+                return writeError(response);
             }
         }
         // 校验租户，是否存在系统中
@@ -65,6 +80,12 @@ public class TenantIdInterceptor implements HandlerInterceptor {
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
+
+    private static boolean writeError(HttpServletResponse response) {
+        var err = StrUtil.format("请求头或者URL参数中必须添加 {}", X_TENANT_ID);
+        ServletUtils.renderError(response, JsonResult.fail(err));
+        return false;
+    }
 
 }
 

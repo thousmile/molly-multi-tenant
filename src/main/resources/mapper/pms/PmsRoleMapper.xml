@@ -44,8 +44,15 @@
         FROM pms_role AS r
         RIGHT JOIN pms_user_role AS ur ON ur.role_id = r.role_id
         WHERE ur.user_id IN
-        <foreach item="item" index="index" collection="userIds"
-                 open="(" separator="," close=")">
+        <foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <select id="selectMenuIdByRoleIds" resultType="java.lang.Long">
+        select menu_id from pms_role_menu where role_id IN
+        <foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>

@@ -1,5 +1,6 @@
 package com.xaaef.molly.system.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,9 +26,11 @@ import java.util.Set;
 @NoArgsConstructor
 public class BindingMenusVO implements java.io.Serializable {
 
+    @ApiModelProperty(value = "ID不能为空！")
     @NotNull(message = "ID不能为空!")
     private Long id;
 
+    @ApiModelProperty(value = "菜单最少是一个")
     @NotNull(message = "菜单不能为空!")
     @Size(min = 1, message = "菜单最少是一个!")
     private Set<Long> menus;
