@@ -65,8 +65,8 @@ public class SchemaDataSourceManager implements DatabaseManager {
      * @date 2022/12/7 21:05
      */
     @Override
-    public void createTable(String tenantId) {
-        log.info("tenantId: {} create table ...", tenantId);
+    public void updateTable(String tenantId) {
+        log.info("tenantId: {} update table ...", tenantId);
         try {
             // 判断 schema 是否存在。不存在就创建
             var conn = dataSource.getConnection();

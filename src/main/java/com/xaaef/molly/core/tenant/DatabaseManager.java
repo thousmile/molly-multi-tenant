@@ -39,7 +39,7 @@ public interface DatabaseManager {
      * @author WangChenChen
      * @date 2022/12/11 11:04
      */
-    void createTable(String tenantId);
+    void updateTable(String tenantId);
 
 
     /**

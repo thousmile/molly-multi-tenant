@@ -59,7 +59,7 @@ public class TenantTableRunner implements ApplicationRunner {
                     .forEach(tenantId -> {
                         tenantManager.addTenantId(tenantId);
                         if (flag) {
-                            databaseManager.createTable(tenantId);
+                            databaseManager.updateTable(tenantId);
                         }
                     });
         }

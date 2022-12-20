@@ -124,8 +124,8 @@ public class DatabaseDataSourceManager implements DatabaseManager {
      * @date 2022/12/7 21:05
      */
     @Override
-    public void createTable(String tenantId) {
-        log.info("tenantId: {} create table ...", tenantId);
+    public void updateTable(String tenantId) {
+        log.info("tenantId: {} update table ...", tenantId);
         var dataSource = getDataSource(tenantId);
         try {
             var conn = new JdbcConnection(dataSource.getConnection());

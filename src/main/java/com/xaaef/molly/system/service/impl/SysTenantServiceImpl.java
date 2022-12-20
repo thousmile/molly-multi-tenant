@@ -200,7 +200,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         this.save(sysTenant);
 
         // 新创建的 租户 创建表结构
-        dataSourceManager.createTable(sysTenant.getTenantId());
+        dataSourceManager.updateTable(sysTenant.getTenantId());
 
         // 将 新创建的 租户ID 保存到 redis 中
         tenantManager.addTenantId(sysTenant.getTenantId());
@@ -208,7 +208,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         // 租户默认角色名称
         String roleName = Optional.ofNullable(configService.getValueByKey(TENANT_DEFAULT_ROLE_NAME)).orElse("管理员");
 
-        // 委托，新的租户id。初始化数据
+        // 委托，新的租户id。执行初始化数据
         this.delegate(sysTenant.getTenantId(), () -> {
 
             var pmsDept = new PmsDept()

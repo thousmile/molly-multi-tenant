@@ -49,8 +49,8 @@ public class TableDataSourceManager implements DatabaseManager {
      * @date 2022/12/7 21:05
      */
     @Override
-    public void createTable(String tenantId) {
-        log.warn("TenantId: {} No need to create table structures", tenantId);
+    public void updateTable(String tenantId) {
+        log.warn("TenantId: {} No need to update table structures", tenantId);
     }
 
 
