@@ -27,7 +27,7 @@ import static com.xaaef.molly.core.tenant.consts.MbpConst.*;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class ProjectTenantLineHandler implements TenantLineHandler {
+public class ProjectLineHandler implements TenantLineHandler {
 
     private final MultiTenantProperties props;
 

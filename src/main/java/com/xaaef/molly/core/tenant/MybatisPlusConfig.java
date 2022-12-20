@@ -68,7 +68,7 @@ public class MybatisPlusConfig {
         if (tenantProperties.getEnableProject()) {
             interceptor.addInnerInterceptor(
                     new TenantLineInnerInterceptor(
-                            new ProjectTenantLineHandler(tenantProperties)
+                            new ProjectLineHandler(tenantProperties)
                     )
             );
         }

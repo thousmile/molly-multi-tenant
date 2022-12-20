@@ -2,7 +2,6 @@ package com.xaaef.molly.core.tenant.schema;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
-import com.baomidou.mybatisplus.extension.parser.JsqlParserSupport;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.tenant.props.MultiTenantProperties;
@@ -39,7 +38,7 @@ import static com.xaaef.molly.core.tenant.consts.MbpConst.TENANT_IGNORE_TABLES;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class SchemaInterceptor extends JsqlParserSupport implements InnerInterceptor {
+public class SchemaInterceptor implements InnerInterceptor {
 
 
     private final MultiTenantProperties props;
