@@ -1,13 +1,14 @@
 package com.xaaef.molly.system.po;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
 /**
- * All rights Reserved, Designed By 深圳市铭灏天智能照明设备有限公司
  * <p>
  * 创建租户
  * </p>
@@ -15,7 +16,6 @@ import lombok.NoArgsConstructor;
  * @author Wang Chen Chen
  * @version 1.0.1
  * @date 2021/7/16 12:02
- * @copyright 2021 http://www.mhtled.com Inc. All rights reserved.
  */
 
 @Data
@@ -24,16 +24,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TenantCreatedSuccessVO implements java.io.Serializable {
 
-    @ApiModelProperty(value = "管理员名称！")
+    @Schema(description = "管理员名称！", requiredMode = REQUIRED)
     private String adminNickname;
 
-    @ApiModelProperty(value = "管理员登录用户名")
+    @Schema(description = "管理员登录用户名", requiredMode = REQUIRED)
     private String adminUsername;
 
-    @ApiModelProperty(value = "管理员手机号")
+    @Schema(description = "管理员手机号", requiredMode = REQUIRED)
     private String adminMobile;
 
-    @ApiModelProperty(value = "管理员密码")
+    @Schema(description = "管理员密码", requiredMode = REQUIRED)
     private String adminPassword;
 
 }

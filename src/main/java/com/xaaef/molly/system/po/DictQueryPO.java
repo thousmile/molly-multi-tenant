@@ -1,8 +1,11 @@
 package com.xaaef.molly.system.po;
 
 import com.xaaef.molly.common.po.SearchPO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.ToString;
+
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 
 /**
@@ -22,6 +25,7 @@ public class DictQueryPO extends SearchPO {
     /**
      * 字典类型
      */
+    @Schema(description = "字典类型", requiredMode = REQUIRED)
     private String dictTypeKey;
 
 }

@@ -18,24 +18,21 @@ import com.xaaef.molly.core.log.service.LogStorageService;
 import com.xaaef.molly.core.tenant.service.MultiTenantManager;
 import com.xaaef.molly.core.tenant.util.TenantUtils;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.xaaef.molly.perms.entity.PmsRoleProxy;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import com.xaaef.molly.system.entity.SysMenu;
 import com.xaaef.molly.system.enums.MenuTargetEnum;
 import com.xaaef.molly.system.mapper.SysMenuMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -167,6 +164,5 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
 
     }
-
 
 }

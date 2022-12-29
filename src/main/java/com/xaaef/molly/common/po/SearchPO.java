@@ -1,6 +1,6 @@
 package com.xaaef.molly.common.po;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
@@ -20,7 +20,7 @@ public class SearchPO extends PagePO implements java.io.Serializable {
     /**
      * 搜索，关键字
      */
-    @ApiModelProperty(value = "关键字搜索")
+    @Schema(description = "关键字搜索")
     private String keywords;
 
 }

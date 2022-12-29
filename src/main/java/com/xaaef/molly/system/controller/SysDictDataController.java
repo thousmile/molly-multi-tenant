@@ -8,8 +8,8 @@ import com.xaaef.molly.system.entity.SysDictData;
 import com.xaaef.molly.system.po.DictQueryPO;
 import com.xaaef.molly.system.service.SysDictDataService;
 import com.xaaef.molly.system.vo.DictDataVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 
 @Slf4j
-@Api(tags = "[ 通用 ] 字典数据")
+@Tag(name = "[ 通用 ] 字典数据")
 @RestController
 @RequestMapping("/dict/data")
 @AllArgsConstructor
@@ -37,14 +37,14 @@ public class SysDictDataController {
 
     private SysDictDataService baseService;
 
-    @ApiOperation(value = "Id查询", notes = "根据Id查询")
+    @Operation(summary = "Id查询", description = "根据Id查询")
     @GetMapping("/{id}")
     public JsonResult<SysDictData> findById(@PathVariable("id") Long id) {
         return JsonResult.success(baseService.getById(id));
     }
 
 
-    @ApiOperation(value = "分页查询", notes = "分页 查询所有")
+    @Operation(summary = "分页查询", description = "分页 查询所有")
     @GetMapping("/query")
     public JsonResult<Pagination<SysDictData>> pageQuery(DictQueryPO params) {
         var page = baseService.pageKeywords(params);
@@ -52,7 +52,7 @@ public class SysDictDataController {
     }
 
 
-    @ApiOperation(value = "[Map]查询所有", notes = "分页 查询所有")
+    @Operation(summary = "[Map]查询所有", description = "分页 查询所有")
     @GetMapping("/mapKeys")
     public JsonResult<Map<String, List<DictDataVO>>> mapKeys() {
         var result = baseService.mapByKeys();
@@ -60,14 +60,14 @@ public class SysDictDataController {
     }
 
 
-    @ApiOperation(value = "根据Type Key查询所有", notes = "根据字典type查询所有")
+    @Operation(summary = "根据Type Key查询所有", description = "根据字典type查询所有")
     @GetMapping("/type/{key}")
     public JsonResult<List<SysDictData>> findTypeKey(@PathVariable("key") String key) {
         return JsonResult.success(baseService.listByKey(key));
     }
 
 
-    @ApiOperation(value = "新增", notes = "不需要添加id")
+    @Operation(summary = "新增", description = "不需要添加id")
     @OperateLog(title = "[字典数据]新增", type = LogType.INSERT)
     @PostMapping()
     public JsonResult<SysDictData> create(@RequestBody SysDictData entity) {
@@ -76,7 +76,7 @@ public class SysDictDataController {
     }
 
 
-    @ApiOperation(value = "修改", notes = "修改必须要id")
+    @Operation(summary = "修改", description = "修改必须要id")
     @OperateLog(title = "[字典数据]修改", type = LogType.UPDATE)
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody SysDictData entity) {
@@ -85,7 +85,7 @@ public class SysDictDataController {
     }
 
 
-    @ApiOperation(value = "删除", notes = "只需要id即可")
+    @Operation(summary = "删除", description = "只需要id即可")
     @OperateLog(title = "[字典数据]删除", type = LogType.DELETE)
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable("id") Long id) {

@@ -16,9 +16,6 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
-  mvc:
-    pathmatch:
-      matching-strategy: ANT_PATH_MATCHER
 
 
   liquibase:
@@ -46,9 +43,9 @@ multi:
 
 info:
   app:
-    name: ${customize.swagger.title}
-    description: ${customize.swagger.description}
-    version: ${customize.swagger.version}
+    name: molly-multi-tenant
+    description: molly mybatis-plus multi tenant sass platform
+    version: 1.0.1
 
 
 management:

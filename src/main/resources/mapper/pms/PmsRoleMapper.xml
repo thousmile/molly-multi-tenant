@@ -40,10 +40,10 @@
 
 
     <select id="selectListByUserIds" resultMap="SysRoleProxyResultMap">
-        SELECT ur.user_id, r.role_id, r.role_name, r.description
-        FROM pms_role AS r
-        RIGHT JOIN pms_user_role AS ur ON ur.role_id = r.role_id
-        WHERE ur.user_id IN
+        SELECT r1.role_id, r1.role_name, r1.description, r2.user_id
+        FROM pms_role AS r1
+        RIGHT JOIN pms_user_role AS r2 ON r2.role_id = r1.role_id
+        WHERE r2.user_id IN
         <foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
             #{item}
         </foreach>

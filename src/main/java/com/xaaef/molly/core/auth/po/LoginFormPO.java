@@ -1,8 +1,11 @@
 package com.xaaef.molly.core.auth.po;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.NotNull;
+
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 /**
  * <p>
@@ -22,18 +25,22 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class LoginFormPO {
 
+    @Schema(description = "用户名", requiredMode = REQUIRED)
     @NotNull(message = "用户名不能为空")
     @Length(min = 5, message = "用户名长度不能少于5位")
     private String username;
 
+    @Schema(description = "密码", requiredMode = REQUIRED)
     @NotNull(message = "密码不能为空")
     @Length(min = 5, message = "密码长度不能少于5位")
     private String password;
 
+    @Schema(description = "验证码", requiredMode = REQUIRED)
     @NotNull(message = "验证码不能为空")
-    @Length(min = 5, max = 5, message = "验证码长度是5位")
+    @Length(min = 4, max = 4, message = "验证码长度是4位")
     private String codeText;
 
+    @Schema(description = "验证码 KEY", requiredMode = REQUIRED)
     @NotNull(message = "验证码 KEY 不能为空")
     @Length(min = 5, message = "验证码 KEY长度不能少于16位")
     private String codeKey;

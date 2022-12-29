@@ -9,8 +9,8 @@ import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.service.PmsRoleService;
 import com.xaaef.molly.system.vo.BindingMenusVO;
 import com.xaaef.molly.system.vo.UpdateMenusVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -32,28 +32,28 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/pms/role")
-@Api(tags = "[ 权限 ] 角色")
+@Tag(name = "[ 权限 ] 角色")
 @AllArgsConstructor
 public class PmsRoleController {
 
     private final PmsRoleService baseService;
 
 
-    @ApiOperation(value = "单个查询", notes = "根据Id查询")
+    @Operation(summary = "单个查询", description = "根据Id查询")
     @GetMapping("/{id}")
     public JsonResult<PmsRole> findById(@PathVariable("id") Long id) {
         return JsonResult.success(baseService.getById(id));
     }
 
 
-    @ApiOperation(value = "查询所有", notes = "查询所有")
+    @Operation(summary = "查询所有", description = "查询所有")
     @GetMapping("/list")
     public JsonResult<List<PmsRole>> list() {
         return JsonResult.success(baseService.list());
     }
 
 
-    @ApiOperation(value = "分页", notes = "分页 查询所有")
+    @Operation(summary = "分页", description = "分页 查询所有")
     @GetMapping("/query")
     public JsonResult<Pagination<PmsRole>> pageQuery(SearchPO params) {
         var page = baseService.pageKeywords(
@@ -65,7 +65,7 @@ public class PmsRoleController {
     }
 
 
-    @ApiOperation(value = "新增", notes = "不需要添加id")
+    @Operation(summary = "新增", description = "不需要添加id")
     @OperateLog(title = "[角色]新增", type = LogType.INSERT)
     @PostMapping()
     public JsonResult create(@RequestBody PmsRole entity) {
@@ -74,7 +74,7 @@ public class PmsRoleController {
     }
 
 
-    @ApiOperation(value = "修改", notes = "修改必须要id")
+    @Operation(summary = "修改", description = "修改必须要id")
     @OperateLog(title = "[角色]修改", type = LogType.UPDATE)
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody PmsRole entity) {
@@ -83,7 +83,7 @@ public class PmsRoleController {
     }
 
 
-    @ApiOperation(value = "删除", notes = "只需要id即可")
+    @Operation(summary = "删除", description = "只需要id即可")
     @OperateLog(title = "[角色]删除", type = LogType.DELETE)
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
@@ -92,7 +92,7 @@ public class PmsRoleController {
     }
 
 
-    @ApiOperation(value = "拥有的权限", notes = "查询角色拥有的权限！")
+    @Operation(summary = "拥有的权限", description = "查询角色拥有的权限！")
     @GetMapping("/menus/{roleId}")
     public JsonResult<UpdateMenusVO> selectHaveMenus(@PathVariable Long roleId) {
         var data = baseService.listHaveMenus(roleId);
@@ -100,7 +100,7 @@ public class PmsRoleController {
     }
 
 
-    @ApiOperation(value = "绑定菜单", notes = "会删除原有的菜单！")
+    @Operation(summary = "绑定菜单", description = "会删除原有的菜单！")
     @OperateLog(title = "[角色]绑定菜单", type = LogType.UPDATE)
     @PostMapping("/menus")
     public JsonResult<Boolean> bindingMenus(@RequestBody @Validated BindingMenusVO entity,

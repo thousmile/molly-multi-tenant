@@ -1,7 +1,7 @@
 package com.xaaef.molly.system.vo;
 
 import cn.hutool.core.lang.tree.Tree;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.List;
@@ -28,14 +28,14 @@ public class UpdateMenusVO implements java.io.Serializable {
     /**
      * 已经拥有的菜单 ID
      */
-    @ApiModelProperty(value = "拥有的菜单ID！")
-    Set<Long> have;
+    @Schema(description = "拥有的菜单ID！")
+    private Set<Long> have;
 
     /**
      * 全部 菜单 ID 和 名称
      */
-    @ApiModelProperty(value = "全部 菜单ID和名称！")
-    List<Tree<Long>> all;
+    @Schema(description = "全部 菜单ID和名称！")
+    private List<Tree<Long>> all;
 
 }
 

@@ -1,10 +1,12 @@
 package com.xaaef.molly.perms.vo;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
+
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 /**
  * <p>
@@ -23,6 +25,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Schema(description = "重置密码！")
 public class ResetPasswordVO {
 
     /**
@@ -30,7 +33,7 @@ public class ResetPasswordVO {
      *
      * @date 2021/5/21 15:43
      */
-    @ApiModelProperty(value = "用户ID不能为空！")
+    @Schema(description = "用户ID不能为空！", requiredMode = REQUIRED)
     @NotNull(message = "用户ID不能为空!")
     private Long userId;
 
@@ -39,7 +42,7 @@ public class ResetPasswordVO {
      *
      * @date 2021/5/21 15:43
      */
-    @ApiModelProperty(value = "新密码长度要大于6位！")
+    @Schema(description = "新密码长度要大于6位！", requiredMode = REQUIRED)
     @NotNull(message = "新密码不能为空!")
     @Length(min = 5, message = "新密码长度要大于6位!")
     private String newPwd;

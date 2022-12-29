@@ -7,14 +7,13 @@ import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.tenant.service.MultiTenantManager;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.xaaef.molly.core.tenant.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -39,9 +38,7 @@ public class TenantIdInterceptor implements HandlerInterceptor {
     private final MultiTenantManager tenantManager;
 
     @Override
-    public boolean preHandle(HttpServletRequest request,
-                             @NotNull HttpServletResponse response,
-                             @NotNull Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         /*
          * 从请求头中获取 如:
          * GET https://www.baidu.com/hello

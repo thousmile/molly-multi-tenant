@@ -1,11 +1,11 @@
 package com.xaaef.molly.system.vo;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.Set;
 
 /**
@@ -26,11 +26,11 @@ import java.util.Set;
 @ToString
 public class UpdateTenantTemplateIdVO {
 
-    @ApiModelProperty(value = "租户ID不能为空！")
+    @Schema(description = "租户ID不能为空！")
     @NotEmpty(message = "租户ID不能为空!")
     private String tenantId;
 
-    @ApiModelProperty(value = "租户权限模板！最少选择一个！")
+    @Schema(description = "租户权限模板！最少选择一个！")
     @NotNull(message = "租户权限模板必须填写！")
     @Size(min = 1, message = "租户权限模板！最少选择一个！")
     private Set<Long> templateIds;

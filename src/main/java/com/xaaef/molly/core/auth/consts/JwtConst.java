@@ -24,6 +24,7 @@ public class JwtConst {
             String.format("%s/**", CAPTCHA_CODES_URL),
             "/actuator/**",
             "/v2/api-docs",
+            "/v3/api-docs/**",
             "/doc.html",
             "/configuration/ui",
             "/swagger-resources",

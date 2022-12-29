@@ -7,8 +7,8 @@ import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.system.entity.ChinaArea;
 import com.xaaef.molly.system.service.ChinaAreaService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +29,7 @@ import java.util.List;
  */
 
 @Slf4j
-@Api(tags = "[ 通用 ] 中国行政地区")
+@Tag(name = "[ 通用 ] 中国行政地区")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/china/area")
@@ -37,14 +37,14 @@ public class ChinaAreaController {
 
     private ChinaAreaService baseService;
 
-    @ApiOperation(value = "单个查询", notes = "根据Id查询")
+    @Operation(summary = "单个查询", description = "根据Id查询")
     @GetMapping("/{id}")
     public JsonResult<ChinaArea> findById(@PathVariable("id") Long id) {
         return JsonResult.success(baseService.getById(id));
     }
 
 
-    @ApiOperation(value = "查询子节点", notes = "查询所有，0.查询所有一级节点。")
+    @Operation(summary = "查询子节点", description = "查询所有，0.查询所有一级节点。")
     @GetMapping("/child/{parentCode}")
     public JsonResult<List<ChinaArea>> findAll(@PathVariable Long parentCode) {
         if (parentCode == null || parentCode < 1) {
@@ -56,7 +56,7 @@ public class ChinaAreaController {
     }
 
 
-    @ApiOperation(value = "分页", notes = "分页 查询所有")
+    @Operation(summary = "分页", description = "分页 查询所有")
     @GetMapping("/query")
     public JsonResult<Pagination<ChinaArea>> pageQuery(SearchPO params) {
         IPage<ChinaArea> page = baseService.pageKeywords(params);

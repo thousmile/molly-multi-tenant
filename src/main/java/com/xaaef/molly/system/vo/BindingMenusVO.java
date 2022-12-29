@@ -1,14 +1,15 @@
 package com.xaaef.molly.system.vo;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Set;
+
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 /**
  * <p>
@@ -26,11 +27,11 @@ import java.util.Set;
 @NoArgsConstructor
 public class BindingMenusVO implements java.io.Serializable {
 
-    @ApiModelProperty(value = "ID不能为空！")
+    @Schema(description = "ID不能为空！", requiredMode = REQUIRED)
     @NotNull(message = "ID不能为空!")
     private Long id;
 
-    @ApiModelProperty(value = "菜单最少是一个")
+    @Schema(description = "菜单最少是一个", requiredMode = REQUIRED)
     @NotNull(message = "菜单不能为空!")
     @Size(min = 1, message = "菜单最少是一个!")
     private Set<Long> menus;

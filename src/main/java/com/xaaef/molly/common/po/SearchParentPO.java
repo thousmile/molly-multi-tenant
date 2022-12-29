@@ -1,6 +1,6 @@
 package com.xaaef.molly.common.po;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,7 +19,7 @@ import lombok.ToString;
 @ToString
 public class SearchParentPO extends SearchPO implements java.io.Serializable {
 
-    @ApiModelProperty(value = "树节点 上级ID")
+    @Schema(description = "树节点 上级ID")
     private Long parentId;
 
 }

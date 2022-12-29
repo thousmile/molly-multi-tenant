@@ -10,8 +10,8 @@ import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.service.SysTemplateService;
 import com.xaaef.molly.system.vo.BindingMenusVO;
 import com.xaaef.molly.system.vo.UpdateMenusVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
-@Api(tags = "[ 系统 ] 租户权限模板")
+@Tag(name = "[ 系统 ] 租户权限模板")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/sys/template")
@@ -39,14 +39,14 @@ public class SysTemplateController {
     private final SysTemplateService baseService;
 
 
-    @ApiOperation(value = "单个查询", notes = "根据Id查询")
+    @Operation(summary = "单个查询", description = "根据Id查询")
     @GetMapping("/{id}")
     public JsonResult<SysTemplate> findById(@PathVariable("id") Long id) {
         return JsonResult.success(baseService.getById(id));
     }
 
 
-    @ApiOperation(value = "分页", notes = "分页 查询所有")
+    @Operation(summary = "分页", description = "分页 查询所有")
     @GetMapping("/query")
     public JsonResult<Pagination<SysTemplate>> pageQuery(SearchPO params) {
         IPage<SysTemplate> page = baseService.pageKeywords(params,
@@ -55,7 +55,7 @@ public class SysTemplateController {
     }
 
 
-    @ApiOperation(value = "新增", notes = "不需要添加id")
+    @Operation(summary = "新增", description = "不需要添加id")
     @OperateLog(title = "[权限模板] 新增", type = LogType.INSERT)
     @PostMapping()
     public JsonResult create(@RequestBody SysTemplate entity) {
@@ -68,7 +68,7 @@ public class SysTemplateController {
     }
 
 
-    @ApiOperation(value = "修改", notes = "修改必须要id")
+    @Operation(summary = "修改", description = "修改必须要id")
     @OperateLog(title = "[权限模板] 修改", type = LogType.UPDATE)
     @PutMapping()
     public JsonResult<String> update(@RequestBody SysTemplate entity) {
@@ -81,7 +81,7 @@ public class SysTemplateController {
     }
 
 
-    @ApiOperation(value = "删除", notes = "只需要id即可")
+    @Operation(summary = "删除", description = "只需要id即可")
     @OperateLog(title = "[权限模板] 删除", type = LogType.DELETE)
     @DeleteMapping("/{id}")
     public JsonResult<String> delete(@PathVariable("id") Integer id) {
@@ -94,14 +94,14 @@ public class SysTemplateController {
     }
 
 
-    @ApiOperation(value = "查询拥有的权限", notes = "查询模板拥有的权限！")
+    @Operation(summary = "查询拥有的权限", description = "查询模板拥有的权限！")
     @GetMapping("/menus/{templateId}")
     public JsonResult<UpdateMenusVO> selectHaveMenus(@PathVariable Long templateId) {
         return JsonResult.success(baseService.listHaveMenus(templateId));
     }
 
 
-    @ApiOperation(value = "修改菜单列表", notes = "修改权限模板的菜单列表")
+    @Operation(summary = "修改菜单列表", description = "修改权限模板的菜单列表")
     @OperateLog(title = "[权限模板]修改菜单列表", type = LogType.UPDATE)
     @PostMapping("/menus")
     public JsonResult<String> updateMenusId(@RequestBody @Validated BindingMenusVO params, BindingResult br) {

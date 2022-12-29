@@ -3,7 +3,8 @@ package com.xaaef.molly.common.util;
 import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.StrUtil;
-import javax.servlet.http.HttpServletRequest;
+import cn.hutool.http.HttpUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -84,20 +85,13 @@ public class IpUtils {
     public static final String IP_URL = "http://whois.pconline.com.cn/ipJson.jsp?ip=%s&json=true";
 
 
-    private final static HttpClient HTTP_CLIENT = HttpClient.newBuilder().connectTimeout(Duration.ofMillis(5000)).build();
-
-
     public static String getRealAddressByIP(String ip) {
         try {
             if (Ipv4Util.isInnerIP(ip)) {
                 return StrUtil.format("内网 {} IP", ip);
             }
-            var request = HttpRequest.newBuilder()
-                    .uri(URI.create(String.format(IP_URL, ip)))
-                    .timeout(Duration.ofMillis(2000))
-                    .build();
-            var response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-            Map<String, String> stringMap = JsonUtils.toMap(response.body(), String.class, String.class);
+            var response = HttpUtil.get(String.format(IP_URL, ip));
+            Map<String, String> stringMap = JsonUtils.toMap(response, String.class, String.class);
             if (stringMap == null) {
                 return "未知";
             }

@@ -8,8 +8,8 @@ import com.xaaef.molly.core.log.LogType;
 import com.xaaef.molly.core.log.OperateLog;
 import com.xaaef.molly.system.entity.SysMenu;
 import com.xaaef.molly.system.service.SysMenuService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +28,7 @@ import java.util.List;
  */
 
 @Slf4j
-@Api(tags = "[ 权限 ] 菜单管理")
+@Tag(name = "[ 权限 ] 菜单管理")
 @RestController
 @RequestMapping("/menu")
 @AllArgsConstructor
@@ -36,7 +36,7 @@ public class SysMenuController {
 
     private SysMenuService baseService;
 
-    @ApiOperation(value = "单个查询", notes = "根据Id查询")
+    @Operation(summary = "单个查询", description = "根据Id查询")
     @GetMapping("/{id}")
     public JsonResult<SysMenu> findById(@PathVariable("id") Long id) {
         log.debug("get ID : {}", id);
@@ -44,7 +44,7 @@ public class SysMenuController {
     }
 
 
-    @ApiOperation(value = "分页", notes = "分页 查询所有")
+    @Operation(summary = "分页", description = "分页 查询所有")
     @GetMapping("/query")
     public JsonResult<Pagination<SysMenu>> pageQuery(SearchPO params) {
         var page = baseService.pageKeywords(
@@ -55,7 +55,7 @@ public class SysMenuController {
     }
 
 
-    @ApiOperation(value = "查询所有", notes = "查询所有")
+    @Operation(summary = "查询所有", description = "查询所有")
     @GetMapping("/list")
     public JsonResult<List<SysMenu>> list() {
         List<SysMenu> list = baseService.list();
@@ -64,7 +64,7 @@ public class SysMenuController {
     }
 
 
-    @ApiOperation(value = "查询树节点", notes = "查询所有[以树节点形式展示]")
+    @Operation(summary = "查询树节点", description = "查询所有[以树节点形式展示]")
     @GetMapping("/tree")
     public JsonResult<List<Tree<Long>>> tree() {
         return JsonResult.success(baseService.tree());
@@ -78,7 +78,7 @@ public class SysMenuController {
      * <p>
      * 具体根据 菜单中的 target 属性
      */
-    @ApiOperation(value = "可用的菜单", notes = "根据当前用户查询此租户的全部可用菜单[以树节点形式展示]")
+    @Operation(summary = "可用的菜单", description = "根据当前用户查询此租户的全部可用菜单[以树节点形式展示]")
     @GetMapping("/available")
     public JsonResult<List<Tree<Long>>> available() {
         return JsonResult.success(
@@ -87,7 +87,7 @@ public class SysMenuController {
     }
 
 
-    @ApiOperation(value = "租户可用的菜单", notes = "租户可用的全部菜单[以树节点形式展示]")
+    @Operation(summary = "租户可用的菜单", description = "租户可用的全部菜单[以树节点形式展示]")
     @GetMapping("/tenant/available")
     public JsonResult<List<Tree<Long>>> tenantAvailable() {
         return JsonResult.success(
@@ -96,7 +96,7 @@ public class SysMenuController {
     }
 
 
-    @ApiOperation(value = "新增", notes = "不需要添加id")
+    @Operation(summary = "新增", description = "不需要添加id")
     @OperateLog(title = "[菜单]新增", type = LogType.INSERT)
     @PostMapping()
     public JsonResult create(@RequestBody SysMenu entity) {
@@ -109,7 +109,7 @@ public class SysMenuController {
     }
 
 
-    @ApiOperation(value = "修改", notes = "修改必须要id")
+    @Operation(summary = "修改", description = "修改必须要id")
     @OperateLog(title = "[菜单]修改", type = LogType.UPDATE)
     @PutMapping()
     public JsonResult update(@RequestBody SysMenu entity) {
@@ -122,7 +122,7 @@ public class SysMenuController {
     }
 
 
-    @ApiOperation(value = "删除", notes = "只需要id即可")
+    @Operation(summary = "删除", description = "只需要id即可")
     @OperateLog(title = "[菜单]删除", type = LogType.DELETE)
     @DeleteMapping("/{id}")
     public JsonResult delete(@PathVariable("id") Long id) {

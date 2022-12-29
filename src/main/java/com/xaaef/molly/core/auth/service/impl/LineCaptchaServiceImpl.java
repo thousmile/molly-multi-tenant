@@ -1,6 +1,7 @@
 package com.xaaef.molly.core.auth.service.impl;
 
 import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.generator.RandomGenerator;
 import com.xaaef.molly.core.auth.jwt.JwtTokenProperties;
 import com.xaaef.molly.core.auth.service.LineCaptchaService;
 import com.xaaef.molly.core.redis.RedisCacheUtils;
@@ -34,9 +35,14 @@ public class LineCaptchaServiceImpl implements LineCaptchaService {
 
     private final JwtTokenProperties props;
 
+    private final static RandomGenerator RANDOM_GENERATOR = new RandomGenerator("13456789abcdefghjkmnpqrstuvwxyABCDEFGHJKMNPQRSTUVWXY", 4);
+
     @Override
     public BufferedImage random(String codeKey) {
-        var lineCaptcha = CaptchaUtil.createLineCaptcha(120, 50);
+        var lineCaptcha = CaptchaUtil.createCircleCaptcha(120, 50, 4, 20);
+        lineCaptcha.setGenerator(RANDOM_GENERATOR);
+        // 重新生成code
+        lineCaptcha.createCode();
         // 将验证码的 codeKey 和 codeText , 保存在 redis 中，有效时间为 10 分钟
         cacheUtils.setString(
                 CAPTCHA_CODE_KEY + codeKey,

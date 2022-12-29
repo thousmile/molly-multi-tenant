@@ -119,11 +119,11 @@ public class WebSecurityConfiguration {
                 )
                 .authorizeHttpRequests(a -> a
                         // 跨域的调用
-                        .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         //  获取白名单（不进行权限验证）
-                        .antMatchers(tokenProperties.getExcludePath()).permitAll()
+                        .requestMatchers(tokenProperties.getExcludePath()).permitAll()
                         //  无需认证的固定的白名单
-                        .antMatchers(WHITE_LIST).permitAll()
+                        .requestMatchers(WHITE_LIST).permitAll()
                         //  其他的请求全部要认证
                         .anyRequest()
                         .authenticated()

@@ -11,8 +11,8 @@ import com.xaaef.molly.perms.service.PmsUserService;
 import com.xaaef.molly.perms.vo.ResetPasswordVO;
 import com.xaaef.molly.perms.vo.UpdatePasswordVO;
 import com.xaaef.molly.perms.vo.UpdateUserRoleIdVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -34,14 +34,14 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/pms/user")
-@Api(tags = "[ 权限 ] 用户")
+@Tag(name = "[ 权限 ] 用户")
 @AllArgsConstructor
 public class PmsUserController {
 
     private final PmsUserService baseService;
 
 
-    @ApiOperation(value = "分页查询", notes = "分页 查询所有")
+    @Operation(summary = "分页查询", description = "分页 查询所有")
     @GetMapping("/query")
     public JsonResult<Pagination<PmsUser>> pageQuery(UserQueryPO params) {
         IPage<PmsUser> page = baseService.pageKeywords(params);
@@ -49,7 +49,7 @@ public class PmsUserController {
     }
 
 
-    @ApiOperation(value = "新增", notes = "不需要添加id")
+    @Operation(summary = "新增", description = "不需要添加id")
     @OperateLog(title = "[用户管理]新增", type = LogType.INSERT)
     @PostMapping()
     public JsonResult<PmsUser> create(@RequestBody PmsUser entity) {
@@ -63,7 +63,7 @@ public class PmsUserController {
 
 
 
-    @ApiOperation(value = "修改", notes = "修改必须要id")
+    @Operation(summary = "修改", description = "修改必须要id")
     @OperateLog(title = "[用户]修改", type = LogType.UPDATE)
     @PutMapping()
     public JsonResult update(@RequestBody PmsUser entity) {
@@ -76,7 +76,7 @@ public class PmsUserController {
     }
 
 
-    @ApiOperation(value = "删除", notes = "修改必须要id")
+    @Operation(summary = "删除", description = "修改必须要id")
     @OperateLog(title = "[用户]删除", type = LogType.UPDATE)
     @DeleteMapping("/{id}")
     public JsonResult delete(@PathVariable Long id) {
@@ -90,7 +90,7 @@ public class PmsUserController {
 
 
 
-    @ApiOperation(value = "修改用户密码", notes = "修改用户密码")
+    @Operation(summary = "修改用户密码", description = "修改用户密码")
     @OperateLog(title = "[用户]修改用户密码", type = LogType.UPDATE)
     @PostMapping("/update/password")
     public JsonResult updatePassword(@RequestBody @Validated UpdatePasswordVO data,
@@ -105,7 +105,7 @@ public class PmsUserController {
     }
 
 
-    @ApiOperation(value = "重置用户密码", notes = "重置用户密码")
+    @Operation(summary = "重置用户密码", description = "重置用户密码")
     @OperateLog(title = "[用户]重置用户密码", type = LogType.UPDATE)
     @PostMapping("/reset/password")
     public JsonResult resetPassword(@RequestBody @Validated ResetPasswordVO data,
@@ -120,7 +120,7 @@ public class PmsUserController {
     }
 
 
-    @ApiOperation(value = "修改用户角色", notes = "修改用户角色,会删除之前的角色信息。")
+    @Operation(summary = "修改用户角色", description = "修改用户角色,会删除之前的角色信息。")
     @OperateLog(title = "[用户]修改用户角色", type = LogType.UPDATE)
     @PostMapping("/update/roles")
     public JsonResult updateRole(@RequestBody @Validated UpdateUserRoleIdVO data,

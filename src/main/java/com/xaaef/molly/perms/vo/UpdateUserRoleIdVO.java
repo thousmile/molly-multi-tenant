@@ -1,11 +1,14 @@
 package com.xaaef.molly.perms.vo;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.util.Set;
+
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 /**
  * <p>
@@ -25,12 +28,12 @@ import java.util.Set;
 public class UpdateUserRoleIdVO {
 
 
-    @ApiModelProperty(value = "用户ID不能为空！")
+    @Schema(description = "用户ID不能为空！", requiredMode = REQUIRED)
     @NotNull(message = "用户ID不能为空!")
     private Long userId;
 
 
-    @ApiModelProperty(value = "角色最少是一个！")
+    @Schema(description = "角色最少是一个！", requiredMode = REQUIRED)
     @NotNull(message = "角色不能为空!")
     @Size(min = 1, message = "角色最少是一个!")
     private Set<Long> roles;
