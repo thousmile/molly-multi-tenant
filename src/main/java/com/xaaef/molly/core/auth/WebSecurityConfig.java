@@ -42,7 +42,7 @@ import static com.xaaef.molly.core.auth.consts.JwtConst.WHITE_LIST;
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
-public class WebSecurityConfiguration {
+public class WebSecurityConfig {
 
     private final JwtTokenProperties tokenProperties;
 

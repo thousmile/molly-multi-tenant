@@ -40,7 +40,7 @@ import java.time.Duration;
         StringRedisTemplate.class
 })
 @EnableConfigurationProperties(CacheProperties.class)
-public class RedisAutoConfiguration {
+public class RedisAutoConfig {
 
     private final CacheProperties cacheProps;
 

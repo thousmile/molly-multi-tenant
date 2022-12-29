@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/molly_master?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
-    password: hello
+    password: 123456
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       maximum-pool-size: 10               #最大连接数，小于等于0会被重置为默认值10；大于零小于1会被重置为minimum-idle的值
