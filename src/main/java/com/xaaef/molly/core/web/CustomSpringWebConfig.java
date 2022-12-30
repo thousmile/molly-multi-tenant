@@ -5,6 +5,9 @@ import com.xaaef.molly.core.tenant.TenantIdInterceptor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,6 +61,26 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
     @Primary
     public ObjectMapper objectMapper() {
         return JsonUtils.getMapper();
+    }
+
+
+    /**
+     * 跨域过滤器
+     *
+     * @author WangChenChen
+     * @date 2022/12/30 13:42
+     */
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOriginPattern("*");
+        config.setAllowCredentials(true);
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+        config.addExposedHeader("*");
+        UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
+        configSource.registerCorsConfiguration("/**", config);
+        return new CorsFilter(configSource);
     }
 
 

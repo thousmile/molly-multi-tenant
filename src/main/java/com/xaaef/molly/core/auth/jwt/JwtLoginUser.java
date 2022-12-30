@@ -10,6 +10,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -30,7 +31,7 @@ import java.util.Collection;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtLoginUser implements UserDetails {
+public class JwtLoginUser implements UserDetails, Principal {
 
     /**
      * 租户ID
@@ -140,6 +141,12 @@ public class JwtLoginUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+
+    @Override
+    public String getName() {
+        return this.loginId;
     }
 
 

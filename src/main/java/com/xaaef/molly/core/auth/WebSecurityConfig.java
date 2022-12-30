@@ -130,6 +130,8 @@ public class WebSecurityConfig {
                 )
                 .addFilterBefore(jwtAuthTokenFilter, BasicAuthenticationFilter.class)
                 .headers()
+                .frameOptions()
+                .disable()
                 // 开始 xss 保护
                 .xssProtection()
                 .and()

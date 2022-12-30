@@ -1,6 +1,7 @@
 package com.xaaef.molly.core.auth.consts;
 
 
+import static com.xaaef.molly.common.consts.WebSocketKey.STOMP_ENDPOINT;
 
 public class JwtConst {
 
@@ -22,6 +23,7 @@ public class JwtConst {
     public static final String[] WHITE_LIST = {
             LOGIN_URL,
             String.format("%s/**", CAPTCHA_CODES_URL),
+            String.format("%s/**", STOMP_ENDPOINT),
             "/actuator/**",
             "/v2/api-docs",
             "/v3/api-docs/**",
