@@ -1,10 +1,13 @@
 package com.xaaef.molly.core.auth.service.impl;
 
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.core.auth.enums.AdminFlag;
 import com.xaaef.molly.core.auth.enums.GrantType;
+import com.xaaef.molly.core.auth.enums.StatusEnum;
 import com.xaaef.molly.core.auth.enums.UserType;
 import com.xaaef.molly.core.auth.exception.JwtAuthException;
 import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
@@ -21,8 +24,10 @@ import com.xaaef.molly.core.tenant.util.TenantUtils;
 import com.xaaef.molly.perms.entity.PmsRoleProxy;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import com.xaaef.molly.system.entity.SysMenu;
+import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.enums.MenuTargetEnum;
 import com.xaaef.molly.system.mapper.SysMenuMapper;
+import com.xaaef.molly.system.mapper.SysTenantMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +38,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.xaaef.molly.common.util.JsonUtils.DEFAULT_DATE_TIME_PATTERN;
 
 
 @Slf4j
@@ -56,6 +64,8 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     private final SysMenuMapper menuMapper;
 
+    private final SysTenantMapper tenantMapper;
+
     /**
      * 登录表单获取 Token
      *
@@ -68,6 +78,20 @@ public class UserLoginServiceImpl implements UserLoginService {
         // 验证码是否正确
         if (!captchaService.check(po.getCodeKey(), po.getCodeText())) {
             throw new JwtAuthException("认证失败：验证码错误。");
+        }
+        // 判断租户是否存在
+        var currentTenant = tenantMapper.selectById(TenantUtils.getTenantId());
+        if (currentTenant == null) {
+            throw new JwtAuthException("租户不存在！");
+        }
+        // 判断租户状态
+        if (!Objects.equals(currentTenant.getStatus(), StatusEnum.NORMAL.getCode())) {
+            throw new JwtAuthException(StrUtil.format("租户 {} 被禁用！", currentTenant.getName()));
+        }
+        // 判断租户是否过期
+        if (LocalDateTime.now().isAfter(currentTenant.getExpired())) {
+            var format = LocalDateTimeUtil.format(currentTenant.getExpired(), DEFAULT_DATE_TIME_PATTERN);
+            throw new JwtAuthException(StrUtil.format("租户 {} 已经在 {} 过期了！", currentTenant.getName(), format));
         }
 
         // 把表单提交的 username  password 封装到 UsernamePasswordAuthenticationToken中

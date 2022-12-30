@@ -9,14 +9,14 @@ x-tenant-id: apple
 ### [master]密码模式登录
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
-x-tenant-id: apple
+x-tenant-id: baidu
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0
 
 {
-  "username": "apple",
-  "password": "apple",
+  "username": "f5f9aea14295",
+  "password": "123456",
   "codeKey": "applezrgegbtnHNrefh",
-  "codeText": "9xwbm"
+  "codeText": "5yvg"
 }
 
 > {%

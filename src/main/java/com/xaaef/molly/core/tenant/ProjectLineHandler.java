@@ -29,14 +29,16 @@ import static com.xaaef.molly.core.tenant.consts.MbpConst.*;
 @AllArgsConstructor
 public class ProjectLineHandler implements TenantLineHandler {
 
-    private final MultiTenantProperties props;
+    private final MultiTenantProperties multiTenantProperties;
+
 
     @Override
     public Expression getTenantId() {
         var projectId = Optional.ofNullable(TenantUtils.getProjectId())
-                .orElse(props.getDefaultProjectId());
+                .orElse(multiTenantProperties.getDefaultProjectId());
         return new StringValue(projectId);
     }
+
 
     /**
      * 获取 项目 的字段名
@@ -46,13 +48,18 @@ public class ProjectLineHandler implements TenantLineHandler {
         return PROJECT_ID;
     }
 
+
     /**
      * 过滤不需要拼接 项目ID 的表
      * 默认返回 false 表示所有表都需要拼接条件
      */
     @Override
     public boolean ignoreTable(String tableName) {
+        if (PROJECT_IGNORE_TABLES.isEmpty()) {
+            return false;
+        }
         return PROJECT_IGNORE_TABLES.stream().anyMatch(t -> t.equalsIgnoreCase(tableName));
     }
+
 
 }

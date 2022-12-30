@@ -21,11 +21,13 @@ public class RedisMultiTenantManager implements MultiTenantManager {
 
     private final RedisCacheUtils cacheUtils;
 
-    private final MultiTenantProperties props;
+
+    private final MultiTenantProperties multiTenantProperties;
+
 
     @Override
     public String getDefaultTenantId() {
-        return props.getDefaultTenantId();
+        return multiTenantProperties.getDefaultTenantId();
     }
 
 
@@ -57,7 +59,7 @@ public class RedisMultiTenantManager implements MultiTenantManager {
     @PostConstruct
     public void init() {
         // 添加默认租户
-        addTenantId(props.getDefaultTenantId());
+        addTenantId(multiTenantProperties.getDefaultTenantId());
     }
 
 

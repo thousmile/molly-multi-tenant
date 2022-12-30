@@ -2,6 +2,7 @@ package com.xaaef.molly.system.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.common.po.SearchPO;
@@ -18,6 +19,7 @@ import com.xaaef.molly.perms.entity.PmsUser;
 import com.xaaef.molly.perms.mapper.PmsDeptMapper;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import com.xaaef.molly.perms.mapper.PmsUserMapper;
+import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
 import com.xaaef.molly.system.po.CreateTenantPO;
@@ -199,6 +201,18 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         // 保存租户
         this.save(sysTenant);
 
+        // 新增权限模板
+        if (po.getTemplateIds() != null && !po.getTemplateIds().isEmpty()) {
+            var wrapper = new LambdaQueryWrapper<SysTemplate>()
+                    .select(SysTemplate::getId)
+                    .in(SysTemplate::getId, po.getTemplateIds());
+            var templateIds = templateService.list(wrapper)
+                    .stream()
+                    .map(SysTemplate::getId)
+                    .collect(Collectors.toSet());
+            baseMapper.insertByTemplates(sysTenant.getTenantId(), templateIds);
+        }
+
         // 新创建的 租户 创建表结构
         dataSourceManager.updateTable(sysTenant.getTenantId());
 
@@ -300,9 +314,17 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         if (!this.exist(SysTenant::getTenantId, tenantId)) {
             return false;
         }
+        if (StringUtils.equals(tenantId, tenantManager.getDefaultTenantId())) {
+            throw new RuntimeException(StrUtil.format("无法删除 {} 默认租户！", tenantId));
+        }
+        // 删除 租户信息
         var flag = super.removeById(tenantId);
-        tenantManager.removeTenantId(tenantId);
+        // 删除 租户模板权限
+        baseMapper.deleteHaveTemplates(tenantId);
+        // 删除 租户数据库
         dataSourceManager.deleteTable(tenantId);
+        // 删除 redis中租户
+        tenantManager.removeTenantId(tenantId);
         return flag;
     }
 

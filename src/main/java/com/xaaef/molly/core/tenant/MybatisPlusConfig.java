@@ -39,7 +39,7 @@ import static com.xaaef.molly.core.tenant.consts.MbpConst.*;
 @EnableTransactionManagement
 public class MybatisPlusConfig {
 
-    private final MultiTenantProperties tenantProperties;
+    private final MultiTenantProperties multiTenantProperties;
 
     /**
      * 单页分页条数限制(默认无限制,参见 插件#handlerLimit 方法)
@@ -59,28 +59,27 @@ public class MybatisPlusConfig {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
 
         // 是否启用租户
-        if (tenantProperties.getEnable()) {
-            var schemaInterceptor = new SchemaInterceptor(tenantProperties);
+        if (multiTenantProperties.getEnable()) {
+            var schemaInterceptor = new SchemaInterceptor(multiTenantProperties);
             interceptor.addInnerInterceptor(schemaInterceptor);
         }
 
         // 是否启用项目
-        if (tenantProperties.getEnableProject()) {
+        if (multiTenantProperties.getEnableProject()) {
             interceptor.addInnerInterceptor(
                     new TenantLineInnerInterceptor(
-                            new ProjectLineHandler(tenantProperties)
+                            new ProjectLineHandler(multiTenantProperties)
                     )
             );
         }
 
         //分页插件: PaginationInnerInterceptor
-        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
+        var paginationInnerInterceptor = new PaginationInnerInterceptor();
         paginationInnerInterceptor.setMaxLimit(MAX_LIMIT);
+        interceptor.addInnerInterceptor(paginationInnerInterceptor);
 
         //防止全表更新与删除插件: BlockAttackInnerInterceptor
-        BlockAttackInnerInterceptor blockAttackInnerInterceptor = new BlockAttackInnerInterceptor();
-
-        interceptor.addInnerInterceptor(paginationInnerInterceptor);
+        var blockAttackInnerInterceptor = new BlockAttackInnerInterceptor();
         interceptor.addInnerInterceptor(blockAttackInnerInterceptor);
 
         return interceptor;
@@ -106,9 +105,9 @@ public class MybatisPlusConfig {
         public void updateFill(MetaObject metaObject) {
             if (JwtSecurityUtils.isAuthenticated()) {
                 var userId = JwtSecurityUtils.getUserId();
-                this.strictInsertFill(metaObject, ATTR_LAST_UPDATE_USER, () -> userId, Long.class);
+                this.strictUpdateFill(metaObject, ATTR_LAST_UPDATE_USER, () -> userId, Long.class);
             }
-            this.strictInsertFill(metaObject, ATTR_LAST_UPDATE_TIME, LocalDateTime::now, LocalDateTime.class);
+            this.strictUpdateFill(metaObject, ATTR_LAST_UPDATE_TIME, LocalDateTime::now, LocalDateTime.class);
         }
 
     }

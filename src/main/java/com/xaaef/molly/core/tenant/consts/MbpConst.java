@@ -67,9 +67,7 @@ public class MbpConst {
     /**
      * 不需要进行 拦截项目ID 的表名称
      */
-    public final static List<String> PROJECT_IGNORE_TABLES = List.of(
-            ""
-    );
+    public final static List<String> PROJECT_IGNORE_TABLES = List.of();
 
 
 }

@@ -5,14 +5,14 @@ x-tenant-id: {{tenantId}}
 Authorization: Bearer {{tokenValue}}
 
 {
-  "tenantId": "apple",
-  "logo": "https://apple.com/apple.png",
-  "name": "apple",
-  "email": "apple@gmail.com",
-  "linkman": "乔布斯",
-  "contactNumber": "15999999999",
-  "areaCode": "123123221311",
-  "address": "美国硅谷",
+  "tenantId": "baidu",
+  "logo": "https://baidu.com/baidu.png",
+  "name": "深圳市腾讯计算机系统有限公司",
+  "email": "baidu@qq.com",
+  "linkman": "李彦宏",
+  "contactNumber": "15111111333",
+  "areaCode": "440305000000",
+  "address": "中国北京海淀区上地十街10号百度大厦",
   "templateIds": [
     10001
   ]

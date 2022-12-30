@@ -1,6 +1,5 @@
 package com.xaaef.molly.core.tenant.props;
 
-import com.xaaef.molly.core.tenant.enums.DbStyle;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -48,29 +47,18 @@ public class MultiTenantProperties {
     private String defaultProjectId = "master";
 
     /**
-     * 多租户的类型。
-     *
-     * 一定要在配置文件里指定....
-     */
-    private DbStyle dbStyle;
-
-
-    /**
      * 创建表结构
      */
     private Boolean createTable = Boolean.TRUE;
-
 
     /**
      * 其他 数据库 创建表结构的 Liquibase 文件地址
      */
     private String otherChangeLog = "classpath:db/changelog-other.xml";
 
-
     /**
      * 主 数据库 创建表结构的 Liquibase 文件地址
      */
     private String masterChangeLog = "classpath:db/changelog-master.xml";
-
 
 }

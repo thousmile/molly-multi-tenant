@@ -4,12 +4,9 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.core.auth.enums.AdminFlag;
 import com.xaaef.molly.core.auth.enums.StatusEnum;
-import com.xaaef.molly.perms.entity.PmsRoleProxy;
 import com.xaaef.molly.perms.entity.PmsUser;
 import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
-import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import com.xaaef.molly.perms.mapper.PmsUserMapper;
-import com.xaaef.molly.system.mapper.SysMenuMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,9 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -27,11 +22,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class PmsUserDetailsService implements UserDetailsService {
 
+
     private final PmsUserMapper userMapper;
 
-    private final PmsRoleMapper roleMapper;
-
-    private final SysMenuMapper menuMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

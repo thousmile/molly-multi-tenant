@@ -13,7 +13,6 @@ import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statements;
 import net.sf.jsqlparser.util.TablesNamesFinder;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -36,12 +35,11 @@ import static com.xaaef.molly.core.tenant.consts.MbpConst.TENANT_IGNORE_TABLES;
 
 
 @Slf4j
-@Component
 @AllArgsConstructor
 public class SchemaInterceptor implements InnerInterceptor {
 
 
-    private final MultiTenantProperties props;
+    private final MultiTenantProperties multiTenantProperties;
 
 
     @Override
@@ -52,7 +50,7 @@ public class SchemaInterceptor implements InnerInterceptor {
         // 判断 表名称 是否需要过滤，即: 使用 公共库，而不是 租户 库。
         if (ignoreTable(tableName)) {
             // 切换数据库
-            switchSchema(conn, props.getDefaultTenantId());
+            switchSchema(conn, multiTenantProperties.getDefaultTenantId());
         } else {
             // 切换数据库
             switchSchema(conn, getCurrentTenantId());
@@ -74,13 +72,13 @@ public class SchemaInterceptor implements InnerInterceptor {
             }
         }
         return Optional.ofNullable(TenantUtils.getTenantId())
-                .orElse(props.getDefaultTenantId());
+                .orElse(multiTenantProperties.getDefaultTenantId());
     }
 
 
     private void switchSchema(Connection conn, String schema) {
         // 切换数据库
-        String sql = String.format("use %s%s", props.getPrefix(), schema);
+        String sql = String.format("use %s%s", multiTenantProperties.getPrefix(), schema);
         try {
             conn.createStatement().execute(sql);
         } catch (SQLException e) {

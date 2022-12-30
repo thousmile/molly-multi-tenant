@@ -7,7 +7,6 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +30,6 @@ import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
 @Slf4j
 @Component
 @AllArgsConstructor
-@ConditionalOnProperty(prefix = "multi.tenant", name = "db-style", havingValue = "Schema")
 public class SchemaDataSourceManager implements DatabaseManager {
 
     // 默认租户的数据源
