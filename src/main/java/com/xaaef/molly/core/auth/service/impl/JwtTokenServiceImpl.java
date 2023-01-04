@@ -48,6 +48,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     private final JWTSigner signer;
 
+
     public JwtTokenServiceImpl(JwtTokenProperties props, RedisCacheUtils cacheUtils) {
         this.props = props;
         this.cacheUtils = cacheUtils;
@@ -68,7 +69,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public void setLoginUser(JwtLoginUser loginUser) {
-        String loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
+        var loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
 
         // 将随机id 跟 当前登录的用户关联，在一起！
         cacheUtils.setObject(loginKey, loginUser, Duration.ofSeconds(props.getTokenExpired()));
@@ -76,8 +77,8 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         // 判断是否开启 单点登录
         if (props.getSso()) {
             // 拼接，当前在线用户 online_user:master:admin
-            String onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, loginUser.getTenantId(), loginUser.getUsername());
-            String oldLoginKey = cacheUtils.getString(onlineUserKey);
+            var onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, loginUser.getTenantId(), loginUser.getUsername());
+            var oldLoginKey = cacheUtils.getString(onlineUserKey);
             // 判断用户名。是否已经登录了！
             if (StringUtils.isNotBlank(oldLoginKey)) {
                 // 移除之前登录的用户
@@ -87,7 +88,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 removeLoginUser(onlineUserKey);
 
                 // 获取当前时间
-                String milli = LocalDateTimeUtil.format(LocalDateTime.now(), DEFAULT_DATE_TIME_PATTERN);
+                var milli = LocalDateTimeUtil.format(LocalDateTime.now(), DEFAULT_DATE_TIME_PATTERN);
 
                 // 将 被强制挤下线的用户，以及时间，保存到 redis中，提示给前端用户！
                 cacheUtils.setString(
@@ -116,19 +117,19 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         var loginId = jwt.getPayloads().getStr(JWT.SUBJECT);
 
         // 根据登录 唯一登录ID 从redis中获取登录的用户信息
-        JwtLoginUser jwtUser = getLoginUser(loginId);
+        var jwtUser = getLoginUser(loginId);
 
         // 如果此用户为空。判断是否开启了单点登录
         if (jwtUser == null || StringUtils.isEmpty(jwtUser.getUsername())) {
             // 判断是否启用单点登录
             if (props.getSso()) {
-                String key = FORCED_OFFLINE_KEY + loginId;
+                var forcedOfflineKey = FORCED_OFFLINE_KEY + loginId;
                 // 判断此用户，是不是被挤下线
-                String offlineTime = cacheUtils.getString(key);
+                var offlineTime = cacheUtils.getString(forcedOfflineKey);
                 if (StringUtils.isNotBlank(offlineTime)) {
                     // 删除 被挤下线 的消息提示
-                    removeLoginUser(key);
-                    String errMsg = String.format("您的账号在[ %s ]被其他用户拥下线了！", offlineTime);
+                    removeLoginUser(forcedOfflineKey);
+                    var errMsg = String.format("您的账号在[ %s ]被其他用户拥下线了！", offlineTime);
                     log.info("errMsg {}", errMsg);
                     throw new JwtAuthException(errMsg);
                 }
@@ -136,6 +137,13 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             throw new JwtAuthException("当前登录用户不存在");
         }
 
+        var loginKey = LOGIN_TOKEN_KEY + loginId;
+        // 过期 token 过期时间
+        var expire = cacheUtils.getExpire(loginKey);
+        // 如果过期时间，小于10分钟。就给 token 增加到 60 分钟的有效时间
+        if (expire < props.getPromptExpired()) {
+            cacheUtils.setExpirationTime(loginKey, Duration.ofHours(1));
+        }
         return jwtUser;
     }
 
@@ -144,13 +152,13 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     public JwtTokenValue refresh() {
         var oldLoginUser = JwtSecurityUtils.getLoginUser();
 
-        String loginKey = LOGIN_TOKEN_KEY + oldLoginUser.getLoginId();
+        var loginKey = LOGIN_TOKEN_KEY + oldLoginUser.getLoginId();
 
         // 移除登录的用户。根据tokenId
         removeLoginUser(loginKey);
 
         // 生成一个随机ID 跟当前用户关联
-        String loginId = IdUtil.simpleUUID();
+        var loginId = IdUtil.simpleUUID();
         var token = createJwtStr(loginId);
         oldLoginUser.setLoginId(loginId);
 
@@ -168,7 +176,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     @Override
     public void logout() {
         var loginUser = JwtSecurityUtils.getLoginUser();
-        String loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
+        var loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
         // 移除登录的用户。根据tokenId
         removeLoginUser(loginKey);
     }
@@ -182,8 +190,8 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public Set<String> listUsernames() {
-        String onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, TenantUtils.getTenantId(), "*");
-        String onlineUserKeyPrefix = StrUtil.format("{}{}:", ONLINE_USER_KEY, TenantUtils.getTenantId());
+        var onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, TenantUtils.getTenantId(), "*");
+        var onlineUserKeyPrefix = StrUtil.format("{}{}:", ONLINE_USER_KEY, TenantUtils.getTenantId());
         return Objects.requireNonNull(cacheUtils.keys(onlineUserKey))
                 .stream()
                 .map(r -> r.replaceAll(onlineUserKeyPrefix, ""))
@@ -193,7 +201,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public Set<String> listLoginIds() {
-        String onlineLoginKey = StrUtil.format("{}*", LOGIN_TOKEN_KEY);
+        var onlineLoginKey = StrUtil.format("{}*", LOGIN_TOKEN_KEY);
         return Objects.requireNonNull(cacheUtils.keys(onlineLoginKey))
                 .stream()
                 .map(r -> r.replaceAll(LOGIN_TOKEN_KEY, ""))

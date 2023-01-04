@@ -35,7 +35,7 @@ public class JwtTokenProperties {
     /**
      * token 缓存 过期时间  单位(秒)
      */
-    private Integer tokenExpired = 3600;
+    private Integer tokenExpired = 7200;
 
     /**
      * 短信验证码过期时间 单位(秒)
