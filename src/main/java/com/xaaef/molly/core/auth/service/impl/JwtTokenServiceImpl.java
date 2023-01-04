@@ -60,7 +60,8 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
 
-    private JwtLoginUser getLoginUser(String loginId) {
+    @Override
+    public JwtLoginUser getLoginUser(String loginId) {
         return cacheUtils.getObject(LOGIN_TOKEN_KEY + loginId, JwtLoginUser.class);
     }
 
@@ -180,12 +181,31 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
 
     @Override
-    public Set<String> getOnlineUsers() {
+    public Set<String> listUsernames() {
         String onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, TenantUtils.getTenantId(), "*");
         String onlineUserKeyPrefix = StrUtil.format("{}{}:", ONLINE_USER_KEY, TenantUtils.getTenantId());
         return Objects.requireNonNull(cacheUtils.keys(onlineUserKey))
                 .stream()
                 .map(r -> r.replaceAll(onlineUserKeyPrefix, ""))
+                .collect(Collectors.toSet());
+    }
+
+
+    @Override
+    public Set<String> listLoginIds() {
+        String onlineLoginKey = StrUtil.format("{}*", LOGIN_TOKEN_KEY);
+        return Objects.requireNonNull(cacheUtils.keys(onlineLoginKey))
+                .stream()
+                .map(r -> r.replaceAll(LOGIN_TOKEN_KEY, ""))
+                .collect(Collectors.toSet());
+    }
+
+
+    @Override
+    public Set<JwtLoginUser> listLoginUsers() {
+        return this.listLoginIds()
+                .stream()
+                .map(this::getLoginUser)
                 .collect(Collectors.toSet());
     }
 

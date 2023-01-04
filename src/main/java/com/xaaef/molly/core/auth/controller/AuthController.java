@@ -2,7 +2,6 @@ package com.xaaef.molly.core.auth.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.xaaef.molly.common.util.JsonResult;
-import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
@@ -144,9 +143,9 @@ public class AuthController {
     @Operation(summary = "登录的用户信息", description = "获取登录的用户信息")
     @GetMapping(LOGIN_USER_URL)
     public JsonResult<JwtLoginUser> loginUser() {
-        var auth = JwtSecurityUtils.getLoginUser();
-        log.info(JsonUtils.toFormatJson(jwtTokenService.getOnlineUsers()));
-        return JsonResult.success(auth);
+        return JsonResult.success(
+                JwtSecurityUtils.getLoginUser()
+        );
     }
 
 

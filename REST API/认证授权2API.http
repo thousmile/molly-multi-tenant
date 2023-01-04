@@ -3,20 +3,20 @@
 ### 获取验证码
 ###  http://localhost:18891/auth/captcha/codes?codeKey=5jXzuwcoUzbtnHNh
 GET {{baseUrl}}/auth/captcha/codes?codeKey=applezrgegbtnHNrefh
-x-tenant-id: apple
+x-tenant-id: google
 
 
 ### [master]密码模式登录
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
-x-tenant-id: baidu
+x-tenant-id: google
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0
 
 {
-  "username": "f5f9aea14295",
+  "username": "13c19cd9e430",
   "password": "123456",
   "codeKey": "applezrgegbtnHNrefh",
-  "codeText": "5yvg"
+  "codeText": "3swv"
 }
 
 > {%
@@ -28,21 +28,21 @@ client.global.set("refreshToken", response.body.data.refresh_token);
 ### 退出登录
 POST {{baseUrl}}/auth/logout
 Content-Type: application/json
-x-tenant-id: apple
+x-tenant-id: google
 Authorization: Bearer {{tokenValue}}
 
 
 ### 刷新token
 GET {{baseUrl}}/auth/refresh
 Content-Type: application/json
-x-tenant-id: apple
+x-tenant-id: google
 Authorization: Bearer {{tokenValue}}
 
 
 ### 获取登录的用户信息
 GET {{baseUrl}}/auth/login/user
 Content-Type: application/json
-x-tenant-id: apple
+x-tenant-id: google
 Authorization: Bearer {{tokenValue}}
 
 
@@ -50,8 +50,7 @@ Authorization: Bearer {{tokenValue}}
 ### 获取用户列表
 GET {{baseUrl}}/pms/user
 Content-Type: application/json
-#x-tenant-id: apple
-#x-tenant-id: google
-x-tenant-id: {{tenantId}}
+x-tenant-id: google
+#x-tenant-id: {{tenantId}}
 Authorization: Bearer {{tokenValue}}
 

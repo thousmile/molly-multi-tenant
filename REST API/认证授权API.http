@@ -16,7 +16,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Fi
   "username": "admin",
   "password": "123456",
   "codeKey": "5jXzuwcoUzbtnHNh",
-  "codeText": "fp1u"
+  "codeText": "gunj"
 }
 
 > {%
@@ -44,5 +44,13 @@ GET {{baseUrl}}/auth/login/user
 Content-Type: application/json
 x-tenant-id: {{tenantId}}
 Authorization: Bearer {{tokenValue}}
+
+
+### admin
+### eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmNTBlY2Y4MTdmNTQ0Njc2OWRhOTYyOTg1NzI0MmI5NCJ9.gria4LT2Am27dnxk87itKvhM6M7h-5Se9Az560LIFy8
+
+
+### google
+### eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5ODdmMzdkMDQ0YTM0NThhYmExYWY3MzdlNTY2ZDhmNiJ9.TNCHkxi988nw7fDULA9E4J8NzJKIC11ewNASuBATzkc
 
 
