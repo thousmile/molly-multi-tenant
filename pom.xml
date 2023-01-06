@@ -20,6 +20,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <storage.version>0.7.0</storage.version>
+        <qiniu.version>7.12.1</qiniu.version>
+
         <hutool.version>5.8.11</hutool.version>
         <knife4j.version>4.0.0</knife4j.version>
         <liquibase.version>4.17.2</liquibase.version>
@@ -30,6 +33,20 @@
 
 
     <dependencies>
+
+        <!-- spring-file-storage 必须要引入 -->
+        <dependency>
+            <groupId>cn.xuyanwu</groupId>
+            <artifactId>spring-file-storage</artifactId>
+            <version>${storage.version}</version>
+        </dependency>
+
+        <!-- 七牛云 Kodo 不使用的情况下可以不引入 -->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>${qiniu.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>

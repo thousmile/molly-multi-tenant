@@ -1,13 +1,14 @@
 ### 图片上传
 POST {{baseUrl}}/upload/image
 Authorization: Bearer {{tokenValue}}
+x-tenant-id: {{tenantId}}
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="tR9669GlNMU-343X.bin"
+Content-Disposition: form-data; name="file"; filename="微信图片_20220421102231.png"
 Content-Type: multipart/form-data
 
-< C:\\Users\\demo\\Desktop\\地图和头像\\tR9669GlNMU-343X.bin
+< C:\\Users\\demo\\Desktop\\地图和头像\\捷顺\\微信图片_20220421102231.png
 --WebAppBoundary--
 
 
@@ -16,6 +17,7 @@ Content-Type: multipart/form-data
 ### 头像上传
 POST {{baseUrl}}/upload/avatar
 Authorization: Bearer {{tokenValue}}
+x-tenant-id: {{tenantId}}
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
@@ -29,5 +31,6 @@ Content-Type: multipart/form-data
 
 
 ### 删除图片
-DELETE {{baseUrl}}/upload/delete?url=https://images.xaaef.com/20210728105923.png
+DELETE {{baseUrl}}/upload?fileUrl=https://oss.xaaef.com/molly/2023/1/6/63b7f8109e85614bf6645f8d.jpg
+x-tenant-id: {{tenantId}}
 Authorization: Bearer {{tokenValue}}

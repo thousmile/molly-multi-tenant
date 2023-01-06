@@ -11,6 +11,7 @@ import com.xaaef.molly.perms.service.PmsUserService;
 import com.xaaef.molly.perms.vo.ResetPasswordVO;
 import com.xaaef.molly.perms.vo.UpdatePasswordVO;
 import com.xaaef.molly.perms.vo.UpdateUserRoleIdVO;
+import com.xaaef.molly.perms.vo.UserRightsVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,14 @@ import java.util.List;
 public class PmsUserController {
 
     private final PmsUserService baseService;
+
+
+    @Operation(summary = "用户权限", description = "用户权限")
+    @GetMapping("/rights")
+    public JsonResult<UserRightsVO> getUserRights() {
+        var result = baseService.getUserRights();
+        return JsonResult.success(result);
+    }
 
 
     @Operation(summary = "分页查询", description = "分页 查询所有")

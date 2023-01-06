@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -45,15 +46,17 @@ public class TestCronAsync {
 
     @Scheduled(fixedRate = 5000)
     public void cron1() {
-        var map = Map.of(
-                "id", RandomUtil.randomInt(10000, 99999),
-                "msg", RandomUtil.randomString(12),
-                "dataArr", RandomUtil.randomEleSet(arrs, 3)
-        );
-        var json = JsonUtils.toJson(map);
-        log.info(json);
-        // 广播通知  给所有用户
-        messagingTemplate.convertAndSend("/topic/broadcast/notice", json);
+        if (!tokenService.listLoginIds().isEmpty()) {
+            var map = Map.of(
+                    "id", RandomUtil.randomInt(10000, 99999),
+                    "msg", RandomUtil.randomString(12),
+                    "dataArr", RandomUtil.randomEleSet(arrs, 3)
+            );
+            var json = JsonUtils.toJson(map);
+            log.info(json);
+            // 广播通知  给所有用户
+            messagingTemplate.convertAndSend("/topic/broadcast/notice", json);
+        }
     }
 
 

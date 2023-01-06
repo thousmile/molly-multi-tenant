@@ -1,33 +1,37 @@
 package com.xaaef.molly.perms.service.impl;
 
+import cn.hutool.core.lang.tree.TreeNode;
+import cn.hutool.core.lang.tree.TreeUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.core.auth.enums.AdminFlag;
 import com.xaaef.molly.core.auth.enums.StatusEnum;
-import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.perms.entity.PmsRole;
+import com.xaaef.molly.perms.entity.PmsRoleProxy;
 import com.xaaef.molly.perms.entity.PmsUser;
+import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import com.xaaef.molly.perms.mapper.PmsUserMapper;
 import com.xaaef.molly.perms.service.PmsUserService;
-import com.xaaef.molly.perms.vo.ResetPasswordVO;
-import com.xaaef.molly.perms.vo.UpdatePasswordVO;
+import com.xaaef.molly.perms.vo.*;
+import com.xaaef.molly.system.entity.SysMenu;
+import com.xaaef.molly.system.enums.MenuTargetEnum;
+import com.xaaef.molly.system.mapper.SysMenuMapper;
 import com.xaaef.molly.system.service.SysConfigService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.aspectj.runtime.reflect.Factory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.xaaef.molly.common.consts.ConfigName.TENANT_DEFAULT_ROLE_NAME;
 import static com.xaaef.molly.common.consts.ConfigName.USER_DEFAULT_PASSWORD;
 import static com.xaaef.molly.core.auth.jwt.JwtSecurityUtils.*;
+import static com.xaaef.molly.system.enums.MenuTypeEnum.*;
+
 
 /**
  * <p>
@@ -45,6 +49,11 @@ import static com.xaaef.molly.core.auth.jwt.JwtSecurityUtils.*;
 public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> implements PmsUserService {
 
     private final SysConfigService configService;
+
+    private final PmsRoleMapper roleMapper;
+
+    private final SysMenuMapper menuMapper;
+
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -142,6 +151,71 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
         }
         // 再赋值新的角色
         return baseMapper.insertByRoles(userId, roleIds);
+    }
+
+
+    @Override
+    public UserRightsVO getUserRights() {
+        // 用户菜单权限
+        List<SysMenu> userMenus = null;
+        // 如果是管理员，就获取全部的权限
+        if (isAdminUser()) {
+            if (isMasterUser()) {
+                // 系统管理员就获取 非租户的全部菜单
+                var wrapper = new LambdaQueryWrapper<SysMenu>()
+                        .ne(SysMenu::getTarget, MenuTargetEnum.TENANT.getCode());
+                userMenus = menuMapper.selectList(wrapper);
+            } else {
+                // 租户管理员，就获取租户全部的菜单
+                userMenus = menuMapper.selectByTenantId(getTenantId());
+            }
+        } else {
+            // 获取当前用户，拥有的 角色ID
+            var roleIds = getLoginUser().getRoles()
+                    .stream()
+                    .map(PmsRoleProxy::getRoleId)
+                    .collect(Collectors.toSet());
+            if (roleIds.isEmpty()) {
+                return UserRightsVO.builder().build();
+            }
+            // 根据 角色ID , 获取全部菜单
+            var menuIds = roleMapper.selectMenuIdByRoleIds(roleIds);
+            if (menuIds.isEmpty()) {
+                return UserRightsVO.builder().build();
+            }
+            userMenus = menuMapper.selectBatchIds(menuIds);
+        }
+
+        // 获取菜单
+        var nodeList = userMenus.stream()
+                .distinct()
+                .filter(r -> r.getMenuType() == MENU.getCode())
+                .map(r -> {
+                    var meta = new MenuMetaVO()
+                            .setTitle(r.getMenuName())
+                            .setIcon(r.getIcon());
+                    var node = new TreeNode<>(r.getMenuId(), r.getParentId(), r.getPerms(), r.getSort());
+                    node.setExtra(Map.of(
+                            "meta", meta,
+                            "component", r.getComponent(),
+                            "path", r.getPath(),
+                            "hidden", r.getVisible() == 0
+                    ));
+                    return node;
+                })
+                .collect(Collectors.toList());
+
+        // 将 菜单列表，递归成 树节点的形式
+        var treeMenus = TreeUtil.build(nodeList, 0L);
+
+        // 获取所有的按钮
+        var buttons = userMenus.stream()
+                .distinct()
+                .filter(r -> r.getMenuType() == BUTTON.getCode())
+                .map(r -> new ButtonVO().setPerms(r.getPerms()).setTitle(r.getMenuName()))
+                .collect(Collectors.toSet());
+
+        return new UserRightsVO().setMenus(treeMenus).setButtons(buttons);
     }
 
 

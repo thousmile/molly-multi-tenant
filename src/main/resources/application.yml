@@ -43,7 +43,7 @@ multi:
 
 info:
   app:
-    name: molly-multi-tenant
+    name: ${spring.application.name}
     description: molly mybatis-plus multi tenant sass platform
     version: 1.0.1
 

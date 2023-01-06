@@ -56,11 +56,12 @@ public class MbpConst {
             "sys_tenant_template",          // 租户关联模板
             "sys_template",                 // 模板
             "sys_template_menu",            // 模板关联菜单
-            "comm_menu",                    // 菜单
-            "comm_config",                  // 全局配置
-            "comm_dict_data",               // 数据字典数据
-            "comm_dict_type",               // 数据字典类型
-            "comm_china_area"               // 中国行政区域表
+            "sys_menu",                     // 菜单
+            "sys_config",                   // 全局配置
+            "sys_dict_data",                // 数据字典数据
+            "sys_dict_type",                // 数据字典类型
+            "sys_file_detail",              // 通用配置文件
+            "china_area"                    // 中国行政区域表
     );
 
 

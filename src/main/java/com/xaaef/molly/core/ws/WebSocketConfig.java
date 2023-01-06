@@ -34,17 +34,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     /**
      * 添加这个Endpoint，这样在网页中就可以通过websocket连接上服务,
-     * 也就是我们配置websocket的服务地址,并且可以指定是否使用socketjs
+     * 也就是我们配置websocket的服务地址,并且可以指定是否使用SockJS
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         /*
-         * 1. 将 /stomp/websocketJs路径注册为STOMP的端点，
-         *    用户连接了这个端点后就可以进行websocket通讯，支持socketJs
+         * 1. 将 /stomp/push 路径注册为STOMP的端点，
+         *    用户连接了这个端点后就可以进行websocket通讯，支持SockJS
          * 2. setAllowedOriginPatterns("*")表示可以跨域
          * 3. withSockJS()表示支持socktJS访问
          * 4. addInterceptors 添加自定义拦截器，这个拦截器是上一个demo自己定义的获取httpsession的拦截器
-         * 5. addInterceptors 添加拦截处理，这里MyPrincipalHandshakeHandler 封装的认证用户信息
+         * 5. setHandshakeHandler 添加拦截处理，这里MyPrincipalHandshakeHandler 封装的认证用户信息
          */
         //配置客户端连接地址
         registry.addEndpoint(STOMP_ENDPOINT)

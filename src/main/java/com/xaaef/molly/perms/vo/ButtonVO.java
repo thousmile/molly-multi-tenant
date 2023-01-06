@@ -1,10 +1,8 @@
-package com.xaaef.molly.system.vo;
+package com.xaaef.molly.perms.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -18,10 +16,13 @@ import lombok.NoArgsConstructor;
  */
 
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
+@ToString
 public class ButtonVO implements java.io.Serializable {
 
     /**

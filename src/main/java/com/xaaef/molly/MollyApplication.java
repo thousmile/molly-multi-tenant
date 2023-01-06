@@ -1,5 +1,6 @@
 package com.xaaef.molly;
 
+import cn.xuyanwu.spring.file.storage.EnableFileStorage;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,6 +22,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 @EnableCaching
 @EnableScheduling
+@EnableFileStorage
 @SpringBootApplication
 @MapperScan("com.xaaef.molly.*.mapper")
 public class MollyApplication {

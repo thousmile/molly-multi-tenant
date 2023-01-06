@@ -16,7 +16,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Fi
   "username": "admin",
   "password": "123456",
   "codeKey": "5jXzuwcoUzbtnHNh",
-  "codeText": "gunj"
+  "codeText": "xbdr"
 }
 
 > {%
@@ -41,6 +41,13 @@ Authorization: Bearer {{tokenValue}}
 
 ### 获取登录的用户信息
 GET {{baseUrl}}/auth/login/user
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+
+### 获取登录的用户菜单权限
+GET {{baseUrl}}/pms/user/rights
 Content-Type: application/json
 x-tenant-id: {{tenantId}}
 Authorization: Bearer {{tokenValue}}

@@ -41,7 +41,7 @@ VALUES (10001, '管理员', 1, '管理员', '2022-06-10 23:11:09', 19980817, '20
 INSERT INTO `pms_user` (`user_id`, `avatar`, `username`, `mobile`, `email`, `nickname`, `password`,
                         `gender`, `dept_id`, `status`, `admin_flag`, `expired`, `create_time`,
                         `create_user`, `last_update_time`, `last_update_user`)
-VALUES (19980817, 'https://oss.mhtled.com/image/mhtled_logo.png', 'admin', '15066666666',
+VALUES (19980817, 'https://images.xaaef.com/08afb399498d4fecb6211c7c26175e8e.jpg', 'admin', '15666666666',
         'admin@qq.com', '超级管理员', '$2a$10$jU7Bg8YLLeF.eoGOzSuZE./ns.lctGOQBX0RTXvhy3HXv8RikUaka', 1,
         10001, 1, 1, NULL, '2021-05-14 11:17:33', 19980817, '2021-12-17 10:12:24', 19980817);
 
