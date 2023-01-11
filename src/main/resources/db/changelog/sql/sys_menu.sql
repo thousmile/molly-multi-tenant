@@ -56,12 +56,12 @@ INSERT INTO `sys_menu` VALUES (10033, '新增', 10006, 'pre_menu:create', '#', '
 INSERT INTO `sys_menu` VALUES (10034, '修改', 10006, 'pre_menu:update', '#', '', '', 3, 1, 1, 1, '2022-06-25 15:03:42', 19980817, '2022-06-27 20:39:53', 19980817);
 INSERT INTO `sys_menu` VALUES (10035, '删除', 10006, 'pre_menu:delete', '#', '', '', 4, 1, 1, 1, '2022-06-25 15:03:42', 19980817, '2022-06-27 20:39:25', 19980817);
 INSERT INTO `sys_menu` VALUES (10036, '字典数据', 10001, 'sys:dict:data', 'sys/dict/dictData', '#', '/sys/dict/data', 7, 0, 0, 1, '2022-06-27 20:36:39', 19980817, '2022-06-30 12:10:50', 19980817);
-INSERT INTO `sys_menu` VALUES (10037, '新增租户', 10019, 'sys:tenant:create:link', 'sys/tenant/createTenant', 'sys', '/sys/tenant/create', 1, 0, 0, 1, '2022-06-27 21:28:41', 19980817, '2022-06-27 21:28:41', 19980817);
+INSERT INTO `sys_menu` VALUES (10037, '新增租户', 10016, 'sys:tenant:create:link', 'sys/tenant/createTenant', 'sys', '/sys/tenant/create', 1, 0, 0, 1, '2022-06-27 21:28:41', 19980817, '2022-06-27 21:28:41', 19980817);
 INSERT INTO `sys_menu` VALUES (10038, '数据统计', 0, 'statistics', 'Layout', 'statistics', '/statistics', 1, 0, 1, 2, '2022-07-30 18:17:42', 19980817, '2022-07-30 18:17:42', 19980817);
-INSERT INTO `sys_menu` VALUES (10039, '能耗统计', 10083, 'statistics:energy', 'statistics/energy/index', 'statistics_energy', '/statistics/energy', 5, 0, 1, 2, '2022-07-30 18:18:27', 19980817, '2022-07-30 18:18:27', 19980817);
-INSERT INTO `sys_menu` VALUES (10040, '趋势分析', 10083, 'statistics:trend', 'statistics/trend/index', 'statistics_trend', '/statistics/trend', 10, 0, 1, 2, '2022-07-30 18:19:12', 19980817, '2022-07-30 18:19:12', 19980817);
+INSERT INTO `sys_menu` VALUES (10039, '能耗统计', 10038, 'statistics:energy', 'statistics/energy/index', 'statistics_energy', '/statistics/energy', 5, 0, 1, 2, '2022-07-30 18:18:27', 19980817, '2022-07-30 18:18:27', 19980817);
+INSERT INTO `sys_menu` VALUES (10040, '趋势分析', 10038, 'statistics:trend', 'statistics/trend/index', 'statistics_trend', '/statistics/trend', 10, 0, 1, 2, '2022-07-30 18:19:12', 19980817, '2022-07-30 18:19:12', 19980817);
 INSERT INTO `sys_menu` VALUES (10041, '设备管理', 0, 'device', 'Layout', 'device', '/device', 3, 0, 1, 2, '2022-07-30 18:19:45', 19980817, '2022-07-30 18:19:45', 19980817);
-INSERT INTO `sys_menu` VALUES (10042, '设备列表', 10086, 'device:list', 'device/list/index', 'device_list', '/device/list', 5, 0, 1, 2, '2022-07-30 18:20:24', 19980817, '2022-07-30 18:20:24', 19980817);
-INSERT INTO `sys_menu` VALUES (10043, '设备规划', 10086, 'device:deploy', 'device/deploy/index', 'device_deploy', '/device/deploy', 3, 0, 1, 2, '2022-07-30 18:20:56', 19980817, '2022-07-30 18:20:56', 19980817);
+INSERT INTO `sys_menu` VALUES (10042, '设备列表', 10041, 'device:list', 'device/list/index', 'device_list', '/device/list', 5, 0, 1, 2, '2022-07-30 18:20:24', 19980817, '2022-07-30 18:20:24', 19980817);
+INSERT INTO `sys_menu` VALUES (10043, '设备规划', 10041, 'device:deploy', 'device/deploy/index', 'device_deploy', '/device/deploy', 3, 0, 1, 2, '2022-07-30 18:20:56', 19980817, '2022-07-30 18:20:56', 19980817);
 
 SET FOREIGN_KEY_CHECKS = 1;

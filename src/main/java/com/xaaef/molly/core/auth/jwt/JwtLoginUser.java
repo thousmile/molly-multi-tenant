@@ -48,28 +48,35 @@ public class JwtLoginUser implements UserDetails, Principal {
      */
     private GrantType grantType;
 
-    /**
-     * 用户唯一ID
-     */
     private Long userId;
 
     /**
-     * 用户昵称
-     */
-    private String nickname;
-
-    /**
-     * 用户头像
+     * 头像
      */
     private String avatar;
 
     /**
-     * 用户登录时，使用的用户名
+     * 用户名
      */
     private String username;
 
     /**
-     * 用户登录时，使用的密码
+     * 手机号码
+     */
+    private String mobile;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 昵称
+     */
+    private String nickname;
+
+    /**
+     * 密码
      */
     private String password;
 
@@ -87,6 +94,16 @@ public class JwtLoginUser implements UserDetails, Principal {
      * 用户类型 0. 租户用户  1. 系统用户
      */
     private UserType userType;
+
+    /**
+     * 性别[ 0.女  1.男  2.未知]
+     */
+    private Byte gender;
+
+    /**
+     * 所属部门
+     */
+    private Long deptId;
 
     /**
      * 登录时间

@@ -1,8 +1,6 @@
 package com.xaaef.molly.system.controller;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.xuyanwu.spring.file.storage.FileInfo;
 import cn.xuyanwu.spring.file.storage.FileStorageService;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.system.vo.FileInfoVO;
@@ -10,13 +8,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * <p>

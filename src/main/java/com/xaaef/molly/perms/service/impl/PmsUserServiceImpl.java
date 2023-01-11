@@ -1,11 +1,15 @@
 package com.xaaef.molly.perms.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.core.auth.enums.AdminFlag;
 import com.xaaef.molly.core.auth.enums.StatusEnum;
+import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
+import com.xaaef.molly.core.auth.service.JwtTokenService;
 import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.entity.PmsRoleProxy;
@@ -21,6 +25,7 @@ import com.xaaef.molly.system.service.SysConfigService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +58,8 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
     private final PmsRoleMapper roleMapper;
 
     private final SysMenuMapper menuMapper;
+
+    private final JwtTokenService jwtTokenService;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -123,6 +130,24 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateById(PmsUser entity) {
+        var wrapper1 = new LambdaQueryWrapper<PmsUser>()
+                .eq(PmsUser::getUsername, entity.getUsername())
+                .ne(PmsUser::getUserId, entity.getUserId());
+        if (this.count(wrapper1) > 0) {
+            throw new RuntimeException(String.format("用户名 %s 已经存在了！", entity.getUsername()));
+        }
+        var wrapper2 = new LambdaQueryWrapper<PmsUser>()
+                .eq(PmsUser::getMobile, entity.getMobile())
+                .ne(PmsUser::getUserId, entity.getUserId());
+        if (this.count(wrapper2) > 0) {
+            throw new RuntimeException(String.format("手机号码 %s 已经存在了！", entity.getMobile()));
+        }
+        var wrapper3 = new LambdaQueryWrapper<PmsUser>()
+                .eq(PmsUser::getEmail, entity.getEmail())
+                .ne(PmsUser::getUserId, entity.getUserId());
+        if (this.count(wrapper3) > 0) {
+            throw new RuntimeException(String.format("邮箱账号 %s 已经存在了！", entity.getEmail()));
+        }
         if (entity.getRoles() != null) {
             // 角色列表
             var roleIds = entity.getRoles()
@@ -133,6 +158,14 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
             updateUserRoles(entity.getUserId(), roleIds);
         }
         entity.setPassword(null);
+        // 如果修改的自己的信息
+        if (Objects.equals(getUserId(), entity.getUserId())) {
+            var loginUser = getLoginUser();
+            var copyOptions = CopyOptions.create();
+            copyOptions.setIgnoreNullValue(true);
+            BeanUtil.copyProperties(entity, loginUser, copyOptions);
+            jwtTokenService.updateLoginUser(loginUser);
+        }
         return super.updateById(entity);
     }
 

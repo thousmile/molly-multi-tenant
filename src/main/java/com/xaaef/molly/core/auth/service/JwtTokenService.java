@@ -31,6 +31,14 @@ public interface JwtTokenService {
 
 
     /**
+     * 修改登录的用户 到redis中
+     *
+     * @param loginUser
+     */
+    void updateLoginUser(JwtLoginUser loginUser);
+
+
+    /**
      * 根据 loginId 获取 用户信息
      * <p>
      * 例: login_tokens:c6ea9a4cbb0e4fd093764c87fcfb372f

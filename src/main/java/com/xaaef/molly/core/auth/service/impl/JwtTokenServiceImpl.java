@@ -104,6 +104,14 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
 
     @Override
+    public void updateLoginUser(JwtLoginUser loginUser) {
+        var loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
+        var expire = cacheUtils.getExpire(loginKey);
+        cacheUtils.setObject(loginKey, loginUser, Duration.ofSeconds(expire));
+    }
+
+
+    @Override
     public JwtLoginUser validate(String bearerToken) throws JwtAuthException {
         var tokenStr = bearerToken.substring(props.getTokenType().length());
         JWT jwt = null;

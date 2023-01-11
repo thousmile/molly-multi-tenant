@@ -9,6 +9,7 @@ import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.perms.mapper.PmsUserMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,15 +37,12 @@ public class PmsUserDetailsService implements UserDetailsService {
                     StrUtil.format("用户名 {} 不存在！", username)
             );
         }
-        return new JwtLoginUser()
-                .setUserId(dbUser.getUserId())
-                .setAvatar(dbUser.getAvatar())
-                .setUsername(dbUser.getUsername())
-                .setNickname(dbUser.getNickname())
-                .setPassword(dbUser.getPassword())
-                .setStatus(StatusEnum.get(dbUser.getStatus()))
-                .setAdminFlag(AdminFlag.get(dbUser.getAdminFlag()))
-                .setAuthorities(Set.of());
+        var result = new JwtLoginUser();
+        BeanUtils.copyProperties(dbUser, result);
+        result.setStatus(StatusEnum.get(dbUser.getStatus()));
+        result.setAdminFlag(AdminFlag.get(dbUser.getAdminFlag()));
+        result.setAuthorities(Set.of());
+        return result;
     }
 
 

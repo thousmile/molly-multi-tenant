@@ -36,25 +36,25 @@ public class UpdatePasswordVO {
     /**
      * 旧密码
      */
-    @Schema(description = "旧密码长度要大于6位！", requiredMode = REQUIRED)
+    @Schema(description = "旧密码长度要大于5位！", requiredMode = REQUIRED)
     @NotNull(message = "旧密码不能为空!")
-    @Length(min = 5, message = "旧密码长度要大于6位!")
+    @Length(min = 5, message = "旧密码长度要大于5位!")
     private String oldPwd;
 
     /**
      * 新密码
      */
-    @Schema(description = "新密码长度要大于6位！", requiredMode = REQUIRED)
+    @Schema(description = "新密码长度要大于5位！", requiredMode = REQUIRED)
     @NotNull(message = "新密码不能为空!")
-    @Length(min = 5, message = "新密码长度要大于6位!")
+    @Length(min = 5, message = "新密码长度要大于5位!")
     private String newPwd;
 
     /**
      * 确认密码
      */
-    @Schema(description = "确认密码长度要大于6位！", requiredMode = REQUIRED)
+    @Schema(description = "确认密码长度要大于5位！", requiredMode = REQUIRED)
     @NotNull(message = "确认密码不能为空!")
-    @Length(min = 5, message = "确认密码长度要大于6位!")
+    @Length(min = 5, message = "确认密码长度要大于5位!")
     private String confirmPwd;
 
 }
