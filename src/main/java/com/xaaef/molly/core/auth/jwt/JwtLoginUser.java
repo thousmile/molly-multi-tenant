@@ -48,6 +48,9 @@ public class JwtLoginUser implements UserDetails, Principal {
      */
     private GrantType grantType;
 
+    /**
+     * 用户ID
+     */
     private Long userId;
 
     /**

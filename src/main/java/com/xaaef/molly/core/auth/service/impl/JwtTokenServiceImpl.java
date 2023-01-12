@@ -187,6 +187,9 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         var loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
         // 移除登录的用户。根据tokenId
         removeLoginUser(loginKey);
+        // 拼接，当前在线用户 online_user:master:admin
+        var onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, loginUser.getTenantId(), loginUser.getUsername());
+        removeLoginUser(onlineUserKey);
     }
 
 

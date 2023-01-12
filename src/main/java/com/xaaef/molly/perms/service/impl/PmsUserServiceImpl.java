@@ -5,17 +5,23 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.core.auth.enums.AdminFlag;
 import com.xaaef.molly.core.auth.enums.StatusEnum;
 import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.core.auth.service.JwtTokenService;
 import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
+import com.xaaef.molly.perms.entity.PmsDept;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.entity.PmsRoleProxy;
 import com.xaaef.molly.perms.entity.PmsUser;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import com.xaaef.molly.perms.mapper.PmsUserMapper;
+import com.xaaef.molly.perms.service.PmsDeptService;
+import com.xaaef.molly.perms.service.PmsRoleService;
 import com.xaaef.molly.perms.service.PmsUserService;
 import com.xaaef.molly.perms.vo.*;
 import com.xaaef.molly.system.entity.SysMenu;
@@ -55,11 +61,40 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
 
     private final SysConfigService configService;
 
+    private final PmsRoleService roleService;
+
+    private final PmsDeptService deptService;
+
     private final PmsRoleMapper roleMapper;
 
     private final SysMenuMapper menuMapper;
 
     private final JwtTokenService jwtTokenService;
+
+
+    @Override
+    public IPage<PmsUser> pageKeywords(SearchPO params, SFunction<PmsUser, ?>... columns) {
+        var result = super.pageKeywords(params, columns);
+        setRoleAndDept(result.getRecords());
+        return result;
+    }
+
+
+    private void setRoleAndDept(Collection<PmsUser> list) {
+        if (!list.isEmpty()) {
+            var userIds = list.stream().map(PmsUser::getUserId).collect(Collectors.toSet());
+            var deptIds = list.stream().map(PmsUser::getDeptId).collect(Collectors.toSet());
+            var roleMaps = roleService.listByUserIds(userIds);
+            var deptMaps = deptService.listByIds(deptIds)
+                    .stream()
+                    .collect(Collectors.toMap(PmsDept::getDeptId, d -> d));
+            list.forEach(r -> {
+                r.setPassword(null);
+                r.setRoles(roleMaps.get(r.getUserId()));
+                r.setDept(deptMaps.get(r.getDeptId()));
+            });
+        }
+    }
 
 
     @Transactional(rollbackFor = Exception.class)

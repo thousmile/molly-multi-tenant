@@ -30,7 +30,7 @@ import java.util.List;
 @Slf4j
 @Tag(name = "[ 权限 ] 菜单管理")
 @RestController
-@RequestMapping("/menu")
+@RequestMapping("/sys/menu")
 @AllArgsConstructor
 public class SysMenuController {
 

@@ -143,9 +143,9 @@ public class AuthController {
     @Operation(summary = "登录的用户信息", description = "获取登录的用户信息")
     @GetMapping(LOGIN_USER_URL)
     public JsonResult<JwtLoginUser> loginUser() {
-        return JsonResult.success(
-                JwtSecurityUtils.getLoginUser()
-        );
+        var loginUser = JwtSecurityUtils.getLoginUser();
+        loginUser.setAuthorities(null);
+        return JsonResult.success(loginUser);
     }
 
 

@@ -1,5 +1,7 @@
 package com.xaaef.molly.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
@@ -15,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.core.auth.enums.UserType.SYSTEM;
@@ -55,10 +59,7 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu>
 
     @Override
     public List<Tree<Long>> tree() {
-        var wrapper = new LambdaQueryWrapper<SysMenu>();
-        wrapper.select(SysMenu::getMenuId, SysMenu::getParentId, SysMenu::getMenuName, SysMenu::getSort);
-        var list = baseMapper.selectList(wrapper);
-        return buildTree(list);
+        return buildTree(this.list());
     }
 
 
@@ -92,7 +93,13 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu>
         List<Tree<Long>> roots = new ArrayList<>();
         if (menus != null && !menus.isEmpty()) {
             var all = menus.stream()
-                    .map(r -> new TreeNode<>(r.getMenuId(), r.getParentId(), r.getMenuName(), r.getSort()))
+                    .map(r -> {
+                        var node = new TreeNode<>(r.getMenuId(), r.getParentId(), r.getMenuName(), r.getSort());
+                        var targetMap = new HashMap<String, Object>();
+                        BeanUtil.beanToMap(r, targetMap, CopyOptions.create().setIgnoreNullValue(true));
+                        node.setExtra(targetMap);
+                        return node;
+                    })
                     .collect(Collectors.toList());
             roots.addAll(TreeUtil.build(all, 0L));
         }

@@ -7,7 +7,7 @@ Authorization: Bearer {{tokenValue}}
 {
   "tenantId": "baidu",
   "logo": "https://baidu.com/baidu.png",
-  "name": "深圳市腾讯计算机系统有限公司",
+  "name": "百度科技有限公司",
   "email": "baidu@qq.com",
   "linkman": "李彦宏",
   "contactNumber": "15111111333",
