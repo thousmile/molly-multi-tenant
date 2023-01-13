@@ -34,4 +34,10 @@ public class MenuMetaVO implements java.io.Serializable {
     @Schema(description = "菜单标题！")
     private String title;
 
+    /**
+     * 是否隐藏
+     */
+    @Schema(description = "是否隐藏！")
+    private Boolean hidden;
+
 }

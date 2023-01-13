@@ -261,13 +261,13 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
                 .map(r -> {
                     var meta = new MenuMetaVO()
                             .setTitle(r.getMenuName())
-                            .setIcon(r.getIcon());
+                            .setIcon(r.getIcon())
+                            .setHidden(r.getVisible() == 0);
                     var node = new TreeNode<>(r.getMenuId(), r.getParentId(), r.getPerms(), r.getSort());
                     node.setExtra(Map.of(
                             "meta", meta,
                             "component", r.getComponent(),
-                            "path", r.getPath(),
-                            "hidden", r.getVisible() == 0
+                            "path", r.getPath()
                     ));
                     return node;
                 })
