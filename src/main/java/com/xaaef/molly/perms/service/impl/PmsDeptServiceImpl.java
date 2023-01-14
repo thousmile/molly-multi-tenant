@@ -1,5 +1,7 @@
 package com.xaaef.molly.perms.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
@@ -59,20 +61,11 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
 
     @Override
     public List<Tree<Long>> treeNode() {
-        var wrapper = new LambdaQueryWrapper<PmsDept>()
-                .select(PmsDept::getDeptId, PmsDept::getParentId,
-                        PmsDept::getDeptName, PmsDept::getDescription,
-                        PmsDept::getLeader, PmsDept::getLeaderMobile,
-                        PmsDept::getSort, PmsDept::getAncestors);
-        var nodeList = baseMapper.selectList(wrapper).stream().map(r -> {
+        var nodeList = this.list().stream().map(r -> {
             var node = new TreeNode<>(r.getDeptId(), r.getParentId(), r.getDeptName(), r.getSort());
-            node.setExtra(
-                    Map.of(
-                            "description", r.getDescription(),
-                            "leader", r.getLeader(),
-                            "leaderMobile", r.getLeaderMobile()
-                    )
-            );
+            var targetMap = new HashMap<String, Object>();
+            BeanUtil.beanToMap(r, targetMap, CopyOptions.create().setIgnoreNullValue(true));
+            node.setExtra(targetMap);
             return node;
         }).collect(Collectors.toList());
         return TreeUtil.build(nodeList, 0L);
