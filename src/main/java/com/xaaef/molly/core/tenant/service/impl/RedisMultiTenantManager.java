@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -32,6 +33,12 @@ public class RedisMultiTenantManager implements MultiTenantManager {
 
 
     @Override
+    public boolean isDefaultTenantId(String tenantId) {
+        return StringUtils.equals(multiTenantProperties.getDefaultTenantId(), tenantId);
+    }
+
+
+    @Override
     public boolean existById(String tenantId) {
         return cacheUtils.hasHashKey(X_TENANT_ID, tenantId);
     }
@@ -53,7 +60,6 @@ public class RedisMultiTenantManager implements MultiTenantManager {
     public void removeTenantId(String tenantId) {
         cacheUtils.deleteHashKey(X_TENANT_ID, tenantId);
     }
-
 
 
     @PostConstruct

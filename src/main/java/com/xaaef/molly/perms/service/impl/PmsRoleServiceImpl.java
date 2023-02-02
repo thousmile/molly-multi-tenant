@@ -4,7 +4,9 @@ import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.tenant.base.service.impl.BaseServiceImpl;
+import com.xaaef.molly.core.tenant.service.MultiTenantManager;
 import com.xaaef.molly.core.tenant.util.TenantUtils;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.entity.PmsRoleProxy;
@@ -46,6 +48,9 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
 
     private final SysMenuMapper menuMapper;
 
+    private final MultiTenantManager tenantManager;
+
+
     @Override
     public UpdateMenusVO listHaveMenus(Long roleId) {
         PmsRole dbRole = getById(roleId);
@@ -57,7 +62,10 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
 
         List<SysMenu> menus = null;
 
-        if (!isMasterUser()) {
+        // 判断当前是否为，默认租户
+        boolean defaultTenantId = tenantManager.isDefaultTenantId(TenantUtils.getTenantId());
+
+        if (!defaultTenantId) {
             // 如果是租户用户，那么就获取，当前角色所在租户的，所有菜单
             menus = menuMapper.selectByTenantId(TenantUtils.getTenantId());
         } else {
@@ -65,6 +73,7 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
             menus = menuMapper.selectList(new LambdaQueryWrapper<SysMenu>()
                     .ne(SysMenu::getTarget, MenuTargetEnum.TENANT.getCode()));
         }
+
         List<Tree<Long>> roots = new ArrayList<>();
         if (!menus.isEmpty()) {
             // 获取全部的菜单

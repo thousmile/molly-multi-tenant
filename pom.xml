@@ -26,9 +26,9 @@
         <hutool.version>5.8.11</hutool.version>
         <knife4j.version>4.0.0</knife4j.version>
         <liquibase.version>4.17.2</liquibase.version>
-        <mybatis-plus.version>3.5.3</mybatis-plus.version>
+        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
 
-        <spring-boot.version>3.0.1</spring-boot.version>
+        <spring-boot.version>3.0.2</spring-boot.version>
     </properties>
 
 

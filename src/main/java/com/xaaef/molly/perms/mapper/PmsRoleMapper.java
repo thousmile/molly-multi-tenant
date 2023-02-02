@@ -19,7 +19,7 @@ public interface PmsRoleMapper extends BaseMapper<PmsRole> {
 
 
     // 删除 角色 的所有权限
-    @Delete("delete from pms_user_role where role_id = #{roleId}")
+    @Delete("delete from pms_role_menu where role_id = #{roleId}")
     int deleteHaveMenus(Long roleId);
 
 

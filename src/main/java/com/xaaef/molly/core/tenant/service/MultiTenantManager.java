@@ -24,6 +24,15 @@ public interface MultiTenantManager {
 
 
     /**
+     * TODO 判断当前租户是否默认租户ID
+     *
+     * @author WangChenChen
+     * @date 2022/12/11 9:46
+     */
+    boolean isDefaultTenantId(String tenantId);
+
+
+    /**
      * TODO 根据租户ID 判断当前租户是否存在
      *
      * @author WangChenChen
