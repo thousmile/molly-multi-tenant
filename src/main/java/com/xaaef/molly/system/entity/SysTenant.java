@@ -82,13 +82,6 @@ public class SysTenant extends BaseEntity {
      */
     private LocalDateTime expired;
 
-
-    /**
-     * 租户 模板 Id
-     */
-    @TableField(exist = false)
-    private Set<Long> templateIds;
-
     /**
      * 租户 模板
      */

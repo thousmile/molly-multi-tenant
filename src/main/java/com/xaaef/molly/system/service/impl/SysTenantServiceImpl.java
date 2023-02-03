@@ -149,7 +149,13 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                     .orElse("https://images.xaaef.com/molly_master_logo.png");
             entity.setLogo(defaultLogoPath);
         }
-        updateTemplate(entity.getTenantId(), entity.getTemplateIds());
+        if (entity.getTemplates() != null && !entity.getTemplates().isEmpty()) {
+            var templateIds = entity.getTemplates()
+                    .stream()
+                    .map(SysTemplate::getId)
+                    .collect(Collectors.toSet());
+            updateTemplate(entity.getTenantId(), templateIds);
+        }
         return super.save(entity);
     }
 
@@ -202,10 +208,13 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         this.save(sysTenant);
 
         // 新增权限模板
-        if (po.getTemplateIds() != null && !po.getTemplateIds().isEmpty()) {
+        if (po.getTemplates() != null && !po.getTemplates().isEmpty()) {
+            var tempIds = po.getTemplates().stream()
+                    .map(SysTemplate::getId)
+                    .collect(Collectors.toSet());
             var wrapper = new LambdaQueryWrapper<SysTemplate>()
                     .select(SysTemplate::getId)
-                    .in(SysTemplate::getId, po.getTemplateIds());
+                    .in(SysTemplate::getId, tempIds);
             var templateIds = templateService.list(wrapper)
                     .stream()
                     .map(SysTemplate::getId)
@@ -271,8 +280,9 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         return TenantCreatedSuccessVO.builder()
                 .adminMobile(po.getAdminMobile())
                 .adminNickname(po.getAdminNickname())
+                .adminEmail(po.getAdminEmail())
                 .adminUsername(po.getAdminUsername())
-                .adminPassword(po.getAdminPwd())
+                .adminPwd(po.getAdminPwd())
                 .build();
     }
 
@@ -283,7 +293,11 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         if (!isMasterUser()) {
             throw new RuntimeException("只有系统用户，才能修改租户！");
         }
-        updateTemplate(entity.getTenantId(), entity.getTemplateIds());
+        var templateIds = entity.getTemplates()
+                .stream()
+                .map(SysTemplate::getId)
+                .collect(Collectors.toSet());
+        updateTemplate(entity.getTenantId(), templateIds);
         return super.updateById(entity);
     }
 

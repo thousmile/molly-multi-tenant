@@ -24,16 +24,20 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 @NoArgsConstructor
 public class TenantCreatedSuccessVO implements java.io.Serializable {
 
-    @Schema(description = "管理员名称！", requiredMode = REQUIRED)
+
+    @Schema(description = "管理员名称！如果不填写，默认是商户名称！")
     private String adminNickname;
 
-    @Schema(description = "管理员登录用户名", requiredMode = REQUIRED)
+    @Schema(description = "管理员登录用户名,如果不填写，随机生成！")
     private String adminUsername;
 
-    @Schema(description = "管理员手机号", requiredMode = REQUIRED)
+    @Schema(description = "管理员手机号,如果不填写，默认使用商户联系人手机号！")
     private String adminMobile;
 
-    @Schema(description = "管理员密码", requiredMode = REQUIRED)
-    private String adminPassword;
+    @Schema(description = "管理员邮箱,如果不填写，默认使用商户邮箱！")
+    private String adminEmail;
+
+    @Schema(description = "管理员密码,如果不填写，默认使用默认密码！")
+    private String adminPwd;
 
 }

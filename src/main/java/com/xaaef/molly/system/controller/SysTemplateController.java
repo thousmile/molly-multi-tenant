@@ -18,6 +18,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  * 租户权限模板 控制器
@@ -43,6 +45,14 @@ public class SysTemplateController {
     @GetMapping("/{id}")
     public JsonResult<SysTemplate> findById(@PathVariable("id") Long id) {
         return JsonResult.success(baseService.getById(id));
+    }
+
+
+    @Operation(summary = "查询所有", description = " 查询所有")
+    @GetMapping("/list")
+    public JsonResult<List<SysTemplate>> list() {
+        var list = baseService.list();
+        return JsonResult.success(list);
     }
 
 

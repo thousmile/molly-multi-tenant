@@ -1,6 +1,6 @@
 package com.xaaef.molly.system.po;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.xaaef.molly.system.entity.SysTemplate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -63,11 +63,11 @@ public class CreateTenantPO implements java.io.Serializable {
     @Schema(description = "租户权限模板Id！", requiredMode = REQUIRED)
     @NotNull(message = "租户权限模板必须填写！")
     @Size(min = 1, message = "租户权限模板！最少选择一个！")
-    private Set<Long> templateIds;
-
+    private Set<SysTemplate> templates;
 
     @Schema(description = "过期时间,如果不填写，默认是 10 年！")
     private LocalDateTime expired;
+
 
 
     @Schema(description = "管理员名称！如果不填写，默认是商户名称！")
