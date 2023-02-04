@@ -14,7 +14,16 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item prop="tenantId" label="租户ID">
-            <el-input v-model.trim="entityForm.tenantId" clearable placeholder="租户ID" type="text" tabindex="1">
+            <el-input
+              v-model.trim="entityForm.tenantId"
+              clearable
+              placeholder="租户ID"
+              type="text"
+              tabindex="1"
+              onkeyup="value=value.replace(/[^\w]/g,'')"
+              maxlength="12"
+              show-word-limit
+            >
               <template #append>
                 <el-button :icon="Refresh" @click="refreshTenantId" />
               </template>
@@ -239,6 +248,14 @@ const adminResult = ref<ICreateTenantAdmin>({
 
 const entityFormRef = ref<FormInstance | null>(null)
 
+const tenantIdValidator = (rule: any, value: any, callback: any) => {
+  if (!/\w{4,12}$/.test(value)) {
+    callback(new Error("只能是字母和数字，长度4~12位!"))
+  } else {
+    callback()
+  }
+}
+
 const emailValidator = (rule: any, value: any, callback: any) => {
   if (!testEmail(value)) {
     callback(new Error("邮箱格式不正确!"))
@@ -257,7 +274,10 @@ const telphoneValidator = (rule: any, value: any, callback: any) => {
 
 /// 表单校验规则
 const entityFormRules: FormRules = {
-  tenantId: [{ required: true, message: "请输入租户ID", trigger: "blur" }],
+  tenantId: [
+    { required: true, message: "请输入租户ID", trigger: "blur" },
+    { validator: tenantIdValidator, trigger: "blur" }
+  ],
   logo: [{ required: true, message: "请上传租户Logo", trigger: "blur" }],
   name: [{ required: true, message: "请输入名称", trigger: "blur" }],
   email: [
