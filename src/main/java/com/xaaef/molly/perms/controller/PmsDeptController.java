@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchParentPO;
 import com.xaaef.molly.common.util.JsonResult;
-import com.xaaef.molly.core.log.LogType;
-import com.xaaef.molly.core.log.OperateLog;
 import com.xaaef.molly.perms.entity.PmsDept;
 import com.xaaef.molly.perms.service.PmsDeptService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,7 +65,6 @@ public class PmsDeptController {
 
 
     @Operation(summary = "新增", description = "不需要添加id")
-    @OperateLog(title = "[部门]新增", type = LogType.INSERT)
     @PostMapping()
     public JsonResult create(@RequestBody PmsDept entity) {
         try {
@@ -80,7 +77,6 @@ public class PmsDeptController {
 
 
     @Operation(summary = "修改", description = "修改必须要id")
-    @OperateLog(title = "[部门]修改", type = LogType.UPDATE)
     @PutMapping()
     public JsonResult update(@RequestBody PmsDept entity) {
         try {
@@ -92,7 +88,6 @@ public class PmsDeptController {
 
 
     @Operation(summary = "删除", description = "只需要id即可")
-    @OperateLog(title = "[部门]删除", type = LogType.DELETE)
     @DeleteMapping("/{id}")
     public JsonResult delete(@PathVariable("id") Long id) {
         try {

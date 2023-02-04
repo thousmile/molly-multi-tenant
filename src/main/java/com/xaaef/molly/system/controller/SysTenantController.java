@@ -3,8 +3,6 @@ package com.xaaef.molly.system.controller;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
-import com.xaaef.molly.core.log.LogType;
-import com.xaaef.molly.core.log.OperateLog;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.po.CreateTenantPO;
 import com.xaaef.molly.system.po.TenantCreatedSuccessVO;
@@ -66,7 +64,6 @@ public class SysTenantController {
 
 
     @Operation(summary = "新增租户", description = "新增租户")
-    @OperateLog(title = "[租户] 新增", type = LogType.INSERT)
     @PostMapping
     public JsonResult<TenantCreatedSuccessVO> save(@Validated @RequestBody CreateTenantPO po, BindingResult br) {
         try {
@@ -78,7 +75,6 @@ public class SysTenantController {
 
 
     @Operation(summary = "修改", description = "修改必须要id")
-    @OperateLog(title = "[租户] 修改", type = LogType.UPDATE)
     @PutMapping
     public JsonResult<Boolean> updateById(@RequestBody SysTenant tenant) {
         var flag = baseService.updateById(tenant);
@@ -87,7 +83,6 @@ public class SysTenantController {
 
 
     @Operation(summary = "删除", description = "只需要id即可")
-    @OperateLog(title = "[租户] 删除", type = LogType.DELETE)
     @DeleteMapping("/{id}")
     public JsonResult<String> deleteById(@PathVariable("id") String id) {
         baseService.removeById(id);
@@ -95,8 +90,7 @@ public class SysTenantController {
     }
 
 
-    @Operation(summary = "关联权限", description = "修改租户权限")
-    @OperateLog(title = "[租户] 修改权限模板", type = LogType.UPDATE)
+    @Operation(summary = "修改权限模板", description = "修改租户权限")
     @PostMapping("/update/templates")
     public JsonResult<String> updateTemplateId(@RequestBody @Validated UpdateTenantTemplateIdVO params,
                                                BindingResult br) {

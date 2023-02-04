@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
-import com.xaaef.molly.core.log.LogType;
-import com.xaaef.molly.core.log.OperateLog;
 import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.service.SysTemplateService;
 import com.xaaef.molly.system.vo.BindingMenusVO;
@@ -66,7 +64,6 @@ public class SysTemplateController {
 
 
     @Operation(summary = "新增", description = "不需要添加id")
-    @OperateLog(title = "[权限模板] 新增", type = LogType.INSERT)
     @PostMapping()
     public JsonResult create(@RequestBody SysTemplate entity) {
         try {
@@ -79,7 +76,6 @@ public class SysTemplateController {
 
 
     @Operation(summary = "修改", description = "修改必须要id")
-    @OperateLog(title = "[权限模板] 修改", type = LogType.UPDATE)
     @PutMapping()
     public JsonResult<String> update(@RequestBody SysTemplate entity) {
         try {
@@ -92,7 +88,6 @@ public class SysTemplateController {
 
 
     @Operation(summary = "删除", description = "只需要id即可")
-    @OperateLog(title = "[权限模板] 删除", type = LogType.DELETE)
     @DeleteMapping("/{id}")
     public JsonResult<String> delete(@PathVariable("id") Integer id) {
         try {
@@ -112,7 +107,6 @@ public class SysTemplateController {
 
 
     @Operation(summary = "修改菜单列表", description = "修改权限模板的菜单列表")
-    @OperateLog(title = "[权限模板]修改菜单列表", type = LogType.UPDATE)
     @PostMapping("/menus")
     public JsonResult<String> updateMenusId(@RequestBody @Validated BindingMenusVO params, BindingResult br) {
         try {

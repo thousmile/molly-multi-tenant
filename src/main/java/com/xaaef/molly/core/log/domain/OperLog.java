@@ -32,9 +32,9 @@ public class OperLog implements java.io.Serializable {
     private String title;
 
     /**
-     * 操作类型
+     * 描述
      */
-    private String operType;
+    private String description;
 
     /**
      * 服务名称

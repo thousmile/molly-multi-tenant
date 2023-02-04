@@ -1,6 +1,7 @@
 package com.xaaef.molly.core.log;
 
 import com.xaaef.molly.common.util.JsonResult;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,9 +20,9 @@ import org.springframework.validation.BindingResult;
  * @date 2019/4/18 11:45
  */
 
+@Slf4j
 @Aspect
 @Component
-@Order(2)
 public class BindingResultAspect {
 
     @Pointcut("execution(public * com.xaaef.molly.*.controller..*.*(..))")

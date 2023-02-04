@@ -2,8 +2,6 @@ package com.xaaef.molly.system.controller;
 
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.util.JsonResult;
-import com.xaaef.molly.core.log.LogType;
-import com.xaaef.molly.core.log.OperateLog;
 import com.xaaef.molly.system.entity.SysDictData;
 import com.xaaef.molly.system.po.DictQueryPO;
 import com.xaaef.molly.system.service.SysDictDataService;
@@ -68,7 +66,6 @@ public class SysDictDataController {
 
 
     @Operation(summary = "新增", description = "不需要添加id")
-    @OperateLog(title = "[字典数据]新增", type = LogType.INSERT)
     @PostMapping()
     public JsonResult<SysDictData> create(@RequestBody SysDictData entity) {
         baseService.save(entity);
@@ -77,7 +74,6 @@ public class SysDictDataController {
 
 
     @Operation(summary = "修改", description = "修改必须要id")
-    @OperateLog(title = "[字典数据]修改", type = LogType.UPDATE)
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody SysDictData entity) {
         boolean b = baseService.updateById(entity);
@@ -86,7 +82,6 @@ public class SysDictDataController {
 
 
     @Operation(summary = "删除", description = "只需要id即可")
-    @OperateLog(title = "[字典数据]删除", type = LogType.DELETE)
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
         boolean b = baseService.removeById(id);

@@ -49,7 +49,7 @@ public class LogStorageServiceAdapter implements LogStorageService {
     }
 
 
-
+    @Async
     @Override
     public void asyncOperateSave(OperLog operLog) {
         log.info("操作日志: \n{}", JsonUtils.toFormatJson(operLog));

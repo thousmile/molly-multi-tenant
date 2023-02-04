@@ -50,6 +50,9 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
         if (!isMasterUser()) {
             throw new RuntimeException("非系统用户，不允许新增配置！");
         }
+        if (super.exist(SysConfig::getConfigKey, entity.getConfigKey())) {
+            throw new RuntimeException("参数键名，已经存在了！");
+        }
         return super.save(entity);
     }
 
@@ -58,6 +61,12 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
     public boolean updateById(SysConfig entity) {
         if (!isMasterUser()) {
             throw new RuntimeException("非系统用户，不允许修改配置！");
+        }
+        var wrapper = new LambdaQueryWrapper<SysConfig>()
+                .eq(SysConfig::getConfigKey, entity.getConfigKey())
+                .ne(SysConfig::getConfigId, entity.getConfigId());
+        if (super.count(wrapper) > 0) {
+            throw new RuntimeException("参数键名，已经存在了！");
         }
         if (StringUtils.isNotBlank(entity.getConfigValue())) {
             String key = String.format("%s:%s", REDIS_CACHE_KEY, entity.getConfigKey());
@@ -74,7 +83,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
             throw new RuntimeException("非系统用户，不允许删除配置！");
         }
         var entity = super.getById(id);
-        if (entity != null) {
+        if (entity == null) {
             throw new RuntimeException("配置不存在！");
         }
         String key = String.format("%s:%s", REDIS_CACHE_KEY, entity.getConfigKey());

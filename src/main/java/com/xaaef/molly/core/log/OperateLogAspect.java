@@ -7,6 +7,8 @@ import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.core.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.core.log.domain.OperLog;
 import com.xaaef.molly.core.log.service.LogStorageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -15,6 +17,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -22,9 +25,14 @@ import org.springframework.validation.BindingResult;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.*;
+
+import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -56,7 +64,7 @@ public class OperateLogAspect {
     /**
      * 统一切面日志,参数校验、统一异常处理、日志打印
      */
-    @Pointcut("@annotation(com.xaaef.molly.core.log.OperateLog)")
+    @Pointcut("@annotation(io.swagger.v3.oas.annotations.Operation)")
     public void logPointCut() {
     }
 
@@ -88,19 +96,28 @@ public class OperateLogAspect {
 
     private void addOperationLog(JoinPoint joinPoint, Object resp, Throwable e, long timeCost) {
         var request = ServletUtils.getRequestInfo();
+        // 如果是 GET 请求，就忽略
+        if ("GET".equals(request.getMethod())) {
+            return;
+        }
         var signature = (MethodSignature) joinPoint.getSignature();
-        var annotation = signature.getMethod().getAnnotation(OperateLog.class);
         var operLog = new OperLog();
-        // 全类名，方法名称
-        var methodName = String.format("%s.%s()", signature.getDeclaringTypeName(), signature.getName());
+        var tag = AnnotationUtils.findAnnotation(joinPoint.getTarget().getClass(), Tag.class);
+        var annotation = signature.getMethod().getAnnotation(Operation.class);
+        if (tag != null) {
+            operLog.setTitle(String.format("%s %s", tag.name(), annotation.summary()));
+        } else {
+            operLog.setTitle(annotation.summary());
+        }
+        operLog.setDescription(annotation.description());
         operLog.setStatus(HttpStatus.OK.value());
         if (e != null) {
             operLog.setErrorLog(e.getMessage());
             operLog.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
-        operLog.setTitle(annotation.title());
-        operLog.setOperType(annotation.type().name());
         operLog.setServiceName(appName);
+        // 全类名，方法名称
+        var methodName = String.format("%s.%s()", signature.getDeclaringTypeName(), signature.getName());
         operLog.setMethod(methodName);
         if (joinPoint.getArgs() != null) {
             var params = new LinkedList<>();

@@ -4,8 +4,6 @@ package com.xaaef.molly.system.controller;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
-import com.xaaef.molly.core.log.LogType;
-import com.xaaef.molly.core.log.OperateLog;
 import com.xaaef.molly.system.entity.SysConfig;
 import com.xaaef.molly.system.service.SysConfigService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,7 +52,6 @@ public class SysConfigController {
 
 
     @Operation(summary = "新增", description = "不需要添加id")
-    @OperateLog(title = "[全局配置] 新增", type = LogType.INSERT)
     @PostMapping()
     public JsonResult<Boolean> create(@RequestBody SysConfig entity) {
         var flag = baseService.save(entity);
@@ -63,7 +60,6 @@ public class SysConfigController {
 
 
     @Operation(summary = "修改", description = "修改必须要id")
-    @OperateLog(title = "[全局配置] 修改", type = LogType.UPDATE)
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody SysConfig entity) {
         var flag = baseService.updateById(entity);
@@ -72,7 +68,6 @@ public class SysConfigController {
 
 
     @Operation(summary = "删除", description = "只需要id即可")
-    @OperateLog(title = "[全局配置] 删除", type = LogType.DELETE)
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
         var flag = baseService.removeById(id);

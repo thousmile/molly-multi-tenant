@@ -3,8 +3,6 @@ package com.xaaef.molly.perms.controller;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
-import com.xaaef.molly.core.log.LogType;
-import com.xaaef.molly.core.log.OperateLog;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.service.PmsRoleService;
 import com.xaaef.molly.system.vo.BindingMenusVO;
@@ -66,7 +64,6 @@ public class PmsRoleController {
 
 
     @Operation(summary = "新增", description = "不需要添加id")
-    @OperateLog(title = "[角色]新增", type = LogType.INSERT)
     @PostMapping()
     public JsonResult create(@RequestBody PmsRole entity) {
         baseService.save(entity);
@@ -75,7 +72,6 @@ public class PmsRoleController {
 
 
     @Operation(summary = "修改", description = "修改必须要id")
-    @OperateLog(title = "[角色]修改", type = LogType.UPDATE)
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody PmsRole entity) {
         boolean b = baseService.updateById(entity);
@@ -84,7 +80,6 @@ public class PmsRoleController {
 
 
     @Operation(summary = "删除", description = "只需要id即可")
-    @OperateLog(title = "[角色]删除", type = LogType.DELETE)
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
         boolean b = baseService.removeById(id);
@@ -92,7 +87,7 @@ public class PmsRoleController {
     }
 
 
-    @Operation(summary = "拥有的权限", description = "查询角色拥有的权限！")
+    @Operation(summary = "拥有的菜单", description = "查询角色拥有的菜单！")
     @GetMapping("/menus/{roleId}")
     public JsonResult<UpdateMenusVO> selectHaveMenus(@PathVariable Long roleId) {
         var data = baseService.listHaveMenus(roleId);
@@ -100,8 +95,7 @@ public class PmsRoleController {
     }
 
 
-    @Operation(summary = "绑定菜单", description = "会删除原有的菜单！")
-    @OperateLog(title = "[角色]绑定菜单", type = LogType.UPDATE)
+    @Operation(summary = "关联菜单", description = "会删除原有的菜单！")
     @PostMapping("/menus")
     public JsonResult<Boolean> bindingMenus(@RequestBody @Validated BindingMenusVO entity,
                                             BindingResult br) {
