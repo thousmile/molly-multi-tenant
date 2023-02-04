@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="85108791-71af-42e1-ae8c-4aa7e82b10ac" name="变更" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST API/http-client.env.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST API/全局配置API.http" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST API/文件上传API.http" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST API/租户管理API.http" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST API/认证授权2API.http" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REST API/认证授权API.http" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/MollyApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/consts/ConfigName.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/consts/ESIndexName.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/consts/WebSocketKey.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/domain/CustomRequestInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/domain/Pagination.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/domain/RectPoint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/domain/TaxCompany.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/enums/DefaultFlag.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/po/PagePO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/po/SearchPO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/po/SearchParentPO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/util/ArithUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/util/IdUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/util/IpUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/util/JsonResult.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/util/JsonUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/util/RectRangeUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/common/util/ServletUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/WebSecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/consts/JwtConst.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/consts/LoginConst.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/controller/AuthController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/enums/AdminFlag.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/enums/ClientType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/enums/GenderType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/enums/GrantType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/enums/OAuth2Error.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/enums/StatusEnum.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/enums/UserStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/enums/UserType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/exception/JwtAuthException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/exception/JwtNoLoginException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/jwt/JwtAuthTokenFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/jwt/JwtLoginUser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/jwt/JwtSecurityUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/jwt/JwtTokenProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/jwt/JwtTokenValue.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/jwt/StringGrantedAuthority.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/po/LoginFormPO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/service/JwtTokenService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/service/LineCaptchaService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/service/UserLoginService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/service/impl/JwtTokenServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/service/impl/LineCaptchaServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/service/impl/PmsUserDetailsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/auth/service/impl/UserLoginServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/log/BindingResultAspect.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/log/OperateLogAspect.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/log/domain/LoginLog.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/log/domain/OperLog.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/log/service/LogStorageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/log/service/impl/LogStorageServiceAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/redis/RedisAutoConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/redis/RedisCacheUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/DatabaseManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/MybatisPlusConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/ProjectLineHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/TenantIdInterceptor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/base/BaseEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/base/service/BaseService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/base/service/impl/BaseServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/consts/MbpConst.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/props/MultiTenantProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/schema/SchemaDataSourceManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/schema/SchemaInterceptor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/service/MultiTenantManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/service/impl/RedisMultiTenantManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/tenant/util/TenantUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/web/CustomSpringWebConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/web/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/web/props/CustomizeSwaggerProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/ws/AuthChannelInterceptor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/core/ws/WebSocketConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/controller/PmsDeptController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/controller/PmsRoleController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/controller/PmsUserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/entity/PmsDept.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/entity/PmsRole.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/entity/PmsRoleProxy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/entity/PmsUser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/entity/PmsUserSocial.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/mapper/PmsDeptMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/mapper/PmsRoleMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/mapper/PmsUserMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/mapper/PmsUserSocialMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/po/UserQueryPO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/service/PmsDeptService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/service/PmsRoleService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/service/PmsUserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/service/PmsUserSocialService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/service/impl/PmsDeptServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/service/impl/PmsRoleServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/service/impl/PmsUserServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/service/impl/PmsUserSocialServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/vo/ButtonVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/vo/MenuMetaVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/vo/ResetPasswordVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/vo/UpdatePasswordVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/vo/UpdateUserRoleIdVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/perms/vo/UserRightsVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/controller/ChinaAreaController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/controller/FileUploadController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/controller/ServerInfoController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/controller/SysConfigController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/controller/SysDictDataController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/controller/SysDictTypeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/controller/SysMenuController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/controller/SysTemplateController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/controller/SysTenantController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/controller/WsTestController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/cron/TestCronAsync.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/entity/ChinaArea.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/entity/ServerInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/entity/SysConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/entity/SysDictData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/entity/SysDictType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/entity/SysFileDetail.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/entity/SysMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/entity/SysTemplate.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/entity/SysTemplateProxy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/entity/SysTenant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/enums/MenuTargetEnum.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/enums/MenuTypeEnum.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/mapper/ChinaAreaMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/mapper/SysConfigMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/mapper/SysDictDataMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/mapper/SysDictTypeMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/mapper/SysFileDetailMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/mapper/SysMenuMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/mapper/SysTemplateMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/mapper/SysTenantMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/po/CreateTenantPO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/po/DictQueryPO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/po/TenantCreatedSuccessVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/runner/TenantTableRunner.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/ChinaAreaService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/SysConfigService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/SysDictDataService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/SysDictTypeService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/SysMenuService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/SysTemplateService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/SysTenantService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/impl/ChinaAreaServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/impl/FileDetailService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/impl/SysConfigServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/impl/SysDictDataServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/impl/SysDictTypeServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/impl/SysMenuServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/impl/SysTemplateServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/service/impl/SysTenantServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/vo/BindingMenusVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/vo/DictDataVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/vo/FileInfoVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/vo/UpdateMenusVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/xaaef/molly/system/vo/UpdateTenantTemplateIdVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-dev.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-prod.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-test.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog-master.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog-other.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/pms.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/sql/china_area.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/sql/pms_init.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/sql/sys_config.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/sql/sys_dict_data.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/sql/sys_dict_type.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/sql/sys_menu.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/sql/tenant_init.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/sys.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/pms/PmsDeptMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/pms/PmsRoleMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/pms/PmsUserMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/sys/ChinaAreaMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/sys/SysMenuMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/sys/SysTemplateMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/sys/SysTenantMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/molly_master_logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/xaaef/molly/MollyMultiTenantApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/xaaef/molly/NoSpringTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2LGJSB2oSLQZb8kssIIwpadlgEH" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="MollyApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="molly-multi-tenant" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.xaaef.molly.MollyApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="85108791-71af-42e1-ae8c-4aa7e82b10ac" name="变更" comment="" />
+      <created>1675491484351</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1675491484351</updated>
+      <workItem from="1675491487250" duration="1219000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
