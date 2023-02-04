@@ -38,6 +38,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.common.consts.ConfigName.*;
@@ -134,6 +135,10 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
             }
             while (tenantManager.existById(entity.getTenantId()));
         } else {
+            var isMatch = Pattern.matches("\\w{4,12}$", entity.getTenantId());
+            if (!isMatch) {
+                throw new RuntimeException("租户ID 只能是字母和数字，长度4~12位!！");
+            }
             if (tenantManager.existById(entity.getTenantId())) {
                 throw new RuntimeException(String.format("租户ID %s 已经存在了！", entity.getTenantId()));
             }
