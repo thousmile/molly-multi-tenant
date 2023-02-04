@@ -144,8 +144,8 @@ public class OperateLogAspect {
         Map<String, Object> responseResultMap = BeanUtil.beanToMap(resp, false, true);
         operLog.setResponseResult(responseResultMap);
         operLog.setTimeCost(timeCost);
-        var userInfo = JwtSecurityUtils.getLoginUser();
         if (JwtSecurityUtils.isAuthenticated()) {
+            var userInfo = JwtSecurityUtils.getLoginUser();
             operLog.setUserId(userInfo.getUserId());
             operLog.setNickname(userInfo.getNickname());
             operLog.setTenantId(userInfo.getTenantId());
