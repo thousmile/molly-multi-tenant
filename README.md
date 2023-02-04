@@ -1,6 +1,6 @@
 <div align="center">
   <h1>molly-multi-tenant</h1>
-  <h2>基于多数据源的sass系统</h2>
+  <h2>基于多数据库的sass系统</h2>
 </div>
 
 ## ⚡ 简介
