@@ -123,14 +123,22 @@ const flatTree = (arr: RouteRecordRaw[]) => {
   const res: OptionsItem[] = []
   const deep = (arr: any[]) => {
     arr.forEach((item: any) => {
-      if (item.meta && item.meta.svgIcon && item.meta.title) {
+      if (item.meta && item.meta.title) {
         const temp: OptionsItem = {
-          path: item.path,
-          meta: {
-            svgIcon: item.meta.svgIcon,
-            title: item.meta.title
-          }
+          path: item.redirect ? item.redirect : item.path,
+          meta: item.meta
         }
+        /**
+         * 解决路由不规范
+        if (prefix && !testHttpUrl(temp.path)) {
+          if (prefix === "/") {
+            prefix = ""
+          }
+          temp.path = temp.path.startsWith("/") ? prefix + temp.path : `${prefix}/${temp.path}`
+        }
+        item.path = temp.path
+        console.log("item.path :>> ", item.path)
+        */
         res.push(temp)
       }
       item.children && deep(item.children)
@@ -174,8 +182,12 @@ onMounted(() => {
           确认
         </span>
         <span class="search-footer-item">
-          <el-icon class="icon"><Top /></el-icon>
-          <el-icon class="icon"><Bottom /></el-icon>
+          <el-icon class="icon">
+            <Top />
+          </el-icon>
+          <el-icon class="icon">
+            <Bottom />
+          </el-icon>
           切换
         </span>
         <span class="search-footer-item">
@@ -191,6 +203,7 @@ onMounted(() => {
 .search-result-container {
   margin-top: 20px;
 }
+
 .search-footer {
   display: flex;
 

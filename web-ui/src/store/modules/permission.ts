@@ -29,6 +29,7 @@ function flatTreeRoutes(arr: IPermsMenus[]): RouteRecordRaw[] {
       arr2.push(target)
       if (source.children && source.children.length > 0) {
         target.children = []
+        target.redirect = source.children[0].path
         deep(source.children, target.children)
       }
     })

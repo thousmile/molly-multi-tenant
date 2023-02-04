@@ -2,7 +2,7 @@
   <el-dropdown trigger="click" @command="handleCommand" size="large">
     <div>
       <el-tooltip effect="dark" content="控件尺寸" placement="bottom">
-        <svg-icon name="size" />
+        <svg-icon name="size" :size="16" />
       </el-tooltip>
     </div>
     <template #dropdown>
