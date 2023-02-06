@@ -1,6 +1,7 @@
 package com.xaaef.molly;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.IdUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -29,6 +30,12 @@ class NoSpringTests {
     public void test4() {
         boolean isMatch = Pattern.matches("\\w{4,12}$", "你好啊啊啊dwa541");
         System.out.println(isMatch);
+    }
+    @Test
+    public void test5() {
+        byte[] bytes = IdUtil.getSnowflakeNextIdStr().getBytes();
+        System.out.println(new String(bytes));
+        System.out.println(bytes.length);
     }
 
 

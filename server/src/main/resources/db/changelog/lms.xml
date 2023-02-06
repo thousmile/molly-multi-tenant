@@ -11,7 +11,7 @@
         <sql splitStatements="true">
             CREATE TABLE `lms_oper_log`
             (
-                `id`              bigint(20) NOT NULL COMMENT 'ID',
+                `id`              varchar(20) NOT NULL COMMENT 'ID',
                 `title`           varchar(255) NOT NULL COMMENT '标题',
                 `description`     varchar(255) NOT NULL COMMENT '描述',
                 `service_name`    varchar(255) NOT NULL COMMENT '服务名称',
@@ -38,7 +38,7 @@
         <sql splitStatements="true">
             CREATE TABLE `lms_login_log`
             (
-                `id`          bigint(20) NOT NULL COMMENT 'ID',
+                `id`          varchar(20) NOT NULL COMMENT 'ID',
                 `grant_type`  varchar(255) NOT NULL COMMENT '授权类型',
                 `user_id`     bigint(20) NOT NULL COMMENT '用户ID',
                 `nickname`    varchar(255) NOT NULL COMMENT '用户昵称',

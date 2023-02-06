@@ -32,7 +32,7 @@ public class LmsLoginLog implements java.io.Serializable {
      * ID
      */
     @TableId
-    private Long id;
+    private String id;
 
     /**
      * 授权类型

@@ -27,7 +27,7 @@ public class LoginLog implements java.io.Serializable {
     /**
      * 消息ID
      */
-    private Long id;
+    private String id;
 
     /**
      * 认证授权方式

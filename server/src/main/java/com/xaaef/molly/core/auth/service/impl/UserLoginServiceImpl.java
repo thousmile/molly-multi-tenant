@@ -220,7 +220,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         loginLog.setTenantId(loginUser.getTenantId());
         loginLog.setCreateTime(loginUser.getLoginTime());
         loginLog.setGrantType(loginUser.getGrantType().getCode());
-        loginLog.setId(IdUtil.getSnowflakeNextId());
+        loginLog.setId(IdUtil.getSnowflakeNextIdStr());
         logStorageService.asyncLoginSave(loginLog);
     }
 

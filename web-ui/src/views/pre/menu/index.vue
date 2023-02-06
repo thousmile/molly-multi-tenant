@@ -1,8 +1,8 @@
 <template>
-  <el-container class="app-container" v-loading="loading">
+  <el-container class="app-container" v-loading="loading" v-has="['pre_menu:view']">
     <el-header height="30px">
       <div class="flex">
-        <el-button type="primary" :icon="Plus" @click="handleAdd(null)">新增</el-button>
+        <el-button type="primary" :icon="Plus" v-has="['pre_menu:create']" @click="handleAdd(null)">新增</el-button>
         <el-button type="success" :icon="Sort" @click="switchExpandAndCollapse">{{
           expandAndCollapse ? "折叠" : "展开"
         }}</el-button>
@@ -65,13 +65,25 @@
         </el-table-column>
         <el-table-column label="操作" width="200">
           <template #default="scope">
-            <el-link :icon="Plus" v-if="scope.row.menuType === 0" type="primary" @click="handleAdd(scope.row)"
+            <el-link
+              :icon="Plus"
+              v-if="scope.row.menuType === 0"
+              v-has="['pre_menu:create']"
+              type="primary"
+              @click="handleAdd(scope.row)"
               >新增</el-link
             >
             &nbsp;
-            <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
+            <el-link :icon="Edit" type="warning" v-has="['pre_menu:update']" @click="handleEdit(scope.row)"
+              >编辑</el-link
+            >
             &nbsp;
-            <el-link :icon="Delete" v-if="!scope.row.children" type="danger" @click="handleDelete(scope.row)"
+            <el-link
+              :icon="Delete"
+              v-if="!scope.row.children"
+              type="danger"
+              v-has="['pre_menu:delete']"
+              @click="handleDelete(scope.row)"
               >删除</el-link
             >
           </template>

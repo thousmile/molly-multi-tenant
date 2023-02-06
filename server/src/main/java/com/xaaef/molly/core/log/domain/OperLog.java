@@ -24,7 +24,7 @@ public class OperLog implements java.io.Serializable {
     /**
      * 消息ID
      */
-    private Long id;
+    private String id;
 
     /**
      * 标题

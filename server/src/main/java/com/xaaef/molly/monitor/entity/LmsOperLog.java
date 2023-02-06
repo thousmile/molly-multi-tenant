@@ -32,7 +32,7 @@ public class LmsOperLog implements java.io.Serializable {
      * ID
      */
     @TableId
-    private Long id;
+    private String id;
 
     /**
      * 标题

@@ -149,9 +149,9 @@ public class OperateLogAspect {
             operLog.setUserId(userInfo.getUserId());
             operLog.setNickname(userInfo.getNickname());
             operLog.setTenantId(userInfo.getTenantId());
-            operLog.setCreateTime(LocalDateTime.now());
-            operLog.setId(IdUtil.getSnowflakeNextId());
         }
+        operLog.setCreateTime(LocalDateTime.now());
+        operLog.setId(IdUtil.getSnowflakeNextIdStr());
         logStorage.asyncOperateSave(operLog);
     }
 

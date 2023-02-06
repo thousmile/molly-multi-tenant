@@ -1,5 +1,5 @@
 <template>
-  <el-container class="app-container" v-loading="loading">
+  <el-container class="app-container" v-loading="loading" v-has="['pre_user:view']">
     <el-header>
       <el-row :gutter="20">
         <el-col :span="8">
@@ -9,7 +9,7 @@
           <el-button type="primary" :icon="Search" @click="searchTableData">搜索</el-button>
         </el-col>
         <el-col :span="2">
-          <el-button type="success" :icon="Plus" @click="handleAdd()">新增</el-button>
+          <el-button type="success" :icon="Plus" v-has="['pre_user:create']" @click="handleAdd()">新增</el-button>
         </el-col>
         <el-col :span="10"><div class="grid-content ep-bg-purple" /></el-col>
       </el-row>
@@ -89,10 +89,14 @@
         </el-table-column>
         <el-table-column label="操作" width="130">
           <template #default="scope">
-            <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
+            <el-link :icon="Edit" type="warning" v-has="['pre_user:update']" @click="handleEdit(scope.row)"
+              >编辑</el-link
+            >
             &nbsp;
             <template v-if="scope.row.adminFlag !== 1">
-              <el-link :icon="Delete" type="danger" @click="handleDelete(scope.row)">删除</el-link>
+              <el-link :icon="Delete" type="danger" v-has="['pre_user:delete']" @click="handleDelete(scope.row)"
+                >删除</el-link
+              >
             </template>
           </template>
         </el-table-column>

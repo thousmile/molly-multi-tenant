@@ -1,8 +1,10 @@
 package com.xaaef.molly.monitor.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.monitor.entity.LmsLoginLog;
 import com.xaaef.molly.monitor.entity.LmsOperLog;
 import com.xaaef.molly.monitor.service.LmsOperLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +46,7 @@ public class LmsOperLogController {
 
     @Operation(summary = "批量删除", description = "只需要id即可")
     @PostMapping()
-    public JsonResult<Boolean> delete(@RequestBody Set<Long> ids) {
+    public JsonResult<Boolean> delete(@RequestBody Set<String> ids) {
         boolean b = baseService.removeBatchByIds(ids);
         return JsonResult.success(b);
     }
