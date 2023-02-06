@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * <p>
- * spring boot jpa 多租户 启动类
+ * spring boot mybatis-plus 多租户 启动类
  * </p>
  *
  * @author WangChenChen

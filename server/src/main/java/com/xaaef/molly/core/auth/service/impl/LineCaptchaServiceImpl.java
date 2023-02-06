@@ -18,13 +18,14 @@ import static com.xaaef.molly.core.auth.consts.LoginConst.CAPTCHA_CODE_KEY;
 
 /**
  * <p>
- *
+ * 验证码
  * </p>
  *
  * @author Wang Chen Chen<932560435@qq.com>
- * @version 1.0
+ * @version 1.0.1
  * @createTime 2020/3/5 0005 11:32
  */
+
 
 @Slf4j
 @Service

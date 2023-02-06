@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+    <!-- [ 日志 ] 操作日志 -->
+    <changeSet id="1675663013-1" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `lms_oper_log`
+            (
+                `id`              bigint(20) NOT NULL COMMENT 'ID',
+                `title`           varchar(255) NOT NULL COMMENT '标题',
+                `description`     varchar(255) NOT NULL COMMENT '描述',
+                `service_name`    varchar(255) NOT NULL COMMENT '服务名称',
+                `user_id`         bigint(20) COMMENT '用户ID',
+                `method`          varchar(255) NOT NULL COMMENT '方法',
+                `method_args`     text COMMENT '方法参数',
+                `request_method`  varchar(255) COMMENT '请求类型',
+                `request_url`     varchar(255) COMMENT '请求地址',
+                `request_ip`      varchar(255) COMMENT '请求IP',
+                `address`         varchar(255) COMMENT '请求地址',
+                `response_result` text COMMENT '请求响应',
+                `status`          int(11) NOT NULL COMMENT '状态',
+                `error_log`       text COMMENT '错误日志',
+                `time_cost`       bigint(20) NOT NULL COMMENT '耗时(毫秒)',
+                `create_time`     datetime     NOT NULL COMMENT '创建时间',
+                PRIMARY KEY (`id`) USING BTREE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 日志 ] 操作日志';
+        </sql>
+    </changeSet>
+
+
+    <!-- [ 日志 ] 登录日志 -->
+    <changeSet id="1675663115-1" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `lms_login_log`
+            (
+                `id`          bigint(20) NOT NULL COMMENT 'ID',
+                `grant_type`  varchar(255) NOT NULL COMMENT '授权类型',
+                `user_id`     bigint(20) NOT NULL COMMENT '用户ID',
+                `nickname`    varchar(255) NOT NULL COMMENT '用户昵称',
+                `username`    varchar(255) NOT NULL COMMENT '用户名',
+                `avatar`      varchar(255) NOT NULL COMMENT '头像',
+                `request_url` varchar(255) NOT NULL COMMENT '请求地址',
+                `request_ip`  varchar(255) NOT NULL COMMENT '请求IP',
+                `address`     varchar(255) NOT NULL COMMENT '请求地址',
+                `os_name`     varchar(255) COMMENT '操作系统',
+                `browser`     varchar(255) COMMENT '浏览器',
+                `create_time` datetime     NOT NULL COMMENT '创建时间',
+                PRIMARY KEY (`id`) USING BTREE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 日志 ] 登录日志';
+        </sql>
+    </changeSet>
+
+
+</databaseChangeLog>

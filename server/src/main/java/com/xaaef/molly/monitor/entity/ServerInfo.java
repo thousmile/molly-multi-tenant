@@ -1,6 +1,5 @@
-package com.xaaef.molly.system.entity;
+package com.xaaef.molly.monitor.entity;
 
-import cn.hutool.core.date.DateUtil;
 import com.xaaef.molly.common.util.ArithUtils;
 import com.xaaef.molly.common.util.IpUtils;
 import com.xaaef.molly.common.util.JsonUtils;
@@ -17,13 +16,10 @@ import oshi.software.os.OperatingSystem;
 import oshi.util.Util;
 
 import java.lang.management.ManagementFactory;
-import java.net.UnknownHostException;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;

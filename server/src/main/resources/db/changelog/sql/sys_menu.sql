@@ -41,7 +41,6 @@ INSERT INTO `sys_menu` VALUES (10018, '视图', 10004, 'pre_user:view', '#', '',
 INSERT INTO `sys_menu` VALUES (10019, '修改', 10004, 'pre_user:update', '#', '', '', 3, 1, 1, 2, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
 INSERT INTO `sys_menu` VALUES (10020, '删除', 10004, 'pre_user:delete', '#', '', '', 4, 1, 1, 2, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
 INSERT INTO `sys_menu` VALUES (10021, '重置密码', 10004, 'pre_user:reset:password', '#', '', '', 5, 1, 1, 2, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
-INSERT INTO `sys_menu` VALUES (10022, '修改角色', 10004, 'pre_user:update:roles', '#', '', '', 6, 1, 1, 2, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
 INSERT INTO `sys_menu` VALUES (10023, '视图', 10005, 'pre_role:view', '#', '', '', 1, 1, 1, 2, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
 INSERT INTO `sys_menu` VALUES (10024, '新增', 10005, 'pre_role:create', '#', '', '', 2, 1, 1, 2, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
 INSERT INTO `sys_menu` VALUES (10025, '修改', 10005, 'pre_role:update', '#', '', '', 3, 1, 1, 2, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
@@ -56,7 +55,6 @@ INSERT INTO `sys_menu` VALUES (10033, '新增', 10006, 'pre_menu:create', '#', '
 INSERT INTO `sys_menu` VALUES (10034, '修改', 10006, 'pre_menu:update', '#', '', '', 3, 1, 1, 1, '2022-06-25 15:03:42', 19980817, '2022-06-27 20:39:53', 19980817);
 INSERT INTO `sys_menu` VALUES (10035, '删除', 10006, 'pre_menu:delete', '#', '', '', 4, 1, 1, 1, '2022-06-25 15:03:42', 19980817, '2022-06-27 20:39:25', 19980817);
 INSERT INTO `sys_menu` VALUES (10036, '字典数据', 10001, 'sys:dict:data', 'sys/dict/dictData', '#', '/sys/dict/data', 7, 0, 0, 1, '2022-06-27 20:36:39', 19980817, '2022-06-30 12:10:50', 19980817);
-INSERT INTO `sys_menu` VALUES (10037, '新增租户', 10016, 'sys:tenant:create:link', 'sys/tenant/createTenant', 'sys', '/sys/tenant/create', 1, 0, 0, 1, '2022-06-27 21:28:41', 19980817, '2022-06-27 21:28:41', 19980817);
 INSERT INTO `sys_menu` VALUES (10038, '数据统计', 0, 'statistics', 'Layout', 'statistics', '/statistics', 1, 0, 1, 2, '2022-07-30 18:17:42', 19980817, '2022-07-30 18:17:42', 19980817);
 INSERT INTO `sys_menu` VALUES (10039, '能耗统计', 10038, 'statistics:energy', 'statistics/energy/index', 'statistics_energy', '/statistics/energy', 5, 0, 1, 2, '2022-07-30 18:18:27', 19980817, '2022-07-30 18:18:27', 19980817);
 INSERT INTO `sys_menu` VALUES (10040, '趋势分析', 10038, 'statistics:trend', 'statistics/trend/index', 'statistics_trend', '/statistics/trend', 10, 0, 1, 2, '2022-07-30 18:19:12', 19980817, '2022-07-30 18:19:12', 19980817);

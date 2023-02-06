@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -109,6 +110,11 @@ public class JwtLoginUser implements UserDetails, Principal {
     private Long deptId;
 
     /**
+     * 过期时间  为空就是永久
+     */
+    private LocalDateTime expired;
+
+    /**
      * 登录时间
      */
     private LocalDateTime loginTime;
@@ -139,7 +145,10 @@ public class JwtLoginUser implements UserDetails, Principal {
     @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        if (expired == null) {
+            return true;
+        }
+        return LocalDateTime.now().isBefore(expired);
     }
 
 

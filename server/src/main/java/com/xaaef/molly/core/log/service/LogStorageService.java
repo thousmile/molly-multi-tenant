@@ -2,6 +2,7 @@ package com.xaaef.molly.core.log.service;
 
 import com.xaaef.molly.common.domain.CustomRequestInfo;
 import com.xaaef.molly.core.auth.jwt.JwtLoginUser;
+import com.xaaef.molly.core.log.domain.LoginLog;
 import com.xaaef.molly.core.log.domain.OperLog;
 import org.aspectj.lang.JoinPoint;
 
@@ -21,11 +22,11 @@ public interface LogStorageService {
     /**
      * 异步保存 登录日志 到 ES 中
      *
-     * @param loginUser
+     * @param loginLog
      * @author Wang Chen Chen
      * @date 2021/8/11 15:30
      */
-    void asyncLoginSave(JwtLoginUser loginUser, CustomRequestInfo request);
+    void asyncLoginSave(LoginLog loginLog);
 
 
     /**

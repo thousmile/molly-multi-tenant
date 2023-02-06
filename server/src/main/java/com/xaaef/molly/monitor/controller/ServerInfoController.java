@@ -1,13 +1,15 @@
-package com.xaaef.molly.system.controller;
+package com.xaaef.molly.monitor.controller;
 
 import com.xaaef.molly.common.util.JsonResult;
-import com.xaaef.molly.system.entity.ServerInfo;
+import com.xaaef.molly.monitor.entity.ServerInfo;
 import com.xaaef.molly.system.service.SysConfigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @Slf4j

@@ -4,6 +4,7 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xaaef.molly.common.domain.CustomRequestInfo;
 import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.core.auth.enums.AdminFlag;
 import com.xaaef.molly.core.auth.enums.GrantType;
@@ -17,6 +18,7 @@ import com.xaaef.molly.core.auth.po.LoginFormPO;
 import com.xaaef.molly.core.auth.service.JwtTokenService;
 import com.xaaef.molly.core.auth.service.LineCaptchaService;
 import com.xaaef.molly.core.auth.service.UserLoginService;
+import com.xaaef.molly.core.log.domain.LoginLog;
 import com.xaaef.molly.core.log.service.LogStorageService;
 import com.xaaef.molly.core.tenant.service.MultiTenantManager;
 import com.xaaef.molly.core.tenant.util.TenantUtils;
@@ -24,7 +26,6 @@ import com.xaaef.molly.core.tenant.util.TenantUtils;
 import com.xaaef.molly.perms.entity.PmsRoleProxy;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import com.xaaef.molly.system.entity.SysMenu;
-import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.enums.MenuTargetEnum;
 import com.xaaef.molly.system.mapper.SysMenuMapper;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
@@ -44,6 +45,16 @@ import java.util.stream.Collectors;
 
 import static com.xaaef.molly.common.util.JsonUtils.DEFAULT_DATE_TIME_PATTERN;
 
+
+/**
+ * <p>
+ * 用户登录
+ * </p>
+ *
+ * @author Wang Chen Chen<932560435@qq.com>
+ * @version 1.0.1
+ * @createTime 2020/3/5 0005 11:32
+ */
 
 @Slf4j
 @Service
@@ -93,7 +104,6 @@ public class UserLoginServiceImpl implements UserLoginService {
             var format = LocalDateTimeUtil.format(currentTenant.getExpired(), DEFAULT_DATE_TIME_PATTERN);
             throw new JwtAuthException(StrUtil.format("租户 {} 已经在 {} 过期了！", currentTenant.getName(), format));
         }
-
         // 把表单提交的 username  password 封装到 UsernamePasswordAuthenticationToken中
         var authResult = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -124,7 +134,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         tokenService.setLoginUser(target);
 
         // 保存登录日志到数据库中
-        logStorageService.asyncLoginSave(target, ServletUtils.getRequestInfo(request));
+        asyncLoginLogSave(target, ServletUtils.getRequestInfo(request));
 
         // 删除 redis 中的 验证码
         captchaService.delete(po.getCodeKey());
@@ -188,5 +198,31 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
 
     }
+
+
+    /**
+     * 保存 登录日志
+     *
+     * @author WangChenChen
+     * @date 2023/2/6 15:56
+     */
+    private void asyncLoginLogSave(JwtLoginUser loginUser, CustomRequestInfo request) {
+        var loginLog = new LoginLog();
+        loginLog.setRequestUrl(request.getRequestUrl());
+        loginLog.setRequestIp(request.getIp());
+        loginLog.setAddress(request.getAddress());
+        loginLog.setOsName(request.getOsName());
+        loginLog.setBrowser(request.getBrowser());
+        loginLog.setAvatar(loginUser.getAvatar());
+        loginLog.setNickname(loginUser.getNickname());
+        loginLog.setUsername(loginUser.getUsername());
+        loginLog.setUserId(loginUser.getUserId());
+        loginLog.setTenantId(loginUser.getTenantId());
+        loginLog.setCreateTime(loginUser.getLoginTime());
+        loginLog.setGrantType(loginUser.getGrantType().getCode());
+        loginLog.setId(IdUtil.getSnowflakeNextId());
+        logStorageService.asyncLoginSave(loginLog);
+    }
+
 
 }
