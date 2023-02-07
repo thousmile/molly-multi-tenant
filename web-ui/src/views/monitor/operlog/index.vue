@@ -121,7 +121,7 @@ const entityForm = ref<IOperLog>({
   /**
    * ID
    */
-  id: 0,
+  id: "",
   /**
    * 标题
    */
