@@ -55,6 +55,24 @@ public class LmsOperLog implements java.io.Serializable {
     private Long userId;
 
     /**
+     * 用户昵称
+     */
+    @TableField(exist = false)
+    private String nickname;
+
+    /**
+     * 用户名
+     */
+    @TableField(exist = false)
+    private String username;
+
+    /**
+     * 头像
+     */
+    @TableField(exist = false)
+    private String avatar;
+
+    /**
      * 方法
      */
     private String method;

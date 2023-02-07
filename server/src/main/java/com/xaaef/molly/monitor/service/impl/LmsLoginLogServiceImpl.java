@@ -1,7 +1,6 @@
 package com.xaaef.molly.monitor.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-import static com.xaaef.molly.core.tenant.consts.MbpConst.CREATE_TIME;
 
 /**
  * <p>
@@ -51,6 +49,7 @@ public class LmsLoginLogServiceImpl extends ServiceImpl<LmsLoginLogMapper, LmsLo
         if (StringUtils.isNotBlank(params.getKeywords())) {
             wrapper.like(LmsLoginLog::getCreateTime, params.getKeywords());
         }
+        wrapper.orderByDesc(LmsLoginLog::getCreateTime);
         return super.page(pageRequest, wrapper);
     }
 

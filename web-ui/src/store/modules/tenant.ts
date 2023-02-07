@@ -3,6 +3,7 @@ import { defineStore } from "pinia"
 import { ref } from "vue"
 import { ISimpleTenant } from "@/types/base"
 import { setCurrentTenant as setTenant, getCurrentTenant as getTenant } from "@/utils/cache/localStorage"
+import { defaultTenant } from "@/config"
 
 export const useTenantStore = defineStore("tenant", () => {
   // 当前租户
@@ -24,9 +25,16 @@ export const useTenantStore = defineStore("tenant", () => {
     setTenant(tenant)
   }
 
+  // 重置当前操作的租户
+  const resetCurrentTenant = (): void => {
+    currentTenant.value = defaultTenant
+    setTenant(defaultTenant)
+  }
+
   return {
     getCurrentTenant,
     setCurrentTenant,
+    resetCurrentTenant,
     getCurrentTenantId
   }
 })

@@ -1,12 +1,11 @@
 import axios, { AxiosInstance, type AxiosRequestConfig } from "axios"
 import { useUserStoreHook } from "@/store/modules/user"
+import { useTenantStoreHook } from "@/store/modules/tenant"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { get } from "lodash-es"
 import { getAccessToken } from "./cache/cookies"
 import { defaultTenant } from "@/config"
 import { getEnvBaseURLPrefix } from "."
-
-import { getCurrentTenant } from "./cache/localStorage"
 import { ISimpleTenant } from "@/types/base"
 
 /** 创建请求实例 */
@@ -41,10 +40,14 @@ function createService() {
           case 400012:
             logout(apiData.message)
             return
+          case 400444:
+            // 表示租户不存在，已经被删除了
+            useTenantStoreHook().resetCurrentTenant()
+            return
           default:
             // 不是正确的 Code
             ElMessage.error(apiData.message || "Error")
-            return Promise.reject(new Error("Error"))
+            return Promise.reject(new Error(apiData.message || "Error"))
         }
       }
     },
@@ -111,7 +114,7 @@ function logout(message: string) {
 /** 创建请求方法 */
 function createRequestFunction(service: AxiosInstance) {
   return function (config: AxiosRequestConfig) {
-    let tenant: ISimpleTenant = getCurrentTenant()
+    let tenant: ISimpleTenant = useTenantStoreHook().getCurrentTenant()
     if (config.url === "/auth/login") {
       tenant = defaultTenant
     }

@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import static com.xaaef.molly.core.auth.enums.OAuth2Error.*;
 import static com.xaaef.molly.core.tenant.consts.MbpConst.X_TENANT_ID;
 
 
@@ -71,7 +72,7 @@ public class TenantIdInterceptor implements HandlerInterceptor {
         // 校验租户，是否存在系统中
         if (!tenantManager.existById(tenantId)) {
             var err = StrUtil.format("租户ID {} 不存在！", tenantId);
-            ServletUtils.renderError(response, JsonResult.fail(err));
+            ServletUtils.renderError(response, JsonResult.result(TENANT_ID_DOES_NOT_EXIST.getStatus(), err));
             return false;
         }
         return HandlerInterceptor.super.preHandle(request, response, handler);
@@ -80,7 +81,7 @@ public class TenantIdInterceptor implements HandlerInterceptor {
 
     private static boolean writeError(HttpServletResponse response) {
         var err = StrUtil.format("请求头或者URL参数中必须添加 {}", X_TENANT_ID);
-        ServletUtils.renderError(response, JsonResult.fail(err));
+        ServletUtils.renderError(response, JsonResult.result(REQUEST_MUST_ADD_TENANT_ID.getStatus(), err));
         return false;
     }
 

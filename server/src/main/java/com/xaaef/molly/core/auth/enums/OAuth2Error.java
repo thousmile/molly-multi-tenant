@@ -130,11 +130,22 @@ public enum OAuth2Error {
      */
     VERIFICATION_CODE_ERROR(400045, "验证码错误"),
 
-
     /**
      * 权限不足
      */
-    ACCESS_DENIED(400061, "请求访问，权限不足");
+    ACCESS_DENIED(400061, "请求访问，权限不足"),
+
+
+    /**
+     * 租户ID不存在
+     */
+    TENANT_ID_DOES_NOT_EXIST(400444, "租户ID不存在"),
+
+
+    /**
+     * 请求必须添加租户ID
+     */
+    REQUEST_MUST_ADD_TENANT_ID(400445, "租户ID不存在");
 
 
     OAuth2Error(Integer status, String error) {

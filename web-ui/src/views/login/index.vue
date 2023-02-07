@@ -22,7 +22,7 @@ const codeUrl = ref("")
 const loginForm: ILoginData = reactive({
   username: "admin",
   password: "a1234567",
-  codeKey: uuidv4(),
+  codeKey: uuidv4().replace(/-/g, ""),
   codeText: ""
 })
 
