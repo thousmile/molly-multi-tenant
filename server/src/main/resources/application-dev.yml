@@ -37,10 +37,10 @@ spring:
     qiniu-kodo: # 七牛云 kodo
       - platform: qiniu-kodo-1 # 存储平台标识
         enable-storage: true  # 启用存储
-        access-key: cyMiqN72iVBoNiY8nWW-d0JQ8Oyoz9wvRvbWzHTt
-        secret-key: TePPDwQarZ2rWxHMCn8iuMLOSbzh0JYXZZjCRt_N
-        bucket-name: 7qj4ztoh
-        domain: https://oss.xaaef.com/            # 访问域名，注意“/”结尾，例如：http://abc.hn-bkt.clouddn.com/
+        access-key: 123456
+        secret-key: 123456
+        bucket-name: 123456
+        domain: https://oss.baidu.com/            # 访问域名，注意“/”结尾，例如：http://abc.hn-bkt.clouddn.com/
         base-path: molly/                         # 基础路径
 
 
@@ -71,6 +71,10 @@ springdoc:
     - group: '系统管理'
       paths-to-match: '/**'
       packages-to-scan: com.xaaef.molly.system.controller
+
+    - group: '系统监控'
+      paths-to-match: '/**'
+      packages-to-scan: com.xaaef.molly.monitor.controller
 
 
 # knife4j的增强配置，不需要增强可以不配

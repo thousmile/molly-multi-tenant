@@ -34,7 +34,6 @@ mybatis-plus:
 multi:
   tenant:
     create-table: true
-    db-style: schema
     master-change-log: classpath:db/changelog-master.xml
     other-change-log: classpath:db/changelog-other.xml
     prefix: molly_
@@ -44,7 +43,7 @@ multi:
 info:
   app:
     name: ${spring.application.name}
-    description: molly mybatis-plus multi tenant sass platform
+    description: Spring Boot 3.X + Mybatis-Plus + Liquibase SaaS
     version: 1.0.1
 
 
