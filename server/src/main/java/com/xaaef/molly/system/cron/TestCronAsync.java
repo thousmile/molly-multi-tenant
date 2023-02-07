@@ -53,7 +53,6 @@ public class TestCronAsync {
                     "dataArr", RandomUtil.randomEleSet(arrs, 3)
             );
             var json = JsonUtils.toJson(map);
-            log.info(json);
             // 广播通知  给所有用户
             messagingTemplate.convertAndSend("/topic/broadcast/notice", json);
         }
@@ -69,7 +68,6 @@ public class TestCronAsync {
                     "dataArr", RandomUtil.randomEleSet(arrs, 3)
             );
             var json = JsonUtils.toJson(map);
-            log.info(json);
             // 推送给指定用户 ,  /user/queue/single/push
             messagingTemplate.convertAndSendToUser(user.getLoginId(), "/queue/single/push", json);
         });

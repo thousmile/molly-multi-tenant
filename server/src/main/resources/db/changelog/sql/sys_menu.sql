@@ -29,9 +29,9 @@ INSERT INTO `sys_menu` VALUES (10006, '菜单管理', 10003, 'pre:menu', 'pre/me
 INSERT INTO `sys_menu` VALUES (10007, '部门管理', 10003, 'pre:dept', 'pre/dept/index', 'pre_dept', '/pre/dept/index', 4, 0, 1, 2, '2021-07-09 12:30:00', 19980817, '2021-07-27 16:46:09', 19980817);
 INSERT INTO `sys_menu` VALUES (10008, '字典管理', 10001, 'sys:dict', 'sys/dict/index', 'sys_dictionary', '/sys/dict', 3, 0, 1, 1, '2021-07-09 12:30:00', 19980817, '2022-06-30 12:10:37', 19980817);
 INSERT INTO `sys_menu` VALUES (10009, '参数设置', 10001, 'sys:config', 'sys/config/index', 'config', '/sys/config', 4, 0, 1, 1, '2021-07-09 12:30:00', 19980817, '2022-05-07 17:48:19', 19980817);
-INSERT INTO `sys_menu` VALUES (10010, '通知公告', 10001, 'sys:notice', 'sys/notice', 'notice', '/sys/notice', 5, 0, 1, 1, '2021-07-09 12:30:00', 19980817, '2021-10-09 10:39:14', 19980817);
+INSERT INTO `sys_menu` VALUES (10010, '通知公告', 10001, 'sys:notice', 'sys/notice/index', 'notice', '/sys/notice', 5, 0, 1, 1, '2021-07-09 12:30:00', 19980817, '2021-10-09 10:39:14', 19980817);
 INSERT INTO `sys_menu` VALUES (10011, '服务监控', 10002, 'monitor:server', 'monitor/server/index', 'server_monitor', '/monitor/server', 1, 0, 1, 1, '2021-07-09 12:30:00', 19980817, '2022-05-26 17:07:01', 19980817);
-INSERT INTO `sys_menu` VALUES (10012, '系统API', 10001, 'sys:swagger', 'sys/swagger', 'interface', '/sys/swagger', 6, 0, 1, 1, '2021-07-09 12:30:00', 19980817, '2022-05-26 17:07:26', 19980817);
+INSERT INTO `sys_menu` VALUES (10012, '系统API', 10001, 'sys:swagger', 'sys/swagger/index', 'interface', '/sys/swagger', 6, 0, 1, 1, '2021-07-09 12:30:00', 19980817, '2022-05-26 17:07:26', 19980817);
 INSERT INTO `sys_menu` VALUES (10013, '操作日志', 10002, 'monitor:operlog', 'monitor/operlog/index', 'sys_oper_log', '/monitor/operlog', 3, 0, 1, 1, '2021-07-09 12:30:00', 19980817, '2021-10-26 17:22:22', 19980817);
 INSERT INTO `sys_menu` VALUES (10014, '登录日志', 10002, 'monitor:logininfor', 'monitor/logininfor/index', 'sys_login_log', '/monitor/logininfor', 4, 0, 1, 1, '2021-07-09 12:30:00', 19980817, '2022-04-02 11:03:47', 19980817);
 INSERT INTO `sys_menu` VALUES (10015, '租户模板', 10001, 'sys:template', 'sys/template/index', 'template', '/sys/template', 1, 0, 1, 1, '2021-08-17 14:02:42', 19980817, '2021-08-17 14:03:32', 19980817);

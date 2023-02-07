@@ -5,6 +5,8 @@ import { getAccessToken, removeAccessToken, setAccessToken } from "@/utils/cache
 import { resetRouter } from "@/router"
 import { loginApi, getUserInfoApi, logoutApi, getUserPermsApi } from "@/api/login"
 import { type ILoginData, ILoginUserInfo, IPermsMenus, IPermsButton } from "@/types/pms"
+import { usePermissionStoreHook } from "./permission"
+import { useTagsViewStoreHook } from "./tags-view"
 
 export const useUserStore = defineStore("user", () => {
   // token信息
@@ -69,10 +71,7 @@ export const useUserStore = defineStore("user", () => {
     return new Promise((resolve, reject) => {
       logoutApi()
         .then((resp) => {
-          removeAccessToken()
-          userInfo.value = undefined
-          accessToken.value = ""
-          resetRouter()
+          fedLogout()
           resolve(resp)
         })
         .catch((error) => {
@@ -87,7 +86,10 @@ export const useUserStore = defineStore("user", () => {
     userInfo.value = undefined
     accessToken.value = ""
     resetRouter()
-    location.reload()
+    buttons.value = []
+    menus.value = []
+    usePermissionStoreHook().clearRoutes()
+    useTagsViewStoreHook().delAllVisitedViews()
   }
 
   /** 重置 Token */

@@ -73,7 +73,13 @@ export const usePermissionStore = defineStore("permission", () => {
     })
   }
 
-  return { routes, getRoutes, dynamicRoutes, toVueRoutes }
+  // 清除路由
+  const clearRoutes = () => {
+    routes.value = []
+    dynamicRoutes.value = []
+  }
+
+  return { routes, getRoutes, dynamicRoutes, toVueRoutes, clearRoutes }
 })
 
 /** 在 setup 外使用 */

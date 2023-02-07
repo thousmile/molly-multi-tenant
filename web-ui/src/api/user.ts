@@ -7,6 +7,11 @@ export const updatePasswordApi = (data: any) => {
   return httpPost<any, IJsonResult<boolean>>("/pms/user/update/password", data)
 }
 
+/** 重置密码 */
+export const resetPasswordApi = (data: any) => {
+  return httpPost<any, IJsonResult<boolean>>("/pms/user/reset/password", data)
+}
+
 /** 查询用户 */
 export const queryUserApi = (params: ISearchQuery) => {
   return httpGet<ISearchQuery, IPageResult<IPmsUser>>("/pms/user/query", params)

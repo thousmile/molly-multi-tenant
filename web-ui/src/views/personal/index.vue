@@ -14,12 +14,12 @@
             </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
-                <el-icon><Dish /></el-icon>
+                <el-icon><Connection /></el-icon>
                 用户ID
                 <div class="pull-right">{{ userInfoForm.userId }}</div>
               </li>
               <li class="list-group-item">
-                <el-icon><Dish /></el-icon>
+                <el-icon><Filter /></el-icon>
                 昵称
                 <div class="pull-right">{{ userInfoForm.nickname }}</div>
               </li>

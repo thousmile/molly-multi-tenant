@@ -98,6 +98,13 @@
                 >删除</el-link
               >
             </template>
+            <el-link
+              :icon="RefreshLeft"
+              type="danger"
+              v-has="['pre_user:reset:password']"
+              @click="handleResetPassword(scope.row)"
+              >重置密码</el-link
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -238,14 +245,14 @@
 
 <script setup lang="ts">
 import { ref, onMounted, reactive, computed } from "vue"
-import { deleteUserApi, queryUserApi, saveUserApi, updateUserApi } from "@/api/user"
+import { deleteUserApi, queryUserApi, resetPasswordApi, saveUserApi, updateUserApi } from "@/api/user"
 import { treeDeptApi } from "@/api/dept"
 import { listRoleApi } from "@/api/role"
 import { ISearchQuery } from "@/types/base"
 import { IPmsUser, IPmsDept, IPmsRole } from "@/types/pms"
 import UserAvatar from "@/components/UserAvatar/index.vue"
 import { testEmail, testPassword, testPhone } from "@/utils/regular"
-import { Plus, Edit, Delete, UserFilled, Search } from "@element-plus/icons-vue"
+import { Plus, Edit, Delete, UserFilled, Search, RefreshLeft } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { useDictStoreHook } from "@/store/modules/dict"
 import { expiredDateAgo, timeAgo, futureShortcuts } from "@/utils"
@@ -446,6 +453,35 @@ const handleAdd = () => {
   dialogTitle.value = "新增"
   saveFlag.value = true
   dialogVisible.value = true
+}
+
+// 重置密码
+const handleResetPassword = (data: IPmsUser) => {
+  ElMessageBox.prompt(`确定要重置 ${data.nickname} 的密码吗?`, "警告", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    inputPattern: /^(?=.*[a-zA-Z])(?=.*[0-9])[A-Za-z0-9]{5,24}$/,
+    inputErrorMessage: "密码包含字母和数字，长度5~24位"
+  })
+    .then(({ value }) => {
+      const params = {
+        userId: data.userId,
+        newPwd: value
+      }
+      resetPasswordApi(params)
+        .then((resp) => {
+          if (resp.data) {
+            ElMessage({
+              message: `重置 ${data.nickname} 的密码成功！`,
+              type: "success"
+            })
+          }
+        })
+        .catch((err) => {
+          console.log("err :>> ", err)
+        })
+    })
+    .catch(() => console.log("catch..."))
 }
 
 // 编辑
