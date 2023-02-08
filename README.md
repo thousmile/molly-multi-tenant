@@ -5,7 +5,8 @@
 
 ## ⚡ 简介
 
-一个免费开源的 多租户sass 管理系统基础解决方案，后端基于 Spring Boot 3.x、mybatis-plus、liquibase、。前端基于 Vue3、TypeScript、Element Plus、Pinia 和 Vite 等主流技术.
+一个免费开源的 多租户sass 管理系统基础解决方案，后端基于 Spring Boot 3.x、mybatis-plus、liquibase、。
+[前端基于 Vue3、TypeScript、Element Plus、Pinia 和 Vite 等主流技术.](https://github.com/un-pany/v3-admin-vite)
 
 ## 项目预览图
 
