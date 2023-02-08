@@ -1,11 +1,12 @@
 <div align="center">
   <h1>molly-multi-tenant</h1>
-  <h2>基于多数据库的sass系统</h2>
+  <h2>基于多数据库的SaaS系统</h2>
 </div>
 
 ## ⚡ 简介
 
-一个免费开源的 多租户sass 管理系统基础解决方案，后端基于 Spring Boot 3.x、mybatis-plus、liquibase、。
+一个免费开源的 多租户SaaS管理系统基础解决方案，
+后端基于 Spring Boot 3.x、mybatis-plus、liquibase、。
 [前端基于 Vue3、TypeScript、Element Plus、Pinia 和 Vite 等主流技术.](https://github.com/un-pany/v3-admin-vite)
 
 ## 项目预览图
