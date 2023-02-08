@@ -86,6 +86,7 @@ const createCode = () => {
 }
 
 /** 初始化验证码 */
+// login-bg.svg
 createCode()
 </script>
 
@@ -94,7 +95,7 @@ createCode()
     <ThemeSwitch class="theme-switch" />
     <div class="login-card">
       <div class="title">
-        <img src="@/assets/layout/logo.png" />
+        <span>Molly SaaS 管理系统</span>
       </div>
       <div class="content">
         <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" @keyup.enter="handleLogin">
@@ -157,32 +158,33 @@ createCode()
   align-items: center;
   width: 100%;
   min-height: 100%;
+  background: url("@/assets/login-bg3.svg") no-repeat;
+
   .theme-switch {
     position: fixed;
     top: 5%;
     right: 5%;
     cursor: pointer;
   }
+
   .login-card {
-    width: 480px;
+    width: 430px;
     border-radius: 5px;
     box-shadow: 0 0 10px #dcdfe6;
     background-color: #fff;
     overflow: hidden;
+
     .title {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 150px;
-      img {
-        height: 80px;
-      }
-      div {
-        text-align: center;
-      }
+      height: 60px;
+      font-size: x-large;
+      font-weight: 600;
     }
+
     .content {
-      padding: 20px 50px 50px 50px;
+      padding: 20px 30px 30px 30px;
       :deep(.el-input-group__append) {
         padding: 0;
         overflow: hidden;
@@ -195,6 +197,7 @@ createCode()
           text-align: center;
         }
       }
+
       .el-button {
         width: 100%;
         margin-top: 10px;
