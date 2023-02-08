@@ -64,8 +64,8 @@ export const usePermissionStore = defineStore("permission", () => {
   }
 
   // 将后端的菜单数据转换为vue-router的路由
-  const toVueRoutes = (data: IPermsMenus[]) => {
-    return new Promise((resolve) => {
+  const toVueRoutes = (data: IPermsMenus[]): Promise<RouteRecordRaw[]> => {
+    return new Promise<RouteRecordRaw[]>((resolve) => {
       const asyncRoutes = flatTreeRoutes(data)
       dynamicRoutes.value = asyncRoutes
       routes.value = constantRoutes.concat(asyncRoutes)

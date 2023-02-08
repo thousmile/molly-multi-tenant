@@ -66,7 +66,14 @@ const logout = () => {
     type: "warning"
   })
     .then(() => {
-      userStore.userLogout().then(() => router.push("/login"))
+      userStore.userLogout().then(() => {
+        // 获取当前页面的路由
+        const path = router.currentRoute.value.path
+        // 获取当前页面的参数
+        const query = router.currentRoute.value.query
+        query.redirect = path
+        router.push({ path: "/login", query: query })
+      })
     })
     .catch(() => console.log("取消退出登录.. :>> "))
 }

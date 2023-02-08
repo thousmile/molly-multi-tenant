@@ -212,7 +212,7 @@
                 <el-date-picker
                   v-model="entityForm.expired"
                   type="datetime"
-                  placeholder="请选择过期时间"
+                  placeholder="请选择过期时间，不填即是永久"
                   format="YYYY-MM-DD HH:mm:ss"
                   value-format="YYYY-MM-DD HH:mm:ss"
                   :shortcuts="futureShortcuts"

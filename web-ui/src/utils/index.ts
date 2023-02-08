@@ -128,17 +128,6 @@ export const getCssVariableValue = (cssVariableName: string) => {
   return cssVariableValue
 }
 
-/**
- * 截取当前 url 端口号之后的 部分
- */
-export function getRelativePath() {
-  const result = location.hash
-  if (result.charAt(0) === "#") {
-    return result.substring(1, result.length)
-  }
-  return result
-}
-
 export function getQueryString(params: string) {
   if (params.indexOf("redirect") !== -1) {
     params = params.substring(params.indexOf("?") + 1, params.length)
@@ -173,6 +162,7 @@ export const getEnvBaseURL = () => {
 }
 
 import chinaAreaJson from "@/assets/ChinaArea.json"
+
 /** 获取 区域名称 */
 export const chinaAreaDeepQuery = (areaCode: number) => {
   let isGet = false

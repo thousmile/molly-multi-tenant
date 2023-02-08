@@ -83,7 +83,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item prop="parentId" label="上级权限">
+              <el-form-item prop="parentId" label="上级部门">
                 <el-cascader
                   v-model="entityForm.parentId"
                   :options="parentMenus"
@@ -124,7 +124,13 @@
             </el-col>
             <el-col :span="12">
               <el-form-item prop="description" label="描述">
-                <el-input v-model.trim="entityForm.description" placeholder="描述" type="text" tabindex="6" />
+                <el-input
+                  v-model.trim="entityForm.description"
+                  placeholder="描述"
+                  :rows="3"
+                  type="textarea"
+                  tabindex="6"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -207,7 +213,7 @@ const entityFormRef = ref<FormInstance | null>(null)
 /// 表单校验规则
 const entityFormRules: FormRules = {
   parentId: [{ required: true, message: "请选择上级部门", trigger: "blur" }],
-  deptName: [{ required: true, message: "请输入名称", trigger: "blur" }],
+  deptName: [{ required: true, message: "请输入部门名称", trigger: "blur" }],
   leader: [{ required: true, message: "请输入部门领导", trigger: "blur" }],
   leaderMobile: [
     { required: true, message: "请输入领导联系方式", trigger: "blur" },
@@ -379,6 +385,14 @@ const handleSaveAndFlush = () => {
             getTableData()
           })
       } else {
+        if (entityForm.value.deptId === entityForm.value.parentId) {
+          ElMessage({
+            message: "上级部门不能是自己！",
+            type: "warning"
+          })
+          loading.value = false
+          return
+        }
         updateDeptApi(entityForm.value)
           .then((resp) => {
             if (resp.data) {

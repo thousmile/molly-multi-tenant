@@ -21,7 +21,7 @@ const codeUrl = ref("")
 /** 登录表单数据 */
 const loginForm: ILoginData = reactive({
   username: "admin",
-  password: "a1234567",
+  password: "123456",
   codeKey: uuidv4().replace(/-/g, ""),
   codeText: ""
 })
@@ -55,7 +55,15 @@ const handleLogin = () => {
       }
       useUserStore()
         .userLogin(params)
-        .then(() => router.push({ path: "/" }))
+        .then(() => {
+          const query = router.currentRoute.value.query
+          let redirect = undefined
+          if (query.redirect) {
+            redirect = query.redirect as string
+            delete query.redirect
+          }
+          router.push({ path: redirect || "/", query: query })
+        })
         .catch((err) => {
           console.log("err", err)
           createCode()

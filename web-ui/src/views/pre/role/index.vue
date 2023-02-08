@@ -81,12 +81,12 @@
         >
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item prop="roleName" label="角色名称">
+              <el-form-item prop="roleName" label="名称">
                 <el-input v-model.trim="entityForm.roleName" placeholder="名称" type="text" tabindex="1" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item prop="sort" label="部门排序">
+              <el-form-item prop="sort" label="排序">
                 <el-input-number v-model="entityForm.sort" :min="1" :max="9999999" tabindex="2" />
               </el-form-item>
             </el-col>
@@ -95,7 +95,7 @@
             <el-input
               v-model="entityForm.description"
               placeholder="描述"
-              :rows="5"
+              :rows="3"
               :maxlength="100"
               type="textarea"
               tabindex="3"
