@@ -1,11 +1,14 @@
 package com.xaaef.molly.core.web;
 
 import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.core.auth.enums.OAuth2Error;
 import com.xaaef.molly.core.auth.exception.JwtAuthException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,7 +36,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = JwtAuthException.class)
     public JsonResult<String> bizExceptionHandler(JwtAuthException e) {
-        e.printStackTrace();
         log.error("发生业务异常！原因是： {}  {} ", e.getStatus(), e.getMessage());
         return JsonResult.error(e.getStatus(), e.getMessage());
     }
@@ -44,7 +46,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public JsonResult<String> handleBindException(MethodArgumentNotValidException e) {
-        e.printStackTrace();
         FieldError fieldError = e.getBindingResult().getFieldError();
         log.warn("参数校验异常: {} --> {}", fieldError.getField(), fieldError.getDefaultMessage());
         return JsonResult.fail(fieldError.getDefaultMessage());
@@ -67,20 +68,27 @@ public class GlobalExceptionHandler {
 
 
     /**
-     * 权限不足异常
-     *
-     * @param e
-     * @return
+     * 认证失败异常
      */
-    @ExceptionHandler(value = AccessDeniedException.class)
-    public JsonResult<String> exceptionHandler(AccessDeniedException e) {
-        e.printStackTrace();
-        return JsonResult.error(OAuth2Error.ACCESS_DENIED.getStatus(),e.getMessage());
+    @ExceptionHandler(value = AuthenticationException.class)
+    public JsonResult<String> exceptionHandler(HttpServletRequest request, AuthenticationException e) {
+        var msg = String.format("请求访问：%s，认证失败，无法访问系统资源", request.getRequestURI());
+        return JsonResult.error(OAuth2Error.OAUTH2_EXCEPTION.getStatus(), msg);
     }
 
 
     /**
-     * 处理空指针的异常
+     * 权限不足异常
+     */
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public JsonResult<String> exceptionHandler(HttpServletRequest request, AccessDeniedException e) {
+        var msg = String.format("请求访问：%s，权限不足，请联系管理员", request.getRequestURI());
+        return JsonResult.error(OAuth2Error.ACCESS_DENIED.getStatus(), msg);
+    }
+
+
+    /**
+     * 处理运行时的异常
      *
      * @param e
      * @return

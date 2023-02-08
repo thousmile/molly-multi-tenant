@@ -22,3 +22,25 @@ Content-Type: application/json
 x-tenant-id: google
 Authorization: Bearer {{tokenValue}}
 
+
+
+### 获取角色数据
+GET {{baseUrl}}/server/info/hello1
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+
+### 获取角色数据
+GET {{baseUrl}}/server/info/hello2
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+
+### 获取角色数据
+GET {{baseUrl}}/server/info/hello3
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
