@@ -32,6 +32,19 @@
           </template>
         </el-table-column>
         <el-table-column prop="address" label="联系地址" />
+        <el-table-column prop="templates" label="权限模板">
+          <template #default="scope">
+            <el-tooltip
+              v-for="(item, index) in scope.row.templates"
+              :key="index"
+              effect="dark"
+              :content="item.description"
+              placement="top-start"
+            >
+              <el-tag>{{ item.name }}</el-tag>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="status" label="状态">
           <template #default="scope">
             {{ dictStore.getNormalDisable(scope.row.status) }}
@@ -497,4 +510,8 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.el-tag {
+  margin: 2px;
+}
+</style>

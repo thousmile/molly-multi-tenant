@@ -47,7 +47,7 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item prop="linkman" label="联系人">
-            <el-input v-model.trim="entityForm.linkman" clearable placeholder="租户联系人" type="text" tabindex="4" />
+            <el-input v-model="entityForm.linkman" clearable placeholder="租户联系人" type="text" tabindex="4" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -70,7 +70,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item prop="address" label="联系地址">
-            <el-input v-model.trim="entityForm.address" clearable placeholder="租户联系地址" type="text" tabindex="6" />
+            <el-input v-model="entityForm.address" clearable placeholder="租户联系地址" type="text" tabindex="6" />
           </el-form-item>
         </el-col>
       </el-row>

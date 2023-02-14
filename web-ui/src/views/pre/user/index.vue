@@ -614,4 +614,8 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.el-tag {
+  margin: 2px;
+}
+</style>

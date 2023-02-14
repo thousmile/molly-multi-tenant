@@ -1,0 +1,85 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/molly_master?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: 123456
+    type: com.zaxxer.hikari.HikariDataSource
+
+
+  data:
+    redis:
+      database: 1
+      port: 6379
+      #host: 127.0.0.1
+      host: 192.168.0.189
+      password: mht123
+      timeout: 5000
+      lettuce:
+        pool:
+          max-idle: 8         # 连接池中的最大空闲连接
+          min-idle: 3         # 连接池中的最小空闲连接
+          max-active: 8       # 连接池最大连接数（使用负值表示没有限制）
+          max-wait: 500       # 连接池最大阻塞等待时间（使用负值表示没有限制）
+
+
+  cache:
+    type: redis
+    redis:
+      use-key-prefix: true
+      time-to-live: 180s
+
+
+  #文件存储配置
+  file-storage:
+    default-platform: qiniu-kodo-1 #默认使用的存储平台
+    thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
+    qiniu-kodo: # 七牛云 kodo
+      - platform: qiniu-kodo-1 # 存储平台标识
+        enable-storage: true  # 启用存储
+        access-key: 123456
+        secret-key: 123456
+        bucket-name: 123456
+        domain: https://oss.baidu.com/       # 访问域名，注意“/”结尾，例如：http://abc.hn-bkt.clouddn.com/
+        base-path: molly/                     # 基础路径
+
+
+# mybatis-plus 日志打印
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    version: 1.0.1
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: '认证管理'
+      paths-to-match: '/auth/**'
+      packages-to-scan: com.xaaef.molly.auth.controller
+
+    - group: '权限管理'
+      paths-to-match: '/pms/**'
+      packages-to-scan: com.xaaef.molly.perms.controller
+
+    - group: '系统管理'
+      paths-to-match: '/**'
+      packages-to-scan: com.xaaef.molly.system.controller
+
+    - group: '系统监控'
+      paths-to-match: '/**'
+      packages-to-scan: com.xaaef.molly.monitor.controller
+
+
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+    version: 1.0.1

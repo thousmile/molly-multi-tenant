@@ -31,7 +31,11 @@
             <el-table-column prop="linkman" label="联系人" />
             <el-table-column fixed="right" label="操作" width="100">
               <template #default="scope">
-                <el-button v-if="value !== scope.row.tenantId" text type="primary" @click="handleSwitchClick(scope.row)"
+                <el-button
+                  v-if="currentTenantId(scope.row.tenantId)"
+                  text
+                  type="primary"
+                  @click="handleSwitchClick(scope.row)"
                   >切换</el-button
                 >
               </template>
@@ -55,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue"
+import { computed, reactive, ref } from "vue"
 import { Search, UserFilled } from "@element-plus/icons-vue"
 import { ISearchQuery, ISimpleTenant } from "@/types/base"
 import { simpleQueryApi } from "@/api/tenant"
@@ -114,6 +118,12 @@ const handleCurrentChange = (val: number) => {
   params.pageIndex = val
   searchTenantList()
 }
+
+const currentTenantId = computed(() => {
+  return (tenantId: string) => {
+    return tenantStore.getCurrentTenantId() !== tenantId
+  }
+})
 
 const searchTenantList = () => {
   loading.value = true
