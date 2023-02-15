@@ -11,10 +11,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>monitor-service</artifactId>
-    <name>monitor-service</name>
+    <artifactId>molly-pms</artifactId>
+    <name>molly-pms</name>
 
     <dependencies>
+
 
         <dependency>
             <groupId>com.xaaef.molly</groupId>
@@ -44,13 +45,6 @@
             <groupId>com.xaaef.molly</groupId>
             <artifactId>web-config</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <!-- 获取服务器信息，内存，CPU，磁盘 -->
-        <dependency>
-            <groupId>com.github.oshi</groupId>
-            <artifactId>oshi-core</artifactId>
-            <version>${oshi.version}</version>
         </dependency>
 
     </dependencies>

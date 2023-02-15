@@ -18,19 +18,19 @@
 
         <dependency>
             <groupId>com.xaaef.molly</groupId>
-            <artifactId>sys-service</artifactId>
+            <artifactId>molly-sys</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.xaaef.molly</groupId>
-            <artifactId>pms-service</artifactId>
+            <artifactId>molly-pms</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.xaaef.molly</groupId>
-            <artifactId>monitor-service</artifactId>
+            <artifactId>molly-monitor</artifactId>
             <version>${project.version}</version>
         </dependency>
 

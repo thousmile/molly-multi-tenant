@@ -46,14 +46,16 @@ public class SchemaInterceptor implements InnerInterceptor {
     public void beforePrepare(StatementHandler sh, Connection conn, Integer transactionTimeout) {
         var mpBoundSql = PluginUtils.mpBoundSql(sh.getBoundSql());
         // 获取当前 sql 语句中的。表名称
-        Set<String> tableName = getTableListName(mpBoundSql.sql());
+        var tableName = getTableListName(mpBoundSql.sql());
         // 判断 表名称 是否需要过滤，即: 使用 公共库，而不是 租户 库。
         if (ignoreTable(tableName)) {
             // 切换数据库
             switchSchema(conn, multiTenantProperties.getDefaultTenantId());
         } else {
+            var tenantId = getCurrentTenantId();
+            log.debug("beforePrepare.tenantId: {}", tenantId);
             // 切换数据库
-            switchSchema(conn, getCurrentTenantId());
+            switchSchema(conn, tenantId);
         }
         InnerInterceptor.super.beforePrepare(sh, conn, transactionTimeout);
     }
@@ -78,7 +80,7 @@ public class SchemaInterceptor implements InnerInterceptor {
 
     private void switchSchema(Connection conn, String schema) {
         // 切换数据库
-        String sql = String.format("use %s%s", multiTenantProperties.getPrefix(), schema);
+        var sql = String.format("use %s%s", multiTenantProperties.getPrefix(), schema);
         try {
             conn.createStatement().execute(sql);
         } catch (SQLException e) {

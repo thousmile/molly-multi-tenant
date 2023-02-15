@@ -60,7 +60,6 @@ public class TenantIdInterceptor implements HandlerInterceptor {
                 if (JwtSecurityUtils.isMasterUser()) {
                     return writeError(response);
                 } else {
-                    TenantUtils.setTenantId(JwtSecurityUtils.getTenantId());
                     tenantId = JwtSecurityUtils.getTenantId();
                 }
             } else {
@@ -73,6 +72,8 @@ public class TenantIdInterceptor implements HandlerInterceptor {
             ServletUtils.renderError(response, JsonResult.result(TENANT_ID_DOES_NOT_EXIST.getStatus(), err));
             return false;
         }
+        TenantUtils.setTenantId(tenantId);
+        log.debug("preHandle.tenantId: {}", tenantId);
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 

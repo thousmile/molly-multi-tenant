@@ -12,9 +12,9 @@
         <module>common</module>
         <module>internal-api</module>
 
-        <module>monitor-service</module>
-        <module>pms-service</module>
-        <module>sys-service</module>
+        <module>molly-monitor</module>
+        <module>molly-pms</module>
+        <module>molly-sys</module>
 
         <module>molly-service</module>
 
@@ -41,7 +41,7 @@
         <oshi.version>6.4.0</oshi.version>
 
         <swagger.version>2.2.7</swagger.version>
-        <hutool.version>5.8.11</hutool.version>
+        <hutool.version>5.8.12</hutool.version>
         <knife4j.version>4.0.0</knife4j.version>
         <liquibase.version>4.17.2</liquibase.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>

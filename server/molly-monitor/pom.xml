@@ -11,8 +11,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>sys-service</artifactId>
-    <name>sys-service</name>
+    <artifactId>molly-monitor</artifactId>
+    <name>molly-monitor</name>
 
     <dependencies>
 
@@ -46,18 +46,11 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- spring-file-storage 必须要引入 -->
+        <!-- 获取服务器信息，内存，CPU，磁盘 -->
         <dependency>
-            <groupId>cn.xuyanwu</groupId>
-            <artifactId>spring-file-storage</artifactId>
-            <version>${storage.version}</version>
-        </dependency>
-
-        <!-- 七牛云 Kodo 不使用的情况下可以不引入 -->
-        <dependency>
-            <groupId>com.qiniu</groupId>
-            <artifactId>qiniu-java-sdk</artifactId>
-            <version>${qiniu.version}</version>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>${oshi.version}</version>
         </dependency>
 
     </dependencies>

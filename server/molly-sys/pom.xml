@@ -11,11 +11,10 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>pms-service</artifactId>
-    <name>pms-service</name>
+    <artifactId>molly-sys</artifactId>
+    <name>molly-sys</name>
 
     <dependencies>
-
 
         <dependency>
             <groupId>com.xaaef.molly</groupId>
@@ -45,6 +44,20 @@
             <groupId>com.xaaef.molly</groupId>
             <artifactId>web-config</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <!-- spring-file-storage 必须要引入 -->
+        <dependency>
+            <groupId>cn.xuyanwu</groupId>
+            <artifactId>spring-file-storage</artifactId>
+            <version>${storage.version}</version>
+        </dependency>
+
+        <!-- 七牛云 Kodo 不使用的情况下可以不引入 -->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>${qiniu.version}</version>
         </dependency>
 
     </dependencies>
