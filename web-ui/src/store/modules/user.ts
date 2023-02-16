@@ -42,8 +42,13 @@ export const useUserStore = defineStore("user", () => {
     return new Promise((resolve, reject) => {
       getUserInfoApi()
         .then((resp) => {
-          userInfo.value = resp.data
-          resolve(resp)
+          if (resp.data) {
+            userInfo.value = resp.data
+            resolve(resp)
+          } else {
+            fedLogout()
+            reject(resp.message)
+          }
         })
         .catch((error) => {
           reject(error)
@@ -56,9 +61,14 @@ export const useUserStore = defineStore("user", () => {
     return new Promise((resolve, reject) => {
       getUserPermsApi()
         .then((resp) => {
-          buttons.value = resp.data.buttons
-          menus.value = resp.data.menus
-          resolve(resp)
+          if (resp.data) {
+            buttons.value = resp.data.buttons
+            menus.value = resp.data.menus
+            resolve(resp)
+          } else {
+            fedLogout()
+            reject(resp.message)
+          }
         })
         .catch((error) => {
           reject(error)

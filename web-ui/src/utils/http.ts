@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, type AxiosRequestConfig } from "axios"
+import { useRouter } from "vue-router"
 import { useUserStoreHook } from "@/store/modules/user"
 import { useTenantStoreHook } from "@/store/modules/tenant"
 import { ElMessage, ElMessageBox } from "element-plus"
@@ -7,6 +8,8 @@ import { getAccessToken } from "./cache/cookies"
 import { defaultTenant } from "@/config"
 import { getEnvBaseURLPrefix } from "."
 import { ISimpleTenant } from "@/types/base"
+import { loginUrl } from "@/config/white-list"
+import { jumpToLogin } from "@/router"
 
 /** 创建请求实例 */
 function createService() {
@@ -39,11 +42,11 @@ function createService() {
           case 400011:
           case 400012:
             logout(apiData.message)
-            return
+            return Promise.reject(new Error(apiData.message))
           case 400444:
             // 表示租户不存在，已经被删除了
             useTenantStoreHook().resetCurrentTenant()
-            return
+            return Promise.reject(new Error(apiData.message))
           default:
             // 不是正确的 Code
             ElMessage.error(apiData.message || "Error")
@@ -107,7 +110,11 @@ function logout(message: string) {
     cancelButtonText: "取消",
     type: "warning"
   })
-    .then(() => useUserStoreHook().fedLogout())
+    .then(() => {
+      useUserStoreHook().fedLogout()
+      // 强制刷新浏览器也行，只是交互体验不是很好
+      location.reload()
+    })
     .catch(() => console.log("取消退出..."))
 }
 

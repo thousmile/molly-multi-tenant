@@ -14,6 +14,8 @@ import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import Screenfull from "@/components/Screenfull/index.vue"
 import Notify from "@/components/Notify/index.vue"
 import { ElMessageBox } from "element-plus"
+import { loginUrl } from "@/config/white-list"
+import { jumpToLogin } from "@/router"
 
 const router = useRouter()
 const appStore = useAppStore()
@@ -66,14 +68,7 @@ const logout = () => {
     type: "warning"
   })
     .then(() => {
-      userStore.userLogout().then(() => {
-        // 获取当前页面的路由
-        const path = router.currentRoute.value.path
-        // 获取当前页面的参数
-        const query = router.currentRoute.value.query
-        query.redirect = path
-        router.push({ path: "/login", query: query })
-      })
+      userStore.userLogout().then(() => jumpToLogin())
     })
     .catch(() => console.log("取消退出登录.. :>> "))
 }

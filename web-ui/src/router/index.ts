@@ -1,3 +1,4 @@
+import { loginUrl } from "@/config/white-list"
 import { type RouteRecordRaw, createRouter, createWebHashHistory, createWebHistory } from "vue-router"
 
 const Layout = () => import("@/layout/index.vue")
@@ -91,6 +92,16 @@ export function resetRouter() {
     // 强制刷新浏览器也行，只是交互体验不是很好
     window.location.reload()
   }
+}
+
+/** 跳转到 登录页面 */
+export function jumpToLogin() {
+  // 获取当前页面的路由
+  const path = router.currentRoute.value.path
+  // 获取当前页面的参数
+  const query = router.currentRoute.value.query
+  query.redirect = path
+  router.push({ path: loginUrl, query: query })
 }
 
 export default router
