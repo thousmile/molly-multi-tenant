@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -105,6 +106,25 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
         }
         entity.setDeptId(null);
         return super.save(entity);
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean removeById(Serializable id) {
+        var dept = getById(id);
+        if (dept == null) {
+            throw new RuntimeException(String.format("部门 %s 不存在!", id));
+        }
+        if (super.exist(PmsDept::getParentId, dept.getDeptId())) {
+            throw new RuntimeException(String.format("请先删除 %s 的下级部门!", dept.getDeptName()));
+        }
+        var wrapper = new LambdaQueryWrapper<PmsUser>()
+                .eq(PmsUser::getDeptId, dept.getDeptId());
+        if (userMapper.selectCount(wrapper) > 0) {
+            throw new RuntimeException(String.format("部门 %s 还有用户关联!", dept.getDeptName()));
+        }
+        return super.removeById(id);
     }
 
 
