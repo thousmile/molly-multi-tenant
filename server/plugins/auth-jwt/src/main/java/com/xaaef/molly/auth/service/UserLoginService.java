@@ -23,10 +23,18 @@ public interface UserLoginService {
     /**
      * 用户登录
      *
-     * @param user
-     * @return String token 值
+     * @param po
+     * @param request
+     * @return TokenValue 值
      * @throws AuthenticationException
      */
     JwtTokenValue login(LoginFormPO po, HttpServletRequest request) throws JwtAuthException;
+
+
+    /**
+     * 刷新内存中用户的权限
+     */
+    void refreshAuthoritys();
+
 
 }

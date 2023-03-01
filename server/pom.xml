@@ -46,7 +46,7 @@
         <liquibase.version>4.17.2</liquibase.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
 
-        <spring-boot.version>3.0.2</spring-boot.version>
+        <spring-boot.version>3.0.3</spring-boot.version>
     </properties>
 
 

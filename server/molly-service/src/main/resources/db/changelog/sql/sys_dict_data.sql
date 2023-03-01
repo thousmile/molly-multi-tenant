@@ -62,4 +62,6 @@ INSERT INTO `sys_dict_data` VALUES (10039, 3, '月', 'month', 'statistics_query_
 INSERT INTO `sys_dict_data` VALUES (10040, 4, '周', 'week', 'statistics_query_type', 0, 19980817, '2022-07-09 14:06:14', 19980817, '2022-07-09 14:06:14');
 INSERT INTO `sys_dict_data` VALUES (10041, 5, '日', 'date', 'statistics_query_type', 1, 19980817, '2022-07-09 14:06:21', 19980817, '2022-07-14 11:21:15');
 
+
+
 SET FOREIGN_KEY_CHECKS = 1;

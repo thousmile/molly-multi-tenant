@@ -62,4 +62,6 @@ INSERT INTO `sys_menu` VALUES (10041, '设备管理', 0, 'device', 'Layout', 'de
 INSERT INTO `sys_menu` VALUES (10042, '设备列表', 10041, 'device:list', 'device/list/index', 'device_list', '/device/list', 5, 0, 1, 2, '2022-07-30 18:20:24', 19980817, '2022-07-30 18:20:24', 19980817);
 INSERT INTO `sys_menu` VALUES (10043, '设备规划', 10041, 'device:deploy', 'device/deploy/index', 'device_deploy', '/device/deploy', 3, 0, 1, 2, '2022-07-30 18:20:56', 19980817, '2022-07-30 18:20:56', 19980817);
 
+
+
 SET FOREIGN_KEY_CHECKS = 1;

@@ -22,7 +22,7 @@ import lombok.Setter;
 public class JwtTokenValue implements java.io.Serializable {
 
     /**
-     * 请求头的值
+     * 请求头的KEY。默认 "Authorization"
      */
     private String header;
 

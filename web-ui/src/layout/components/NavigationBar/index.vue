@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed } from "vue"
-import { useRouter } from "vue-router"
 import { useAppStore } from "@/store/modules/app"
 import { useSettingsStore } from "@/store/modules/settings"
 import { useUserStore } from "@/store/modules/user"
@@ -14,10 +13,8 @@ import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import Screenfull from "@/components/Screenfull/index.vue"
 import Notify from "@/components/Notify/index.vue"
 import { ElMessageBox } from "element-plus"
-import { loginUrl } from "@/config/white-list"
 import { jumpToLogin } from "@/router"
 
-const router = useRouter()
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
 const userStore = useUserStore()
@@ -110,6 +107,8 @@ const logout = () => {
   height: var(--v3-navigationbar-height);
   overflow: hidden;
   background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+
   .hamburger {
     display: flex;
     align-items: center;
@@ -117,7 +116,15 @@ const logout = () => {
     float: left;
     padding: 0 15px;
     cursor: pointer;
+    line-height: 46px;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.025);
+    }
   }
+
   .breadcrumb {
     float: left;
     // 参考 Bootstrap 的响应式设计 WIDTH = 576

@@ -96,9 +96,9 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
     @Override
     public boolean save(PmsDept entity) {
         if (entity.getParentId() != null && entity.getParentId() == 0L) {
-            entity.setAncestors(String.valueOf(entity.getParentId()));
+            entity.setAncestors(String.valueOf(0L));
         } else {
-            var parentDept = getById(entity.getParentId());
+            var parentDept = super.getById(entity.getParentId());
             if (parentDept == null) {
                 throw new RuntimeException(String.format("上级部门 %d 不存在!", entity.getParentId()));
             }

@@ -35,4 +35,6 @@ INSERT INTO `sys_dict_type` VALUES (10012, '菜单类型', 'sys_menu_type', '菜
 INSERT INTO `sys_dict_type` VALUES (10013, '所属用户', 'sys_menu_target', '所属用户列表', '2022-06-25 10:03:27', 19980817, '2022-06-25 10:03:30', 19980817);
 INSERT INTO `sys_dict_type` VALUES (10014, '统计查询类型', 'statistics_query_type', '统计查询类型', '2022-07-09 14:05:30', 19980817, '2022-07-09 14:05:30', 19980817);
 
+
+
 SET FOREIGN_KEY_CHECKS = 1;

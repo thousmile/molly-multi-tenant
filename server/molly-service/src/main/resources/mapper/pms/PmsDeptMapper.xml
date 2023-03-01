@@ -21,19 +21,11 @@
 
 
     <sql id="Base_Column_List">
-        dept_id        ,parent_id,
+        dept_id,parent_id,
         dept_name,leader,leader_mobile,
         sort,`description`,ancestors,create_time,
         create_user,last_update_time,last_update_user
     </sql>
-
-
-    <insert id="insertByMenus">
-        insert into pms_dept_menu (dept_id, menu_id) values
-        <foreach collection='menus' item='item' index='index' separator=','>
-            (#{id},#{item})
-        </foreach>
-    </insert>
 
 
     <update id="updateChildDept" parameterType="java.util.List">
@@ -48,6 +40,14 @@
             #{item.deptId}
         </foreach>
     </update>
+
+
+    <insert id="insertByMenus">
+        insert into pms_dept_menu (dept_id, menu_id) values
+        <foreach collection='menus' item='item' index='index' separator=','>
+            (#{id},#{item})
+        </foreach>
+    </insert>
 
 
 </mapper>

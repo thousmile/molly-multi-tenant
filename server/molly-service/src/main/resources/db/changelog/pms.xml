@@ -47,7 +47,7 @@
                 `dept_name`        varchar(50)  NOT NULL COMMENT '部门名',
                 `leader`           varchar(50)  NOT NULL COMMENT '部门领导名称',
                 `leader_mobile`    varchar(50)  NOT NULL COMMENT '领导手机号码',
-                `sort`             tinyint(4) NOT NULL COMMENT '排序',
+                `sort`             bigint(20) NOT NULL COMMENT '排序',
                 `description`      varchar(255) NOT NULL COMMENT '部门描述',
                 `ancestors`        varchar(255) NOT NULL COMMENT '祖先级别',
                 `create_time`      datetime     NOT NULL COMMENT '创建时间',
@@ -56,6 +56,18 @@
                 `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
                 PRIMARY KEY (`dept_id`) USING BTREE
             ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 权限 ] 部门表';
+        </sql>
+    </changeSet>
+
+
+    <!-- [ 权限 ] 部门和菜单权限表 -->
+    <changeSet id="1670814646-2" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `pms_dept_menu`
+            (
+                `dept_id` bigint(20) NOT NULL COMMENT '部门ID',
+                `menu_id` bigint(20) NOT NULL COMMENT '菜单ID'
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 权限 ] 部门和菜单权限表';
         </sql>
     </changeSet>
 

@@ -62,14 +62,15 @@ const handleLogin = () => {
             redirect = query.redirect as string
             delete query.redirect
           }
-          router.push({ path: redirect || "/", query: query })
+          const to = { path: redirect || "/", query: query }
+          router.push(to).then(() => {
+            loading.value = false
+          })
         })
         .catch((err) => {
+          loading.value = false
           console.log("err", err)
           createCode()
-        })
-        .finally(() => {
-          loading.value = false
         })
     } else {
       loading.value = false
@@ -98,7 +99,13 @@ createCode()
         <span>Molly SaaS 管理系统</span>
       </div>
       <div class="content">
-        <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" @keyup.enter="handleLogin">
+        <el-form
+          v-loading="loading"
+          ref="loginFormRef"
+          :model="loginForm"
+          :rules="loginFormRules"
+          @keyup.enter="handleLogin"
+        >
           <el-form-item prop="username">
             <el-input
               v-model.trim="loginForm.username"

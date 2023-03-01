@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class JwtTokenProperties {
 
     /**
-     * token 在请求头中的名称
+     * 请求头的KEY。默认 "Authorization"
      */
     private String tokenHeader = "Authorization";
 

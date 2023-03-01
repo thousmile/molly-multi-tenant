@@ -36,6 +36,12 @@
 
         <dependency>
             <groupId>com.xaaef.molly</groupId>
+            <artifactId>auth-jwt</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xaaef.molly</groupId>
             <artifactId>mbp-tenant</artifactId>
             <version>${project.version}</version>
         </dependency>

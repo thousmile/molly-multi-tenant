@@ -4,6 +4,7 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.xaaef.molly.auth.enums.GrantType;
+import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.domain.CustomRequestInfo;
 import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.common.enums.AdminFlag;
@@ -30,6 +31,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -115,9 +117,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         target.setUserType(userType);
 
         // 生成一个随机ID 跟当前用户关联
-        String loginId = IdUtil.simpleUUID();
-        String token = tokenService.createJwtStr(loginId);
-        target.setLoginId(loginId);
+        target.setLoginId(IdUtil.simpleUUID());
 
         // 设置角色和菜单权限
         setAuthoritys(target);
@@ -134,13 +134,34 @@ public class UserLoginServiceImpl implements UserLoginService {
 
         return JwtTokenValue.builder()
                 .header(props.getTokenHeader())
-                .accessToken(token)
+                .accessToken(tokenService.createJwtStr(target.getLoginId()))
                 .tokenType(props.getTokenType())
                 .expiresIn(props.getTokenExpired())
                 .build();
     }
 
 
+    @Override
+    public void refreshAuthoritys() {
+        // 判断用户是否登录
+        if (JwtSecurityUtils.isAuthenticated()){
+            // 获取登录用户
+            var target = JwtSecurityUtils.getLoginUser();
+            target.setAuthorities(List.of());
+            // 设置用户的权限
+            setAuthoritys(target);
+            // 更新用户的权限
+            tokenService.updateLoginUser(target);
+        }
+    }
+
+
+    /**
+     * 设置用户的权限
+     *
+     * @author WangChenChen
+     * @date 2023/2/6 15:56
+     */
     private void setAuthoritys(JwtLoginUser target) {
         // 获取 登录用户，拥有的角色
         var roles = roleService.listByUserId(target.getUserId());

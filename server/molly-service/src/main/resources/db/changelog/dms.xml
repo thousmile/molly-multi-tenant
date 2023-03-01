@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+    <!-- [ 核心 ] 项目ID -->
+    <changeSet id="1677204882-1" author="WangChenChen (generated)">
+        <sql splitStatements="true">
+            CREATE TABLE `dms_project`
+            (
+                `project_id`       varchar(20)  NOT NULL COMMENT '项目 ID',
+                `project_name`     varchar(255) NOT NULL COMMENT '项目 名称',
+                `parent_id`        bigint(20) NOT NULL DEFAULT '0' COMMENT '父主键',
+                `ancestors`        varchar(255) NOT NULL COMMENT '祖先级别',
+                `description`      text COMMENT '项目描述',
+                `create_time`      datetime     NOT NULL COMMENT '创建时间',
+                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
+                `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
+                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
+                PRIMARY KEY (`project_id`) USING BTREE,
+                UNIQUE KEY `UK_dms_project_project_id` (`project_id`) USING BTREE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 核心 ] 项目';
+        </sql>
+    </changeSet>
+
+
+</databaseChangeLog>

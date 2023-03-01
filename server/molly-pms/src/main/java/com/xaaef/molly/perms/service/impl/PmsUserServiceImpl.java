@@ -146,7 +146,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean removeById(Serializable id) {
-        var user = getById(id);
+        var user = this.getById(id);
         if (user == null) {
             throw new RuntimeException(String.format("用户id为 [ %s ] 的用户不存在！", id));
         }
@@ -206,7 +206,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public int updateUserRoles(Long userId, Set<Long> roleIds) {
-        var dbUser = getById(userId);
+        var dbUser = this.getById(userId);
         if (dbUser == null) {
             throw new RuntimeException(String.format("用户 %d 不存在！", userId));
         }

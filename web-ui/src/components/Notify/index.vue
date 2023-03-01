@@ -111,6 +111,7 @@ const handleHistory = () => {
     background: var(--el-color-danger-light-9);
     color: var(--el-color-danger);
     padding: 5px;
+    border-radius: 5px;
   }
 
   .list-item + .list-item {
