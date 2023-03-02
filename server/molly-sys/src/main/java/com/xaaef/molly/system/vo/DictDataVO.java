@@ -27,7 +27,7 @@ public class DictDataVO implements java.io.Serializable {
      * 字典排序
      */
     @Schema(description = "字典排序！")
-    private Integer dictSort;
+    private Long dictSort;
 
     /**
      * 字典标签

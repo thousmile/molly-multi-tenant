@@ -173,7 +173,7 @@
             CREATE TABLE `sys_dict_data`
             (
                 `dict_code`        bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典编码',
-                `dict_sort`        tinyint(4) NOT NULL DEFAULT '0' COMMENT '字典排序',
+                `dict_sort`        bigint(20) NOT NULL DEFAULT '0' COMMENT '字典排序',
                 `dict_label`       varchar(100) NOT NULL DEFAULT '' COMMENT '字典标签',
                 `dict_value`       varchar(100) NOT NULL DEFAULT '' COMMENT '字典键值',
                 `type_key`         varchar(50)  NOT NULL DEFAULT '' COMMENT '字典类型',
@@ -206,7 +206,7 @@
                 `component`        varchar(255) NOT NULL DEFAULT '#' COMMENT '组件',
                 `icon`             varchar(255) NOT NULL DEFAULT '#' COMMENT '菜单图标',
                 `path`             varchar(255) NOT NULL DEFAULT '#' COMMENT '路由地址',
-                `sort`             int(11) NOT NULL COMMENT '排序',
+                `sort`             bigint(20) NOT NULL COMMENT '排序',
                 `menu_type`        tinyint(1) NOT NULL DEFAULT '1' COMMENT '菜单类型（1.菜单 2.按钮）',
                 `visible`          tinyint(1) NOT NULL DEFAULT '1' COMMENT '菜单状态（1.显示 0.隐藏）',
                 `target`           tinyint(1) NOT NULL DEFAULT '2' COMMENT '0.租户用户   1. 系统用户   2.全部用户',

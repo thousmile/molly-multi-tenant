@@ -3,14 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount, onMounted } from "vue"
+import { ref, onMounted } from "vue"
 const data1 = ref({})
-console.log("data1 :>> ", data1)
-onBeforeMount(() => {
-  console.log("2.组件挂载页面之前执行")
-})
 onMounted(() => {
-  console.log("3.-组件挂载到页面之后执行")
+  console.log("data1 :>> ", data1.value)
 })
 </script>
 

@@ -5,21 +5,21 @@
 <mapper namespace="com.xaaef.molly.system.mapper.SysMenuMapper">
 
     <resultMap id="BaseResultMap" type="SysMenu">
-        <id property="menuId" column="menu_id" jdbcType="INTEGER"/>
-        <result property="menuName" column="menu_name" jdbcType="VARCHAR"/>
-        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
-        <result property="perms" column="perms" jdbcType="VARCHAR"/>
-        <result property="component" column="component" jdbcType="VARCHAR"/>
-        <result property="icon" column="icon" jdbcType="VARCHAR"/>
-        <result property="sort" column="sort" jdbcType="TINYINT"/>
-        <result property="path" column="path" jdbcType="VARCHAR"/>
-        <result property="menuType" column="menu_type" jdbcType="TINYINT"/>
-        <result property="visible" column="visible" jdbcType="TINYINT"/>
-        <result property="target" column="target" jdbcType="TINYINT"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="createUser" column="create_user" jdbcType="BIGINT"/>
-        <result property="lastUpdateTime" column="last_update_time" jdbcType="TIMESTAMP"/>
-        <result property="lastUpdateUser" column="last_update_user" jdbcType="BIGINT"/>
+        <id property="menuId" column="menu_id"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="perms" column="perms"/>
+        <result property="component" column="component"/>
+        <result property="icon" column="icon"/>
+        <result property="sort" column="sort"/>
+        <result property="path" column="path"/>
+        <result property="menuType" column="menu_type"/>
+        <result property="visible" column="visible"/>
+        <result property="target" column="target"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="lastUpdateTime" column="last_update_time"/>
+        <result property="lastUpdateUser" column="last_update_user"/>
     </resultMap>
 
     <sql id="Base_Column_List">

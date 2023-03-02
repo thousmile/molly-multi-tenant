@@ -5,14 +5,14 @@
 <mapper namespace="com.xaaef.molly.perms.mapper.PmsRoleMapper">
 
     <resultMap id="BaseResultMap" type="PmsRole">
-        <id property="roleId" column="role_id" jdbcType="INTEGER"/>
-        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
-        <result property="sort" column="sort" jdbcType="TINYINT"/>
-        <result property="description" column="description" jdbcType="VARCHAR"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="createUser" column="create_user" jdbcType="BIGINT"/>
-        <result property="lastUpdateTime" column="last_update_time" jdbcType="TIMESTAMP"/>
-        <result property="lastUpdateUser" column="last_update_user" jdbcType="BIGINT"/>
+        <id property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="sort" column="sort"/>
+        <result property="description" column="description"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="lastUpdateTime" column="last_update_time"/>
+        <result property="lastUpdateUser" column="last_update_user"/>
     </resultMap>
 
 

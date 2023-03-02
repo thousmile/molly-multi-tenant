@@ -13,7 +13,7 @@
             (
                 `role_id`          bigint(20) NOT NULL AUTO_INCREMENT COMMENT '角色id',
                 `role_name`        varchar(255) NOT NULL COMMENT '角色名',
-                `sort`             int(11) NOT NULL COMMENT '排序',
+                `sort`             bigint(20) NOT NULL COMMENT '排序',
                 `description`      varchar(255) NOT NULL COMMENT '部门描述',
                 `create_time`      datetime     NOT NULL COMMENT '创建时间',
                 `create_user`      bigint(20) NOT NULL COMMENT '创建人',

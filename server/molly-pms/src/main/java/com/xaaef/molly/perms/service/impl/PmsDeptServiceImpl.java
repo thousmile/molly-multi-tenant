@@ -152,7 +152,7 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
             child.setAncestors(child.getAncestors().replaceFirst(oldAncestors, newAncestors));
         }
         if (children.size() > 0) {
-            baseMapper.updateChildDept(children);
+            baseMapper.updateChilds(children);
         }
     }
 

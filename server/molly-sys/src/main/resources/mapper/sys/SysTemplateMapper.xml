@@ -5,13 +5,13 @@
 <mapper namespace="com.xaaef.molly.system.mapper.SysTemplateMapper">
 
     <resultMap id="BaseResultMap" type="SysTemplate">
-        <id property="id" column="id" jdbcType="INTEGER"/>
-        <result property="name" column="name" jdbcType="VARCHAR"/>
-        <result property="description" column="description" jdbcType="VARCHAR"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="createUser" column="create_user" jdbcType="BIGINT"/>
-        <result property="lastUpdateTime" column="last_update_time" jdbcType="TIMESTAMP"/>
-        <result property="lastUpdateUser" column="last_update_user" jdbcType="BIGINT"/>
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="lastUpdateTime" column="last_update_time"/>
+        <result property="lastUpdateUser" column="last_update_user"/>
     </resultMap>
 
 

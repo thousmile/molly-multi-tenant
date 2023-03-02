@@ -58,7 +58,8 @@ public class ApiSysMenuServiceImpl implements ApiSysMenuService {
     public Set<SysMenuDTO> listMenuByNonTenant() {
         var wrapper = new LambdaQueryWrapper<SysMenu>()
                 .ne(SysMenu::getTarget, MenuTargetEnum.TENANT.getCode());
-        return listToMenuDTO(menuMapper.selectList(wrapper));
+        var sysMenus = menuMapper.selectList(wrapper);
+        return listToMenuDTO(sysMenus);
     }
 
 
@@ -70,7 +71,8 @@ public class ApiSysMenuServiceImpl implements ApiSysMenuService {
 
     @Override
     public Set<SysMenuDTO> listMenuByTenantId(String tenantId) {
-        return listToMenuDTO(menuMapper.selectByTenantId(tenantId));
+        var sysMenus = menuMapper.selectByTenantId(tenantId);
+        return listToMenuDTO(sysMenus);
     }
 
 

@@ -55,7 +55,7 @@ public class SysMenuDTO implements java.io.Serializable {
     /**
      * 排序
      */
-    private Integer sort;
+    private Long sort;
 
     /**
      * 路由地址

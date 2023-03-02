@@ -61,7 +61,7 @@ public class SysMenu extends BaseEntity {
     /**
      * 排序
      */
-    private Integer sort;
+    private Long sort;
 
     /**
      * 路由地址

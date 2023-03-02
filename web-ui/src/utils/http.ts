@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, type AxiosRequestConfig } from "axios"
-import { useRouter } from "vue-router"
 import { useUserStoreHook } from "@/store/modules/user"
 import { useTenantStoreHook } from "@/store/modules/tenant"
 import { ElMessage, ElMessageBox } from "element-plus"
@@ -8,8 +7,6 @@ import { getAccessToken } from "./cache/cookies"
 import { defaultTenant } from "@/config"
 import { getEnvBaseURLPrefix } from "."
 import { ISimpleTenant } from "@/types/base"
-import { loginUrl } from "@/config/white-list"
-import { jumpToLogin } from "@/router"
 
 /** 创建请求实例 */
 function createService() {
@@ -132,7 +129,7 @@ function createRequestFunction(service: AxiosInstance) {
         "x-tenant-id": tenant.tenantId,
         "Content-Type": get(config, "headers.Content-Type", "application/json")
       },
-      timeout: 5000,
+      timeout: 8000,
       baseURL: getEnvBaseURLPrefix()
     }
     return service(Object.assign(configDefault, config))

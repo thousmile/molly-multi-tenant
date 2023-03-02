@@ -26,6 +26,8 @@ const props = withDefaults(defineProps<Props>(), {})
 
 const router = useRouter()
 
+const title = ref("搜索菜单")
+
 const keyword = ref("")
 
 const activePath = ref("")
@@ -159,6 +161,7 @@ onMounted(() => {
 <template>
   <el-dialog
     top="5vh"
+    :title="title"
     :width="device === DeviceType.Mobile ? '80vw' : '50vw'"
     v-model="show"
     :before-close="handleClose"

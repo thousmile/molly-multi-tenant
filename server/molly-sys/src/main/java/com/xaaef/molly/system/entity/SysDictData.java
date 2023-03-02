@@ -35,7 +35,7 @@ public class SysDictData extends BaseEntity {
     /**
      * 字典排序
      */
-    private Integer dictSort;
+    private Long dictSort;
 
     /**
      * 字典标签

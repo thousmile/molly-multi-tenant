@@ -20,12 +20,12 @@ import java.util.Set;
 
 public interface PmsDeptMapper extends BaseMapper<PmsDept> {
 
-    // 根据部门ID，查询 子孙 部门
+    // 根据 部门ID，查询 子孙 部门。不包含自己
     @Select("select * from pms_dept where find_in_set(#{deptId}, ancestors)")
-    List<PmsDept> selectChildDept(Long deptId);
+    Set<PmsDept> selectChildDept(Long deptId);
 
 
-    // 根据部门ID，查询 子孙 部门id
+    // 根据 部门ID，查询 子孙 部门id。不包含自己
     @Select("select dept_id from pms_dept where find_in_set(#{deptId}, ancestors)")
     Set<Long> selectChildDeptId(Long deptId);
 
@@ -33,9 +33,9 @@ public interface PmsDeptMapper extends BaseMapper<PmsDept> {
     /**
      * 修改子元素关系
      *
-     * @param depts 子元素
+     * @param childs 子元素
      */
-    int updateChildDept(@Param("depts") List<PmsDept> depts);
+    int updateChilds(@Param("childs") Set<PmsDept> childs);
 
 
     /**

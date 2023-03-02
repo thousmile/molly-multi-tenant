@@ -347,7 +347,11 @@ const onUpdatePassword = () => {
 
 .user-form {
   .el-input {
-    width: 218px;
+    width: 300px;
+  }
+
+  .el-select {
+    width: 300px;
   }
 }
 </style>
