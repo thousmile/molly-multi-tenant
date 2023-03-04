@@ -10,6 +10,7 @@ import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.dto.InitUserDTO;
+import com.xaaef.molly.system.service.SysUserService;
 import com.xaaef.molly.tenant.DatabaseManager;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
@@ -62,6 +63,9 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
 
     private final ApiPmsUserService userService;
 
+    private final SysUserService sysUserService;
+
+
     /**
      * uuid
      */
@@ -77,7 +81,9 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                 SysTenant::getLinkman,
                 SysTenant::getAddress
         );
-        var collect = result.getRecords().stream().map(SysTenant::getTenantId).collect(Collectors.toSet());
+        var collect = result.getRecords().stream()
+                .map(SysTenant::getTenantId)
+                .collect(Collectors.toSet());
         if (collect.isEmpty()) {
             return result;
         }
@@ -106,6 +112,11 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                 SysTenant::getName,
                 SysTenant::getLinkman
         );
+        // 如果当前登录的用户，关联的有租户，
+        var tenantIds = sysUserService.listHaveTenantIds(getUserId());
+        if (!tenantIds.isEmpty()) {
+            wrapper.lambda().in(SysTenant::getTenantId, tenantIds);
+        }
         Page<SysTenant> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
         return super.page(pageRequest, wrapper);
     }

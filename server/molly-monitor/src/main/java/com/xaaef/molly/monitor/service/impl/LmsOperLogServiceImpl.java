@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
+
 import com.xaaef.molly.tenant.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
 import com.xaaef.molly.internal.dto.PmsUserDTO;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.xaaef.molly.tenant.util.DelegateUtils.*;
 
 /**
  * <p>
@@ -101,15 +103,6 @@ public class LmsOperLogServiceImpl extends ServiceImpl<LmsOperLogMapper, LmsOper
                     r.setUsername(user.getUsername());
                     r.setAvatar(user.getAvatar());
                 });
-    }
-
-
-    private <S> S delegate(String targetTenant, Supplier<S> fun) {
-        var originalTenantId = TenantUtils.getTenantId();
-        TenantUtils.setTenantId(targetTenant);
-        var result = fun.get();
-        TenantUtils.setTenantId(originalTenantId);
-        return result;
     }
 
 

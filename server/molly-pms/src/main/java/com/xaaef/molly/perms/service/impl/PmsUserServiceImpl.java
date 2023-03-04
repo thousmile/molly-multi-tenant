@@ -240,12 +240,12 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
                     .map(PmsRoleDTO::getRoleId)
                     .collect(Collectors.toSet());
             if (roleIds.isEmpty()) {
-                return UserRightsVO.builder().build();
+                return new UserRightsVO().setButtons(Set.of()).setMenus(List.of());
             }
             // 根据 角色ID , 获取全部菜单
             var menuIds = roleMapper.selectMenuIdByRoleIds(roleIds);
             if (menuIds.isEmpty()) {
-                return UserRightsVO.builder().build();
+                return new UserRightsVO().setButtons(Set.of()).setMenus(List.of());
             }
             userMenus = menuService.listMenuByMenuIds(menuIds);
         }

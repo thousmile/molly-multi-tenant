@@ -76,7 +76,13 @@
           <template #default="scope">
             <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
             &nbsp;
-            <el-link :icon="Delete" type="danger" @click="handleDelete(scope.row)">删除</el-link>
+            <el-link
+              :icon="Delete"
+              v-if="!isDefaultTenantId(scope.row.tenantId)"
+              type="danger"
+              @click="handleDelete(scope.row)"
+              >删除</el-link
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -238,7 +244,17 @@ import { useDictStoreHook } from "@/store/modules/dict"
 import { cloneDeep } from "lodash-es"
 import { chinaAreaDeepQuery, expiredDateAgo, timeAgo, futureShortcuts } from "@/utils"
 import { testEmail, testTelphone } from "@/utils/regular"
+import { useTenantStoreHook } from "@/store/modules/tenant"
 const dictStore = useDictStoreHook()
+
+const tenantStore = useTenantStoreHook()
+
+// 判断当前租户，是否默认租户
+const isDefaultTenantId = computed(() => {
+  return (tenantId: string) => {
+    return tenantStore.getDefaultTenantId() === tenantId
+  }
+})
 
 /** 加载 */
 const loading = ref(false)

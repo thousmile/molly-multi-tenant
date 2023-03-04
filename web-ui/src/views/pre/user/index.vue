@@ -93,18 +93,27 @@
               >编辑</el-link
             >
             &nbsp;
-            <template v-if="scope.row.adminFlag !== 1">
-              <el-link :icon="Delete" type="danger" v-has="['pre_user:delete']" @click="handleDelete(scope.row)"
-                >删除</el-link
-              >
-            </template>
-            <el-link
-              :icon="RefreshLeft"
-              type="danger"
-              v-has="['pre_user:reset:password']"
-              @click="handleResetPassword(scope.row)"
-              >重置密码</el-link
-            >
+            <el-dropdown @command="(cmd:string) => handleCommand(cmd, scope.row)">
+              <span class="el-dropdown-link">
+                更多
+                <el-icon class="el-icon--right">
+                  <arrow-down />
+                </el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <div v-has="['pre_user:reset:password']">
+                    <el-dropdown-item :icon="Link" command="ResetPassword">重置密码</el-dropdown-item>
+                  </div>
+                  <div v-if="isDefaultTenantId" v-has="['pre_user:reset:password']">
+                    <el-dropdown-item :icon="RefreshLeft" command="LinkTenant">关联租户</el-dropdown-item>
+                  </div>
+                  <div v-if="scope.row.adminFlag !== 1" v-has="['pre_user:delete']">
+                    <el-dropdown-item :icon="Delete" command="Delete">删除</el-dropdown-item>
+                  </div>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -228,6 +237,36 @@
           </span>
         </template>
       </el-dialog>
+
+      <!-- 新增和修改的弹窗 -->
+      <el-dialog
+        v-model="linkTenantForm.visible"
+        :title="linkTenantForm.title"
+        width="30%"
+        :close-on-click-modal="false"
+      >
+        <el-select-v2
+          v-model="linkTenantForm.have"
+          :options="linkTenantForm.all"
+          placeholder="请选择租户"
+          style="width: 100%"
+          multiple
+          clearable
+        >
+          <template #default="{ item }">
+            <span style="margin-right: 8px">{{ item.value }}</span>
+            <span style="color: var(--el-text-color-secondary); font-size: 13px">
+              {{ item.label }}
+            </span>
+          </template>
+        </el-select-v2>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="linkTenantForm.visible = false">取消</el-button>
+            <el-button type="primary" @click="handleSaveLinkTenant">确定</el-button>
+          </span>
+        </template>
+      </el-dialog>
     </el-main>
     <el-footer>
       <el-pagination
@@ -244,21 +283,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, computed } from "vue"
-import { deleteUserApi, queryUserApi, resetPasswordApi, saveUserApi, updateUserApi } from "@/api/user"
+import { ref, reactive, onMounted, computed } from "vue"
+import {
+  deleteUserApi,
+  listSysUserTenantIdApi,
+  queryUserApi,
+  resetPasswordApi,
+  saveUserApi,
+  updateSysUserTenantIdApi,
+  updateUserApi
+} from "@/api/user"
 import { treeDeptApi } from "@/api/dept"
 import { listRoleApi } from "@/api/role"
-import { ISearchQuery } from "@/types/base"
+import { ISearchQuery, ISimpleTenant } from "@/types/base"
 import { IPmsUser, IPmsDept, IPmsRole } from "@/types/pms"
 import UserAvatar from "@/components/UserAvatar/index.vue"
 import { testEmail, testPassword, testPhone } from "@/utils/regular"
-import { Plus, Edit, Delete, UserFilled, Search, RefreshLeft } from "@element-plus/icons-vue"
+import { Plus, Edit, Delete, UserFilled, Search, RefreshLeft, Link } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { useDictStoreHook } from "@/store/modules/dict"
 import { expiredDateAgo, timeAgo, futureShortcuts } from "@/utils"
 import { cloneDeep } from "lodash-es"
+import { useTenantStoreHook } from "@/store/modules/tenant"
 
 const dictStore = useDictStoreHook()
+
+const tenantStore = useTenantStoreHook()
+
+// 判断当前租户，是否默认租户
+const isDefaultTenantId = computed(() => {
+  return tenantStore.isDefaultTenantId()
+})
 
 /** 加载 */
 const loading = ref(false)
@@ -447,6 +502,23 @@ const entityRoles = computed({
   }
 })
 
+const handleCommand = (command: string, data: IPmsUser) => {
+  switch (command) {
+    case "ResetPassword":
+      handleResetPassword(data)
+      break
+    case "LinkTenant":
+      handleLinkTenant(data)
+      break
+    case "Delete":
+      handleDelete(data)
+      break
+    default:
+      console.log("command :>> ", command)
+      break
+  }
+}
+
 // 新增
 const handleAdd = () => {
   resetEntity()
@@ -530,7 +602,6 @@ const deptCascaderChange = (data: number[]) => {
 
 // 删除
 const handleDelete = (data: IPmsUser) => {
-  console.log("data :>> ", data)
   ElMessageBox.confirm(`确要删除 ${data.nickname} 吗?`, "警告", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
@@ -605,6 +676,78 @@ const handleSaveAndFlush = () => {
       return false
     }
   })
+}
+
+interface LinkTenant {
+  visible: boolean
+  title: string
+  userId: number
+  all: ISimpleTenant[]
+  have: string[]
+}
+
+const linkTenantForm = reactive<LinkTenant>({
+  visible: false,
+  title: "",
+  userId: 0,
+  all: [],
+  have: []
+})
+
+const resetLinkTenant = () => {
+  linkTenantForm.userId = 0
+  linkTenantForm.title = ""
+  linkTenantForm.visible = false
+  linkTenantForm.all = []
+  linkTenantForm.have = []
+}
+
+// 系统用户关联租户
+const handleLinkTenant = (data: IPmsUser) => {
+  listSysUserTenantIdApi(data.userId)
+    .then((resp) => {
+      if (resp.data) {
+        linkTenantForm.all = resp.data.all
+        linkTenantForm.have = resp.data.have
+      }
+    })
+    .catch((err) => {
+      console.log("err :>> ", err)
+    })
+    .finally(() => {
+      linkTenantForm.userId = data.userId
+      linkTenantForm.title = `${data.nickname} 关联租户`
+      linkTenantForm.visible = true
+    })
+}
+
+const handleSaveLinkTenant = () => {
+  const tenantIds = linkTenantForm.have.map((id) => id)
+  const params = {
+    userId: linkTenantForm.userId,
+    tenantIds: tenantIds
+  }
+  ElMessageBox.confirm(`确定要关联租户吗?`, "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning"
+  })
+    .then(() => {
+      updateSysUserTenantIdApi(params)
+        .then((resp) => {
+          if (resp.data) {
+            ElMessage({
+              message: "用户关联租户成功！",
+              type: "success"
+            })
+          }
+        })
+        .catch((err) => {
+          console.log("err :>> ", err)
+        })
+        .finally(() => resetLinkTenant())
+    })
+    .catch(() => resetLinkTenant())
 }
 
 onMounted(() => {

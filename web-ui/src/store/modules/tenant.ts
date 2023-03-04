@@ -14,6 +14,11 @@ export const useTenantStore = defineStore("tenant", () => {
     return getCurrentTenant().tenantId
   }
 
+  // 获取默认租户
+  const getDefaultTenantId = (): string => {
+    return defaultTenant.tenantId
+  }
+
   // 获取当前租户
   const getCurrentTenant = (): ISimpleTenant => {
     return currentTenant.value
@@ -31,7 +36,14 @@ export const useTenantStore = defineStore("tenant", () => {
     setTenant(defaultTenant)
   }
 
+  // 获取当前租户
+  const isDefaultTenantId = (): boolean => {
+    return getCurrentTenantId() === getDefaultTenantId()
+  }
+
   return {
+    getDefaultTenantId,
+    isDefaultTenantId,
     getCurrentTenant,
     setCurrentTenant,
     resetCurrentTenant,

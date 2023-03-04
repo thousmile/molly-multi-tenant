@@ -26,6 +26,8 @@ import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.encryptPassword;
 import static com.xaaef.molly.common.consts.ConfigName.TENANT_DEFAULT_ROLE_NAME;
 import static com.xaaef.molly.common.enums.AdminFlag.YES;
 import static com.xaaef.molly.common.enums.GenderType.MALE;
+import static com.xaaef.molly.tenant.util.DelegateUtils.*;
+
 
 /**
  * <p>
@@ -45,8 +47,6 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
     private final ApiSysConfigService configService;
 
     private final PmsUserMapper userMapper;
-
-    private final PmsUserService userService;
 
     private final PmsDeptMapper deptMapper;
 
@@ -90,13 +90,22 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
 
 
     @Override
+    public boolean existByUserId(Long userId) {
+        return userMapper.exists(
+                new LambdaQueryWrapper<PmsUser>()
+                        .eq(PmsUser::getUserId, userId)
+        );
+    }
+
+
+    @Override
     public void initUserAndRoleAndDept(InitUserDTO po) {
         // 租户默认角色名称
         var roleName = Optional.ofNullable(configService.getValueByKey(TENANT_DEFAULT_ROLE_NAME))
                 .orElse("管理员");
 
         // 委托，新的租户id。执行初始化数据
-        userService.delegate(po.getTenantId(), () -> {
+        delegate(po.getTenantId(), () -> {
 
             var pmsDept = new PmsDept()
                     .setParentId(0L)

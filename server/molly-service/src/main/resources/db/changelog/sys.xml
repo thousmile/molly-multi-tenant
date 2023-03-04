@@ -44,14 +44,14 @@
     </changeSet>
 
 
-    <!-- [ 租户 ] 租户和用户表 -->
+    <!-- [ 租户 ] 用户和租户表 -->
     <changeSet id="1677205971-1" author="WangChenChen (generated)">
         <sql stripComments="true">
-            CREATE TABLE `sys_tenant_user`
+            CREATE TABLE `sys_user_tenant`
             (
-                `tenant_id`   varchar(20) NOT NULL COMMENT '租户 ID',
-                `user_id` bigint(20) NOT NULL COMMENT '用户 ID'
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 租户 ] 租户和用户表';
+                `user_id`   bigint(20) NOT NULL COMMENT '用户 ID',
+                `tenant_id` varchar(20) NOT NULL COMMENT '租户 ID'
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 租户 ] 用户和租户表';
         </sql>
     </changeSet>
 

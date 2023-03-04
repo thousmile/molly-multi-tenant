@@ -1,5 +1,5 @@
 import { IJsonResult, IPageResult, ISearchQuery } from "@/types/base"
-import { IPmsUser } from "@/types/pms"
+import { IPmsUser, IUserListTenant } from "@/types/pms"
 import { httpPost, httpPut, httpGet, httpDelete } from "@/utils/http"
 
 /** 修改密码 */
@@ -35,4 +35,14 @@ export const updateUserApi = (data: any) => {
 /** 删除 */
 export const deleteUserApi = (id: number) => {
   return httpDelete<number, IJsonResult<boolean>>(`/pms/user/${id}`)
+}
+
+/** 查询系统用户 关联的租户Id */
+export const listSysUserTenantIdApi = (userId: number) => {
+  return httpGet<any, IJsonResult<IUserListTenant>>(`/sys/user/list/tenant?userId=${userId}`)
+}
+
+/** 系统用户 关联的租户Id */
+export const updateSysUserTenantIdApi = (data: any) => {
+  return httpPost<any, IJsonResult<string>>("/sys/user/update/tenant", data)
 }

@@ -1,4 +1,4 @@
-import { IBaseEntity } from "./base"
+import { IBaseEntity, ISimpleTenant } from "./base"
 
 /** 用户登录 */
 export interface ILoginData {
@@ -259,4 +259,16 @@ export interface IPmsDept extends IBaseEntity {
    * 子菜单
    */
   children: IPmsDept[]
+}
+
+/** 用户关联的租户 */
+export interface IUserListTenant {
+  /**
+   * 已经拥有的 租户ID
+   */
+  have: string[]
+  /**
+   * 全部 租户信息
+   */
+  all: ISimpleTenant[]
 }

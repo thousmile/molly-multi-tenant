@@ -64,6 +64,9 @@ export const useUserStore = defineStore("user", () => {
           if (resp.data) {
             buttons.value = resp.data.buttons
             menus.value = resp.data.menus
+            if (resp.data.menus.length === 0) {
+              fedLogout()
+            }
             resolve(resp)
           } else {
             fedLogout()

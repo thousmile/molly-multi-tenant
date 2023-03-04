@@ -3,6 +3,7 @@ package com.xaaef.molly.system.vo;
 import cn.hutool.core.lang.tree.Tree;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ import java.util.Set;
 @Setter
 @ToString
 @Builder
+@Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateMenusVO implements java.io.Serializable {
