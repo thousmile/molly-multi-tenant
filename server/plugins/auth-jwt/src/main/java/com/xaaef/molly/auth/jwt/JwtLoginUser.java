@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * <p>
@@ -122,6 +123,11 @@ public class JwtLoginUser implements UserDetails, Principal {
      * 角色列表
      */
     private Collection<PmsRoleDTO> roles;
+
+    /**
+     * 拥有的租户ID
+     */
+    private Set<String> haveTenantIds;
 
     /**
      * 权限列表

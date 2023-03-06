@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, type AxiosRequestConfig } from "axios"
+import axios, { AxiosInstance, AxiosResponse, type AxiosRequestConfig } from "axios"
 import { useUserStoreHook } from "@/store/modules/user"
 import { useTenantStoreHook } from "@/store/modules/tenant"
 import { ElMessage, ElMessageBox } from "element-plus"
@@ -41,9 +41,15 @@ function createService() {
             logout(apiData.message)
             return Promise.reject(new Error(apiData.message))
           case 400444:
+            // 如果租户ID 不存在，就重置为默认租户
+            ElMessage.error(apiData.message)
             // 表示租户不存在，已经被删除了
             useTenantStoreHook().resetCurrentTenant()
-            return Promise.reject(new Error(apiData.message))
+            return resetTenant(service, response)
+          case 400446:
+            // 此用户不包含此租户ID
+            useTenantStoreHook().setCurrentTenant(apiData.data as ISimpleTenant)
+            return resetTenant(service, response)
           default:
             // 不是正确的 Code
             ElMessage.error(apiData.message || "Error")
@@ -98,6 +104,16 @@ function createService() {
     }
   )
   return service
+}
+
+// 重置租户
+function resetTenant(service: AxiosInstance, response: AxiosResponse) {
+  const config = response.config
+  const tenant = useTenantStoreHook().getCurrentTenant()
+  config.headers["x-tenant-id"] = tenant.tenantId
+  console.log("reset tenant id to :>> ", tenant.tenantId)
+  // 获取当前失败的请求，重新发起请求
+  return service(config)
 }
 
 // 退出登录

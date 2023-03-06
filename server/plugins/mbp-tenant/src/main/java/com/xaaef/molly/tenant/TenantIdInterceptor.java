@@ -2,9 +2,12 @@ package com.xaaef.molly.tenant;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
+import com.xaaef.molly.internal.api.ApiSysTenantService;
+import com.xaaef.molly.internal.dto.SysTenantDTO;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
 import com.xaaef.molly.tenant.util.TenantUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.util.Optional;
 
 import static com.xaaef.molly.auth.enums.OAuth2Error.*;
 import static com.xaaef.molly.tenant.consts.MbpConst.X_TENANT_ID;
@@ -35,6 +40,8 @@ import static com.xaaef.molly.tenant.consts.MbpConst.X_TENANT_ID;
 public class TenantIdInterceptor implements HandlerInterceptor {
 
     private final MultiTenantManager tenantManager;
+
+    private final ApiSysTenantService tenantService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -74,7 +81,30 @@ public class TenantIdInterceptor implements HandlerInterceptor {
         }
         TenantUtils.setTenantId(tenantId);
         log.debug("preHandle.tenantId: {}", tenantId);
+        if (!haveTenantPermissions(response, tenantId)) {
+            return false;
+        }
         return HandlerInterceptor.super.preHandle(request, response, handler);
+    }
+
+
+    private boolean haveTenantPermissions(HttpServletResponse response, String tenantId) {
+        // 如果当前用户是 系统用户
+        if (JwtSecurityUtils.isMasterUser()) {
+            var haveTenantIds = JwtSecurityUtils.getLoginUser().getHaveTenantIds();
+            if (!haveTenantIds.isEmpty() && !haveTenantIds.contains(tenantId)) {
+                var err = StrUtil.format("您没有 租户ID {} 的操作权限！", tenantId);
+                var first = haveTenantIds.stream().findFirst();
+                var result = JsonResult.error(NO_HAVE_TENANT_PERMISSIONS.getStatus(), err, SysTenantDTO.class);
+                if (first.isPresent()) {
+                    var firstTenant = tenantService.getSimpleByTenantId(first.get());
+                    result.setData(firstTenant);
+                }
+                ServletUtils.renderError(response, result);
+                return false;
+            }
+        }
+        return true;
     }
 
 

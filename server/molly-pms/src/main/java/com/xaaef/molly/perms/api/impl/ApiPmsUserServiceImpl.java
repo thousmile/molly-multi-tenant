@@ -78,6 +78,12 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
 
 
     @Override
+    public PmsUserDTO getByUserId(Long userId) {
+        return toBuilder(userMapper.selectById(userId));
+    }
+
+
+    @Override
     public Set<PmsUserDTO> listByUserIds(Set<Long> userIds) {
         var wrapper = new LambdaQueryWrapper<PmsUser>()
                 .select(PmsUser::getUserId, PmsUser::getUsername, PmsUser::getAvatar, PmsUser::getNickname)

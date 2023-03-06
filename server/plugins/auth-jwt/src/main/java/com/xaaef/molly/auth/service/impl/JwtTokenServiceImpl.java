@@ -68,6 +68,17 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
 
     @Override
+    public JwtLoginUser getLoginUserByUsername(String tenantId, String username) {
+        var onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, tenantId, username);
+        var loginId = cacheUtils.getString(onlineUserKey);
+        if (StringUtils.isEmpty(loginId)) {
+            return null;
+        }
+        return getLoginUser(loginId);
+    }
+
+
+    @Override
     public void setLoginUser(JwtLoginUser loginUser) {
         var loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
 

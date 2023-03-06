@@ -22,6 +22,14 @@ public interface ApiSysTenantService {
      */
     SysTenantDTO getByTenantId(String tenantId);
 
+    /**
+     * 根据租户ID 获取租户信息
+     *
+     * @author WangChenChen
+     * @date 2023/2/14 10:53
+     */
+    SysTenantDTO getSimpleByTenantId(String tenantId);
+
 
     /**
      * 获取当前的租户信息

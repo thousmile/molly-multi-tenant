@@ -46,6 +46,15 @@ public interface ApiPmsUserService {
 
 
     /**
+     * 根据 用户ID 获取用户信息
+     *
+     * @author WangChenChen
+     * @date 2023/2/14 10:53
+     */
+    PmsUserDTO getByUserId(Long userId);
+
+
+    /**
      * 根据 用户名 获取用户信息
      *
      * @author WangChenChen

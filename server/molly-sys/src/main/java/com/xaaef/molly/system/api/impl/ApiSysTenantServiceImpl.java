@@ -1,5 +1,6 @@
 package com.xaaef.molly.system.api.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.internal.api.ApiSysTenantService;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
 import com.xaaef.molly.system.entity.SysTenant;
@@ -34,6 +35,25 @@ public class ApiSysTenantServiceImpl implements ApiSysTenantService {
     @Override
     public SysTenantDTO getByTenantId(String tenantId) {
         var source = tenantMapper.selectById(tenantId);
+        if (source == null) {
+            return null;
+        }
+        var target = new SysTenantDTO();
+        BeanUtils.copyProperties(source, target);
+        return target;
+    }
+
+
+    @Override
+    public SysTenantDTO getSimpleByTenantId(String tenantId) {
+        var wrapper = new LambdaQueryWrapper<SysTenant>()
+                .select(
+                        SysTenant::getTenantId,
+                        SysTenant::getLogo,
+                        SysTenant::getName,
+                        SysTenant::getLinkman
+                ).eq(SysTenant::getTenantId, tenantId);
+        var source = tenantMapper.selectOne(wrapper);
         if (source == null) {
             return null;
         }

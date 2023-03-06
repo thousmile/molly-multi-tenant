@@ -1,7 +1,12 @@
 package com.xaaef.molly.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xaaef.molly.auth.jwt.JwtLoginUser;
+import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
+import com.xaaef.molly.internal.dto.PmsUserDTO;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
 import com.xaaef.molly.system.mapper.SysUserMapper;
@@ -17,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
+import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.getTenantId;
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.isMasterUser;
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
@@ -33,6 +39,8 @@ public class SysUserServiceImpl implements SysUserService {
     private final MultiTenantManager tenantManager;
 
     private final SysTenantMapper tenantMapper;
+
+    private final JwtTokenService jwtTokenService;
 
 
     @Override
@@ -70,10 +78,18 @@ public class SysUserServiceImpl implements SysUserService {
         // 获取存在的 租户ID
         var collect = tenantIds.stream().filter(tenantManager::existById).collect(Collectors.toSet());
         return delegate(tenantManager.getDefaultTenantId(), () -> {
+            var sysUser = pmsUserService.getByUserId(userId);
             // 判断系统用户是否存在
-            if (pmsUserService.existByUserId(userId)) {
+            if (sysUser != null) {
                 // 删除 用户 之前关联的租户
                 baseMapper.deleteHaveTenants(userId);
+                // 根据用户名，获取 登录的用户信息
+                var loginUser = jwtTokenService.getLoginUserByUsername(getTenantId(), sysUser.getUsername());
+                if (loginUser != null) {
+                    // 更新 系统用户 关联的租户ID
+                    loginUser.setHaveTenantIds(collect);
+                    jwtTokenService.updateLoginUser(loginUser);
+                }
                 if (!collect.isEmpty()) {
                     // 用户 关联 新的租户
                     var r2 = baseMapper.insertByTenants(userId, collect);

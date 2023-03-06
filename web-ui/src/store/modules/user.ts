@@ -7,6 +7,7 @@ import { loginApi, getUserInfoApi, logoutApi, getUserPermsApi } from "@/api/logi
 import { type ILoginData, ILoginUserInfo, IPermsMenus, IPermsButton } from "@/types/pms"
 import { usePermissionStoreHook } from "./permission"
 import { useTagsViewStoreHook } from "./tags-view"
+import { ElMessage } from "element-plus"
 
 export const useUserStore = defineStore("user", () => {
   // token信息
@@ -65,6 +66,10 @@ export const useUserStore = defineStore("user", () => {
             buttons.value = resp.data.buttons
             menus.value = resp.data.menus
             if (resp.data.menus.length === 0) {
+              ElMessage({
+                message: "您暂无权限，请联系管理员!",
+                type: "warning"
+              })
               fedLogout()
             }
             resolve(resp)

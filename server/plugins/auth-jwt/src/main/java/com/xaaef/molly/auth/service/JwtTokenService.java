@@ -48,6 +48,16 @@ public interface JwtTokenService {
 
 
     /**
+     * 根据 用户名 获取 用户信息
+     *
+     * @return String 用户名称
+     * @author Wang Chen Chen
+     * @date 2021/7/12 16:29
+     */
+    JwtLoginUser getLoginUserByUsername(String tenantId, String username);
+
+
+    /**
      * 校验 token 值是否正确
      * <p>
      * 例: Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdG6IjE2NDPuFA

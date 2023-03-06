@@ -145,7 +145,13 @@ public enum OAuth2Error {
     /**
      * 请求必须添加租户ID
      */
-    REQUEST_MUST_ADD_TENANT_ID(400445, "租户ID不存在");
+    REQUEST_MUST_ADD_TENANT_ID(400445, "租户ID不存在"),
+
+
+    /**
+     * 此系统用户不包含此租户ID
+     */
+    NO_HAVE_TENANT_PERMISSIONS(400446, "此用户不包含此租户ID");
 
 
     OAuth2Error(Integer status, String error) {

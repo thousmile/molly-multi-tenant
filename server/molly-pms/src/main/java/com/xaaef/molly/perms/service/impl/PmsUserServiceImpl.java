@@ -7,6 +7,8 @@ import cn.hutool.core.lang.tree.TreeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.xaaef.molly.auth.jwt.JwtLoginUser;
+import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.common.enums.AdminFlag;
@@ -26,6 +28,8 @@ import com.xaaef.molly.perms.service.PmsDeptService;
 import com.xaaef.molly.perms.service.PmsRoleService;
 import com.xaaef.molly.perms.service.PmsUserService;
 import com.xaaef.molly.perms.vo.*;
+import com.xaaef.molly.tenant.util.DelegateUtils;
+import com.xaaef.molly.tenant.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +44,7 @@ import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
 import static com.xaaef.molly.common.consts.ConfigName.USER_DEFAULT_PASSWORD;
 import static com.xaaef.molly.common.enums.AdminFlag.*;
 import static com.xaaef.molly.common.enums.MenuTypeEnum.*;
+import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 
 /**
@@ -191,9 +196,9 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
             updateUserRoles(entity.getUserId(), roleIds);
         }
         entity.setPassword(null);
-        // 如果修改的自己的信息
-        if (Objects.equals(getUserId(), entity.getUserId())) {
-            var loginUser = getLoginUser();
+        // 根据用户名，获取 登录的用户信息
+        var loginUser = jwtTokenService.getLoginUserByUsername(TenantUtils.getTenantId(), entity.getUsername());
+        if (loginUser != null) {
             var copyOptions = CopyOptions.create();
             copyOptions.setIgnoreNullValue(true);
             BeanUtil.copyProperties(entity, loginUser, copyOptions);
@@ -222,64 +227,68 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
 
     @Override
     public UserRightsVO getUserRights() {
-        // 用户菜单权限
-        Set<SysMenuDTO> userMenus = null;
-        // 如果是管理员，就获取全部的权限
-        if (isAdminUser()) {
-            if (isMasterUser()) {
-                // 系统管理员就获取 非租户的全部菜单
-                userMenus = menuService.listMenuByNonTenant();
+        // 获取 当前登录的用户 所属的租户
+        String tenantId = JwtSecurityUtils.getTenantId();
+        return delegate(tenantId, () -> {
+            // 用户菜单权限
+            Set<SysMenuDTO> userMenus = null;
+            // 如果是管理员，就获取全部的权限
+            if (isAdminUser()) {
+                if (isMasterUser()) {
+                    // 系统管理员就获取 非租户的全部菜单
+                    userMenus = menuService.listMenuByNonTenant();
+                } else {
+                    // 租户管理员，就获取租户全部的菜单
+                    userMenus = menuService.listMenuByTenantId(tenantId);
+                }
             } else {
-                // 租户管理员，就获取租户全部的菜单
-                userMenus = menuService.listMenuByTenantId(getTenantId());
+                // 获取当前用户，拥有的 角色ID
+                var roleIds = getLoginUser().getRoles()
+                        .stream()
+                        .map(PmsRoleDTO::getRoleId)
+                        .collect(Collectors.toSet());
+                if (roleIds.isEmpty()) {
+                    return new UserRightsVO().setButtons(Set.of()).setMenus(List.of());
+                }
+                // 根据 角色ID , 获取全部菜单
+                var menuIds = roleMapper.selectMenuIdByRoleIds(roleIds);
+                if (menuIds.isEmpty()) {
+                    return new UserRightsVO().setButtons(Set.of()).setMenus(List.of());
+                }
+                userMenus = menuService.listMenuByMenuIds(menuIds);
             }
-        } else {
-            // 获取当前用户，拥有的 角色ID
-            var roleIds = getLoginUser().getRoles()
-                    .stream()
-                    .map(PmsRoleDTO::getRoleId)
+
+            // 获取菜单
+            var nodeList = userMenus.stream()
+                    .distinct()
+                    .filter(r -> r.getMenuType() == MENU.getCode())
+                    .map(r -> {
+                        var meta = new MenuMetaVO()
+                                .setTitle(r.getMenuName())
+                                .setIcon(r.getIcon())
+                                .setHidden(r.getVisible() == 0);
+                        var node = new TreeNode<>(r.getMenuId(), r.getParentId(), r.getPerms(), r.getSort());
+                        node.setExtra(Map.of(
+                                "meta", meta,
+                                "component", r.getComponent(),
+                                "path", r.getPath()
+                        ));
+                        return node;
+                    })
+                    .collect(Collectors.toList());
+
+            // 将 菜单列表，递归成 树节点的形式
+            var treeMenus = TreeUtil.build(nodeList, 0L);
+
+            // 获取所有的按钮
+            var buttons = userMenus.stream()
+                    .distinct()
+                    .filter(r -> r.getMenuType() == BUTTON.getCode())
+                    .map(r -> new ButtonVO().setPerms(r.getPerms()).setTitle(r.getMenuName()))
                     .collect(Collectors.toSet());
-            if (roleIds.isEmpty()) {
-                return new UserRightsVO().setButtons(Set.of()).setMenus(List.of());
-            }
-            // 根据 角色ID , 获取全部菜单
-            var menuIds = roleMapper.selectMenuIdByRoleIds(roleIds);
-            if (menuIds.isEmpty()) {
-                return new UserRightsVO().setButtons(Set.of()).setMenus(List.of());
-            }
-            userMenus = menuService.listMenuByMenuIds(menuIds);
-        }
 
-        // 获取菜单
-        var nodeList = userMenus.stream()
-                .distinct()
-                .filter(r -> r.getMenuType() == MENU.getCode())
-                .map(r -> {
-                    var meta = new MenuMetaVO()
-                            .setTitle(r.getMenuName())
-                            .setIcon(r.getIcon())
-                            .setHidden(r.getVisible() == 0);
-                    var node = new TreeNode<>(r.getMenuId(), r.getParentId(), r.getPerms(), r.getSort());
-                    node.setExtra(Map.of(
-                            "meta", meta,
-                            "component", r.getComponent(),
-                            "path", r.getPath()
-                    ));
-                    return node;
-                })
-                .collect(Collectors.toList());
-
-        // 将 菜单列表，递归成 树节点的形式
-        var treeMenus = TreeUtil.build(nodeList, 0L);
-
-        // 获取所有的按钮
-        var buttons = userMenus.stream()
-                .distinct()
-                .filter(r -> r.getMenuType() == BUTTON.getCode())
-                .map(r -> new ButtonVO().setPerms(r.getPerms()).setTitle(r.getMenuName()))
-                .collect(Collectors.toSet());
-
-        return new UserRightsVO().setMenus(treeMenus).setButtons(buttons);
+            return new UserRightsVO().setMenus(treeMenus).setButtons(buttons);
+        });
     }
 
 

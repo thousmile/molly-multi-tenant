@@ -68,6 +68,8 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     private final ApiSysTenantService tenantService;
 
+    private final ApiSysUserService sysUserService;
+
 
     /**
      * 登录表单获取 Token
@@ -119,6 +121,13 @@ public class UserLoginServiceImpl implements UserLoginService {
         // 生成一个随机ID 跟当前用户关联
         target.setLoginId(IdUtil.simpleUUID());
 
+        // 如果当前登录的用户，是否系统用户
+        if (userType == UserType.SYSTEM) {
+            target.setHaveTenantIds(
+                    sysUserService.listHaveTenantIds(target.getUserId())
+            );
+        }
+
         // 设置角色和菜单权限
         setAuthoritys(target);
 
@@ -144,7 +153,7 @@ public class UserLoginServiceImpl implements UserLoginService {
     @Override
     public void refreshAuthoritys() {
         // 判断用户是否登录
-        if (JwtSecurityUtils.isAuthenticated()){
+        if (JwtSecurityUtils.isAuthenticated()) {
             // 获取登录用户
             var target = JwtSecurityUtils.getLoginUser();
             target.setAuthorities(List.of());
