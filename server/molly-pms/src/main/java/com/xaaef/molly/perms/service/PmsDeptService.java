@@ -20,10 +20,15 @@ import java.util.Set;
 
 public interface PmsDeptService extends BaseService<PmsDept> {
 
-
+    /**
+     * 分页查询
+     */
     IPage<PmsDept> pageKeywords(SearchParentPO po);
 
 
+    /**
+     * 获取所有部门，树节点展示
+     */
     List<Tree<Long>> treeNode();
 
 
