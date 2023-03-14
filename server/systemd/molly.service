@@ -1,0 +1,15 @@
+[Unit]
+Description="molly mybatis-plus multi tenant SaaS platform REST API"
+Documentation=https://api.molly.xaaef.com
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=forking
+ExecStart=/opt/molly-server/molly.sh start
+ExecReload=/opt/molly-server/molly.sh restart
+ExecStop=/opt/molly-server/molly.sh stop
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

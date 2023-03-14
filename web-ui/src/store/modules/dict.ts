@@ -98,12 +98,6 @@ export const useDictStore = defineStore("dict", () => {
     }
   })
 
-  const getFaultType = computed(() => {
-    return (value: number) => {
-      return getDictMapValue("sys_fault_type", value)
-    }
-  })
-
   const getMenuType = computed(() => {
     return (value: number) => {
       return getDictMapValue("sys_menu_type", value)
@@ -137,7 +131,6 @@ export const useDictStore = defineStore("dict", () => {
     getNoticeStatus,
     getOperType,
     getCommonStatus,
-    getFaultType,
     getMenuType,
     getMenuTarget,
     getQueryType

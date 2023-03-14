@@ -47,6 +47,11 @@ public class MultiTenantProperties {
     private String defaultProjectId = "master";
 
     /**
+     * 默认 数据库名称
+     */
+    private String dbName = prefix + defaultTenantId;
+
+    /**
      * 创建表结构
      */
     private Boolean createTable = Boolean.TRUE;

@@ -36,8 +36,9 @@ multi:
     create-table: true
     master-change-log: classpath:db/changelog-master.xml
     other-change-log: classpath:db/changelog-other.xml
-    prefix: molly_
+    prefix: molly1_
     default-tenant-id: master
+    db-name: ${multi.tenant.prefix}${multi.tenant.default-tenant-id}
 
 
 info:
