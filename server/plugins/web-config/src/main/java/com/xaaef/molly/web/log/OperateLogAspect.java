@@ -71,26 +71,28 @@ public class OperateLogAspect {
     @Around("logPointCut()")
     public Object doAfterReturning(ProceedingJoinPoint joinPoint) {
         long startTime = System.currentTimeMillis();
-        Object resp = null;
+        // 方法执行的结果
+        Object result = null;
         // 耗时，单位毫秒
         long timeCost = 0L;
+        // 执行方法异常
+        Throwable ex = null;
         try {
-            resp = joinPoint.proceed();
+            result = joinPoint.proceed();
             timeCost = System.currentTimeMillis() - startTime;
         } catch (Throwable ew) {
+            ex = ew;
             log.error(ew.getMessage());
-            resp = JsonResult.fail(ew.getMessage());
-            //方法执行完成后增加日志
-            addOperationLog(joinPoint, resp, ew, timeCost);
+            result = JsonResult.fail(ew.getMessage());
         } finally {
             //方法执行完成后增加日志
-            addOperationLog(joinPoint, resp, null, timeCost);
+            addOperationLog(joinPoint, result, ex, timeCost);
         }
-        return resp;
+        return result;
     }
 
 
-    private void addOperationLog(JoinPoint joinPoint, Object resp, Throwable e, long timeCost) {
+    private void addOperationLog(JoinPoint joinPoint, Object resp, Throwable ex, long timeCost) {
         var request = ServletUtils.getRequestInfo();
         // 如果是 GET 请求，就忽略
         if ("GET".equals(request.getMethod())) {
@@ -107,8 +109,8 @@ public class OperateLogAspect {
         }
         operLog.setDescription(annotation.description());
         operLog.setStatus(HttpStatus.OK.value());
-        if (e != null) {
-            operLog.setErrorLog(e.getMessage());
+        if (ex != null) {
+            operLog.setErrorLog(ex.getMessage());
             operLog.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         operLog.setServiceName(appName);
@@ -117,7 +119,7 @@ public class OperateLogAspect {
         operLog.setMethod(methodName);
         if (joinPoint.getArgs() != null) {
             var params = new LinkedList<>();
-            for (Object arg : joinPoint.getArgs()) {
+            for (var arg : joinPoint.getArgs()) {
                 if (arg instanceof BindingResult
                         || arg instanceof HttpServletRequest
                         || arg instanceof HttpServletResponse

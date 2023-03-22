@@ -9,6 +9,7 @@ import com.xaaef.molly.common.util.JsonUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -59,6 +60,13 @@ class NoSpringTests {
         var first = treeNodes.stream().map(TreeNode::getParentId).sorted().findFirst().get();
         List<Tree<Integer>> build = TreeUtil.build(treeNodes, first);
         System.out.println(JsonUtils.toFormatJson(build));
+    }
+
+
+    @Test
+    public void test7() {
+        var l = Duration.ofMinutes(1).toMillis();
+        System.out.println(l);
     }
 
 

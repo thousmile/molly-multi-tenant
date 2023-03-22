@@ -88,6 +88,9 @@ public class TenantIdInterceptor implements HandlerInterceptor {
     }
 
 
+    /**
+     * 判断 当前用户是否拥有 此租户的操作权限
+     */
     private boolean haveTenantPermissions(HttpServletResponse response, String tenantId) {
         // 如果当前用户是 系统用户
         if (JwtSecurityUtils.isMasterUser()) {

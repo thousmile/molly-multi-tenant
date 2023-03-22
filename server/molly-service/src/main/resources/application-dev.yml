@@ -38,12 +38,11 @@ spring:
     qiniu-kodo: # 七牛云 kodo
       - platform: qiniu-kodo-1 # 存储平台标识
         enable-storage: true  # 启用存储
-        access-key: cyMiqN72iV
-        secret-key: cyMiqN72iV
-        bucket-name: cyMiqN72iV
-        domain: https://cyMiqN72iV.xaaef.com/            # 访问域名，注意“/”结尾，例如：http://abc.hn-bkt.clouddn.com/
+        access-key: cyMiqN72iVBoNiY8nWW-d0JQ8Oyoz9wvRvbWzHTt
+        secret-key: TePPDwQarZ2rWxHMCn8iuMLOSbzh0JYXZZjCRt_N
+        bucket-name: 7qj4ztoh
+        domain: https://oss.xaaef.com/            # 访问域名，注意“/”结尾，例如：http://abc.hn-bkt.clouddn.com/
         base-path: molly/                         # 基础路径
-
 
 
 # mybatis-plus 日志打印
