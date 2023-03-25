@@ -1,10 +1,14 @@
 package com.xaaef.molly.web;
 
+import cn.hutool.core.lang.intern.InternUtil;
+import cn.hutool.core.net.Ipv4Util;
 import com.xaaef.molly.auth.consts.JwtConst;
 import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.tenant.TenantIdInterceptor;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -19,6 +23,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.format.Formatter;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -26,11 +32,31 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.xaaef.molly.common.util.IpUtils.getLocalIPS;
+
 
 @Slf4j
 @Configuration
 @AllArgsConstructor
 public class CustomSpringWebConfig implements WebMvcConfigurer {
+
+    private final ServerProperties sp;
+
+
+    /**
+     * TODO 输出文档地址
+     *
+     * @author WangChenChen
+     * @date 2023/3/26 1:30
+     */
+    @PostConstruct
+    public void outputDocAddress() {
+        Set<String> localIPS = getLocalIPS();
+        localIPS.add("localhost");
+        localIPS.add(Ipv4Util.LOCAL_IP);
+        localIPS.forEach(ip -> log.info("http://{}:{}/doc.html", ip, sp.getPort()));
+    }
+
 
     private final TenantIdInterceptor tenantIdInterceptor;
 

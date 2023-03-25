@@ -4,18 +4,22 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
+import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.util.IdUtil;
 import com.xaaef.molly.common.util.JsonUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.net.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static com.xaaef.molly.common.util.IpUtils.getLocalIPS;
 
 
 class NoSpringTests {
@@ -67,6 +71,15 @@ class NoSpringTests {
     public void test7() {
         var l = Duration.ofMinutes(1).toMillis();
         System.out.println(l);
+    }
+
+
+    @Test
+    public void test8() {
+        var port = 19222;
+        getLocalIPS().stream()
+                .map(ip -> String.format("http://%s:%d/doc.html", ip, port))
+                .forEach(System.out::println);
     }
 
 

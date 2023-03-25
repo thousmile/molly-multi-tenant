@@ -9,8 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static cn.hutool.core.net.NetUtil.LOCAL_IP;
 
@@ -88,6 +91,9 @@ public class IpUtils {
                 return StrUtil.format("内网 {} IP", ip);
             }
             var response = HttpUtil.get(String.format(IP_URL, ip));
+            if (!JsonUtils.isJson(response)) {
+                return "未知";
+            }
             Map<String, String> stringMap = JsonUtils.toMap(response, String.class, String.class);
             if (stringMap == null) {
                 return "未知";
@@ -125,6 +131,29 @@ public class IpUtils {
         } catch (UnknownHostException e) {
         }
         return "未知";
+    }
+
+
+    /**
+     * 此方法描述的是：获得服务器的IP地址(多网卡)
+     */
+    public static Set<String> getLocalIPS() {
+        var ipList = new HashSet<String>();
+        try {
+            var netInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (netInterfaces.hasMoreElements()) {
+                var ips = netInterfaces.nextElement().getInetAddresses();
+                while (ips.hasMoreElements()) {
+                    var ip = ips.nextElement();
+                    if (!ip.isLoopbackAddress() && ip.getHostAddress().matches("(\\d{1,3}\\.){3}\\d{1,3}")) {
+                        ipList.add(ip.getHostAddress());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return ipList;
     }
 
 

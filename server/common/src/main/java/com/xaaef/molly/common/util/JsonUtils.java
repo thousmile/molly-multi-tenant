@@ -243,4 +243,26 @@ public class JsonUtils {
     }
 
 
+    /**
+     * 判断字符串是否为 json
+     *
+     * @param str
+     * @return java.util.List<T>
+     * @author Wang Chen Chen <932560435@qq.com>
+     * @date 2019/4/18 15:26
+     */
+    public static boolean isJson(String str) {
+        boolean result = false;
+        if (StringUtils.isNotBlank(str)) {
+            str = str.trim();
+            if (str.startsWith("{") && str.endsWith("}")) {
+                result = true;
+            } else if (str.startsWith("[") && str.endsWith("]")) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+
 }
