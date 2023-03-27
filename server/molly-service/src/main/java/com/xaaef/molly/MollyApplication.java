@@ -1,11 +1,9 @@
 package com.xaaef.molly;
 
-import cn.hutool.core.net.Ipv4Util;
 import cn.xuyanwu.spring.file.storage.EnableFileStorage;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -31,8 +29,6 @@ public class MollyApplication {
 
 
     public static void main(String[] args) {
-
-        System.out.println();
         SpringApplication.run(MollyApplication.class, args);
     }
 

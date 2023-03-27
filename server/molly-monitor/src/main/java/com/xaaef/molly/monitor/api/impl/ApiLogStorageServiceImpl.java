@@ -1,6 +1,7 @@
 package com.xaaef.molly.monitor.api.impl;
 
 import com.xaaef.molly.common.util.BatchQueueUtils;
+import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.internal.api.ApiLogStorageService;
 import com.xaaef.molly.internal.dto.LoginLogDTO;
 import com.xaaef.molly.internal.dto.OperLogDTO;
@@ -114,6 +115,8 @@ public class ApiLogStorageServiceImpl implements ApiLogStorageService {
         // queueHandler2.add(source);
         var target = new LmsOperLog();
         BeanUtils.copyProperties(source, target);
+        target.setMethodArgs(JsonUtils.toJson(source.getMethodArgs()));
+        target.setResponseResult(JsonUtils.toJson(source.getResponseResult()));
         operLogService.save(target);
     }
 

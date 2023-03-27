@@ -1,5 +1,6 @@
 package com.xaaef.molly.redis;
 
+import com.xaaef.molly.common.util.JsonUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
