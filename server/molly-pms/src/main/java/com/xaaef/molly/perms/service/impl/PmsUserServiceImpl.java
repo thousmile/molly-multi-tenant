@@ -28,7 +28,6 @@ import com.xaaef.molly.perms.service.PmsDeptService;
 import com.xaaef.molly.perms.service.PmsRoleService;
 import com.xaaef.molly.perms.service.PmsUserService;
 import com.xaaef.molly.perms.vo.*;
-import com.xaaef.molly.tenant.util.DelegateUtils;
 import com.xaaef.molly.tenant.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

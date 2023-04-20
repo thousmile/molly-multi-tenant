@@ -41,9 +41,9 @@
         <oshi.version>6.4.1</oshi.version>
 
         <swagger.version>2.2.8</swagger.version>
-        <hutool.version>5.8.17</hutool.version>
+        <hutool.version>5.8.18</hutool.version>
         <knife4j.version>4.1.0</knife4j.version>
-        <liquibase.version>4.21.0</liquibase.version>
+        <liquibase.version>4.21.1</liquibase.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
 
         <spring-boot.version>3.0.5</spring-boot.version>

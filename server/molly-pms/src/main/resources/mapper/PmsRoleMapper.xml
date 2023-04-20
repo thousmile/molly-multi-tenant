@@ -50,6 +50,14 @@
     </select>
 
 
+    <select id="selectListByUserId" resultMap="SysRoleProxyResultMap">
+        SELECT r1.role_id, r1.role_name, r1.description
+        FROM pms_role AS r1
+        RIGHT JOIN pms_user_role AS r2 ON r2.role_id = r1.role_id
+        WHERE r2.user_id = #{userId}
+    </select>
+
+
     <select id="selectMenuIdByRoleIds" resultType="java.lang.Long">
         select menu_id from pms_role_menu where role_id IN
         <foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">

@@ -35,6 +35,14 @@ public interface PmsRoleMapper extends BaseMapper<PmsRole> {
      */
     Set<PmsRoleProxy> selectListByUserIds(@Param("userIds") Set<Long> userIds);
 
+    /**
+     * 查询用户的角色
+     *
+     * @author WangChenChen
+     * @date 2022/3/22 18:14
+     */
+    Set<PmsRoleProxy> selectListByUserId(@Param("userId") Long userId);
+
 
     @Select("select menu_id from pms_role_menu where role_id = #{roleId}")
     Set<Long> selectMenuIdByRoleId(Long roleId);
