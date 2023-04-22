@@ -7,12 +7,12 @@ import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.auth.jwt.JwtTokenProperties;
 import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.auth.service.impl.JwtTokenServiceImpl;
-import com.xaaef.molly.redis.RedisCacheUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,7 +25,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import static com.xaaef.molly.auth.consts.JwtConst.WHITE_LIST;
+import static com.xaaef.molly.common.consts.JwtConst.WHITE_LIST;
 
 
 /**
@@ -74,8 +74,8 @@ public class WebSecurityConfig {
      * @date 2022/12/10 16:30
      */
     @Bean
-    public JwtTokenService jwtTokenService(RedisCacheUtils cacheUtils) {
-        return new JwtTokenServiceImpl(tokenProperties, cacheUtils);
+    public JwtTokenService jwtTokenService(RedisTemplate<String, Object> redisTemplate) {
+        return new JwtTokenServiceImpl(tokenProperties, redisTemplate);
     }
 
 

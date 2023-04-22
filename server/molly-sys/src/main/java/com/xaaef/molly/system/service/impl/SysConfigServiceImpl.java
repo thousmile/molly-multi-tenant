@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.consts.ConfigName;
 import com.xaaef.molly.common.util.JsonUtils;
-import com.xaaef.molly.redis.RedisCacheUtils;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.system.entity.SysConfig;
 import com.xaaef.molly.system.mapper.SysConfigMapper;
@@ -12,6 +11,7 @@ import com.xaaef.molly.system.service.SysConfigService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +40,7 @@ import java.util.Map;
 public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysConfig>
         implements SysConfigService {
 
-    private final RedisCacheUtils cacheUtils;
+    private final StringRedisTemplate redisTemplate;
 
 
     @Override
@@ -68,7 +68,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
         }
         if (StringUtils.isNotBlank(entity.getConfigValue())) {
             String key = String.format("%s:%s", ConfigName.REDIS_CACHE_KEY, entity.getConfigKey());
-            cacheUtils.setString(key, entity.getConfigValue(), Duration.ofHours(1));
+            redisTemplate.opsForValue().set(key, entity.getConfigValue(), Duration.ofHours(1));
         }
         return super.updateById(entity);
     }
@@ -85,7 +85,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
             throw new RuntimeException("配置不存在！");
         }
         String key = String.format("%s:%s", ConfigName.REDIS_CACHE_KEY, entity.getConfigKey());
-        cacheUtils.deleteKey(key);
+        redisTemplate.delete(key);
         return super.removeById(entity.getConfigId());
     }
 
@@ -93,15 +93,15 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
     @Override
     public String getValueByKey(String configKey) {
         String key = String.format("%s:%s", ConfigName.REDIS_CACHE_KEY, configKey);
-        if (cacheUtils.hasKey(key)) {
-            return cacheUtils.getString(key);
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+            return redisTemplate.opsForValue().get(key);
         }
         var wrapper = new LambdaQueryWrapper<SysConfig>()
                 .select(SysConfig::getConfigValue)
                 .eq(SysConfig::getConfigKey, configKey);
         var config = baseMapper.selectOne(wrapper);
         if (config != null && StringUtils.isNotBlank(config.getConfigValue())) {
-            cacheUtils.setString(key, config.getConfigValue(), Duration.ofHours(1));
+            redisTemplate.opsForValue().set(key, config.getConfigValue(), Duration.ofHours(1));
             return config.getConfigValue();
         }
         return null;

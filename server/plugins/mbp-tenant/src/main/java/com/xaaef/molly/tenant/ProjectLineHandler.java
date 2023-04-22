@@ -2,7 +2,7 @@ package com.xaaef.molly.tenant;
 
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
-import com.xaaef.molly.tenant.util.TenantUtils;
+import com.xaaef.molly.common.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static com.xaaef.molly.tenant.consts.MbpConst.*;
+import static com.xaaef.molly.common.consts.MbpConst.*;
 
 
 /**

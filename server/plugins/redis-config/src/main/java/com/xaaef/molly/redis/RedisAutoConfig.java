@@ -13,8 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -53,8 +52,9 @@ public class RedisAutoConfig {
 
         var valueSerializer = valueSerializer();
         var keySerializer = keySerializer();
+        var tenantKeySerializer = new TenantStringRedisSerializer();
 
-        redisTemplate.setKeySerializer(keySerializer);
+        redisTemplate.setKeySerializer(tenantKeySerializer);
         redisTemplate.setHashKeySerializer(keySerializer);
         redisTemplate.setValueSerializer(valueSerializer);
         redisTemplate.setHashValueSerializer(valueSerializer);
@@ -65,14 +65,26 @@ public class RedisAutoConfig {
 
 
     @Bean
+    @ConditionalOnMissingBean(StringRedisTemplate.class)
+    public StringRedisTemplate StringRedisTemplate(RedisConnectionFactory factory) {
+        var redisTemplate = new StringRedisTemplate();
+        redisTemplate.setKeySerializer(new TenantStringRedisSerializer());
+        redisTemplate.setConnectionFactory(factory);
+        redisTemplate.afterPropertiesSet();
+        log.debug("自定义 StringRedisTemplate 加载完成");
+        return redisTemplate;
+    }
+
+
+    @Bean
     public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
-        var keySerializer = keySerializer();
+        var tenantKeySerializer = new TenantStringRedisSerializer();
         var valueSerializer = valueSerializer();
         var redisProps = cacheProps.getRedis();
         var entryTtl = redisProps.getTimeToLive() == null ? Duration.ofSeconds(180) : redisProps.getTimeToLive();
         var config = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(entryTtl)
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(keySerializer))
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(tenantKeySerializer))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer))
                 .disableCachingNullValues();
         return RedisCacheManager.builder(redisConnectionFactory)
@@ -87,22 +99,9 @@ public class RedisAutoConfig {
 
 
     private static RedisSerializer<Object> valueSerializer() {
-        return new Jackson2JsonRedisSerializer<>(Object.class);
+        return new Jackson2JsonRedisSerializer<>(JsonUtils.getMapper(), Object.class);
     }
 
-
-    /**
-     * redis 缓存工具类
-     *
-     * @param stringRedisTemplate
-     * @return RedisCacheUtils
-     * @author WangChenChen
-     * @date 2022/5/16 10:02
-     */
-    @Bean
-    public RedisCacheUtils redisCacheUtils(StringRedisTemplate stringRedisTemplate) {
-        return new RedisCacheUtils(stringRedisTemplate);
-    }
 
 }
 

@@ -1,6 +1,5 @@
 package com.xaaef.molly.tenant.service.impl;
 
-import com.xaaef.molly.redis.RedisCacheUtils;
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
 import jakarta.annotation.PostConstruct;
@@ -8,11 +7,12 @@ import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-import static com.xaaef.molly.tenant.consts.MbpConst.X_TENANT_ID;
+import static com.xaaef.molly.common.util.TenantUtils.X_TENANT_ID;
 
 
 @Slf4j
@@ -20,7 +20,7 @@ import static com.xaaef.molly.tenant.consts.MbpConst.X_TENANT_ID;
 @AllArgsConstructor
 public class RedisMultiTenantManager implements MultiTenantManager {
 
-    private final RedisCacheUtils cacheUtils;
+    private final StringRedisTemplate redisTemplate;
 
 
     private final MultiTenantProperties multiTenantProperties;
@@ -40,13 +40,13 @@ public class RedisMultiTenantManager implements MultiTenantManager {
 
     @Override
     public boolean existById(String tenantId) {
-        return cacheUtils.hasHashKey(X_TENANT_ID, tenantId);
+        return redisTemplate.opsForHash().hasKey(X_TENANT_ID, tenantId);
     }
 
 
     @Override
     public void addTenantId(String tenantId) {
-        cacheUtils.setHashObject(X_TENANT_ID, tenantId, tenantId);
+        redisTemplate.opsForHash().put(X_TENANT_ID, tenantId, tenantId);
     }
 
 
@@ -58,7 +58,7 @@ public class RedisMultiTenantManager implements MultiTenantManager {
 
     @Override
     public void removeTenantId(String tenantId) {
-        cacheUtils.deleteHashKey(X_TENANT_ID, tenantId);
+        redisTemplate.opsForHash().delete(X_TENANT_ID, tenantId);
     }
 
 
@@ -71,7 +71,7 @@ public class RedisMultiTenantManager implements MultiTenantManager {
 
     @PreDestroy
     public void preDestroy() {
-        cacheUtils.deleteKey(X_TENANT_ID);
+        redisTemplate.delete(X_TENANT_ID);
         log.info("delete the tenantId in redis ...");
     }
 

@@ -2,6 +2,7 @@ package com.xaaef.molly.perms.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -28,7 +29,7 @@ import com.xaaef.molly.perms.service.PmsDeptService;
 import com.xaaef.molly.perms.service.PmsRoleService;
 import com.xaaef.molly.perms.service.PmsUserService;
 import com.xaaef.molly.perms.vo.*;
-import com.xaaef.molly.tenant.util.TenantUtils;
+import com.xaaef.molly.common.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -87,13 +88,14 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
             var userIds = list.stream().map(PmsUser::getUserId).collect(Collectors.toSet());
             var deptIds = list.stream().map(PmsUser::getDeptId).collect(Collectors.toSet());
             var roleMaps = roleService.listByUserIds(userIds);
-            var deptMaps = deptService.listByIds(deptIds)
-                    .stream()
-                    .collect(Collectors.toMap(PmsDept::getDeptId, d -> d));
+            var deptMaps = deptService.listByIds(deptIds).stream().collect(Collectors.toMap(PmsDept::getDeptId, d -> d));
+            var online = jwtTokenService.listUsernames();
             list.forEach(r -> {
                 r.setPassword(null);
                 r.setRoles(roleMaps.get(r.getUserId()));
                 r.setDept(deptMaps.get(r.getDeptId()));
+                // 如果包含，那么就是在线。【 0.离线  1.在线】
+                r.setLoginFlag(CollectionUtil.contains(online, r.getUsername()) ? (byte) 1 : (byte) 0);
             });
         }
     }
@@ -113,8 +115,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
         }
         // 如果用户密码为空
         if (StringUtils.isBlank(entity.getPassword())) {
-            var userDefaultPassword = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD))
-                    .orElse("123456");
+            var userDefaultPassword = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD)).orElse("123456");
             entity.setPassword(userDefaultPassword);
         }
 
@@ -135,10 +136,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
 
         if (entity.getRoles() != null) {
             // 角色列表
-            var roleIds = entity.getRoles()
-                    .stream()
-                    .map(PmsRole::getRoleId)
-                    .collect(Collectors.toSet());
+            var roleIds = entity.getRoles().stream().map(PmsRole::getRoleId).collect(Collectors.toSet());
             // 修改 角色
             updateUserRoles(entity.getUserId(), roleIds);
         }
@@ -167,36 +165,27 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateById(PmsUser entity) {
-        var wrapper1 = new LambdaQueryWrapper<PmsUser>()
-                .eq(PmsUser::getUsername, entity.getUsername())
-                .ne(PmsUser::getUserId, entity.getUserId());
+        var wrapper1 = new LambdaQueryWrapper<PmsUser>().eq(PmsUser::getUsername, entity.getUsername()).ne(PmsUser::getUserId, entity.getUserId());
         if (this.count(wrapper1) > 0) {
             throw new RuntimeException(String.format("用户名 %s 已经存在了！", entity.getUsername()));
         }
-        var wrapper2 = new LambdaQueryWrapper<PmsUser>()
-                .eq(PmsUser::getMobile, entity.getMobile())
-                .ne(PmsUser::getUserId, entity.getUserId());
+        var wrapper2 = new LambdaQueryWrapper<PmsUser>().eq(PmsUser::getMobile, entity.getMobile()).ne(PmsUser::getUserId, entity.getUserId());
         if (this.count(wrapper2) > 0) {
             throw new RuntimeException(String.format("手机号码 %s 已经存在了！", entity.getMobile()));
         }
-        var wrapper3 = new LambdaQueryWrapper<PmsUser>()
-                .eq(PmsUser::getEmail, entity.getEmail())
-                .ne(PmsUser::getUserId, entity.getUserId());
+        var wrapper3 = new LambdaQueryWrapper<PmsUser>().eq(PmsUser::getEmail, entity.getEmail()).ne(PmsUser::getUserId, entity.getUserId());
         if (this.count(wrapper3) > 0) {
             throw new RuntimeException(String.format("邮箱账号 %s 已经存在了！", entity.getEmail()));
         }
         if (entity.getRoles() != null) {
             // 角色列表
-            var roleIds = entity.getRoles()
-                    .stream()
-                    .map(PmsRole::getRoleId)
-                    .collect(Collectors.toSet());
+            var roleIds = entity.getRoles().stream().map(PmsRole::getRoleId).collect(Collectors.toSet());
             // 修改 原有角色
             updateUserRoles(entity.getUserId(), roleIds);
         }
         entity.setPassword(null);
         // 根据用户名，获取 登录的用户信息
-        var loginUser = jwtTokenService.getLoginUserByUsername(TenantUtils.getTenantId(), entity.getUsername());
+        var loginUser = jwtTokenService.getLoginUserByUsername(entity.getUsername());
         if (loginUser != null) {
             var copyOptions = CopyOptions.create();
             copyOptions.setIgnoreNullValue(true);
@@ -242,10 +231,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
                 }
             } else {
                 // 获取当前用户，拥有的 角色ID
-                var roleIds = getLoginUser().getRoles()
-                        .stream()
-                        .map(PmsRoleDTO::getRoleId)
-                        .collect(Collectors.toSet());
+                var roleIds = getLoginUser().getRoles().stream().map(PmsRoleDTO::getRoleId).collect(Collectors.toSet());
                 if (roleIds.isEmpty()) {
                     return new UserRightsVO().setButtons(Set.of()).setMenus(List.of());
                 }
@@ -258,38 +244,32 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
             }
 
             // 获取菜单
-            var nodeList = userMenus.stream()
-                    .distinct()
-                    .filter(r -> r.getMenuType() == MENU.getCode())
-                    .map(r -> {
-                        var meta = new MenuMetaVO()
-                                .setTitle(r.getMenuName())
-                                .setIcon(r.getIcon())
-                                .setHidden(r.getVisible() == 0);
-                        var node = new TreeNode<>(r.getMenuId(), r.getParentId(), r.getPerms(), r.getSort());
-                        node.setExtra(Map.of(
-                                "meta", meta,
-                                "component", r.getComponent(),
-                                "path", r.getPath()
-                        ));
-                        return node;
-                    })
-                    .collect(Collectors.toList());
+            var nodeList = userMenus.stream().distinct().filter(r -> r.getMenuType() == MENU.getCode()).map(r -> {
+                var meta = new MenuMetaVO().setTitle(r.getMenuName()).setIcon(r.getIcon()).setHidden(r.getVisible() == 0);
+                var node = new TreeNode<>(r.getMenuId(), r.getParentId(), r.getPerms(), r.getSort());
+                node.setExtra(Map.of("meta", meta, "component", r.getComponent(), "path", r.getPath()));
+                return node;
+            }).collect(Collectors.toList());
 
             // 将 菜单列表，递归成 树节点的形式
             var treeMenus = TreeUtil.build(nodeList, 0L);
 
             // 获取所有的按钮
-            var buttons = userMenus.stream()
-                    .distinct()
-                    .filter(r -> r.getMenuType() == BUTTON.getCode())
-                    .map(r -> new ButtonVO().setPerms(r.getPerms()).setTitle(r.getMenuName()))
-                    .collect(Collectors.toSet());
+            var buttons = userMenus.stream().distinct().filter(r -> r.getMenuType() == BUTTON.getCode()).map(r -> new ButtonVO().setPerms(r.getPerms()).setTitle(r.getMenuName())).collect(Collectors.toSet());
 
             return new UserRightsVO().setMenus(treeMenus).setButtons(buttons);
         });
     }
 
+
+    @Override
+    public Set<JwtLoginUser> listLoginUsers() {
+        return jwtTokenService.listLoginUsers()
+                .stream()
+                .peek(r -> {
+                    r.setAuthorities(null);
+                }).collect(Collectors.toSet());
+    }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -307,10 +287,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
                 // 新密码 加密
                 var newPassword = encryptPassword(pwd.getNewPwd());
                 // 修改
-                var pmsUser = PmsUser.builder()
-                        .userId(pwd.getUserId())
-                        .password(newPassword)
-                        .build();
+                var pmsUser = PmsUser.builder().userId(pwd.getUserId()).password(newPassword).build();
                 return super.updateById(pmsUser);
             }
         }
@@ -326,9 +303,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
             // 新密码 加密
             String newPassword = encryptPassword(pwd.getNewPwd());
             // 修改
-            var pmsUser = new PmsUser()
-                    .setUserId(pwd.getUserId())
-                    .setPassword(newPassword);
+            var pmsUser = new PmsUser().setUserId(pwd.getUserId()).setPassword(newPassword);
             return super.updateById(pmsUser);
         }
         throw new RuntimeException("用户不存在，无法重置密码！");

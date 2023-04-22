@@ -1,4 +1,4 @@
-package com.xaaef.molly.tenant.util;
+package com.xaaef.molly.common.util;
 
 
 import org.apache.commons.lang3.StringUtils;
@@ -7,9 +7,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Objects;
-
-import static com.xaaef.molly.tenant.consts.MbpConst.X_PROJECT_ID;
-import static com.xaaef.molly.tenant.consts.MbpConst.X_TENANT_ID;
 
 
 /**
@@ -23,6 +20,13 @@ import static com.xaaef.molly.tenant.consts.MbpConst.X_TENANT_ID;
 
 
 public class TenantUtils {
+
+    // http 租户请求头
+    public final static String X_TENANT_ID = "x-tenant-id";
+
+    // http 租户 默认项目 请求头
+    public final static String X_PROJECT_ID = "x-project-id";
+
 
     private final static ThreadLocal<String> TENANT_ID_THREAD_LOCAL = new NamedInheritableThreadLocal<>("TENANT_ID_THREAD_LOCAL");
 

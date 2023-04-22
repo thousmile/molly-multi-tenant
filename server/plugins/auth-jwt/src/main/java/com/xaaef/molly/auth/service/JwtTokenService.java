@@ -54,7 +54,7 @@ public interface JwtTokenService {
      * @author Wang Chen Chen
      * @date 2021/7/12 16:29
      */
-    JwtLoginUser getLoginUserByUsername(String tenantId, String username);
+    JwtLoginUser getLoginUserByUsername(String username);
 
 
     /**
@@ -94,7 +94,7 @@ public interface JwtTokenService {
      * @author Wang Chen Chen
      * @date 2021/7/12 16:29
      */
-    Set<String> listUsernames(String tenantId);
+    Set<String> listUsernames();
 
 
     /**

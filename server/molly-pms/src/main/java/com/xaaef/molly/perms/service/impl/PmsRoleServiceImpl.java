@@ -8,7 +8,7 @@ import com.xaaef.molly.internal.dto.SysMenuDTO;
 import com.xaaef.molly.perms.vo.UpdateMenusVO;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
-import com.xaaef.molly.tenant.util.TenantUtils;
+import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.entity.PmsRoleProxy;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;

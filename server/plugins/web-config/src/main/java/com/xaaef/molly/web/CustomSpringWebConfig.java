@@ -1,8 +1,7 @@
 package com.xaaef.molly.web;
 
-import cn.hutool.core.lang.intern.InternUtil;
 import cn.hutool.core.net.Ipv4Util;
-import com.xaaef.molly.auth.consts.JwtConst;
+import com.xaaef.molly.common.consts.JwtConst;
 import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.tenant.TenantIdInterceptor;
 import jakarta.annotation.PostConstruct;
@@ -23,8 +22,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.format.Formatter;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

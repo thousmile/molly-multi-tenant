@@ -160,6 +160,9 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
 
 
     private PmsUserDTO toBuilder(PmsUser source) {
+        if (source == null) {
+            return null;
+        }
         var target = new PmsUserDTO();
         BeanUtils.copyProperties(source, target);
         return target;

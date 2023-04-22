@@ -8,7 +8,7 @@ import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.monitor.repository.LmsOperLogRepository;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
 
-import com.xaaef.molly.tenant.util.TenantUtils;
+import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
 import com.xaaef.molly.internal.dto.PmsUserDTO;
 import com.xaaef.molly.monitor.entity.LmsOperLog;

@@ -33,7 +33,7 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.util.Objects;
 
-import static com.xaaef.molly.auth.consts.JwtConst.*;
+import static com.xaaef.molly.common.consts.JwtConst.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 

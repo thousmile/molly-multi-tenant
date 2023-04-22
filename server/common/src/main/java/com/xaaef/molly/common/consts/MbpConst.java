@@ -1,4 +1,4 @@
-package com.xaaef.molly.tenant.consts;
+package com.xaaef.molly.common.consts;
 
 import java.util.List;
 
@@ -13,12 +13,6 @@ import java.util.List;
  */
 
 public class MbpConst {
-
-    // http 租户请求头
-    public final static String X_TENANT_ID = "x-tenant-id";
-
-    // http 租户 默认项目 请求头
-    public final static String X_PROJECT_ID = "x-project-id";
 
 
     /**

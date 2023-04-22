@@ -2,14 +2,13 @@ package com.xaaef.molly.tenant;
 
 
 import cn.hutool.core.util.StrUtil;
-import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.internal.api.ApiSysTenantService;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
-import com.xaaef.molly.tenant.util.TenantUtils;
+import com.xaaef.molly.common.util.TenantUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -18,10 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.util.Optional;
-
 import static com.xaaef.molly.auth.enums.OAuth2Error.*;
-import static com.xaaef.molly.tenant.consts.MbpConst.X_TENANT_ID;
+import static com.xaaef.molly.common.util.TenantUtils.X_TENANT_ID;
 
 
 /**

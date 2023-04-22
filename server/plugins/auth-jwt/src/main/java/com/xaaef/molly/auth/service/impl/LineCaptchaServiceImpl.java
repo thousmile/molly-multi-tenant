@@ -4,16 +4,16 @@ import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.generator.RandomGenerator;
 import com.xaaef.molly.auth.jwt.JwtTokenProperties;
 import com.xaaef.molly.auth.service.LineCaptchaService;
-import com.xaaef.molly.redis.RedisCacheUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
 import java.time.Duration;
 
-import static com.xaaef.molly.auth.consts.LoginConst.CAPTCHA_CODE_KEY;
+import static com.xaaef.molly.common.consts.LoginConst.CAPTCHA_CODE_KEY;
 
 
 /**
@@ -32,7 +32,7 @@ import static com.xaaef.molly.auth.consts.LoginConst.CAPTCHA_CODE_KEY;
 @AllArgsConstructor
 public class LineCaptchaServiceImpl implements LineCaptchaService {
 
-    private final RedisCacheUtils cacheUtils;
+    private final StringRedisTemplate redisTemplate;
 
     private final JwtTokenProperties props;
 
@@ -45,7 +45,7 @@ public class LineCaptchaServiceImpl implements LineCaptchaService {
         // 重新生成code
         lineCaptcha.createCode();
         // 将验证码的 codeKey 和 codeText , 保存在 redis 中，有效时间为 10 分钟
-        cacheUtils.setString(
+        redisTemplate.opsForValue().set(
                 CAPTCHA_CODE_KEY + codeKey,
                 lineCaptcha.getCode(),
                 Duration.ofSeconds(props.getCaptchaExpired())
@@ -56,14 +56,14 @@ public class LineCaptchaServiceImpl implements LineCaptchaService {
 
     @Override
     public void delete(String codeKey) {
-        cacheUtils.deleteKey(CAPTCHA_CODE_KEY + codeKey);
+        redisTemplate.delete(CAPTCHA_CODE_KEY + codeKey);
     }
 
 
     @Override
     public boolean check(String codeKey, String userCodeText) {
         // 获取服务器的 CodeText
-        String serverCodeText = cacheUtils.getString(CAPTCHA_CODE_KEY + codeKey);
+        String serverCodeText = redisTemplate.opsForValue().get(CAPTCHA_CODE_KEY + codeKey);
         // 将 serverCodeText 和 user.codeText 都转换成小写，然后比较
         return StringUtils.equalsIgnoreCase(serverCodeText, userCodeText);
     }

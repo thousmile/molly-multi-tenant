@@ -84,7 +84,7 @@ public class SysUserServiceImpl implements SysUserService {
                 // 删除 用户 之前关联的租户
                 baseMapper.deleteHaveTenants(userId);
                 // 根据用户名，获取 登录的用户信息
-                var loginUser = jwtTokenService.getLoginUserByUsername(getTenantId(), sysUser.getUsername());
+                var loginUser = jwtTokenService.getLoginUserByUsername(sysUser.getUsername());
                 if (loginUser != null) {
                     // 更新 系统用户 关联的租户ID
                     loginUser.setHaveTenantIds(collect);

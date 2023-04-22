@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.time.LocalDateTime;
 
-import static com.xaaef.molly.tenant.consts.MbpConst.*;
+import static com.xaaef.molly.common.consts.MbpConst.*;
 
 
 /**

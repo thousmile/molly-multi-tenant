@@ -1,7 +1,7 @@
 package com.xaaef.molly.monitor.gen;
 
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
-import com.xaaef.molly.tenant.util.TenantUtils;
+import com.xaaef.molly.common.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +23,9 @@ public class IndexNameGenerator {
     private final MultiTenantProperties multiTenantProperties;
 
     public String getTenantId() {
-        return Optional.ofNullable(TenantUtils.getProjectId())
-                .orElse(multiTenantProperties.getDefaultProjectId());
+        var tenantId = Optional.ofNullable(TenantUtils.getTenantId())
+                .orElse(multiTenantProperties.getDefaultTenantId());
+        return tenantId;
     }
 
 }

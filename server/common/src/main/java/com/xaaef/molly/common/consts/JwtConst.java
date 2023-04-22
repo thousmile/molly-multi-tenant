@@ -1,4 +1,4 @@
-package com.xaaef.molly.auth.consts;
+package com.xaaef.molly.common.consts;
 
 
 import static com.xaaef.molly.common.consts.WebSocketKey.STOMP_ENDPOINT;

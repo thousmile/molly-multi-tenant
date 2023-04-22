@@ -1,5 +1,6 @@
 package com.xaaef.molly.auth.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -13,19 +14,22 @@ import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.auth.jwt.JwtTokenProperties;
 import com.xaaef.molly.auth.jwt.JwtTokenValue;
 import com.xaaef.molly.auth.service.JwtTokenService;
-import com.xaaef.molly.redis.RedisCacheUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.xaaef.molly.auth.consts.LoginConst.LOGIN_TOKEN_KEY;
+import static com.xaaef.molly.common.consts.LoginConst.LOGIN_TOKEN_KEY;
 import static com.xaaef.molly.common.util.JsonUtils.DEFAULT_DATE_TIME_PATTERN;
-import static com.xaaef.molly.auth.consts.LoginConst.*;
+import static com.xaaef.molly.common.consts.LoginConst.*;
 import static com.xaaef.molly.auth.enums.OAuth2Error.TOKEN_FORMAT_ERROR;
 
 
@@ -44,33 +48,34 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     private final JwtTokenProperties props;
 
-    private final RedisCacheUtils cacheUtils;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private final JWTSigner signer;
 
 
-    public JwtTokenServiceImpl(JwtTokenProperties props, RedisCacheUtils cacheUtils) {
+    public JwtTokenServiceImpl(JwtTokenProperties props, RedisTemplate<String, Object> redisTemplate) {
         this.props = props;
-        this.cacheUtils = cacheUtils;
+        this.redisTemplate = redisTemplate;
         this.signer = JWTSignerUtil.hs256(props.getSecret().getBytes());
     }
 
 
     private void removeLoginUser(String loginId) {
-        cacheUtils.deleteKey(loginId);
+        redisTemplate.delete(loginId);
     }
 
 
     @Override
     public JwtLoginUser getLoginUser(String loginId) {
-        return cacheUtils.getObject(LOGIN_TOKEN_KEY + loginId, JwtLoginUser.class);
+        var obj = redisTemplate.opsForValue().get(LOGIN_TOKEN_KEY + loginId);
+        return BeanUtil.copyProperties(obj, JwtLoginUser.class);
     }
 
 
     @Override
-    public JwtLoginUser getLoginUserByUsername(String tenantId, String username) {
-        var onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, tenantId, username);
-        var loginId = cacheUtils.getString(onlineUserKey);
+    public JwtLoginUser getLoginUserByUsername(String username) {
+        var onlineUserKey = ONLINE_USER_KEY + username;
+        var loginId = (String) redisTemplate.opsForValue().get(onlineUserKey);
         if (StringUtils.isEmpty(loginId)) {
             return null;
         }
@@ -83,13 +88,13 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         var loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
 
         // 将随机id 跟 当前登录的用户关联，在一起！
-        cacheUtils.setObject(loginKey, loginUser, Duration.ofSeconds(props.getTokenExpired()));
+        redisTemplate.opsForValue().set(loginKey, loginUser, Duration.ofSeconds(props.getTokenExpired()));
 
         // 判断是否开启 单点登录
         if (props.getSso()) {
-            // 拼接，当前在线用户 online_user:master:admin
-            var onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, loginUser.getTenantId(), loginUser.getUsername());
-            var oldLoginKey = cacheUtils.getString(onlineUserKey);
+            // 拼接，当前在线用户 online_user:admin
+            var onlineUserKey = ONLINE_USER_KEY + loginUser.getUsername();
+            var oldLoginKey = (String) redisTemplate.opsForValue().get(onlineUserKey);
             // 判断用户名。是否已经登录了！
             if (StringUtils.isNotBlank(oldLoginKey)) {
                 // 移除之前登录的用户
@@ -102,14 +107,14 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 var milli = LocalDateTimeUtil.format(LocalDateTime.now(), DEFAULT_DATE_TIME_PATTERN);
 
                 // 将 被强制挤下线的用户，以及时间，保存到 redis中，提示给前端用户！
-                cacheUtils.setString(
+                redisTemplate.opsForValue().set(
                         FORCED_OFFLINE_KEY + oldLoginKey,
-                        milli, Duration.ofSeconds(props.getPromptExpired())
+                        milli,
+                        Duration.ofSeconds(props.getPromptExpired())
                 );
             }
-
             // 保存 在线用户
-            cacheUtils.setString(onlineUserKey, loginUser.getLoginId(), Duration.ofSeconds(props.getTokenExpired()));
+            redisTemplate.opsForValue().set(onlineUserKey, loginUser.getLoginId(), Duration.ofSeconds(props.getTokenExpired()));
         }
     }
 
@@ -117,8 +122,10 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     @Override
     public void updateLoginUser(JwtLoginUser loginUser) {
         var loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
-        var expire = cacheUtils.getExpire(loginKey);
-        cacheUtils.setObject(loginKey, loginUser, Duration.ofSeconds(expire));
+        var expire = redisTemplate.getExpire(loginKey);
+        if (expire != null && expire > 0) {
+            redisTemplate.opsForValue().set(loginKey, loginUser, Duration.ofSeconds(expire));
+        }
     }
 
 
@@ -144,8 +151,8 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             if (props.getSso()) {
                 var forcedOfflineKey = FORCED_OFFLINE_KEY + loginId;
                 // 判断此用户，是不是被挤下线
-                var offlineTime = cacheUtils.getString(forcedOfflineKey);
-                if (StringUtils.isNotBlank(offlineTime)) {
+                var offlineTimeObj = redisTemplate.opsForValue().get(forcedOfflineKey);
+                if (offlineTimeObj instanceof String offlineTime && StringUtils.isNotBlank(offlineTime)) {
                     // 删除 被挤下线 的消息提示
                     removeLoginUser(forcedOfflineKey);
                     var errMsg = String.format("您的账号在[ %s ]被其他用户拥下线了！", offlineTime);
@@ -155,13 +162,12 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             }
             throw new JwtAuthException("当前登录用户不存在");
         }
-
         var loginKey = LOGIN_TOKEN_KEY + loginId;
         // 过期 token 过期时间
-        var expire = cacheUtils.getExpire(loginKey);
+        var expire = redisTemplate.getExpire(loginKey);
         // 如果过期时间，小于10分钟。就给 token 增加到 60 分钟的有效时间
-        if (expire < props.getPromptExpired()) {
-            cacheUtils.setExpirationTime(loginKey, Duration.ofHours(1));
+        if (expire != null && expire < props.getPromptExpired()) {
+            redisTemplate.expire(loginKey, Duration.ofHours(1));
         }
         return jwtUser;
     }
@@ -198,9 +204,10 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         var loginKey = LOGIN_TOKEN_KEY + loginUser.getLoginId();
         // 移除登录的用户。根据tokenId
         removeLoginUser(loginKey);
-        // 拼接，当前在线用户 online_user:master:admin
-        var onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, loginUser.getTenantId(), loginUser.getUsername());
+        // 拼接，当前在线用户 online_user:admin
+        var onlineUserKey = ONLINE_USER_KEY + loginUser.getUsername();
         removeLoginUser(onlineUserKey);
+        SecurityContextHolder.clearContext();
     }
 
 
@@ -211,20 +218,19 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
 
     @Override
-    public Set<String> listUsernames(String tenantId) {
-        var onlineUserKey = StrUtil.format("{}{}:{}", ONLINE_USER_KEY, tenantId, "*");
-        var onlineUserKeyPrefix = StrUtil.format("{}{}:", ONLINE_USER_KEY, tenantId);
-        return Objects.requireNonNull(cacheUtils.keys(onlineUserKey))
+    public Set<String> listUsernames() {
+        var onlineUserKey = ONLINE_USER_KEY + "*";
+        return Objects.requireNonNull(redisTemplate.keys(onlineUserKey))
                 .stream()
-                .map(r -> r.replaceAll(onlineUserKeyPrefix, ""))
+                .map(r -> r.replaceAll(ONLINE_USER_KEY, ""))
                 .collect(Collectors.toSet());
     }
 
 
     @Override
     public Set<String> listLoginIds() {
-        var onlineLoginKey = StrUtil.format("{}*", LOGIN_TOKEN_KEY);
-        return Objects.requireNonNull(cacheUtils.keys(onlineLoginKey))
+        var onlineLoginKey = LOGIN_TOKEN_KEY + "*";
+        return Objects.requireNonNull(redisTemplate.keys(onlineLoginKey))
                 .stream()
                 .map(r -> r.replaceAll(LOGIN_TOKEN_KEY, ""))
                 .collect(Collectors.toSet());

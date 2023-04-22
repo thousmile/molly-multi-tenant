@@ -1,10 +1,10 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.0.189:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-    #url: jdbc:mysql://localhost:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-    username: test123
-    password: mht123456
+    #url: jdbc:mysql://192.168.0.189:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: root
     type: com.zaxxer.hikari.HikariDataSource
 
 
@@ -12,9 +12,9 @@ spring:
     redis:
       database: 1
       port: 6379
-      #host: 127.0.0.1
-      host: 192.168.0.189
-      password: mht123
+      host: 127.0.0.1
+      #host: 192.168.0.189
+      #password: mht123
       timeout: 5000
       lettuce:
         pool:
@@ -43,6 +43,10 @@ spring:
         bucket-name: 123456
         domain: https://oss.baidu.com/       # 访问域名，注意“/”结尾，例如：http://abc.hn-bkt.clouddn.com/
         base-path: molly/                     # 基础路径
+
+
+  elasticsearch:
+    uris: http://localhost:9200
 
 
 # mybatis-plus 日志打印

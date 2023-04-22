@@ -1,6 +1,7 @@
 package com.xaaef.molly.perms.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.perms.entity.PmsUser;
@@ -17,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -54,6 +58,13 @@ public class PmsUserController {
     }
 
 
+    @Operation(summary = "在线用户查询", description = "在线用户 查询所有")
+    @GetMapping("/online/query")
+    public JsonResult<Set<JwtLoginUser>> pageQuery2() {
+        return JsonResult.success(baseService.listLoginUsers());
+    }
+
+
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
     public JsonResult<PmsUser> create(@RequestBody PmsUser entity) {
@@ -64,7 +75,6 @@ public class PmsUserController {
             return JsonResult.fail(e.getMessage(), PmsUser.class);
         }
     }
-
 
 
     @Operation(summary = "修改", description = "修改必须要id")
@@ -89,7 +99,6 @@ public class PmsUserController {
             return JsonResult.fail(e.getMessage());
         }
     }
-
 
 
     @Operation(summary = "修改用户密码", description = "修改用户密码")

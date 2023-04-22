@@ -78,7 +78,7 @@ public class PmsUser extends BaseEntity {
     private Byte adminFlag;
 
     /**
-     * 状态 【0.禁用 1.正常】
+     * 状态 【 0.禁用  1.正常】
      */
     private Byte status;
 
@@ -103,5 +103,11 @@ public class PmsUser extends BaseEntity {
      */
     @TableField(exist = false)
     private Set<PmsRole> roles;
+
+    /**
+     * 是否登录 【 0.离线  1.在线】
+     */
+    @TableField(exist = false)
+    private Byte loginFlag;
 
 }

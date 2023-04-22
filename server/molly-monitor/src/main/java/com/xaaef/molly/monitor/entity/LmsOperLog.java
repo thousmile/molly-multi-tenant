@@ -1,6 +1,5 @@
 package com.xaaef.molly.monitor.entity;
 
-import com.xaaef.molly.tenant.util.TenantUtils;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;

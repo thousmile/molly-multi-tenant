@@ -1,5 +1,6 @@
 package com.xaaef.molly.monitor.api.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.internal.api.ApiLogStorageService;
 import com.xaaef.molly.internal.dto.LoginLogDTO;

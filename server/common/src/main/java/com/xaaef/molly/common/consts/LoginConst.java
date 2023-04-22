@@ -1,4 +1,4 @@
-package com.xaaef.molly.auth.consts;
+package com.xaaef.molly.common.consts;
 
 public class LoginConst {
 

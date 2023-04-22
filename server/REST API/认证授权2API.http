@@ -13,10 +13,10 @@ x-tenant-id: google
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0
 
 {
-  "username": "13c19cd9e430",
+  "username": "b8b6fafbd083",
   "password": "123456",
   "codeKey": "applezrgegbtnHNrefh",
-  "codeText": "p97v"
+  "codeText": "3j1x"
 }
 
 > {%
@@ -45,12 +45,4 @@ Content-Type: application/json
 x-tenant-id: google
 Authorization: Bearer {{tokenValue}}
 
-
-
-### 获取用户列表
-GET {{baseUrl}}/pms/user
-Content-Type: application/json
-x-tenant-id: google
-#x-tenant-id: {{tenantId}}
-Authorization: Bearer {{tokenValue}}
 

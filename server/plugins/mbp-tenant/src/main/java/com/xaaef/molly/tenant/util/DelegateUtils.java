@@ -1,5 +1,7 @@
 package com.xaaef.molly.tenant.util;
 
+import com.xaaef.molly.common.util.TenantUtils;
+
 import java.util.function.Supplier;
 
 

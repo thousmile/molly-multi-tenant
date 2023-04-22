@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
-import static com.xaaef.molly.auth.consts.JwtConst.WHITE_LIST;
+import static com.xaaef.molly.common.consts.JwtConst.WHITE_LIST;
 import static com.xaaef.molly.auth.enums.OAuth2Error.ACCESS_TOKEN_INVALID;
 
 
