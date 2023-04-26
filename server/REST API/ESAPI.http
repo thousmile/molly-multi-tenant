@@ -1,7 +1,52 @@
-###
-GET http://localhost:9200/_cat/indices?v
+### 查询索引
+GET {{esUrl}}/_cat/indices?v
 Content-Type: application/json
 
-###
-GET http://localhost:9200/google_lms_oper_log
+
+### 索引排序
+GET {{esUrl}}/_cat/indices/master_*?v&s=docs.count:desc
 Content-Type: application/json
+
+
+### 查询索引映射
+GET {{esUrl}}/google_dms_device_log
+Content-Type: application/json
+
+
+### 删除索引
+DELETE {{esUrl}}/master_lms_login_log
+Content-Type: application/json
+
+
+### 修改索引，默认分片和副本
+POST {{esUrl}}/_template/default_template
+Content-Type: application/json
+
+{
+  "index_patterns": [
+    "*"
+  ],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  }
+}
+
+
+
+### 查询索引映射
+GET {{esUrl}}/google_lms_oper_log/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match_all": {}
+  },
+  "sort": [
+    {
+      "createTime": {
+        "order": "desc"
+      }
+    }
+  ]
+}

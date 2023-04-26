@@ -2,6 +2,7 @@ package com.xaaef.molly.system.runner;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xaaef.molly.internal.api.ApiEsIndexService;
 import com.xaaef.molly.tenant.DatabaseManager;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
 import com.xaaef.molly.system.entity.SysTenant;
@@ -11,7 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 /**
@@ -24,6 +28,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+@Order(Byte.MIN_VALUE)
 @AllArgsConstructor
 public class TenantTableRunner implements ApplicationRunner {
 
@@ -33,12 +38,17 @@ public class TenantTableRunner implements ApplicationRunner {
 
     private final MultiTenantManager tenantManager;
 
+    private final List<ApiEsIndexService> esIndexService;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         var props = databaseManager.getMultiTenantProperties();
-        long count = tenantMapper.selectCount(null);
-        int pageSize = 100;
-        long pageCount = (count / pageSize) + 1;
+        var defaultTenantId = props.getDefaultTenantId();
+        var count = tenantMapper.selectCount(null);
+        var pageSize = 100;
+        var pageCount = (count / pageSize) + 1;
+        // 初始化，默认租户的 es 索引
+        esIndexService.forEach(s -> s.init(defaultTenantId));
         for (int i = 1; i <= pageCount; i++) {
             Page<SysTenant> pageRequest = Page.of(i, pageSize);
             var wrapper = new LambdaQueryWrapper<SysTenant>()
@@ -47,10 +57,12 @@ public class TenantTableRunner implements ApplicationRunner {
                     .getRecords()
                     .stream()
                     .map(SysTenant::getTenantId)
-                    .filter(tenantId -> !StringUtils.equals(tenantId, props.getDefaultTenantId()))
+                    .filter(tenantId -> !StringUtils.equals(tenantId, defaultTenantId))
                     .forEach(tenantId -> {
                         tenantManager.addTenantId(tenantId);
                         databaseManager.updateTable(tenantId);
+                        // 初始化，租户的 es 索引
+                        esIndexService.forEach(s -> s.init(tenantId));
                     });
         }
     }

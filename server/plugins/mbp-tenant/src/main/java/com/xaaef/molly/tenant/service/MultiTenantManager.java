@@ -1,6 +1,7 @@
 package com.xaaef.molly.tenant.service;
 
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,6 +22,15 @@ public interface MultiTenantManager {
      * @date 2022/12/11 9:46
      */
     String getDefaultTenantId();
+
+
+    /**
+     * TODO 获取全部的租户
+     *
+     * @author WangChenChen
+     * @date 2022/12/11 9:46
+     */
+    Set<String> getListTenantId();
 
 
     /**

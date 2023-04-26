@@ -1,5 +1,6 @@
 package com.xaaef.molly.monitor.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
@@ -10,6 +11,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.LocalDateTime;
+
 
 /**
  * <p>
@@ -27,8 +29,9 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(indexName = "#{@indexNameGenerator.getTenantId()+'_lms_oper_log'}")
+@Document(indexName = "#{T(com.xaaef.molly.common.consts.ESIndexName).getOperateLogIndex()}", createIndex = false)
 public class LmsOperLog implements java.io.Serializable {
+
     /**
      * ID
      */
@@ -39,19 +42,19 @@ public class LmsOperLog implements java.io.Serializable {
     /**
      * 标题
      */
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String title;
 
     /**
      * 描述
      */
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String description;
 
     /**
      * 服务名称
      */
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Keyword)
     private String serviceName;
 
     /**
@@ -81,19 +84,19 @@ public class LmsOperLog implements java.io.Serializable {
     /**
      * 方法
      */
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Keyword)
     private String method;
 
     /**
      * 方法参数
      */
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Keyword)
     private String methodArgs;
 
     /**
      * 请求类型
      */
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Keyword)
     private String requestMethod;
 
     /**
@@ -143,5 +146,13 @@ public class LmsOperLog implements java.io.Serializable {
      */
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
     protected LocalDateTime createTime;
+
+
+    /**
+     * 索引名称
+     */
+    @Transient
+    @JsonIgnore
+    private String indexName;
 
 }

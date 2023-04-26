@@ -1,7 +1,5 @@
 package com.xaaef.molly.internal.api;
 
-import com.xaaef.molly.internal.dto.SysTenantDTO;
-
 import java.util.Set;
 
 /**

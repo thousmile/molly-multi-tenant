@@ -13,8 +13,10 @@ Authorization: Bearer {{tokenValue}}
   "contactNumber": "15111111333",
   "areaCode": "440305000000",
   "address": "中国北京海淀区上地十街10号百度大厦",
-  "templateIds": [
-    10001
+  "templates": [
+    {
+      "id": 10001
+    }
   ]
 }
 
@@ -34,8 +36,10 @@ Authorization: Bearer {{tokenValue}}
   "contactNumber": "15213324660",
   "areaCode": "123123221311",
   "address": "美国加利福尼亚州圣克拉拉县山景市",
-  "templateIds": [
-    10001
+  "templates": [
+    {
+      "id": 10001
+    }
   ]
 }
 

@@ -23,13 +23,6 @@ spring:
     change-log: ${multi.tenant.master-change-log}
 
 
-# mybatis-plus 自动配置
-mybatis-plus:
-  type-aliases-package: com.xaaef.molly.*.entity
-  configuration:
-    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
-
-
 # 多租户配置
 multi:
   tenant:
@@ -39,6 +32,13 @@ multi:
     prefix: molly_
     default-tenant-id: master
     db-name: ${multi.tenant.prefix}${multi.tenant.default-tenant-id}
+
+
+# mybatis-plus 自动配置
+mybatis-plus:
+  type-aliases-package: com.xaaef.molly.*.entity
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
 
 
 info:

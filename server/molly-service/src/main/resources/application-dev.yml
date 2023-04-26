@@ -1,20 +1,19 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    #url: jdbc:mysql://192.168.0.189:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-    url: jdbc:mysql://localhost:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://192.168.0.188:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
-    password: root
+    password: mht123456
     type: com.zaxxer.hikari.HikariDataSource
 
 
   data:
     redis:
-      database: 1
-      port: 6379
-      host: 127.0.0.1
-      #host: 192.168.0.189
+      host: 192.168.0.188
+      #host: 127.0.0.1
       #password: mht123
+      database: 10
+      port: 6379
       timeout: 5000
       lettuce:
         pool:
@@ -38,15 +37,15 @@ spring:
     qiniu-kodo: # 七牛云 kodo
       - platform: qiniu-kodo-1 # 存储平台标识
         enable-storage: true  # 启用存储
-        access-key: 123456
-        secret-key: 123456
-        bucket-name: 123456
-        domain: https://oss.baidu.com/       # 访问域名，注意“/”结尾，例如：http://abc.hn-bkt.clouddn.com/
+        access-key: cyMiqN72iVBoNiY8nWW-d0JQ8Oyoz9wvRvbWzHTt
+        secret-key: TePPDwQarZ2rWxHMCn8iuMLOSbzh0JYXZZjCRt_N
+        bucket-name: 7qj4ztoh
+        domain: https://oss.xaaef.com/        # 访问域名，注意“/”结尾，例如：http://abc.hn-bkt.clouddn.com/
         base-path: molly/                     # 基础路径
 
 
   elasticsearch:
-    uris: http://localhost:9200
+    uris: http://192.168.0.188:19200
 
 
 # mybatis-plus 日志打印

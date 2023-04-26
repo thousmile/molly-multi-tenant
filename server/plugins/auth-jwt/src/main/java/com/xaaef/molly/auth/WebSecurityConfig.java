@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -74,8 +75,9 @@ public class WebSecurityConfig {
      * @date 2022/12/10 16:30
      */
     @Bean
-    public JwtTokenService jwtTokenService(RedisTemplate<String, Object> redisTemplate) {
-        return new JwtTokenServiceImpl(tokenProperties, redisTemplate);
+    public JwtTokenService jwtTokenService(RedisTemplate<String, Object> redisTemplate,
+                                           StringRedisTemplate strRedisTemplate) {
+        return new JwtTokenServiceImpl(tokenProperties, redisTemplate, strRedisTemplate);
     }
 
 

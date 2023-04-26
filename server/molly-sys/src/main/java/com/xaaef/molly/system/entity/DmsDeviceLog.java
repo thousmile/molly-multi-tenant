@@ -1,4 +1,4 @@
-package com.xaaef.molly.monitor.entity;
+package com.xaaef.molly.system.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -11,6 +11,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * <p>
@@ -28,75 +29,58 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(indexName = "#{T(com.xaaef.molly.common.consts.ESIndexName).getLoginLogIndex()}", createIndex = false)
-public class LmsLoginLog implements java.io.Serializable {
+@Document(indexName = "#{T(com.xaaef.molly.common.consts.ESIndexName).getDeviceLogIndex()}", createIndex = false)
+public class DmsDeviceLog implements java.io.Serializable {
 
     /**
-     * ID
+     * 唯一 ID
      */
     @Id
     @Field(type = FieldType.Text)
     private String id;
 
     /**
-     * 授权类型
-     */
-    @Field(type = FieldType.Text)
-    private String grantType;
-
-    /**
-     * 用户ID
+     * 设备 ID
      */
     @Field(type = FieldType.Long)
-    private Long userId;
+    private Long deviceId;
 
     /**
-     * 用户昵称
+     * 设备 SN
+     */
+    @Field(type = FieldType.Text)
+    private String serialNumber;
+
+    /**
+     * 产品 ID
+     */
+    @Field(type = FieldType.Text)
+    private String productId;
+
+    /**
+     * 区域 ID
+     */
+    @Field(type = FieldType.Long)
+    private Long areaId;
+
+
+    /**
+     * 消息主题
+     */
+    @Field(type = FieldType.Text)
+    private String topic;
+
+    /**
+     * 日志类型
      */
     @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
-    private String nickname;
+    private String logType;
 
     /**
-     * 用户名
+     * 日志内容
      */
-    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
-    private String username;
-
-    /**
-     * 头像
-     */
-    @Field(type = FieldType.Text)
-    private String avatar;
-
-    /**
-     * 请求地址
-     */
-    @Field(type = FieldType.Text)
-    private String requestUrl;
-
-    /**
-     * 请求IP
-     */
-    @Field(type = FieldType.Text)
-    private String requestIp;
-
-    /**
-     * 请求地址
-     */
-    @Field(type = FieldType.Text)
-    private String address;
-
-    /**
-     * 操作系统
-     */
-    @Field(type = FieldType.Text)
-    private String osName;
-
-    /**
-     * 浏览器
-     */
-    @Field(type = FieldType.Text)
-    private String browser;
+    @Field(type = FieldType.Object)
+    private Map<String, Object> content;
 
     /**
      * 创建时间

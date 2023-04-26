@@ -6,6 +6,7 @@ After=network-online.target
 
 [Service]
 Type=forking
+WorkingDirectory=/opt/molly-server/
 ExecStart=/opt/molly-server/molly.sh start
 ExecReload=/opt/molly-server/molly.sh restart
 ExecStop=/opt/molly-server/molly.sh stop
