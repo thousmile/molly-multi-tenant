@@ -2,6 +2,7 @@ package com.xaaef.molly.system.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 public class SysTemplateProxy extends SysTemplate {

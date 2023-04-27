@@ -3,6 +3,7 @@ package com.xaaef.molly.system.po;
 import com.xaaef.molly.common.po.SearchPO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
@@ -20,6 +21,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Data
 @ToString
+@EqualsAndHashCode(callSuper = false)
 public class DictQueryPO extends SearchPO {
 
     /**

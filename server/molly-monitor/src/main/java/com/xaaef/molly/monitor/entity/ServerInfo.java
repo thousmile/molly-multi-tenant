@@ -46,26 +46,31 @@ public class ServerInfo implements java.io.Serializable {
     /**
      * CPU相关信息
      */
+    @Builder.Default()
     private Cpu cpu = new Cpu();
 
     /**
      * 內存相关信息
      */
+    @Builder.Default()
     private Mem mem = new Mem();
 
     /**
      * JVM相关信息
      */
+    @Builder.Default()
     private Jvm jvm = new Jvm();
 
     /**
      * 服务器相关信息
      */
+    @Builder.Default()
     private Sys sys = new Sys();
 
     /**
      * 磁盘相关信息
      */
+    @Builder.Default()
     private List<SysFile> sysFiles = new LinkedList<SysFile>();
 
 
@@ -190,7 +195,6 @@ public class ServerInfo implements java.io.Serializable {
 
     @Getter
     @Setter
-    @Builder
     @Accessors(chain = true)
     @AllArgsConstructor
     @NoArgsConstructor
@@ -277,7 +281,6 @@ public class ServerInfo implements java.io.Serializable {
 
     @Getter
     @Setter
-    @Builder
     @Accessors(chain = true)
     @AllArgsConstructor
     @NoArgsConstructor
@@ -393,7 +396,6 @@ public class ServerInfo implements java.io.Serializable {
 
     @Getter
     @Setter
-    @Builder
     @Accessors(chain = true)
     @AllArgsConstructor
     @NoArgsConstructor
@@ -444,7 +446,6 @@ public class ServerInfo implements java.io.Serializable {
 
     @Getter
     @Setter
-    @Builder
     @Accessors(chain = true)
     @AllArgsConstructor
     @NoArgsConstructor
@@ -478,7 +479,6 @@ public class ServerInfo implements java.io.Serializable {
 
     @Getter
     @Setter
-    @Builder
     @Accessors(chain = true)
     @AllArgsConstructor
     @NoArgsConstructor
