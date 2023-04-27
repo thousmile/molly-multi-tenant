@@ -4,8 +4,9 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xaaef.molly.common.po.SearchPO;
-import com.xaaef.molly.monitor.repository.LmsOperLogRepository;
+import com.xaaef.molly.monitor.mapper.LmsOperLogMapper;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
 
 import com.xaaef.molly.common.util.TenantUtils;
@@ -21,10 +22,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.tenant.util.DelegateUtils.*;
+
 
 /**
  * <p>
@@ -36,12 +37,11 @@ import static com.xaaef.molly.tenant.util.DelegateUtils.*;
  * @date 2023/2/6 15:28
  */
 
+
 @Slf4j
 @Service
 @AllArgsConstructor
-public class LmsOperLogServiceImpl implements LmsOperLogService {
-
-    private final LmsOperLogRepository operLogRepository;
+public class LmsOperLogServiceImpl extends ServiceImpl<LmsOperLogMapper, LmsOperLog> implements LmsOperLogService {
 
     private final ApiPmsUserService userService;
 
@@ -65,14 +65,9 @@ public class LmsOperLogServiceImpl implements LmsOperLogService {
             wrapper.like(LmsOperLog::getCreateTime, params.getKeywords());
         }
         wrapper.orderByDesc(LmsOperLog::getCreateTime);
-        return null;
-    }
-
-
-    @Override
-    public boolean removeBatchByIds(Set<String> ids) {
-        operLogRepository.deleteAllById(ids);
-        return true;
+        var result = super.page(pageRequest, wrapper);
+        include(result.getRecords());
+        return result;
     }
 
 

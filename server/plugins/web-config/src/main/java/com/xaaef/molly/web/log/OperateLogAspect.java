@@ -5,6 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.common.util.ServletUtils;
+import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiLogStorageService;
 import com.xaaef.molly.internal.dto.OperLogDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -142,6 +143,7 @@ public class OperateLogAspect {
         Map<String, Object> responseResultMap = BeanUtil.beanToMap(resp, false, true);
         operLog.setResponseResult(responseResultMap);
         operLog.setTimeCost(timeCost);
+        operLog.setTenantId(TenantUtils.getTenantId());
         if (JwtSecurityUtils.isAuthenticated()) {
             var userInfo = JwtSecurityUtils.getLoginUser();
             operLog.setUserId(userInfo.getUserId());

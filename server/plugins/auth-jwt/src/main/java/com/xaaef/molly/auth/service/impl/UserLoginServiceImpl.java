@@ -220,19 +220,15 @@ public class UserLoginServiceImpl implements UserLoginService {
      */
     private void asyncLoginLogSave(JwtLoginUser loginUser, CustomRequestInfo request) {
         var loginLog = new LoginLogDTO();
+        BeanUtils.copyProperties(loginUser, loginLog);
+        loginLog.setId(IdUtil.getSnowflakeNextIdStr());
         loginLog.setRequestUrl(request.getRequestUrl());
         loginLog.setRequestIp(request.getIp());
         loginLog.setAddress(request.getAddress());
         loginLog.setOsName(request.getOsName());
         loginLog.setBrowser(request.getBrowser());
-        loginLog.setAvatar(loginUser.getAvatar());
-        loginLog.setNickname(loginUser.getNickname());
-        loginLog.setUsername(loginUser.getUsername());
-        loginLog.setUserId(loginUser.getUserId());
-        loginLog.setTenantId(loginUser.getTenantId());
-        loginLog.setCreateTime(loginUser.getLoginTime());
         loginLog.setGrantType(loginUser.getGrantType().getCode());
-        loginLog.setId(IdUtil.getSnowflakeNextIdStr());
+        loginLog.setCreateTime(loginUser.getLoginTime());
         logStorageService.asyncLoginSave(loginLog);
     }
 
