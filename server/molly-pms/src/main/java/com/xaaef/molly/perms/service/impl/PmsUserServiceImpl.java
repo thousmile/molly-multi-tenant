@@ -267,6 +267,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
         return jwtTokenService.listLoginUsers()
                 .stream()
                 .peek(r -> {
+                    r.setPassword(null);
                     r.setAuthorities(null);
                 }).collect(Collectors.toSet());
     }

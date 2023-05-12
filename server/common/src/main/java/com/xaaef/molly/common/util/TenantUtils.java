@@ -46,7 +46,11 @@ public class TenantUtils {
             return null;
         }
         var request = attributes.getRequest();
-        return request.getHeader(X_TENANT_ID);
+        var header = request.getHeader(X_TENANT_ID);
+        if (StringUtils.isNotBlank(header)) {
+            return header;
+        }
+        return request.getParameter(X_TENANT_ID);
     }
 
 
@@ -62,8 +66,6 @@ public class TenantUtils {
     }
 
 
-
-
     /**
      * 获取 项目ID
      */
@@ -76,7 +78,11 @@ public class TenantUtils {
             return null;
         }
         var request = attributes.getRequest();
-        return request.getHeader(X_PROJECT_ID);
+        var header = request.getHeader(X_PROJECT_ID);
+        if (StringUtils.isNotBlank(header)) {
+            return header;
+        }
+        return request.getParameter(X_PROJECT_ID);
     }
 
 

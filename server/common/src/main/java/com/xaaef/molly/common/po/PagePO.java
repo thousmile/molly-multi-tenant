@@ -21,6 +21,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 @Getter
 @Setter
 @ToString
+@Schema(description = "分页查询")
 public class PagePO implements java.io.Serializable {
 
     public PagePO() {

@@ -22,8 +22,8 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "租户创建结果")
 public class TenantCreatedSuccessVO implements java.io.Serializable {
-
 
     @Schema(description = "管理员名称！如果不填写，默认是商户名称！")
     private String adminNickname;

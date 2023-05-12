@@ -27,7 +27,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UpdateTenantTemplateIdVO {
+@Schema(description = "租户关联模板")
+public class UpdateTenantTemplateIdVO implements java.io.Serializable {
 
     @Schema(description = "租户ID不能为空！")
     @NotEmpty(message = "租户ID不能为空!")

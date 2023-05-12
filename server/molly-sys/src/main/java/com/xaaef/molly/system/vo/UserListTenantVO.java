@@ -1,11 +1,9 @@
 package com.xaaef.molly.system.vo;
 
-import com.xaaef.molly.system.entity.SysTenant;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,6 +22,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "系统用户授权多个租户")
 public class UserListTenantVO implements java.io.Serializable {
 
     /**

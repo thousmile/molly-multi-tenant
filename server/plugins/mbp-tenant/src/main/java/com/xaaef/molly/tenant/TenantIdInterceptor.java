@@ -48,12 +48,14 @@ public class TenantIdInterceptor implements HandlerInterceptor {
          * x-tenant-id=master
          * */
         var tenantId = request.getHeader(X_TENANT_ID);
-        if (StringUtils.isEmpty(tenantId)) {
-            /*
-             * 从URL地址中获取   如:
-             * GET https://www.baidu.com/hello?x-tenant-id=master
-             * */
-            tenantId = request.getParameter(X_TENANT_ID);
+        /*
+         * 从URL地址中获取   如:
+         * GET https://www.baidu.com/hello?x-tenant-id=master
+         * */
+        var paramTenantId = request.getParameter(X_TENANT_ID);
+        // URL中的租户id。会覆盖掉请求头中的租户id
+        if (StringUtils.isEmpty(tenantId) || StringUtils.isNotEmpty(paramTenantId)) {
+            tenantId = paramTenantId;
         }
         if (StringUtils.isEmpty(tenantId)) {
             // 判断当前此请求，是否已经登录。

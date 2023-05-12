@@ -21,6 +21,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Data
 @ToString
+@Schema(description = "字典查询")
 @EqualsAndHashCode(callSuper = false)
 public class DictQueryPO extends SearchPO {
 

@@ -2,6 +2,7 @@ package com.xaaef.molly.perms.api.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.enums.StatusEnum;
+import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
 import com.xaaef.molly.internal.dto.InitUserDTO;
@@ -136,7 +137,7 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
             var password = encryptPassword(po.getAdminPwd());
 
             var pmsUser = new PmsUser()
-                    .setUserId(10001L)
+                    .setUserId(IdUtils.getStandaloneId())
                     .setAvatar(po.getLogo())
                     .setUsername(po.getAdminUsername())
                     .setMobile(po.getAdminMobile())

@@ -28,6 +28,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "关联菜单")
 public class BindingMenusVO implements java.io.Serializable {
 
     @Schema(description = "ID不能为空！", requiredMode = REQUIRED)

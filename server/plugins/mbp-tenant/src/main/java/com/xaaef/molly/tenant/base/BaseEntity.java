@@ -2,6 +2,7 @@ package com.xaaef.molly.tenant.base;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -28,6 +29,7 @@ public class BaseEntity implements java.io.Serializable {
      *
      * @date 2019/12/11 21:12
      */
+    @Schema(description = "创建时间")
     @TableField(fill = FieldFill.INSERT)
     protected LocalDateTime createTime;
 
@@ -36,6 +38,7 @@ public class BaseEntity implements java.io.Serializable {
      *
      * @date 2019/12/11 21:12
      */
+    @Schema(description = "创建人 id")
     @TableField(fill = FieldFill.INSERT)
     protected Long createUser;
 
@@ -44,6 +47,7 @@ public class BaseEntity implements java.io.Serializable {
      *
      * @date 2019/12/11 21:12
      */
+    @Schema(description = "最后一次修改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     protected LocalDateTime lastUpdateTime;
 
@@ -52,6 +56,7 @@ public class BaseEntity implements java.io.Serializable {
      *
      * @date 2019/12/11 21:12
      */
+    @Schema(description = "最后一次修改人 id")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     protected Long lastUpdateUser;
 }

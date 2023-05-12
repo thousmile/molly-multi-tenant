@@ -17,6 +17,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Schema(description = "搜索分页查询")
 public class SearchPO extends PagePO implements java.io.Serializable {
 
     /**

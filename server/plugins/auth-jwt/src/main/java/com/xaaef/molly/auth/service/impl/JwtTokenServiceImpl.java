@@ -2,6 +2,7 @@ package com.xaaef.molly.auth.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
@@ -13,6 +14,7 @@ import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.auth.jwt.JwtTokenProperties;
 import com.xaaef.molly.auth.jwt.JwtTokenValue;
 import com.xaaef.molly.auth.service.JwtTokenService;
+import com.xaaef.molly.common.util.TenantUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -70,7 +72,11 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public JwtLoginUser getLoginUser(String loginId) {
+        log.info("登录状态： {}  系统用户: {}", JwtSecurityUtils.isAuthenticated(), JwtSecurityUtils.isMasterUser());
         var obj = redisTemplate.opsForValue().get(LOGIN_TOKEN_KEY + loginId);
+        if (obj == null) {
+            return null;
+        }
         return BeanUtil.copyProperties(obj, JwtLoginUser.class);
     }
 

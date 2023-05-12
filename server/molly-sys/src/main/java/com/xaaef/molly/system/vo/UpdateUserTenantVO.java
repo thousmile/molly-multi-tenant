@@ -26,6 +26,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Schema(description = "系统用户授权多个租户")
 public class UpdateUserTenantVO {
 
     @Schema(description = "用户ID不能为空！")

@@ -3,6 +3,7 @@ package com.xaaef.molly.monitor.entity;
 import com.xaaef.molly.common.util.ArithUtils;
 import com.xaaef.molly.common.util.IpUtils;
 import com.xaaef.molly.common.util.JsonUtils;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import oshi.SystemInfo;
@@ -193,6 +194,7 @@ public class ServerInfo implements java.io.Serializable {
     }
 
 
+    @Schema(description = "CPU详情")
     @Getter
     @Setter
     @Accessors(chain = true)
@@ -202,31 +204,37 @@ public class ServerInfo implements java.io.Serializable {
         /**
          * 核心数
          */
+        @Schema(description = "核心数")
         private int cpuNum;
 
         /**
          * CPU总的使用率
          */
+        @Schema(description = "CPU总的使用率")
         private double total;
 
         /**
          * CPU系统使用率
          */
+        @Schema(description = "CPU系统使用率")
         private double sys;
 
         /**
          * CPU用户使用率
          */
+        @Schema(description = "CPU用户使用率")
         private double used;
 
         /**
          * CPU当前等待率
          */
+        @Schema(description = "CPU当前等待率")
         private double wait;
 
         /**
          * CPU当前空闲率
          */
+        @Schema(description = "CPU当前空闲率")
         private double free;
 
 
@@ -279,6 +287,8 @@ public class ServerInfo implements java.io.Serializable {
         }
     }
 
+
+    @Schema(description = "JVM详情")
     @Getter
     @Setter
     @Accessors(chain = true)
@@ -288,26 +298,31 @@ public class ServerInfo implements java.io.Serializable {
         /**
          * 当前JVM占用的内存总数(M)
          */
+        @Schema(description = "当前JVM占用的内存总数(M)")
         private double total;
 
         /**
          * JVM最大可用内存总数(M)
          */
+        @Schema(description = "JVM最大可用内存总数(M)")
         private double max;
 
         /**
          * JVM空闲内存(M)
          */
+        @Schema(description = "JVM空闲内存(M)")
         private double free;
 
         /**
          * JDK版本
          */
+        @Schema(description = "JDK版本")
         private String version;
 
         /**
          * JDK路径
          */
+        @Schema(description = "JDK路径")
         private String home;
 
         public double getTotal() {
@@ -394,6 +409,8 @@ public class ServerInfo implements java.io.Serializable {
         }
     }
 
+
+    @Schema(description = "内存详情")
     @Getter
     @Setter
     @Accessors(chain = true)
@@ -403,16 +420,19 @@ public class ServerInfo implements java.io.Serializable {
         /**
          * 内存总量
          */
+        @Schema(description = "内存总量")
         private double total;
 
         /**
          * 已用内存
          */
+        @Schema(description = "已用内存")
         private double used;
 
         /**
          * 剩余内存
          */
+        @Schema(description = "剩余内存")
         private double free;
 
         public double getTotal() {
@@ -444,6 +464,8 @@ public class ServerInfo implements java.io.Serializable {
         }
     }
 
+
+    @Schema(description = "系统详情")
     @Getter
     @Setter
     @Accessors(chain = true)
@@ -453,30 +475,37 @@ public class ServerInfo implements java.io.Serializable {
         /**
          * 服务器名称
          */
+        @Schema(description = "服务器名称")
         private String computerName;
 
         /**
          * 服务器Ip
          */
+        @Schema(description = "服务器IP")
         private String computerIp;
 
         /**
          * 项目路径
          */
+        @Schema(description = "项目路径")
         private String userDir;
 
         /**
          * 操作系统
          */
+        @Schema(description = "操作系统")
         private String osName;
 
         /**
          * 系统架构
          */
+        @Schema(description = "系统架构")
         private String osArch;
 
     }
 
+
+    @Schema(description = "文件系统详情")
     @Getter
     @Setter
     @Accessors(chain = true)
@@ -486,36 +515,43 @@ public class ServerInfo implements java.io.Serializable {
         /**
          * 盘符路径
          */
+        @Schema(description = "盘符路径")
         private String dirName;
 
         /**
          * 盘符类型
          */
+        @Schema(description = "盘符类型")
         private String sysTypeName;
 
         /**
          * 文件类型
          */
+        @Schema(description = "文件类型")
         private String typeName;
 
         /**
          * 总大小
          */
+        @Schema(description = "总大小")
         private String total;
 
         /**
          * 剩余大小
          */
+        @Schema(description = "剩余大小")
         private String free;
 
         /**
          * 已经使用量
          */
+        @Schema(description = "已经使用量")
         private String used;
 
         /**
          * 资源的使用率
          */
+        @Schema(description = "资源的使用率")
         private double usage;
     }
 

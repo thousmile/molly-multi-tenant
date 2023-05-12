@@ -17,6 +17,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Schema(description = "上级ID, 搜索分页查询")
 public class SearchParentPO extends SearchPO implements java.io.Serializable {
 
     @Schema(description = "树节点 上级ID")

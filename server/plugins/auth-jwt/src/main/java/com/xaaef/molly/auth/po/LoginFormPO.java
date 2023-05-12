@@ -18,6 +18,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
  */
 
 
+@Schema(description = "用户密码登录参数")
 @Getter
 @Setter
 @ToString

@@ -44,7 +44,7 @@ public class TestCronAsync {
             "S", "T", "U", "V", "W", "X", "Y", "Z");
 
 
-    @Scheduled(fixedRate = 5000)
+    // @Scheduled(fixedRate = 5000)
     public void cron1() {
         if (!tokenService.listLoginIds().isEmpty()) {
             var map = Map.of(
@@ -59,7 +59,7 @@ public class TestCronAsync {
     }
 
 
-    @Scheduled(fixedRate = 8000)
+    // @Scheduled(fixedRate = 8000)
     public void cron2() {
         tokenService.listLoginUsers().forEach(user -> {
             var map = Map.of(

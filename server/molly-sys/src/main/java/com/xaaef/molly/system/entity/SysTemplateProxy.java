@@ -1,5 +1,6 @@
 package com.xaaef.molly.system.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,6 +26,7 @@ public class SysTemplateProxy extends SysTemplate {
     /**
      * 租户 ID
      */
+    @Schema(description = "租户Id")
     private String tenantId;
 
 

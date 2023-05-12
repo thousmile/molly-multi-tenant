@@ -25,6 +25,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "修改菜单")
 public class UpdateMenusVO implements java.io.Serializable {
 
     /**

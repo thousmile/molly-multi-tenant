@@ -1,6 +1,7 @@
 package com.xaaef.molly.perms.po;
 
 import com.xaaef.molly.common.po.SearchParentPO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,6 +21,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Schema(description = "关联菜单")
 public class UserQueryPO extends SearchParentPO {
 
     /**

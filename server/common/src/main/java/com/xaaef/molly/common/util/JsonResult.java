@@ -1,6 +1,7 @@
 package com.xaaef.molly.common.util;
 
 import com.xaaef.molly.common.domain.Pagination;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Schema(description = "通用返回结果")
 public class JsonResult<T> implements Serializable {
 
     private static final int SUCCESS = 200;
@@ -28,16 +30,19 @@ public class JsonResult<T> implements Serializable {
     /**
      * 返回状态码
      */
+    @Schema(description = "状态码 200: 成功！ 100: 失败！ 其他: 都是报错！")
     private Integer status;
 
     /**
      * 返回消息
      */
+    @Schema(description = "消息")
     private String message;
 
     /**
      * 返回内容
      */
+    @Schema(description = "结果")
     private T data;
 
     private JsonResult() {

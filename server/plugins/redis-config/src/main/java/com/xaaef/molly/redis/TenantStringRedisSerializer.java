@@ -16,6 +16,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.xaaef.molly.common.consts.LoginConst.*;
+
 /**
  * <p>
  * redis 自定义序列化，用于保存租户号，隔离数据
@@ -30,9 +32,12 @@ import java.util.List;
 public class TenantStringRedisSerializer implements RedisSerializer<String> {
 
     /**
-     * 不隔离的多租户的redis   == equals
+     * 不隔离的多租户的 redis == equals
      */
     private static final List<String> IGNORE_EQUALS_KEYS = List.of(
+            CAPTCHA_CODE_KEY,
+            LOGIN_TOKEN_KEY,
+            FORCED_OFFLINE_KEY,
             TenantUtils.X_TENANT_ID,
             ConfigName.REDIS_CACHE_KEY,
             ConfigName.USER_DEFAULT_PASSWORD,
@@ -43,7 +48,7 @@ public class TenantStringRedisSerializer implements RedisSerializer<String> {
 
 
     /**
-     * 不隔离的多租户的redis   == contains
+     * 不隔离的多租户的 redis == contains
      */
     private static final List<String> IGNORE_CONTAINS_KEYS = List.of(
             "aaa",

@@ -22,6 +22,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
  * @date 2021/7/23 15:14
  */
 
+@Schema(description = "关联菜单")
 @Data
 @Builder
 @AllArgsConstructor
