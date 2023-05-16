@@ -96,4 +96,10 @@ public class SysMenu extends BaseEntity {
     @Schema(description = "菜单状态（1.显示 0.隐藏）")
     private Byte visible;
 
+    /**
+     * 保持状态（1.保持 0.不保持）
+     */
+    @Schema(description = "保持状态（1.保持 0.不保持）")
+    private Byte keepAlive;
+
 }

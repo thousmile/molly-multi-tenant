@@ -6,6 +6,7 @@ import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.util.IdUtil;
+import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.util.JsonUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -80,6 +81,13 @@ class NoSpringTests {
         getLocalIPS().stream()
                 .map(ip -> String.format("http://%s:%d/doc.html", ip, port))
                 .forEach(System.out::println);
+    }
+
+
+    @Test
+    public void test9() {
+        System.out.println(JwtSecurityUtils.encryptPassword("test123456"));
+        System.out.println(JwtSecurityUtils.encryptPassword("test456789"));
     }
 
 

@@ -1,5 +1,6 @@
 package com.xaaef.molly.internal.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -77,4 +78,8 @@ public class SysMenuDTO implements java.io.Serializable {
      */
     private Byte visible;
 
+    /**
+     * 保持状态（1.保持 0.不保持）
+     */
+    private Byte keepAlive;
 }

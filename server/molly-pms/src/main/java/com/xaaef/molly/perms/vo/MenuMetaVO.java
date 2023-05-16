@@ -40,4 +40,10 @@ public class MenuMetaVO implements java.io.Serializable {
     @Schema(description = "是否隐藏！")
     private Boolean hidden;
 
+    /**
+     * 是否隐藏
+     */
+    @Schema(description = "保持状态（1.保持 0.不保持）！")
+    private Boolean keepAlive;
+
 }

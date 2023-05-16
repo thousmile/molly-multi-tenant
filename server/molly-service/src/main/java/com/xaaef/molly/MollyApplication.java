@@ -27,7 +27,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @MapperScan("com.xaaef.molly.*.mapper")
 public class MollyApplication {
 
-
     public static void main(String[] args) {
         SpringApplication.run(MollyApplication.class, args);
     }

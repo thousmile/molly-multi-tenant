@@ -245,9 +245,19 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
 
             // 获取菜单
             var nodeList = userMenus.stream().distinct().filter(r -> r.getMenuType() == MENU.getCode()).map(r -> {
-                var meta = new MenuMetaVO().setTitle(r.getMenuName()).setIcon(r.getIcon()).setHidden(r.getVisible() == 0);
+                var meta = new MenuMetaVO()
+                        .setTitle(r.getMenuName())
+                        .setIcon(r.getIcon())
+                        .setHidden(r.getVisible() == 0)
+                        .setKeepAlive(r.getKeepAlive() == 1);
                 var node = new TreeNode<>(r.getMenuId(), r.getParentId(), r.getPerms(), r.getSort());
-                node.setExtra(Map.of("meta", meta, "component", r.getComponent(), "path", r.getPath()));
+                node.setExtra(
+                        Map.of(
+                                "meta", meta,
+                                "component", r.getComponent(),
+                                "path", r.getPath()
+                        )
+                );
                 return node;
             }).collect(Collectors.toList());
 
@@ -255,7 +265,11 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
             var treeMenus = TreeUtil.build(nodeList, 0L);
 
             // 获取所有的按钮
-            var buttons = userMenus.stream().distinct().filter(r -> r.getMenuType() == BUTTON.getCode()).map(r -> new ButtonVO().setPerms(r.getPerms()).setTitle(r.getMenuName())).collect(Collectors.toSet());
+            var buttons = userMenus.stream()
+                    .distinct()
+                    .filter(r -> r.getMenuType() == BUTTON.getCode())
+                    .map(r -> new ButtonVO().setPerms(r.getPerms()).setTitle(r.getMenuName()))
+                    .collect(Collectors.toSet());
 
             return new UserRightsVO().setMenus(treeMenus).setButtons(buttons);
         });
