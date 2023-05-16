@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.0.188:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
     password: mht123456
     type: com.zaxxer.hikari.HikariDataSource
@@ -9,10 +9,8 @@ spring:
 
   data:
     redis:
-      host: 192.168.0.188
-      #host: 127.0.0.1
-      #password: mht123
-      database: 10
+      host: localhost
+      database: 0
       port: 6379
       timeout: 5000
       lettuce:
@@ -32,20 +30,16 @@ spring:
 
   #文件存储配置
   file-storage:
-    default-platform: qiniu-kodo-1 #默认使用的存储平台
-    thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
+    default-platform: qiniu-kodo-1            #默认使用的存储平台
+    thumbnail-suffix: ".min.jpg"              #缩略图后缀，例如【.min.jpg】【.png】
     qiniu-kodo: # 七牛云 kodo
-      - platform: qiniu-kodo-1 # 存储平台标识
-        enable-storage: true  # 启用存储
-        access-key: cyMiqN72iVBoNiY8nWW-d0JQ8Oyoz9wvRvbWzHTt
-        secret-key: TePPDwQarZ2rWxHMCn8iuMLOSbzh0JYXZZjCRt_N
-        bucket-name: 7qj4ztoh
-        domain: https://oss.xaaef.com/        # 访问域名，注意“/”结尾，例如：http://abc.hn-bkt.clouddn.com/
+      - platform: qiniu-kodo-1                # 存储平台标识
+        enable-storage: true                  # 启用存储
+        access-key: example
+        secret-key: example
+        bucket-name: example
+        domain: https://oss.example.com/      # 访问域名，注意“/”结尾，例如：https://oss.example.com/
         base-path: molly/                     # 基础路径
-
-
-  elasticsearch:
-    uris: http://192.168.0.188:19200
 
 
 # mybatis-plus 日志打印

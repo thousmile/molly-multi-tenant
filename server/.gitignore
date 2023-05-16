@@ -1,10 +1,6 @@
 HELP.md
 target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-!**/**/**/**/application-dev.yml
-
+molly-service/src/main/resources/application-dev.yml
 
 ### STS ###
 .apt_generated
