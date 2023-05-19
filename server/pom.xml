@@ -38,7 +38,7 @@
 
         <storage.version>0.7.0</storage.version>
         <qiniu.version>7.13.0</qiniu.version>
-        <oshi.version>6.4.1</oshi.version>
+        <oshi.version>6.4.2</oshi.version>
 
         <swagger.version>2.2.8</swagger.version>
         <hutool.version>5.8.18</hutool.version>
@@ -46,7 +46,7 @@
         <liquibase.version>4.21.1</liquibase.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
 
-        <spring-boot.version>3.0.6</spring-boot.version>
+        <spring-boot.version>3.0.7</spring-boot.version>
     </properties>
 
 
@@ -58,15 +58,14 @@
         </dependency>
 
         <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations-jakarta</artifactId>
-            <version>${swagger.version}</version>
-            <scope>provided</scope>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
 
         <dependency>
