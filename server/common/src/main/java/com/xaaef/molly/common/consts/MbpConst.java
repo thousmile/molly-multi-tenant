@@ -55,7 +55,7 @@ public class MbpConst {
             "sys_dict_data",                // 数据字典数据
             "sys_dict_type",                // 数据字典类型
             "sys_file_detail",              // 通用配置文件
-            "china_area"                   // 中国行政区域表
+            "china_area"                    // 中国行政区域表
     );
 
 

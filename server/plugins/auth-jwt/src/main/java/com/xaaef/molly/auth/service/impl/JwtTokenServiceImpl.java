@@ -72,7 +72,6 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public JwtLoginUser getLoginUser(String loginId) {
-        log.info("登录状态： {}  系统用户: {}", JwtSecurityUtils.isAuthenticated(), JwtSecurityUtils.isMasterUser());
         var obj = redisTemplate.opsForValue().get(LOGIN_TOKEN_KEY + loginId);
         if (obj == null) {
             return null;

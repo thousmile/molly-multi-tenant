@@ -21,16 +21,14 @@ const settingsStore = useSettingsStore()
 const { showSidebarLogo } = storeToRefs(settingsStore)
 
 const activeMenu = computed(() => {
-  const { meta, path } = route
-  if (meta?.activeMenu) {
-    return meta.activeMenu
-  }
-  return path
+  const {
+    meta: { activeMenu },
+    path
+  } = route
+  return activeMenu ? activeMenu : path
 })
 
-const isCollapse = computed(() => {
-  return !appStore.sidebar.opened
-})
+const isCollapse = computed(() => !appStore.sidebar.opened)
 </script>
 
 <template>
@@ -98,7 +96,7 @@ const isCollapse = computed(() => {
 
 .el-menu {
   border: none;
-  height: 100%;
+  min-height: 100%;
   width: 100% !important;
 }
 

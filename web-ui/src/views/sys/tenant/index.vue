@@ -243,7 +243,7 @@ import createTenant from "./create.vue"
 import { useDictStoreHook } from "@/store/modules/dict"
 import { cloneDeep } from "lodash-es"
 import { chinaAreaDeepQuery, expiredDateAgo, timeAgo, futureShortcuts } from "@/utils"
-import { testEmail, testTelphone } from "@/utils/regular"
+import { testEmail, testTelphone } from "@/utils/validate"
 import { useTenantStoreHook } from "@/store/modules/tenant"
 const dictStore = useDictStoreHook()
 

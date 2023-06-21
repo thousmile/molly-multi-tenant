@@ -2,44 +2,46 @@
 import { ref, computed } from "vue"
 import { ElMessage } from "element-plus"
 import { Bell } from "@element-plus/icons-vue"
-import { useNoticeStoreHook } from "@/store/modules/notice"
+import NotifyList from "./NotifyList.vue"
+import { type ListItem, notifyData, messageData, todoData } from "./data"
 
-type TabNameType = "广播" | "推送"
+type TabName = "通知" | "消息" | "待办"
 
-const noticeStore = useNoticeStoreHook()
+interface DataItem {
+  name: TabName
+  type: "primary" | "success" | "warning" | "danger" | "info"
+  list: ListItem[]
+}
 
 /** 角标当前值 */
 const badgeValue = computed(() => {
-  let value = 0
-  value += noticeStore.broadcast.length
-  value += noticeStore.pushNotices.length
-  return value
+  return data.value.reduce((sum, item) => sum + item.list.length, 0)
 })
-
 /** 角标最大值 */
 const badgeMax = 99
-
 /** 面板宽度 */
 const popoverWidth = 350
-
 /** 当前 Tab */
-const activeName = ref<TabNameType>("广播")
-
-noticeStore.getPushNotices
-
+const activeName = ref<TabName>("通知")
 /** 所有数据 */
-const data = ref<any[]>([
+const data = ref<DataItem[]>([
   // 通知数据
   {
-    name: "广播",
+    name: "通知",
     type: "primary",
-    list: noticeStore.getBroadcast
+    list: notifyData
   },
   // 消息数据
   {
-    name: "推送",
+    name: "消息",
     type: "danger",
-    list: noticeStore.getPushNotices
+    list: messageData
+  },
+  // 待办数据
+  {
+    name: "待办",
+    type: "warning",
+    list: todoData
   }
 ])
 
@@ -68,15 +70,7 @@ const handleHistory = () => {
               <el-badge :value="item.list.length" :max="badgeMax" :type="item.type" />
             </template>
             <el-scrollbar height="400px">
-              <el-empty v-if="item.list.length === 0" />
-              <ul v-else class="list">
-                <li v-for="(item1, index1) in item.list" :key="index1" class="list-item">
-                  <strong>{{ item1.id }}</strong>
-                  &nbsp;&nbsp;&nbsp;
-                  <span>{{ item1.msg }}</span>
-                  <div>{{ item1.dataArr }}</div>
-                </li>
-              </ul>
+              <NotifyList :list="item.list" />
             </el-scrollbar>
           </el-tab-pane>
         </el-tabs>
@@ -97,25 +91,5 @@ const handleHistory = () => {
   text-align: center;
   padding-top: 12px;
   border-top: 1px solid var(--el-border-color);
-}
-
-.list {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-
-  .list-item {
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-    background: var(--el-color-danger-light-9);
-    color: var(--el-color-danger);
-    padding: 5px;
-    border-radius: 5px;
-  }
-
-  .list-item + .list-item {
-    margin-top: 10px;
-  }
 }
 </style>

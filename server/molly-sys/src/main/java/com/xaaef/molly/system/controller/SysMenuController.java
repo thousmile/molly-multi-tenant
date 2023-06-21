@@ -96,36 +96,36 @@ public class SysMenuController {
 
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult create(@RequestBody SysMenu entity) {
+    public JsonResult<SysMenu> create(@RequestBody SysMenu entity) {
         try {
             baseService.save(entity);
             return JsonResult.success(entity);
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), SysMenu.class);
         }
     }
 
 
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult update(@RequestBody SysMenu entity) {
+    public JsonResult<Boolean> update(@RequestBody SysMenu entity) {
         try {
             boolean byId = baseService.updateById(entity);
             return JsonResult.success(byId);
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 
 
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
-    public JsonResult delete(@PathVariable("id") Long id) {
+    public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
         try {
             boolean byId = baseService.removeById(id);
             return JsonResult.success(byId);
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 

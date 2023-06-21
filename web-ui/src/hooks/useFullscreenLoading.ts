@@ -1,60 +1,34 @@
-import { ElLoading, LoadingOptions } from "element-plus"
+import { type LoadingOptions, ElLoading } from "element-plus"
 
-const defaultOption = {
+const defaultOptions = {
   lock: true,
-  text: "加载中...",
-  background: "rgba(0, 0, 0, 0.7)"
+  text: "加载中..."
 }
 
-interface ILoading {
+interface LoadingInstance {
   close: () => void
 }
 
-/**
- * 传入一个方法 fn，在它执行周期内，加上「全屏」loading
- * 如果：
- * 1. fn 是同步方法，结束后隐藏 loading
- * 2. 如果是异步方法，resolve 后隐藏 loading
- * 3. 报错后隐藏 loading 并抛出错误
- * @param {*} fn 函数
- * @param options
- * @returns Function 一个新的函数，去执行它吧
- */
-export const useFullscreenLoading = <T>(
-  fn: (...args: any[]) => T,
-  options: LoadingOptions = {}
-): ((...args: any[]) => Promise<T>) => {
-  let loading: ILoading | undefined
-  const showLoading = (options: LoadingOptions) => {
-    loading = ElLoading.service(options)
-  }
+interface UseFullscreenLoading {
+  <T extends (...args: any[]) => ReturnType<T>>(fn: T, options?: LoadingOptions): (
+    ...args: Parameters<T>
+  ) => Promise<ReturnType<T>>
+}
 
-  const hideLoading = () => {
-    loading && loading.close()
-  }
-  const _options = { ...defaultOption, ...options }
-  const newFn = (...args: any[]) => {
+/**
+ * 传入一个函数 fn，在它执行周期内，加上「全屏」loading
+ * @param fn 要执行的函数
+ * @param options LoadingOptions
+ * @returns 返回一个新的函数，该函数返回一个 Promise
+ */
+export const useFullscreenLoading: UseFullscreenLoading = (fn, options = {}) => {
+  let loadingInstance: LoadingInstance
+  return async (...args) => {
     try {
-      showLoading(_options)
-      const result = fn(...args)
-      const isPromise = result instanceof Promise
-      if (!isPromise) {
-        hideLoading()
-        return Promise.resolve(result)
-      }
-      return result
-        .then((res: any) => {
-          hideLoading()
-          return res
-        })
-        .catch((err: Error) => {
-          hideLoading()
-          throw err
-        })
-    } catch (err) {
-      hideLoading()
-      throw err
+      loadingInstance = ElLoading.service({ ...defaultOptions, ...options })
+      return await fn(...args)
+    } finally {
+      loadingInstance?.close()
     }
   }
-  return newFn
 }

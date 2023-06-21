@@ -2,7 +2,7 @@ import store from "@/store"
 import { defineStore } from "pinia"
 import { ref } from "vue"
 import { ISimpleTenant } from "@/types/base"
-import { setCurrentTenant as setTenant, getCurrentTenant as getTenant } from "@/utils/cache/localStorage"
+import { setCurrentTenant as setTenant, getCurrentTenant as getTenant } from "@/utils/cache/local-storage"
 import { defaultTenant } from "@/config"
 
 export const useTenantStore = defineStore("tenant", () => {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-input v-model="value" size="small" :readonly="true" :prefix-icon="Search" @focus="inputFocus" />
+    <el-input v-model="value" size="small" :readonly="true" :prefix-icon="Search" @click="inputFocus" />
     <el-dialog
       v-model="dialogVisible"
       :title="title"
@@ -83,7 +83,7 @@ const title = ref("切换租户")
 
 const dialogVisible = ref(false)
 
-const value = computed(() => tenantStore.getCurrentTenant().name)
+const value = ref(tenantStore.getCurrentTenant().name)
 
 // 获取 input 焦点
 const inputFocus = () => {

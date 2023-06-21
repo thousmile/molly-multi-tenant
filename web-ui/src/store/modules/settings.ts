@@ -2,7 +2,7 @@ import { ref } from "vue"
 import store from "@/store"
 import { defineStore } from "pinia"
 import layoutSettings from "@/config/layout"
-import { getControlSize, setControlSize } from "@/utils/cache/localStorage"
+import { getControlSize, setControlSize } from "@/utils/cache/local-storage"
 
 export const useSettingsStore = defineStore("settings", () => {
   const fixedHeader = ref<boolean>(layoutSettings.fixedHeader)
@@ -29,7 +29,7 @@ export const useSettingsStore = defineStore("settings", () => {
 
   const showControlSize = ref<boolean>(layoutSettings.showControlSize)
 
-  const controlSize = ref<string>(getControlSize() || layoutSettings.controlSize)
+  const controlSize = ref<string>(getControlSize() || "default")
 
   // 更新控件尺寸
   const updateControlSize = (value: string) => {

@@ -1,13 +1,12 @@
 import { ref } from "vue"
 import store from "@/store"
 import { defineStore } from "pinia"
-import { getAccessToken, removeAccessToken, setAccessToken } from "@/utils/cache/cookies"
+import { useTagsViewStore } from "./tags-view"
 import { resetRouter } from "@/router"
-import { loginApi, getUserInfoApi, logoutApi, getUserPermsApi } from "@/api/login"
-import { type ILoginData, ILoginUserInfo, IPermsMenus, IPermsButton } from "@/types/pms"
-import { usePermissionStoreHook } from "./permission"
-import { useTagsViewStoreHook } from "./tags-view"
+import { loginApi, getUserInfoApi, getUserPermsApi, logoutApi } from "@/api/login"
+import { type IPermsButton, ILoginData, IPermsMenus, ILoginUserInfo } from "@/types/pms"
 import { ElMessage } from "element-plus"
+import { getAccessToken, removeAccessToken, setAccessToken } from "@/utils/cache/local-storage"
 
 export const useUserStore = defineStore("user", () => {
   // token信息
@@ -21,6 +20,8 @@ export const useUserStore = defineStore("user", () => {
 
   // 用户的权限菜单
   const menus = ref<IPermsMenus[]>([])
+
+  const tagsViewStore = useTagsViewStore()
 
   /** 登录 */
   const userLogin = (loginData: ILoginData) => {
@@ -106,13 +107,18 @@ export const useUserStore = defineStore("user", () => {
     resetRouter()
     buttons.value = []
     menus.value = []
-    usePermissionStoreHook().clearRoutes()
-    useTagsViewStoreHook().delAllVisitedViews()
+    _resetTagsView()
   }
 
   /** 重置 Token */
   const resetToken = () => {
     removeAccessToken()
+  }
+
+  /** 重置 Visited Views 和 Cached Views */
+  const _resetTagsView = () => {
+    tagsViewStore.delAllVisitedViews()
+    tagsViewStore.delAllCachedViews()
   }
 
   return {

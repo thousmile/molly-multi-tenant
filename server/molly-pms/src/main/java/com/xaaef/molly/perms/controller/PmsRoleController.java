@@ -65,25 +65,25 @@ public class PmsRoleController {
 
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult create(@RequestBody PmsRole entity) {
-        baseService.save(entity);
-        return JsonResult.success(entity);
+    public JsonResult<Boolean> create(@RequestBody PmsRole entity) {
+        var flag = baseService.save(entity);
+        return JsonResult.success(flag);
     }
 
 
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody PmsRole entity) {
-        boolean b = baseService.updateById(entity);
-        return JsonResult.success(b);
+        var flag = baseService.updateById(entity);
+        return JsonResult.success(flag);
     }
 
 
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
-        boolean b = baseService.removeById(id);
-        return JsonResult.success(b);
+        var flag = baseService.removeById(id);
+        return JsonResult.success(flag);
     }
 
 
@@ -99,8 +99,8 @@ public class PmsRoleController {
     @PostMapping("/menus")
     public JsonResult<Boolean> bindingMenus(@RequestBody @Validated BindingMenusVO entity,
                                             BindingResult br) {
-        boolean b = baseService.updateMenus(entity.getId(), entity.getMenus());
-        return JsonResult.success(b);
+        var flag = baseService.updateMenus(entity.getId(), entity.getMenus());
+        return JsonResult.success(flag);
     }
 
 }

@@ -42,6 +42,8 @@
 
 [中文文档](https://juejin.cn/post/7089377403717287972)
 
+[手摸手教程](https://juejin.cn/column/7207659644487139387)
+
 ## 国内仓库
 
 [Gitee](https://gitee.com/un-pany/v3-admin-vite)
@@ -57,8 +59,8 @@
 ```bash
 # 配置
 1. 一键安装 .vscode 目录中推荐的插件
-3. node 版本 16+
-4. pnpm 版本 7.x
+2. node 版本 16+
+3. pnpm 版本 8.x
 
 # 克隆项目
 git clone https://github.com/un-pany/v3-admin-vite.git
@@ -93,10 +95,14 @@ pnpm build:stage
 pnpm build:prod
 ```
 
-## 🔧 代码格式检查
+## 🔧 代码检查
 
 ```bash
+# 代码格式化
 pnpm lint
+
+# 单元测试
+pnpm test
 ```
 
 ## Git 提交规范参考
@@ -114,3 +120,38 @@ pnpm lint
 - `ci` 持续集成相关
 - `types` 类型定义文件更改
 - `wip` 开发中
+
+## 项目预览图
+
+![preview1.png](./src/assets/docs/preview1.png)
+![preview2.png](./src/assets/docs/preview2.png)
+![preview3.png](./src/assets/docs/preview3.png)
+
+## 💕 贡献者
+
+感谢所有的贡献者！
+
+<a href="https://github.com/un-pany/v3-admin-vite/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=un-pany/v3-admin-vite" />
+</a>
+
+## 💕 感谢 Star
+
+小项目获取 star 不易，如果你喜欢这个项目的话，欢迎支持一个 star！这是作者持续维护的唯一动力（小声：毕竟是免费的）
+
+## ☕ Donate
+
+[查看捐赠方式](https://github.com/un-pany/v3-admin-vite/issues/69)
+
+## 可有可无的群
+
+QQ 群：1014374415（左）&& 加我微信，拉你进微信群（右）
+
+![qq.png](./src/assets/docs/qq.png)
+![wechat.png](./src/assets/docs/wechat.png)
+
+## 📄 License
+
+[MIT](./LICENSE)
+
+Copyright (c) 2022-present [pany](https://github.com/pany-ang)

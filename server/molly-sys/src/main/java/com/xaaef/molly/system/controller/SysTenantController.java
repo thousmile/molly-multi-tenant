@@ -84,21 +84,21 @@ public class SysTenantController {
 
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
-    public JsonResult<String> deleteById(@PathVariable("id") String id) {
-        baseService.removeById(id);
-        return JsonResult.success();
+    public JsonResult<Boolean> deleteById(@PathVariable("id") String id) {
+        var flag = baseService.removeById(id);
+        return JsonResult.success(flag);
     }
 
 
     @Operation(summary = "修改权限模板", description = "修改租户权限")
     @PostMapping("/update/templates")
-    public JsonResult<String> updateTemplateId(@RequestBody @Validated UpdateTenantTemplateIdVO params,
-                                               BindingResult br) {
+    public JsonResult<Boolean> updateTemplateId(@RequestBody @Validated UpdateTenantTemplateIdVO params,
+                                                BindingResult br) {
         try {
-            baseService.updateTemplate(params.getTenantId(), params.getTemplateIds());
-            return JsonResult.success();
+            var flag = baseService.updateTemplate(params.getTenantId(), params.getTemplateIds());
+            return JsonResult.success(flag);
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 

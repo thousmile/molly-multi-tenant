@@ -1,4 +1,3 @@
-import { defaultSettings } from "@/config"
 import dayjs from "dayjs"
 
 export const DEFAULT_DATE_TIME_PATTERN = "YYYY-MM-DD HH:mm:ss"
@@ -116,7 +115,7 @@ export const cleanArray = (actual: any[]) => {
   return newArray
 }
 
-/** 将全局 CSS 变量导入 JS 中使用 */
+/** 用 JS 获取全局 css 变量 */
 export const getCssVariableValue = (cssVariableName: string) => {
   let cssVariableValue = ""
   try {
@@ -128,27 +127,13 @@ export const getCssVariableValue = (cssVariableName: string) => {
   return cssVariableValue
 }
 
-export function getQueryString(params: string) {
-  if (params.indexOf("redirect") !== -1) {
-    params = params.substring(params.indexOf("?") + 1, params.length)
+/** 用 JS 设置全局 CSS 变量 */
+export const setCssVariableValue = (cssVariableName: string, cssVariableValue: string) => {
+  try {
+    document.documentElement.style.setProperty(cssVariableName, cssVariableValue)
+  } catch (error) {
+    console.error(error)
   }
-  const array = params.split("&")
-  const result = []
-  for (let index = 0; index < array.length; index++) {
-    const element = array[index]
-    if (element !== undefined && element !== null && element !== "") {
-      const param = element.split("=")
-      result.push({ key: param[0], value: param[1] })
-    }
-  }
-  return result
-}
-
-export default function getPageTitle(pageTitle: string) {
-  if (pageTitle) {
-    return `${pageTitle} - ${defaultSettings.title}`
-  }
-  return `${defaultSettings.title}`
 }
 
 /** 获取 http 请求头 前缀 */
@@ -161,7 +146,15 @@ export const getEnvBaseURL = () => {
   return import.meta.env.VITE_BASE_API
 }
 
+export default function getPageTitle(pageTitle: string) {
+  if (pageTitle) {
+    return `${pageTitle} - ${defaultSettings.title}`
+  }
+  return `${defaultSettings.title}`
+}
+
 import chinaAreaJson from "@/assets/ChinaArea.json"
+import { defaultSettings } from "@/config"
 
 /** 获取 区域名称 */
 export const chinaAreaDeepQuery = (areaCode: number) => {

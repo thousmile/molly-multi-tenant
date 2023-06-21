@@ -1,12 +1,10 @@
 <script lang="ts" setup>
-import logoText1 from "@/assets/layout/logo.png"
-import logoText2 from "@/assets/layout/logo-text-3.png"
+interface Props {
+  collapse?: boolean
+}
 
-const props = defineProps({
-  collapse: {
-    type: Boolean,
-    default: true
-  }
+const props = withDefaults(defineProps<Props>(), {
+  collapse: true
 })
 </script>
 
@@ -14,10 +12,10 @@ const props = defineProps({
   <div class="sidebar-logo-container" :class="{ collapse: props.collapse }">
     <transition name="sidebar-logo-fade">
       <router-link v-if="props.collapse" key="collapse" to="/">
-        <img :src="logoText1" class="sidebar-logo" />
+        <img src="@/assets/layout/logo.png" class="sidebar-logo" />
       </router-link>
       <router-link v-else key="expand" to="/">
-        <img :src="logoText2" class="sidebar-logo-text" />
+        <img src="@/assets/layout/logo-text-1.png" class="sidebar-logo-text" />
       </router-link>
     </transition>
   </div>

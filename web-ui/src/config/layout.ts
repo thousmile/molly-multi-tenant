@@ -1,5 +1,5 @@
 /** 布局配置 */
-interface ILayoutSettings {
+interface LayoutSettings {
   /** 是否显示 Settings Panel */
   showSettings: boolean
   /** 是否显示标签栏 */
@@ -24,11 +24,9 @@ interface ILayoutSettings {
   showSearchRoute: boolean
   /** 是否显示控件尺寸 */
   showControlSize: boolean
-  /** 控件尺寸 */
-  controlSize: string
 }
 
-const layoutSettings: ILayoutSettings = {
+const layoutSettings: LayoutSettings = {
   showSettings: true,
   showTagsView: true,
   fixedHeader: true,
@@ -40,8 +38,7 @@ const layoutSettings: ILayoutSettings = {
   showColorWeakness: false,
   showSearchTenant: true,
   showSearchRoute: true,
-  showControlSize: true,
-  controlSize: "default"
+  showControlSize: true
 }
 
 export default layoutSettings

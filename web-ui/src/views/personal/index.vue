@@ -128,11 +128,11 @@
 import { useUserStore } from "@/store/modules/user"
 import UserAvatar from "@/components/UserAvatar/index.vue"
 import { ref, reactive } from "vue"
-import { ILoginUserInfo } from "@/types/pms"
 import { type FormInstance, FormRules, ElMessageBox } from "element-plus"
 import { updatePasswordApi, updateUserApi } from "@/api/user"
-import { testEmail, testPassword, testPhone } from "@/utils/regular"
+import { testEmail, testPassword, testPhone } from "@/utils/validate"
 import { useRouter } from "vue-router"
+import { ILoginUserInfo } from "@/types/pms"
 const router = useRouter()
 
 const activeName = ref("first")

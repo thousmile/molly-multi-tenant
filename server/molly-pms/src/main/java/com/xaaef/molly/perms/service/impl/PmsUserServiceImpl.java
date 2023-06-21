@@ -198,7 +198,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public int updateUserRoles(Long userId, Set<Long> roleIds) {
+    public Boolean updateUserRoles(Long userId, Set<Long> roleIds) {
         var dbUser = this.getById(userId);
         if (dbUser == null) {
             throw new RuntimeException(String.format("用户 %d 不存在！", userId));
@@ -206,10 +206,10 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
         // 先删除当前用户拥有的所有角色
         baseMapper.deleteHaveRoles(userId);
         if (roleIds == null || roleIds.isEmpty()) {
-            return 1;
+            return false;
         }
         // 再赋值新的角色
-        return baseMapper.insertByRoles(userId, roleIds);
+        return baseMapper.insertByRoles(userId, roleIds) > 0;
     }
 
 

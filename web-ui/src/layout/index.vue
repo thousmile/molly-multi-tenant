@@ -1,70 +1,60 @@
 <script lang="ts" setup>
 import { computed } from "vue"
-import { useAppStore, DeviceType } from "@/store/modules/app"
+import { storeToRefs } from "pinia"
+import { useAppStore } from "@/store/modules/app"
 import { useSettingsStore } from "@/store/modules/settings"
-import { useTenantStoreHook } from "@/store/modules/tenant"
 import { AppMain, NavigationBar, Settings, Sidebar, TagsView, RightPanel } from "./components"
 import useResize from "./hooks/useResize"
+import { DeviceEnum } from "@/constants/app-key"
+import { useTenantStoreHook } from "@/store/modules/tenant"
 
 const appStore = useAppStore()
-
 const settingsStore = useSettingsStore()
-
 const tenantStore = useTenantStoreHook()
-
-/** Layout 布局响应式 */
-useResize()
-
-const classObj = computed(() => {
-  return {
-    hideSidebar: !appStore.sidebar.opened,
-    openSidebar: appStore.sidebar.opened,
-    withoutAnimation: appStore.sidebar.withoutAnimation,
-    mobile: appStore.device === DeviceType.Mobile,
-    showGreyMode: showGreyMode.value,
-    showColorWeakness: showColorWeakness.value
-  }
-})
-
-const showSettings = computed(() => {
-  return settingsStore.showSettings
-})
-
-const showTagsView = computed(() => {
-  return settingsStore.showTagsView
-})
-
-const fixedHeader = computed(() => {
-  return settingsStore.fixedHeader
-})
-
-const showGreyMode = computed(() => {
-  return settingsStore.showGreyMode
-})
-
-const showColorWeakness = computed(() => {
-  return settingsStore.showColorWeakness
-})
 
 const currentTenantId = computed(() => {
   return tenantStore.getCurrentTenantId()
 })
 
+const { showGreyMode, showColorWeakness, showSettings, showTagsView, fixedHeader } = storeToRefs(settingsStore)
+
+/** Layout 布局响应式 */
+useResize()
+
+/** 定义计算属性 layoutClasses，用于控制布局的类名 */
+const layoutClasses = computed(() => {
+  return {
+    hideSidebar: !appStore.sidebar.opened,
+    openSidebar: appStore.sidebar.opened,
+    withoutAnimation: appStore.sidebar.withoutAnimation,
+    mobile: appStore.device === DeviceEnum.Mobile,
+    showGreyMode: showGreyMode.value,
+    showColorWeakness: showColorWeakness.value
+  }
+})
+
+/** 用于处理点击 mobile 端侧边栏遮罩层的事件 */
 const handleClickOutside = () => {
   appStore.closeSidebar(false)
 }
 </script>
 
 <template>
-  <div :class="classObj" class="app-wrapper">
-    <div v-if="classObj.mobile && classObj.openSidebar" class="drawer-bg" @click="handleClickOutside" />
-    <Sidebar class="sidebar-wrapper" />
-    <div :class="{ hasTagsView: showTagsView }" class="main-wrapper">
+  <div :class="layoutClasses" class="app-wrapper">
+    <!-- mobile 端侧边栏遮罩层 -->
+    <div v-if="layoutClasses.mobile && layoutClasses.openSidebar" class="drawer-bg" @click="handleClickOutside" />
+    <!-- 左侧边栏 -->
+    <Sidebar class="sidebar-container" />
+    <!-- 主容器 -->
+    <div :class="{ hasTagsView: showTagsView }" class="main-container">
+      <!-- 头部导航栏和标签栏 -->
       <div :class="{ 'fixed-header': fixedHeader }">
         <NavigationBar />
-        <TagsView v-if="showTagsView" />
+        <TagsView v-show="showTagsView" />
       </div>
+      <!-- 页面主体内容 -->
       <AppMain :key="currentTenantId" />
+      <!-- 右侧设置面板 -->
       <RightPanel v-if="showSettings">
         <Settings />
       </RightPanel>
@@ -74,6 +64,7 @@ const handleClickOutside = () => {
 
 <style lang="scss" scoped>
 @import "@/styles/mixins.scss";
+$transition-time: 0.35s;
 
 .app-wrapper {
   @include clearfix;
@@ -99,15 +90,15 @@ const handleClickOutside = () => {
   z-index: 999;
 }
 
-.main-wrapper {
+.main-container {
   min-height: 100%;
-  transition: margin-left 0.28s;
+  transition: margin-left $transition-time;
   margin-left: var(--v3-sidebar-width);
   position: relative;
 }
 
-.sidebar-wrapper {
-  transition: width 0.28s;
+.sidebar-container {
+  transition: width $transition-time;
   width: var(--v3-sidebar-width) !important;
   height: 100%;
   position: fixed;
@@ -125,14 +116,14 @@ const handleClickOutside = () => {
   right: 0;
   z-index: 9;
   width: calc(100% - var(--v3-sidebar-width));
-  transition: width 0.28s;
+  transition: width $transition-time;
 }
 
 .hideSidebar {
-  .main-wrapper {
+  .main-container {
     margin-left: var(--v3-sidebar-hide-width);
   }
-  .sidebar-wrapper {
+  .sidebar-container {
     width: var(--v3-sidebar-hide-width) !important;
   }
   .fixed-header {
@@ -140,13 +131,13 @@ const handleClickOutside = () => {
   }
 }
 
-// for mobile response 适配移动端
+// 适配 mobile 端
 .mobile {
-  .main-wrapper {
+  .main-container {
     margin-left: 0px;
   }
-  .sidebar-wrapper {
-    transition: transform 0.28s;
+  .sidebar-container {
+    transition: transform $transition-time;
     width: var(--v3-sidebar-width) !important;
   }
   &.openSidebar {
@@ -154,7 +145,7 @@ const handleClickOutside = () => {
     top: 0;
   }
   &.hideSidebar {
-    .sidebar-wrapper {
+    .sidebar-container {
       pointer-events: none;
       transition-duration: 0.3s;
       transform: translate3d(calc(0px - var(--v3-sidebar-width)), 0, 0);
@@ -167,8 +158,8 @@ const handleClickOutside = () => {
 }
 
 .withoutAnimation {
-  .main-wrapper,
-  .sidebar-wrapper {
+  .main-container,
+  .sidebar-container {
     transition: none;
   }
 }

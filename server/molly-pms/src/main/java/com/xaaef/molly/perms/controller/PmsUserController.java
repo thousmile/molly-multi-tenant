@@ -79,66 +79,66 @@ public class PmsUserController {
 
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult update(@RequestBody PmsUser entity) {
+    public JsonResult<Boolean> update(@RequestBody PmsUser entity) {
         try {
-            boolean byId = baseService.updateById(entity);
-            return JsonResult.success(byId);
+            var flag = baseService.updateById(entity);
+            return JsonResult.success(flag);
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 
 
     @Operation(summary = "删除", description = "修改必须要id")
     @DeleteMapping("/{id}")
-    public JsonResult delete(@PathVariable Long id) {
+    public JsonResult<Boolean> delete(@PathVariable Long id) {
         try {
-            boolean b = baseService.removeById(id);
-            return JsonResult.success(b);
+            var flag = baseService.removeById(id);
+            return JsonResult.success(flag);
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 
 
     @Operation(summary = "修改用户密码", description = "修改用户密码")
     @PostMapping("/update/password")
-    public JsonResult updatePassword(@RequestBody @Validated UpdatePasswordVO data,
-                                     BindingResult br) {
+    public JsonResult<Boolean> updatePassword(@RequestBody @Validated UpdatePasswordVO data,
+                                              BindingResult br) {
         try {
             return JsonResult.success(
                     baseService.updatePassword(data)
             );
         } catch (RuntimeException e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 
 
     @Operation(summary = "重置用户密码", description = "重置用户密码")
     @PostMapping("/reset/password")
-    public JsonResult resetPassword(@RequestBody @Validated ResetPasswordVO data,
-                                    BindingResult br) {
+    public JsonResult<Boolean> resetPassword(@RequestBody @Validated ResetPasswordVO data,
+                                             BindingResult br) {
         try {
             return JsonResult.success(
                     baseService.resetPassword(data)
             );
         } catch (RuntimeException e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 
 
     @Operation(summary = "修改用户角色", description = "修改用户角色,会删除之前的角色信息。")
     @PostMapping("/update/roles")
-    public JsonResult updateRole(@RequestBody @Validated UpdateUserRoleIdVO data,
-                                 BindingResult br) {
+    public JsonResult<Boolean> updateRole(@RequestBody @Validated UpdateUserRoleIdVO data,
+                                          BindingResult br) {
         try {
             return JsonResult.success(
                     baseService.updateUserRoles(data.getUserId(), data.getRoles())
             );
         } catch (RuntimeException e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 

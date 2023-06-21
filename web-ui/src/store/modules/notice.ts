@@ -4,7 +4,7 @@ import { computed, ref } from "vue"
 import { Client } from "@stomp/stompjs"
 // @ts-ignore
 import SockJS from "sockjs-client/dist/sockjs.min.js"
-import { getAccessToken } from "@/utils/cache/cookies"
+import { getAccessToken } from "@/utils/cache/local-storage"
 import { useTenantStoreHook } from "./tenant"
 import { getEnvBaseURL } from "@/utils"
 

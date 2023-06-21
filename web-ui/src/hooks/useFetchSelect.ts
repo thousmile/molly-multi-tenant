@@ -1,51 +1,44 @@
-import { onMounted, ref } from "vue"
+import { ref, onMounted } from "vue"
 
-// 定义下拉框接收的数据格式
-export interface SelectOption {
-  value: string
+type OptionValue = string | number
+
+/** Select 需要的数据格式 */
+interface SelectOption {
+  value: OptionValue
   label: string
   disabled?: boolean
-  key?: string
 }
 
-// 定义入参格式
+/** 接口响应格式 */
+interface ApiData {
+  code: number
+  data: SelectOption[]
+  message: string
+}
+
+/** 入参格式，暂时只需要传递 api 函数即可 */
 interface FetchSelectProps {
-  apiFun: () => Promise<any>
+  api: () => Promise<ApiData>
 }
 
 export function useFetchSelect(props: FetchSelectProps) {
-  const { apiFun } = props
+  const { api } = props
 
+  const loading = ref<boolean>(false)
   const options = ref<SelectOption[]>([])
+  const value = ref<OptionValue>("")
 
-  const loading = ref(false)
-
-  const selectedValue = ref("")
-
-  /* 调用接口请求数据 */
+  /** 调用接口获取数据 */
   const loadData = () => {
     loading.value = true
     options.value = []
-    return apiFun().then(
-      (res) => {
-        loading.value = false
+    api()
+      .then((res) => {
         options.value = res.data
-        return res.data
-      },
-      (err) => {
-        // 未知错误，可能是代码抛出的错误，或是网络错误
+      })
+      .finally(() => {
         loading.value = false
-        options.value = [
-          {
-            value: "-1",
-            label: err.message,
-            disabled: true
-          }
-        ]
-        // 接着抛出错误
-        return Promise.reject(err)
-      }
-    )
+      })
   }
 
   onMounted(() => {
@@ -53,8 +46,8 @@ export function useFetchSelect(props: FetchSelectProps) {
   })
 
   return {
-    options,
     loading,
-    selectedValue
+    options,
+    value
   }
 }

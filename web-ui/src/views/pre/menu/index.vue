@@ -49,6 +49,11 @@
             {{ dictStore.getShowHide(scope.row.visible) }}
           </template>
         </el-table-column>
+        <el-table-column prop="keepAlive" label="保存状态">
+          <template #default="scope">
+            {{ dictStore.getYesNo(scope.row.keepAlive) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="createTime" label="创建时间">
           <template #default="scope">
             <el-tooltip v-if="scope.row.createTime" :content="scope.row.createTime" placement="top">
@@ -170,6 +175,15 @@
               </el-form-item>
             </el-col>
           </el-row>
+
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item prop="keepAlive" label="保持状态">
+                <select-dict-data v-model:value="entityForm.keepAlive" dictTypeKey="sys_yes_no" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12"> &nbsp; </el-col>
+          </el-row>
         </el-form>
         <template #footer>
           <span class="dialog-footer">
@@ -239,6 +253,7 @@ const entityForm = ref<ISysMenu>({
   target: 2,
   menuType: 0,
   visible: 0,
+  keepAlive: 0,
   children: []
 })
 
@@ -258,7 +273,8 @@ const entityFormRules: FormRules = {
   path: [{ required: true, message: "请输入权限路由", trigger: "blur" }],
   target: [{ required: true, message: "请输入权限所属", trigger: "blur" }],
   menuType: [{ required: true, message: "请输入权限类型", trigger: "blur" }],
-  visible: [{ required: true, message: "请输入显示或者隐藏", trigger: "blur" }]
+  visible: [{ required: true, message: "请输入显示或者隐藏", trigger: "blur" }],
+  keepAlive: [{ required: true, message: "请选择保持状态", trigger: "blur" }]
 }
 
 // 上级权限
@@ -335,6 +351,7 @@ const resetEntity = () => {
     target: 2,
     menuType: 0,
     visible: 0,
+    keepAlive: 0,
     children: []
   }
 }

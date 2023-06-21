@@ -20,8 +20,8 @@ import { Plus } from "@element-plus/icons-vue"
 import type { UploadProps } from "element-plus"
 import { deleteFile } from "@/api/upload"
 import { getEnvBaseURL } from "@/utils"
-import { getAccessToken } from "@/utils/cache/cookies"
-import { getCurrentTenant } from "@/utils/cache/localStorage"
+import { getAccessToken } from "@/utils/cache/local-storage"
+import { getCurrentTenant } from "@/utils/cache/local-storage"
 
 const props = defineProps({
   src: {

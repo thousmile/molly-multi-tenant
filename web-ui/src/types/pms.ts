@@ -98,6 +98,10 @@ export interface ISysMenu extends IBaseEntity {
    */
   visible: number
   /**
+   * 保持状态（1.保持 0.不保持）
+   */
+  keepAlive: number
+  /**
    * 子菜单
    */
   children: ISysMenu[]
@@ -139,6 +143,8 @@ export interface IPermsMenusMeta {
   title: string
   /** 是否隐藏 */
   hidden: boolean
+  /** 保持状态 */
+  keepAlive: boolean
 }
 
 /** 系统用户 */

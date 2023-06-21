@@ -1,4 +1,4 @@
-import { ISimpleTenant } from "@/types/base"
+import { ISimpleTenant } from "@/api/types/base"
 
 // 设置 默认的租户
 export const defaultTenant: ISimpleTenant = {

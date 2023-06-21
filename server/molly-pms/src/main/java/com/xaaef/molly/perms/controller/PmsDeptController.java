@@ -66,34 +66,34 @@ public class PmsDeptController {
 
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult create(@RequestBody PmsDept entity) {
+    public JsonResult<Boolean> create(@RequestBody PmsDept entity) {
         try {
-            baseService.save(entity);
-            return JsonResult.success(entity);
+            var flag = baseService.save(entity);
+            return JsonResult.success(flag);
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 
 
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult update(@RequestBody PmsDept entity) {
+    public JsonResult<Boolean> update(@RequestBody PmsDept entity) {
         try {
             return JsonResult.success(baseService.updateById(entity));
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 
 
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
-    public JsonResult delete(@PathVariable("id") Long id) {
+    public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
         try {
             return JsonResult.success(baseService.removeById(id));
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 

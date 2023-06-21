@@ -65,36 +65,36 @@ public class SysTemplateController {
 
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult create(@RequestBody SysTemplate entity) {
+    public JsonResult<Boolean> create(@RequestBody SysTemplate entity) {
         try {
             var save = baseService.save(entity);
             return JsonResult.success(save);
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 
 
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<String> update(@RequestBody SysTemplate entity) {
+    public JsonResult<Boolean> update(@RequestBody SysTemplate entity) {
         try {
-            baseService.updateById(entity);
-            return JsonResult.success();
+            var flag = baseService.updateById(entity);
+            return JsonResult.success(flag);
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 
 
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
-    public JsonResult<String> delete(@PathVariable("id") Integer id) {
+    public JsonResult<Boolean> delete(@PathVariable("id") Integer id) {
         try {
-            baseService.removeById(id);
-            return JsonResult.success();
+            var flag = baseService.removeById(id);
+            return JsonResult.success(flag);
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 
@@ -108,12 +108,12 @@ public class SysTemplateController {
 
     @Operation(summary = "修改菜单列表", description = "修改权限模板的菜单列表")
     @PostMapping("/menus")
-    public JsonResult<String> updateMenusId(@RequestBody @Validated BindingMenusVO params, BindingResult br) {
+    public JsonResult<Boolean> updateMenusId(@RequestBody @Validated BindingMenusVO params, BindingResult br) {
         try {
-            baseService.updateMenus(params.getId(), params.getMenus());
-            return JsonResult.success();
+            var flag = baseService.updateMenus(params.getId(), params.getMenus());
+            return JsonResult.success(flag);
         } catch (Exception e) {
-            return JsonResult.fail(e.getMessage());
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }
     }
 

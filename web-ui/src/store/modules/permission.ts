@@ -18,7 +18,8 @@ function flatTreeRoutes(arr: IPermsMenus[]): RouteRecordRaw[] {
         meta: {
           title: source.meta.title,
           svgIcon: source.meta.icon,
-          hidden: source.meta.hidden
+          hidden: source.meta.hidden,
+          keepAlive: source.meta.keepAlive
         }
       }
       if (source.component === "Layout") {

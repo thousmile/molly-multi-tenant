@@ -153,7 +153,7 @@ import { ref, onMounted, computed } from "vue"
 import { Plus, Edit, Delete, Sort } from "@element-plus/icons-vue"
 
 import { ElMessage, ElMessageBox, FormInstance, FormRules, TableInstance } from "element-plus"
-import { testPhone } from "@/utils/regular"
+import { testPhone } from "@/utils/validate"
 import { cloneDeep } from "lodash-es"
 import { timeAgo } from "@/utils"
 

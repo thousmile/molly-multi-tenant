@@ -37,16 +37,16 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <storage.version>0.7.0</storage.version>
-        <qiniu.version>7.13.0</qiniu.version>
-        <oshi.version>6.4.2</oshi.version>
+        <qiniu.version>7.13.1</qiniu.version>
+        <oshi.version>6.4.3</oshi.version>
 
         <swagger.version>2.2.8</swagger.version>
-        <hutool.version>5.8.18</hutool.version>
+        <hutool.version>5.8.19</hutool.version>
         <knife4j.version>4.1.0</knife4j.version>
         <liquibase.version>4.21.1</liquibase.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
 
-        <spring-boot.version>3.0.7</spring-boot.version>
+        <spring-boot.version>3.1.0</spring-boot.version>
     </properties>
 
 

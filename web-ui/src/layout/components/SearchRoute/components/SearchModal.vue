@@ -4,10 +4,11 @@ import SearchResult from "./SearchResult.vue"
 import { ref, watch, computed, nextTick, shallowRef, onMounted } from "vue"
 import { useDebounceFn, onKeyStroke } from "@vueuse/core"
 import { Search } from "@element-plus/icons-vue"
+import { useAppStoreHook } from "@/store/modules/app"
 import { usePermissionStoreHook } from "@/store/modules/permission"
-import { useAppStoreHook, DeviceType } from "@/store/modules/app"
 import { OptionsItem } from "."
-import { testHttpUrl } from "@/utils/regular"
+import { testUrl } from "@/utils/validate"
+import { DeviceEnum } from "@/constants/app-key"
 
 interface Props {
   /** 弹窗显隐 */
@@ -104,7 +105,7 @@ const handleDown = () => {
 const handleEnter = () => {
   const { length } = resultOptions.value
   if (length === 0 || activePath.value === "") return
-  if (testHttpUrl(activePath.value)) {
+  if (testUrl(activePath.value)) {
     window.open(activePath.value)
   } else {
     router.push(activePath.value)
@@ -162,7 +163,7 @@ onMounted(() => {
   <el-dialog
     top="5vh"
     :title="title"
-    :width="device === DeviceType.Mobile ? '80vw' : '50vw'"
+    :width="device === DeviceEnum.Mobile ? '80vw' : '50vw'"
     v-model="show"
     :before-close="handleClose"
   >

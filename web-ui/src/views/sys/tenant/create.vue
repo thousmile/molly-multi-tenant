@@ -192,7 +192,7 @@ import { Refresh, ArrowLeft, ArrowRight, Check, Close } from "@element-plus/icon
 import ImageUpload from "@/components/ImageUpload/index.vue"
 import SearchChinaArea from "@/components/SearchChinaArea/index.vue"
 import { v4 as uuidv4 } from "uuid"
-import { testEmail, testTelphone } from "@/utils/regular"
+import { testEmail, testTelphone } from "@/utils/validate"
 
 // 随机生成租户ID
 const randomTenantId = () => {

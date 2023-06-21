@@ -1,5 +1,4 @@
-import { type App } from "vue"
-import { type Directive } from "vue"
+import { Directive, type App } from "vue"
 import { useUserStoreHook } from "@/store/modules/user"
 
 /** 挂载自定义指令 */
@@ -20,7 +19,7 @@ const permission: Directive = {
         el.style.display = "none"
       }
     } else {
-      throw new Error(`need roles! Like v-has="['admin','editor']"`)
+      throw new Error(`need permissions! Like v-has="['update:data','add:data']"`)
     }
   }
 }

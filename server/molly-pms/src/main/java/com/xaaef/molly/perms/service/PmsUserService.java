@@ -58,7 +58,7 @@ public interface PmsUserService extends BaseService<PmsUser> {
      * @return int
      * @date 2022/12/9 15:33
      */
-    int updateUserRoles(Long userId, Set<Long> roleIds);
+    Boolean updateUserRoles(Long userId, Set<Long> roleIds);
 
 
     /**

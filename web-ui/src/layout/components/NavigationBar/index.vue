@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from "vue"
+import { storeToRefs } from "pinia"
 import { useAppStore } from "@/store/modules/app"
 import { useSettingsStore } from "@/store/modules/settings"
 import { useUserStore } from "@/store/modules/user"
@@ -16,48 +16,20 @@ import { ElMessageBox } from "element-plus"
 import { jumpToLogin } from "@/router"
 
 const appStore = useAppStore()
-const settingsStore = useSettingsStore()
 const userStore = useUserStore()
+const settingsStore = useSettingsStore()
 const userInfo = userStore.userInfo
 
-const sidebar = computed(() => {
-  return appStore.sidebar
-})
+const { sidebar } = storeToRefs(appStore)
+const { showNotify, showThemeSwitch, showScreenfull, showSearchTenant, showSearchRoute, showControlSize } =
+  storeToRefs(settingsStore)
 
-// 显示通知
-const showNotify = computed(() => {
-  return settingsStore.showNotify
-})
-
-// 显示主题切换
-const showThemeSwitch = computed(() => {
-  return settingsStore.showThemeSwitch
-})
-
-// 显示 全屏切换
-const showScreenfull = computed(() => {
-  return settingsStore.showScreenfull
-})
-
-// 显示 搜索租户
-const showSearchTenant = computed(() => {
-  return settingsStore.showSearchTenant
-})
-
-// 显示 搜索路由
-const showSearchRoute = computed(() => {
-  return settingsStore.showSearchRoute
-})
-
-// 显示 控件尺寸
-const showControlSize = computed(() => {
-  return settingsStore.showControlSize
-})
-
+/** 切换侧边栏 */
 const toggleSidebar = () => {
   appStore.toggleSidebar(false)
 }
 
+/** 登出 */
 const logout = () => {
   ElMessageBox.confirm("确定要退出系统?", "警告", {
     confirmButtonText: "确定",
@@ -107,8 +79,6 @@ const logout = () => {
   height: var(--v3-navigationbar-height);
   overflow: hidden;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-
   .hamburger {
     display: flex;
     align-items: center;
@@ -116,18 +86,10 @@ const logout = () => {
     float: left;
     padding: 0 15px;
     cursor: pointer;
-    line-height: 46px;
-    transition: background 0.3s;
-    -webkit-tap-highlight-color: transparent;
-
-    &:hover {
-      background: rgba(0, 0, 0, 0.025);
-    }
   }
-
   .breadcrumb {
     float: left;
-    // 参考 Bootstrap 的响应式设计 WIDTH = 576
+    // 参考 Bootstrap 的响应式设计将宽度设置为 576
     @media screen and (max-width: 576px) {
       display: none;
     }

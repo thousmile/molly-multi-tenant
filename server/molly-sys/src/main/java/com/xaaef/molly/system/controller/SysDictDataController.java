@@ -76,16 +76,16 @@ public class SysDictDataController {
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody SysDictData entity) {
-        boolean b = baseService.updateById(entity);
-        return JsonResult.success(b);
+        var flag = baseService.updateById(entity);
+        return JsonResult.success(flag);
     }
 
 
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
-        boolean b = baseService.removeById(id);
-        return JsonResult.success(b);
+        var flag = baseService.removeById(id);
+        return JsonResult.success(flag);
     }
 
 }
