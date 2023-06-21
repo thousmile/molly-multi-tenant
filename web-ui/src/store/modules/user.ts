@@ -7,6 +7,7 @@ import { loginApi, getUserInfoApi, getUserPermsApi, logoutApi } from "@/api/logi
 import { type IPermsButton, ILoginData, IPermsMenus, ILoginUserInfo } from "@/types/pms"
 import { ElMessage } from "element-plus"
 import { getAccessToken, removeAccessToken, setAccessToken } from "@/utils/cache/local-storage"
+import { useNoticeStoreHook } from "./notice"
 
 export const useUserStore = defineStore("user", () => {
   // token信息
@@ -105,6 +106,8 @@ export const useUserStore = defineStore("user", () => {
     userInfo.value = undefined
     accessToken.value = ""
     resetRouter()
+    // 关闭 WebSocket
+    useNoticeStoreHook().stopWebSocket()
     buttons.value = []
     menus.value = []
     _resetTagsView()

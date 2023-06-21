@@ -80,6 +80,11 @@ export const useNoticeStore = defineStore("notice", () => {
     })
   }
 
+  const stopWebSocket = () => {
+    // 停止
+    stompClient.value!.deactivate()
+  }
+
   const getStompClientActive = (): boolean => {
     return stompClientActive.value
   }
@@ -100,6 +105,7 @@ export const useNoticeStore = defineStore("notice", () => {
     getBroadcast,
     getPushNotices,
     startWebSocket,
+    stopWebSocket,
     getStompClientActive
   }
 })

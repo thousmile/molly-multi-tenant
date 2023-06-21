@@ -5,6 +5,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.system.entity.SysMenu;
@@ -40,6 +41,27 @@ import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.isMasterUser;
 @AllArgsConstructor
 public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu>
         implements SysMenuService {
+
+
+    @Override
+    public boolean save(SysMenu entity) {
+        if (this.exist(SysMenu::getPerms, entity.getPerms())) {
+            throw new RuntimeException(StrUtil.format("权限标识: {} 已经存在了", entity.getPerms()));
+        }
+        return super.save(entity);
+    }
+
+
+    @Override
+    public boolean updateById(SysMenu entity) {
+        var wrapper = new LambdaQueryWrapper<SysMenu>()
+                .eq(SysMenu::getPerms, entity.getPerms())
+                .ne(SysMenu::getMenuId, entity.getMenuId());
+        if (this.exist(wrapper)) {
+            throw new RuntimeException(StrUtil.format("权限标识: {} 已经存在了", entity.getPerms()));
+        }
+        return super.updateById(entity);
+    }
 
 
     @Transactional(rollbackFor = Exception.class)

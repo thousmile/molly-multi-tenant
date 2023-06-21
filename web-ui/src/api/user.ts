@@ -32,6 +32,11 @@ export const updateUserApi = (data: any) => {
   return httpPut<any, IJsonResult<boolean>>("/pms/user", data)
 }
 
+/** 修改当前登录的用户信息 */
+export const updateUserInfoApi = (data: any) => {
+  return httpPut<any, IJsonResult<boolean>>("/pms/user/info", data)
+}
+
 /** 删除 */
 export const deleteUserApi = (id: number) => {
   return httpDelete<number, IJsonResult<boolean>>(`/pms/user/${id}`)

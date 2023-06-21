@@ -129,7 +129,7 @@ import { useUserStore } from "@/store/modules/user"
 import UserAvatar from "@/components/UserAvatar/index.vue"
 import { ref, reactive } from "vue"
 import { type FormInstance, FormRules, ElMessageBox } from "element-plus"
-import { updatePasswordApi, updateUserApi } from "@/api/user"
+import { updatePasswordApi, updateUserInfoApi } from "@/api/user"
 import { testEmail, testPassword, testPhone } from "@/utils/validate"
 import { useRouter } from "vue-router"
 import { ILoginUserInfo } from "@/types/pms"
@@ -194,13 +194,14 @@ const onUpdateUserInfo = () => {
           loading.value = true
           const params = {
             userId: userInfoForm.userId,
+            username: userInfoForm.username,
             mobile: userInfoForm.mobile,
             avatar: userInfoForm.avatar,
             nickname: userInfoForm.nickname,
             gender: userInfoForm.gender,
             email: userInfoForm.email
           }
-          updateUserApi(params)
+          updateUserInfoApi(params)
             .then(() => userStore.getUserInfo())
             .catch((err) => {
               console.log("err", err)

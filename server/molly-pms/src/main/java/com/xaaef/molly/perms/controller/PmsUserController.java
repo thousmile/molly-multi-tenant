@@ -2,6 +2,7 @@ package com.xaaef.molly.perms.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
+import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.perms.entity.PmsUser;
@@ -21,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
+
+import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.getTenantId;
+import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 
 /**
@@ -82,6 +86,19 @@ public class PmsUserController {
     public JsonResult<Boolean> update(@RequestBody PmsUser entity) {
         try {
             var flag = baseService.updateById(entity);
+            return JsonResult.success(flag);
+        } catch (Exception e) {
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
+        }
+    }
+
+
+    @Operation(summary = "修改", description = "修改必须要id")
+    @PutMapping("/info")
+    public JsonResult<Boolean> updateInfo(@RequestBody PmsUser entity) {
+        try {
+            var flag = delegate(JwtSecurityUtils.getTenantId(),
+                    () -> baseService.updateById(entity));
             return JsonResult.success(flag);
         } catch (Exception e) {
             return JsonResult.fail(e.getMessage(), Boolean.FALSE);

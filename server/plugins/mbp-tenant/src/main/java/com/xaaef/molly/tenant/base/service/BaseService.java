@@ -1,6 +1,7 @@
 package com.xaaef.molly.tenant.base.service;
 
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -116,6 +117,15 @@ public interface BaseService<T extends BaseEntity> extends IService<T> {
      * @date 2021/8/25 9:41
      */
     boolean exist(SFunction<T, ?> column, Object value);
+
+
+    /**
+     * 根据 字段 判断，是否存在
+     *
+     * @author Wang Chen Chen
+     * @date 2021/8/25 9:41
+     */
+    boolean exist(Wrapper<T> wrapper);
 
 
     /**

@@ -181,14 +181,14 @@ onMounted(() => {
         @contextmenu.prevent="openMenu(tag, $event)"
       >
         {{ tag.meta?.title }}
-        <el-icon v-if="!isAffix(tag)" :size="12" @click.prevent.stop="closeSelectedTag(tag)">
+        <el-icon v-if="!isAffix(tag)" :size="14" @click.prevent.stop="closeSelectedTag(tag)">
           <Close />
         </el-icon>
       </router-link>
     </ScrollPane>
     <ul v-show="visible" class="contextmenu" :style="{ left: left + 'px', top: top + 'px' }">
-      <li @click="refreshSelectedTag(selectedTag)">刷新</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭</li>
+      <li @click="refreshSelectedTag(selectedTag)">刷新此页</li>
+      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭此页</li>
       <li @click="closeOthersTags">关闭其它</li>
       <li @click="closeAllTags(selectedTag)">关闭所有</li>
     </ul>

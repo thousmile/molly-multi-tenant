@@ -79,6 +79,12 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> exte
 
 
     @Override
+    public boolean exist(Wrapper<T> wrapper) {
+        return super.count(wrapper) > 0;
+    }
+
+
+    @Override
     public long count(SFunction<T, ?> column, Object value) {
         var wrapper = new LambdaQueryWrapper<T>().eq(column, value);
         return super.count(wrapper);

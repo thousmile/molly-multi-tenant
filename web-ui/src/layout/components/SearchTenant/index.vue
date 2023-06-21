@@ -83,7 +83,7 @@ const title = ref("切换租户")
 
 const dialogVisible = ref(false)
 
-const value = ref(tenantStore.getCurrentTenant().name)
+const value = computed(() => tenantStore.getCurrentTenant().name)
 
 // 获取 input 焦点
 const inputFocus = () => {
@@ -99,7 +99,6 @@ const handleSwitchClick = (t: ISimpleTenant) => {
     name: t.name,
     linkman: t.linkman
   }
-  value.value = tenant.name
   tenantStore.setCurrentTenant(tenant)
   dialogVisible.value = false
 }

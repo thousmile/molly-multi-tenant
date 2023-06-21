@@ -33,8 +33,6 @@ router.beforeEach((to, _from, next) => {
           // 将'有访问权限的动态路由' 添加到 Router 中
           dynamicRoutes.forEach((route) => router.addRoute(route))
 
-          console.log("dynamicRoutes :>> ", dynamicRoutes)
-
           // hack方法 确保addRoute已完成 设置 replace: true, 因此导航将不会留下历史记录
           next({ path: to.path, query: to.query, replace: true })
         } else {

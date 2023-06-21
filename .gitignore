@@ -1,6 +1,5 @@
 HELP.md
 target/
-server/molly-service/src/main/resources/application-dev.yml
 
 ### STS ###
 .apt_generated

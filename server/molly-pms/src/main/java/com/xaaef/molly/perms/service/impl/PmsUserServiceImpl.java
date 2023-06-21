@@ -29,7 +29,6 @@ import com.xaaef.molly.perms.service.PmsDeptService;
 import com.xaaef.molly.perms.service.PmsRoleService;
 import com.xaaef.molly.perms.service.PmsUserService;
 import com.xaaef.molly.perms.vo.*;
-import com.xaaef.molly.common.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -286,27 +285,33 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
                 }).collect(Collectors.toSet());
     }
 
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updatePassword(UpdatePasswordVO pwd) {
-        var sysUser = baseMapper.selectById(pwd.getUserId());
-        if (!StringUtils.equals(pwd.getNewPwd(), pwd.getConfirmPwd())) {
-            throw new RuntimeException("新密码与确认密码不一致，请重新输入！");
-        }
-        // 判断 老密码是否正确。
-        if (matchesPassword(pwd.getOldPwd(), sysUser.getPassword())) {
-            // 判断 新密码 和 老密码是否相同
-            if (matchesPassword(pwd.getNewPwd(), sysUser.getPassword())) {
-                throw new RuntimeException("新密码与旧密码相同，请重新输入！");
-            } else {
-                // 新密码 加密
-                var newPassword = encryptPassword(pwd.getNewPwd());
-                // 修改
-                var pmsUser = PmsUser.builder().userId(pwd.getUserId()).password(newPassword).build();
-                return super.updateById(pmsUser);
+        // 修改密码。要切换到当前登录用户所在的租户
+        // 否则，当平台用户在操作其他租户时，选择修改自己的用户名密码。就查不到自己的用户信息
+        return delegate(getTenantId(), () -> {
+            var sysUser = baseMapper.selectById(pwd.getUserId());
+            if (!StringUtils.equals(pwd.getNewPwd(), pwd.getConfirmPwd())) {
+                throw new RuntimeException("新密码与确认密码不一致，请重新输入！");
             }
-        }
-        throw new RuntimeException("旧密码错误，请重新输入！");
+            // 判断 旧的密码是否正确。
+            if (matchesPassword(pwd.getOldPwd(), sysUser.getPassword())) {
+                // 判断 新密码 和 老密码是否相同
+                if (matchesPassword(pwd.getNewPwd(), sysUser.getPassword())) {
+                    throw new RuntimeException("新密码与旧密码相同，请重新输入！");
+                } else {
+                    // 新密码 加密
+                    var newPassword = encryptPassword(pwd.getNewPwd());
+                    // 修改
+                    var pmsUser = PmsUser.builder().userId(pwd.getUserId()).password(newPassword).build();
+                    return super.updateById(pmsUser);
+                }
+            } else {
+                throw new RuntimeException("旧密码错误，请重新输入！");
+            }
+        });
     }
 
 

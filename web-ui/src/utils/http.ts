@@ -51,6 +51,7 @@ function createService() {
           return resetTenant(service, response)
         case 400446:
           // 此用户不包含此租户ID
+          ElMessage.error(`您没有操作 ${useTenantStoreHook().getCurrentTenant().name} 租户的权限`)
           useTenantStoreHook().setCurrentTenant(apiData.data as ISimpleTenant)
           return resetTenant(service, response)
         default:
@@ -136,7 +137,6 @@ function resetTenant(service: AxiosInstance, response: AxiosResponse) {
   const config = response.config
   const tenant = useTenantStoreHook().getCurrentTenant()
   config.headers["x-tenant-id"] = tenant.tenantId
-  console.log("reset tenant id to :>> ", tenant.tenantId)
   // 获取当前失败的请求，重新发起请求
   return service(config)
 }
