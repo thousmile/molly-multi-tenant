@@ -31,13 +31,13 @@ public class FileDetailService extends ServiceImpl<SysFileDetailMapper, SysFileD
 
 
     @Override
-    public boolean record(FileInfo info) {
+    public boolean save(FileInfo info) {
         var detail = BeanUtil.copyProperties(info, SysFileDetail.class, "attr");
         //这是手动获 取附加属性字典 并转成 json 字符串，方便存储在数据库中
         if (info.getAttr() != null) {
             detail.setAttr(JsonUtils.toJson(info.getAttr()));
         }
-        var b = this.save(detail);
+        var b = super.save(detail);
         if (b) {
             info.setId(detail.getId());
         }

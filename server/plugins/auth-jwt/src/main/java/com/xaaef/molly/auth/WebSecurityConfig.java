@@ -21,6 +21,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
@@ -99,11 +102,12 @@ public class WebSecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtAuthTokenFilter jwtAuthTokenFilter) throws Exception {
-        httpSecurity
+        return httpSecurity
                 // 关闭 csrf
-                .csrf().disable()
+                .csrf(CsrfConfigurer::disable)
                 // 允许跨域（也可以不允许，看具体需求）
-                .cors().and()
+                .cors(AbstractHttpConfigurer::disable)
+                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 // 不需要 Session
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 自定义 认证的异常处理
@@ -133,14 +137,7 @@ public class WebSecurityConfig {
                         .authenticated()
                 )
                 .addFilterBefore(jwtAuthTokenFilter, BasicAuthenticationFilter.class)
-                .headers()
-                .frameOptions()
-                .disable()
-                // 开始 xss 保护
-                .xssProtection()
-                .and()
-                .cacheControl();
-        return httpSecurity.build();
+                .build();
     }
 
 
