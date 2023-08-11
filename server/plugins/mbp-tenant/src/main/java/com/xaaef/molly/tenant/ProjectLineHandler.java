@@ -6,6 +6,7 @@ import com.xaaef.molly.common.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.expression.StringValue;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +37,7 @@ public class ProjectLineHandler implements TenantLineHandler {
     public Expression getTenantId() {
         var projectId = Optional.ofNullable(TenantUtils.getProjectId())
                 .orElse(multiTenantProperties.getDefaultProjectId());
-        return new StringValue(projectId);
+        return new LongValue(projectId);
     }
 
 

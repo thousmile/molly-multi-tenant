@@ -151,7 +151,13 @@ public enum OAuth2Error {
     /**
      * 此系统用户不包含此租户ID
      */
-    NO_HAVE_TENANT_PERMISSIONS(400446, "此用户不包含此租户ID");
+    NO_HAVE_TENANT_PERMISSIONS(400446, "此用户不包含此租户ID"),
+
+
+    /**
+     * 此系统用户不包含 此项目ID
+     */
+    NO_HAVE_PROJECT_PERMISSIONS(400447, "此用户不包含此项目ID");
 
 
     OAuth2Error(Integer status, String error) {

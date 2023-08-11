@@ -152,6 +152,12 @@ public class JwtLoginUser implements UserDetails, Principal {
     private Set<String> haveTenantIds;
 
     /**
+     * 拥有的项目ID
+     */
+    @Schema(description = "拥有的项目ID")
+    private Set<Long> haveProjectIds;
+
+    /**
      * 权限列表
      */
     @Schema(description = "权限列表")

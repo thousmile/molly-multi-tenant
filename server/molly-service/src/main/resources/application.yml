@@ -31,7 +31,10 @@ multi:
     other-change-log: classpath:db/changelog-other.xml
     prefix: molly_
     default-tenant-id: master
+    default-project-id: 10001
     db-name: ${multi.tenant.prefix}${multi.tenant.default-tenant-id}
+    enable: true
+    enable-project: true
 
 
 # mybatis-plus 自动配置

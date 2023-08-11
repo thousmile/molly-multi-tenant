@@ -1,7 +1,8 @@
 package com.xaaef.molly.common.util;
 
 
-import org.apache.commons.lang3.StringUtils;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.core.NamedInheritableThreadLocal;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -31,14 +32,14 @@ public class TenantUtils {
     private final static ThreadLocal<String> TENANT_ID_THREAD_LOCAL = new NamedInheritableThreadLocal<>("TENANT_ID_THREAD_LOCAL");
 
 
-    private final static ThreadLocal<String> PROJECT_ID_THREAD_LOCAL = new NamedInheritableThreadLocal<>("PROJECT_ID_THREAD_LOCAL");
+    private final static ThreadLocal<Long> PROJECT_ID_THREAD_LOCAL = new NamedInheritableThreadLocal<>("PROJECT_ID_THREAD_LOCAL");
 
 
     /**
      * 获取 租户ID
      */
     public static String getTenantId() {
-        if (StringUtils.isNotBlank(TENANT_ID_THREAD_LOCAL.get())) {
+        if (StrUtil.isNotBlank(TENANT_ID_THREAD_LOCAL.get())) {
             return TENANT_ID_THREAD_LOCAL.get();
         }
         var attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -47,7 +48,7 @@ public class TenantUtils {
         }
         var request = attributes.getRequest();
         var header = request.getHeader(X_TENANT_ID);
-        if (StringUtils.isNotBlank(header)) {
+        if (StrUtil.isNotBlank(header)) {
             return header;
         }
         return request.getParameter(X_TENANT_ID);
@@ -58,7 +59,7 @@ public class TenantUtils {
      * 设置 租户ID
      */
     public static void setTenantId(String tenantId) {
-        if (StringUtils.isNotBlank(tenantId)) {
+        if (StrUtil.isNotBlank(tenantId)) {
             TENANT_ID_THREAD_LOCAL.set(tenantId);
         } else {
             TENANT_ID_THREAD_LOCAL.remove();
@@ -69,8 +70,8 @@ public class TenantUtils {
     /**
      * 获取 项目ID
      */
-    public static String getProjectId() {
-        if (StringUtils.isNotBlank(PROJECT_ID_THREAD_LOCAL.get())) {
+    public static Long getProjectId() {
+        if (PROJECT_ID_THREAD_LOCAL.get() != null) {
             return PROJECT_ID_THREAD_LOCAL.get();
         }
         var attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -78,20 +79,25 @@ public class TenantUtils {
             return null;
         }
         var request = attributes.getRequest();
-        var header = request.getHeader(X_PROJECT_ID);
-        if (StringUtils.isNotBlank(header)) {
-            return header;
+        // 先从请求头中 获取 项目id
+        var projectIdStr = request.getHeader(X_PROJECT_ID);
+        if (StrUtil.isEmpty(projectIdStr) || !NumberUtil.isNumber(projectIdStr)) {
+            // 从请求参数中 获取 项目id
+            projectIdStr = request.getParameter(X_PROJECT_ID);
         }
-        return request.getParameter(X_PROJECT_ID);
+        if (StrUtil.isNotBlank(projectIdStr) && NumberUtil.isNumber(projectIdStr)) {
+            return NumberUtil.parseLong(projectIdStr);
+        }
+        return null;
     }
 
 
     /**
      * 设置 项目ID
      */
-    public static void setProjectId(String tenantId) {
-        if (StringUtils.isNotBlank(tenantId)) {
-            PROJECT_ID_THREAD_LOCAL.set(tenantId);
+    public static void setProjectId(Long projectId) {
+        if (projectId != null) {
+            PROJECT_ID_THREAD_LOCAL.set(projectId);
         } else {
             PROJECT_ID_THREAD_LOCAL.remove();
         }

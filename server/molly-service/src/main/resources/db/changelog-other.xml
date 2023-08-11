@@ -9,5 +9,6 @@
 
     <include file="db/changelog/lms.xml"/>
 
+    <include file="db/changelog/cms.xml"/>
 
 </databaseChangeLog>

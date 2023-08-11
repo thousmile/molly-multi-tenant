@@ -1,15 +1,15 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://molly.mysql.com:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://192.168.0.188:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
-    password: root
+    password: mht123456
     type: com.zaxxer.hikari.HikariDataSource
 
 
   data:
     redis:
-      host: molly.redis.com
+      host: 192.168.0.188
       database: 6
       port: 6379
       timeout: 5000

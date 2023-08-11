@@ -11,6 +11,7 @@
 
     <include file="db/changelog/pms.xml"/>
 
+    <include file="db/changelog/cms.xml"/>
 
     <!-- 初始化 租户，权限模板 -->
     <changeSet id="1671072286-1" author="WangChenChen (generated)">
@@ -21,6 +22,12 @@
     <!-- 初始化 用户，角色，部门， -->
     <changeSet id="1671072305-1" author="WangChenChen (generated)">
         <sqlFile path="db/changelog/sql/pms_init.sql"/>
+    </changeSet>
+
+
+    <!-- [ 项目 ] 初始化一个默认的项目 -->
+    <changeSet id="1691740133-1" author="WangChenChen (generated)">
+        <sqlFile path="db/changelog/sql/cms_init.sql"/>
     </changeSet>
 
 

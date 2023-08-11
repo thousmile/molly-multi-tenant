@@ -44,7 +44,7 @@ public class MultiTenantProperties {
     /**
      * 默认 项目ID
      */
-    private String defaultProjectId = "master";
+    private Long defaultProjectId = 10001L;
 
     /**
      * 默认 数据库名称

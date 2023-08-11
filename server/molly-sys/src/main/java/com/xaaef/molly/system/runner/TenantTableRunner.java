@@ -14,6 +14,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 /**
  * TODO 初始化 租户的表结构
@@ -38,23 +40,26 @@ public class TenantTableRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         var props = databaseManager.getMultiTenantProperties();
-        var defaultTenantId = props.getDefaultTenantId();
-        var count = tenantMapper.selectCount(null);
-        var pageSize = 100;
-        var pageCount = (count / pageSize) + 1;
-        for (int i = 1; i <= pageCount; i++) {
-            Page<SysTenant> pageRequest = Page.of(i, pageSize);
-            var wrapper = new LambdaQueryWrapper<SysTenant>()
-                    .select(SysTenant::getTenantId);
-            tenantMapper.selectPage(pageRequest, wrapper)
-                    .getRecords()
-                    .stream()
-                    .map(SysTenant::getTenantId)
-                    .filter(tenantId -> !StringUtils.equals(tenantId, defaultTenantId))
-                    .forEach(tenantId -> {
-                        tenantManager.addTenantId(tenantId);
-                        databaseManager.updateTable(tenantId);
-                    });
+        if (props.getEnable()) {
+            log.info("Execute TenantTableRunner run() ...");
+            var defaultTenantId = props.getDefaultTenantId();
+            var count = tenantMapper.selectCount(null);
+            var pageSize = 100;
+            var pageCount = (count / pageSize) + 1;
+            for (int i = 1; i <= pageCount; i++) {
+                Page<SysTenant> pageRequest = Page.of(i, pageSize);
+                var wrapper = new LambdaQueryWrapper<SysTenant>()
+                        .select(List.of(SysTenant::getTenantId));
+                tenantMapper.selectPage(pageRequest, wrapper)
+                        .getRecords()
+                        .stream()
+                        .map(SysTenant::getTenantId)
+                        .filter(tenantId -> !StringUtils.equals(tenantId, defaultTenantId))
+                        .forEach(tenantId -> {
+                            tenantManager.addTenantId(tenantId);
+                            databaseManager.updateTable(tenantId);
+                        });
+            }
         }
     }
 

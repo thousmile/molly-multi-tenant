@@ -11,39 +11,40 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>molly-service</artifactId>
-    <name>molly-service</name>
+    <artifactId>molly-cms</artifactId>
+    <name>molly-cms</name>
 
     <dependencies>
 
+
         <dependency>
             <groupId>com.xaaef.molly</groupId>
-            <artifactId>molly-sys</artifactId>
+            <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.xaaef.molly</groupId>
-            <artifactId>molly-pms</artifactId>
+            <artifactId>redis-config</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.xaaef.molly</groupId>
-            <artifactId>molly-cms</artifactId>
+            <artifactId>internal-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.xaaef.molly</groupId>
-            <artifactId>molly-monitor</artifactId>
+            <artifactId>mbp-tenant</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <scope>runtime</scope>
+            <groupId>com.xaaef.molly</groupId>
+            <artifactId>web-config</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
     </dependencies>
@@ -58,27 +59,6 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
-                <executions>
-                    <execution>
-                        <id>repackage</id>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

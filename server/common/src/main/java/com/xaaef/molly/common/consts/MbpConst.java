@@ -1,10 +1,10 @@
 package com.xaaef.molly.common.consts;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
- * 全局配置文件 key
+ * mybatis-plus 常量配置
  * </p>
  *
  * @author Wang Chen Chen
@@ -44,25 +44,44 @@ public class MbpConst {
 
     /**
      * 不需要进行 拦截租户 的表名称
+     * 用法:
+     *
+     * @see com.xaaef.molly.tenant.schema.SchemaInterceptor.ignoreTable()
      */
-    public final static List<String> TENANT_IGNORE_TABLES = List.of(
-            "sys_tenant",                   // 租户
-            "sys_tenant_template",          // 租户关联模板
-            "sys_template",                 // 模板
-            "sys_template_menu",            // 模板关联菜单
-            "sys_menu",                     // 菜单
-            "sys_config",                   // 全局配置
-            "sys_dict_data",                // 数据字典数据
-            "sys_dict_type",                // 数据字典类型
-            "sys_file_detail",              // 通用配置文件
-            "china_area"                    // 中国行政区域表
+    public final static Set<String> TENANT_IGNORE_TABLES = new HashSet<>(
+            Set.of(
+                    "sys_tenant",                   // 租户
+                    "sys_tenant_template",          // 租户关联模板
+                    "sys_template",                 // 模板
+                    "sys_template_menu",            // 模板关联菜单
+                    "sys_menu",                     // 菜单
+                    "sys_config",                   // 全局配置
+                    "sys_dict_data",                // 数据字典数据
+                    "sys_dict_type",                // 数据字典类型
+                    "sys_file_detail",              // 通用配置文件
+                    "china_area"                    // 中国行政区域表
+            )
     );
 
 
     /**
-     * 不需要进行 拦截项目ID 的表名称
+     * 不需要进行拦截 project_id 的表名称
+     * <p>
+     * 在 项目初始化的时候，会自动从数据中读取，不包含 project_id 字段的表名称
+     * <p>
+     * 必须添加 COLUMNS 否则
+     * <p>
+     *
+     * @see com.xaaef.molly.corems.runner.ProjectTableRunner
+     * <p>
      */
-    public final static List<String> PROJECT_IGNORE_TABLES = List.of();
+    public final static Set<String> PROJECT_IGNORE_TABLES = new HashSet<>(
+            Set.of(
+                    "COLUMNS",
+                    "cms_hello",
+                    "cms_test1"
+            )
+    );
 
 
 }

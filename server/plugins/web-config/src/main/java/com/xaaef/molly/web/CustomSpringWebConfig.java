@@ -3,7 +3,10 @@ package com.xaaef.molly.web;
 import cn.hutool.core.net.Ipv4Util;
 import com.xaaef.molly.common.consts.JwtConst;
 import com.xaaef.molly.common.util.JsonUtils;
+import com.xaaef.molly.tenant.ProjectIdInterceptor;
 import com.xaaef.molly.tenant.TenantIdInterceptor;
+import com.xaaef.molly.tenant.props.MultiTenantProperties;
+import com.xaaef.molly.tenant.service.MultiTenantManager;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +60,10 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
 
     private final TenantIdInterceptor tenantIdInterceptor;
 
+    private final ProjectIdInterceptor projectIdInterceptor;
+
+    private final MultiTenantProperties multiTenantProperties;
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -64,9 +71,23 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
         var whiteList = Arrays.stream(JwtConst.WHITE_LIST)
                 .filter(s -> !JwtConst.LOGIN_URL.equals(s))
                 .collect(Collectors.toList());
-        registry.addInterceptor(tenantIdInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns(whiteList);
+
+        // 启用 租户ID 拦截器
+        if (multiTenantProperties.getEnable()) {
+            registry.addInterceptor(tenantIdInterceptor)
+                    .addPathPatterns("/**")
+                    .excludePathPatterns(whiteList);
+            log.info("Enable TenantIdInterceptor Success ...");
+        }
+
+        // 启用 项目ID 拦截器
+        if (multiTenantProperties.getEnableProject()) {
+            registry.addInterceptor(projectIdInterceptor)
+                    .addPathPatterns("/**")
+                    .excludePathPatterns(whiteList);
+            log.info("Enable ProjectIdInterceptor Success ...");
+        }
+
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 
