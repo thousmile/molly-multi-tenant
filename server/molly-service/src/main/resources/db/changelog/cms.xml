@@ -20,7 +20,7 @@
                 `lng`              decimal(10, 6) NOT NULL COMMENT '经度',
                 `lat`              decimal(10, 6) NOT NULL COMMENT '纬度',
                 `password`         varchar(255)   NOT NULL COMMENT '项目密码，做一些危险操作时，使用',
-                `status`           tinyint(1) NOT NULL COMMENT '状态 【0.禁用 1.正常 2.锁定 】',
+                `status`           tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 【0.禁用 1.正常 2.锁定 】',
                 `create_time`      datetime       NOT NULL COMMENT '创建时间',
                 `create_user`      bigint(20) NOT NULL COMMENT '创建人',
                 `last_update_time` datetime       NOT NULL COMMENT '最后一次修改时间',

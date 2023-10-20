@@ -19,7 +19,7 @@
                 `contact_number`   varchar(50)  NOT NULL COMMENT '联系电话',
                 `area_code`        bigint(20) NOT NULL COMMENT '行政区域',
                 `address`          varchar(255) NOT NULL COMMENT '联系地址',
-                `status`           tinyint(4) NOT NULL DEFAULT '1' COMMENT '租户状态 0.不可用 1.正常',
+                `status`           tinyint(4) NOT NULL DEFAULT '1' COMMENT '租户状态 0.禁用 1.正常',
                 `expired`          datetime     NOT NULL COMMENT '过期时间。默认是 10 年',
                 `create_time`      datetime     NOT NULL COMMENT '添加时间',
                 `create_user`      bigint(20) NOT NULL COMMENT '创建人',
@@ -210,6 +210,7 @@
                 `menu_type`        tinyint(1) NOT NULL DEFAULT '1' COMMENT '菜单类型（1.菜单 2.按钮）',
                 `visible`          tinyint(1) NOT NULL DEFAULT '1' COMMENT '菜单状态（1.显示 0.隐藏）',
                 `target`           tinyint(1) NOT NULL DEFAULT '2' COMMENT '0.租户用户   1. 系统用户   2.全部用户',
+                `keep_alive`       tinyint(1) NOT NULL DEFAULT '0' COMMENT '保持状态（1.保持 0.不保持）',
                 `create_time`      datetime     NOT NULL COMMENT '创建时间',
                 `create_user`      bigint(20) NOT NULL COMMENT '创建人',
                 `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
@@ -223,14 +224,6 @@
     <!-- 初始化 菜单权限表 -->
     <changeSet id="1670815177-2" author="WangChenChen (generated)">
         <sqlFile path="db/changelog/sql/sys_menu.sql"/>
-    </changeSet>
-
-
-    <!-- 菜单权限表添加字段 -->
-    <changeSet id="1670815177-3" author="WangChenChen (generated)">
-        <sql>
-            ALTER TABLE sys_menu ADD keep_alive tinyint(1) NOT NULL DEFAULT '0' COMMENT '保持状态（1.保持 0.不保持）';
-        </sql>
     </changeSet>
 
 
@@ -258,7 +251,7 @@
                 `attr`              text NULL COMMENT '附加属性',
                 `create_time`       datetime NULL DEFAULT NULL COMMENT '创建时间',
                 PRIMARY KEY (`id`) USING BTREE
-            ) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '[ 通用 ] 文件记录表' ROW_FORMAT = DYNAMIC;
+            ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '[ 通用 ] 文件记录表' ROW_FORMAT = DYNAMIC;
         </sql>
     </changeSet>
 
