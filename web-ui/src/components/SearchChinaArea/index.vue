@@ -1,5 +1,5 @@
 <template>
-  <el-cascader v-model="value" filterable :options="options" :props="cascaderProps" />
+  <el-cascader v-model="value" filterable :options="options" :props="cascaderProps" clearable />
 </template>
 
 <script setup lang="ts">

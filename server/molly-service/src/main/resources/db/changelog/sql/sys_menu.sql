@@ -63,5 +63,10 @@ INSERT INTO `sys_menu` VALUES (10042, '设备列表', 10041, 'device:list', 'dev
 INSERT INTO `sys_menu` VALUES (10043, '设备规划', 10041, 'device:deploy', 'device/deploy/index', 'device_deploy', '/device/deploy', 3, 0, 1, 2, 0, '2022-07-30 18:20:56', 19980817, '2022-07-30 18:20:56', 19980817);
 INSERT INTO `sys_menu` VALUES (10044, '项目管理', 0, 'project', 'Layout', 'project', '/project', 3, 0, 1, 2, 0, '2022-07-30 18:19:45', 19980817, '2022-07-30 18:19:45', 19980817);
 INSERT INTO `sys_menu` VALUES (10045, '项目列表', 10044, 'project:list', 'project/list/index', 'project_list', '/project/list', 5, 0, 1, 2, 0, '2022-07-30 18:20:24', 19980817, '2022-07-30 18:20:24', 19980817);
+INSERT INTO `sys_menu` VALUES (10046, '新增', 10045, 'cms_project:create', '#', '', '', 2, 1, 1, 2, 0, '2022-06-25 15:01:56', 19980817, '2022-06-25 15:01:56', 19980817);
+INSERT INTO `sys_menu` VALUES (10047, '视图', 10045, 'cms_project:view', '#', '', '', 1, 1, 1, 2, 0, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
+INSERT INTO `sys_menu` VALUES (10048, '修改', 10045, 'cms_project:update', '#', '', '', 3, 1, 1, 2, 0, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
+INSERT INTO `sys_menu` VALUES (10049, '删除', 10045, 'cms_project:delete', '#', '', '', 4, 1, 1, 2, 0, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
+INSERT INTO `sys_menu` VALUES (10050, '重置密码', 10045, 'cms_project:reset:password', '#', '', '', 5, 1, 1, 2, 0, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
 
 SET FOREIGN_KEY_CHECKS = 1;

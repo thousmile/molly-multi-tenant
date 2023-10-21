@@ -1,8 +1,10 @@
 package com.xaaef.molly.perms.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xaaef.molly.internal.dto.PmsDeptDTO;
 import com.xaaef.molly.tenant.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -43,40 +45,34 @@ public class CmsProject extends BaseEntity {
     private String projectName;
 
     /**
-     * 领导名称
+     * 联系人名称
      */
-    @Schema(description = "领导名称")
-    private String leader;
+    @Schema(description = "联系人名称")
+    private String linkman;
 
     /**
-     * 领导手机号
+     * 联系电话
      */
-    @Schema(description = "领导手机号")
-    private String leaderMobile;
+    @Schema(description = "联系电话")
+    private String contactNumber;
+
+    /**
+     * 行政地址
+     */
+    @Schema(description = "行政地址")
+    private Long areaCode;
+
+    /**
+     * 联系地址 如：左右云创谷1栋A座
+     */
+    @Schema(description = "联系地址")
+    private String address;
 
     /**
      * 排序
      */
     @Schema(description = "排序")
     private Long sort;
-
-    /**
-     * 所在地，如：广东省/深圳市/龙岗区-左右云创谷
-     */
-    @Schema(description = "所在地，如：广东省/深圳市/龙岗区-左右云创谷")
-    private String address;
-
-    /**
-     * 经度
-     */
-    @Schema(description = "经度")
-    private Double lng;
-
-    /**
-     * 纬度
-     */
-    @Schema(description = "纬度")
-    private Double lat;
 
     /**
      * 项目密码，做一些危险操作时，使用
@@ -89,5 +85,18 @@ public class CmsProject extends BaseEntity {
      */
     @Schema(description = "状态 【0.禁用 1.正常 2.锁定 】")
     private Byte status;
+
+    /**
+     * 所属部门
+     */
+    @Schema(description = "所属部门Id")
+    private Long deptId;
+
+    /**
+     * 所属部门
+     */
+    @Schema(description = "所属部门")
+    @TableField(exist = false)
+    private PmsDeptDTO dept;
 
 }

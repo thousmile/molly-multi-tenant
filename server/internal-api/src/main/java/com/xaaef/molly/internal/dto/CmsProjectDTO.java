@@ -37,40 +37,28 @@ public class CmsProjectDTO implements java.io.Serializable {
     private String projectName;
 
     /**
-     * 领导名称
+     * 联系人名称
      */
-    @Schema(description = "领导名称")
-    private String leader;
+    @Schema(description = "联系人名称")
+    private String linkman;
 
     /**
-     * 领导手机号
+     * 联系电话
      */
-    @Schema(description = "领导手机号")
-    private String leaderMobile;
+    @Schema(description = "联系电话")
+    private String contactNumber;
+
+    /**
+     * 联系地址
+     */
+    @Schema(description = "联系地址")
+    private String address;
 
     /**
      * 排序
      */
     @Schema(description = "排序")
     private Long sort;
-
-    /**
-     * 所在地，如：广东省/深圳市/龙岗区-左右云创谷
-     */
-    @Schema(description = "所在地，如：广东省/深圳市/龙岗区-左右云创谷")
-    private String address;
-
-    /**
-     * 经度
-     */
-    @Schema(description = "经度")
-    private Double lng;
-
-    /**
-     * 纬度
-     */
-    @Schema(description = "纬度")
-    private Double lat;
 
     /**
      * 项目密码，做一些危险操作时，使用

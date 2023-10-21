@@ -69,11 +69,11 @@ watchEffect(() => {
 @import "@/styles/mixins.scss";
 
 .setting-container {
-  padding: 20px;
+  padding: 0px 20px;
   .setting-item {
     font-size: 14px;
     color: var(--el-text-color-regular);
-    padding: 5px 0;
+    padding: 3px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;

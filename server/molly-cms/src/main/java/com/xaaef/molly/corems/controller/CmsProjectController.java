@@ -5,11 +5,14 @@ import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchParentPO;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.corems.service.CmsProjectService;
+import com.xaaef.molly.corems.vo.ResetPasswordVO;
 import com.xaaef.molly.perms.entity.CmsProject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +47,8 @@ public class CmsProjectController {
     @Operation(summary = "分页", description = "分页 查询所有")
     @GetMapping("/query")
     public JsonResult<Pagination<CmsProject>> pageQuery(SearchParentPO params) {
-        IPage<CmsProject> page = baseService.pageKeywords(params);
+        IPage<CmsProject> page = baseService.pageKeywords(params,
+                List.of(CmsProject::getProjectName));
         return JsonResult.success(page.getTotal(), page.getRecords());
     }
 
@@ -89,5 +93,18 @@ public class CmsProjectController {
         }
     }
 
+
+    @Operation(summary = "重置项目密码", description = "重置项目密码")
+    @PostMapping("/reset/password")
+    public JsonResult<Boolean> resetPassword(@RequestBody @Validated ResetPasswordVO data,
+                                             BindingResult br) {
+        try {
+            return JsonResult.success(
+                    baseService.resetPassword(data)
+            );
+        } catch (RuntimeException e) {
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
+        }
+    }
 
 }

@@ -1,18 +1,16 @@
 <template>
-  <div class="avatar-wrapper">
-    <el-upload
-      class="avatar-uploader"
-      :action="getAction"
-      :headers="myHeaders"
-      :show-file-list="false"
-      :on-success="handleAvatarSuccess"
-      :before-upload="beforeAvatarUpload"
-      accept=".jpg,.jpeg,.png,.gif"
-    >
-      <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-      <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-    </el-upload>
-  </div>
+  <el-upload
+    class="avatar-uploader"
+    :action="getAction"
+    :headers="myHeaders"
+    :show-file-list="false"
+    :on-success="handleAvatarSuccess"
+    :before-upload="beforeAvatarUpload"
+    accept=".jpg,.jpeg,.png,.gif"
+  >
+    <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+  </el-upload>
 </template>
 
 <script setup lang="ts" name="UserAvatar">
@@ -88,11 +86,6 @@ const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
 
 <style lang="scss" scoped>
 $size: 100px;
-
-.avatar-wrapper {
-  border: 2px solid #8c939d;
-  border-radius: 3px;
-}
 
 .avatar-uploader .el-upload {
   cursor: pointer;

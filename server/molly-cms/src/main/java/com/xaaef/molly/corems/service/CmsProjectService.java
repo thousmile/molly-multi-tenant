@@ -1,5 +1,6 @@
 package com.xaaef.molly.corems.service;
 
+import com.xaaef.molly.corems.vo.ResetPasswordVO;
 import com.xaaef.molly.perms.entity.CmsProject;
 import com.xaaef.molly.tenant.base.service.BaseService;
 
@@ -17,6 +18,15 @@ import java.util.Set;
 
 public interface CmsProjectService extends BaseService<CmsProject> {
 
+
+    /**
+     * 重置密码
+     *
+     * @param pwd
+     * @return int
+     * @date 2022/12/9 15:33
+     */
+    boolean resetPassword(ResetPasswordVO pwd);
 
 
 }

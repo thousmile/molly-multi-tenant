@@ -149,7 +149,13 @@
             </el-col>
             <el-col :span="12">
               <el-form-item prop="password" label="密码" v-if="saveFlag">
-                <el-input v-model.trim="entityForm.password" placeholder="密码" type="password" tabindex="2" />
+                <el-input
+                  v-model.trim="entityForm.password"
+                  placeholder="密码"
+                  type="password"
+                  tabindex="2"
+                  show-password
+                />
               </el-form-item>
             </el-col>
           </el-row>
