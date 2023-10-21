@@ -33,8 +33,11 @@ export interface ILoginUserInfo {
 
 /** 用户登录的角色 */
 export interface IUserRole {
+  /* 角色ID */
   roleId: number
+  /* 角色名称 */
   roleName: string
+  /* 角色描述 */
   description: string
 }
 
@@ -46,6 +49,7 @@ export interface IOAuth2Token {
   token_type: string
   /** 用于调用刷新`accessToken`的接口时所需的`token` */
   refresh_token: string
+  /* 授权返回 */
   scope: string
   /** `accessToken`的过期时间  秒 */
   expires_in: number
@@ -53,57 +57,31 @@ export interface IOAuth2Token {
 
 // 系统菜单
 export interface ISysMenu extends IBaseEntity {
-  /**
-   * 菜单 ID
-   */
+  /*菜单 ID*/
   menuId: number
-  /**
-   * 上级菜单
-   */
+  /*上级菜单*/
   parentId: number
-  /**
-   * 菜单 名称
-   */
+  /*菜单 名称*/
   menuName: string
-  /**
-   * 权限标识
-   */
+  /*权限标识*/
   perms: string
-  /**
-   * 组件
-   */
+  /*组件*/
   component: string
-  /**
-   * 菜单图标
-   */
+  /*菜单图标*/
   icon: string
-  /**
-   * 排序
-   */
+  /*排序*/
   sort: number
-  /**
-   * 路由地址
-   */
+  /*路由地址*/
   path: string
-  /**
-   * 0.租户用户   1. 系统用户   2.全部
-   */
+  /*目标用户 0.租户用户 1. 系统用户  2.全部*/
   target: number
-  /**
-   * 菜单类型（0.菜单 1.按钮）
-   */
+  /*菜单类型（0.菜单 1.按钮）*/
   menuType: number
-  /**
-   * 菜单状态（1.显示 0.隐藏）
-   */
+  /*菜单状态（1.显示 0.隐藏）*/
   visible: number
-  /**
-   * 保持状态（1.保持 0.不保持）
-   */
+  /*保持状态（1.保持 0.不保持）*/
   keepAlive: number
-  /**
-   * 子菜单
-   */
+  /*子菜单*/
   children: ISysMenu[]
 }
 
@@ -123,19 +101,27 @@ export interface IPermsButton {
   title: string
 }
 
-/** 按钮权限 */
+/** 菜单权限 */
 export interface IPermsMenus {
+  /* 菜单ID */
   id: number
+  /* 上级ID */
   parentId: number
+  /* 权重 */
   weight: number
+  /* 名称 */
   name: string
+  /* 属性 */
   meta: IPermsMenusMeta
+  /* 路径 */
   path: string
+  /* vue.js 组件 */
   component: string
+  /* 子菜单 */
   children: IPermsMenus[]
 }
 
-/** 按钮权限 */
+/** 菜单属性 */
 export interface IPermsMenusMeta {
   /* 图标 */
   icon: string

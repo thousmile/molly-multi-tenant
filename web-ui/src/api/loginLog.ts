@@ -1,6 +1,6 @@
 import { IJsonResult, IPageResult, ISearchQuery } from "@/types/base"
 import { ILoginLog, IOperLog } from "@/types/lms"
-import { httpPost, httpGet } from "@/utils/http"
+import { httpPost, httpGet } from "@/utils/service"
 
 /** 分页查询 登录日志 */
 export const queryLoginLogApi = (data: ISearchQuery) => {

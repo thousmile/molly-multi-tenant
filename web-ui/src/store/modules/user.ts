@@ -1,17 +1,18 @@
 import { ref } from "vue"
 import store from "@/store"
 import { defineStore } from "pinia"
+import { ElMessage } from "element-plus"
+import { useNoticeStoreHook } from "./notice"
+import { useSettingsStore } from "./settings"
 import { useTagsViewStore } from "./tags-view"
-import { resetRouter } from "@/router"
+import { getToken, removeToken, setToken } from "@/utils/cache/cookies"
 import { loginApi, getUserInfoApi, getUserPermsApi, logoutApi } from "@/api/login"
 import { type IPermsButton, ILoginData, IPermsMenus, ILoginUserInfo } from "@/types/pms"
-import { ElMessage } from "element-plus"
-import { getAccessToken, removeAccessToken, setAccessToken } from "@/utils/cache/local-storage"
-import { useNoticeStoreHook } from "./notice"
+import { resetRouter } from "@/router"
 
 export const useUserStore = defineStore("user", () => {
   // token信息
-  const accessToken = ref<string>(getAccessToken() || "")
+  const accessToken = ref<string>(getToken() || "")
 
   // 用户详情
   const userInfo = ref<ILoginUserInfo>()
@@ -22,15 +23,19 @@ export const useUserStore = defineStore("user", () => {
   // 用户的权限菜单
   const menus = ref<IPermsMenus[]>([])
 
+  const noticeStore = useNoticeStoreHook()
+
   const tagsViewStore = useTagsViewStore()
 
+  const settingsStore = useSettingsStore()
+
   /** 登录 */
-  const userLogin = (loginData: ILoginData) => {
+  const userLogin = async (loginData: ILoginData) => {
     return new Promise((resolve, reject) => {
       loginApi(loginData)
         .then((resp) => {
           const token = resp.data.token_type + resp.data.access_token
-          setAccessToken(token)
+          setToken(token)
           accessToken.value = token
           resolve(resp)
         })
@@ -102,26 +107,23 @@ export const useUserStore = defineStore("user", () => {
 
   /** 前端登录，不用请求后台，直接删除所有 cookie */
   const fedLogout = () => {
-    removeAccessToken()
+    removeToken()
     userInfo.value = undefined
     accessToken.value = ""
     resetRouter()
     // 关闭 WebSocket
-    useNoticeStoreHook().stopWebSocket()
+    noticeStore.stopWebSocket()
     buttons.value = []
     menus.value = []
     _resetTagsView()
   }
 
-  /** 重置 Token */
-  const resetToken = () => {
-    removeAccessToken()
-  }
-
   /** 重置 Visited Views 和 Cached Views */
   const _resetTagsView = () => {
-    tagsViewStore.delAllVisitedViews()
-    tagsViewStore.delAllCachedViews()
+    if (!settingsStore.cacheTagsView) {
+      tagsViewStore.delAllVisitedViews()
+      tagsViewStore.delAllCachedViews()
+    }
   }
 
   return {
@@ -133,7 +135,6 @@ export const useUserStore = defineStore("user", () => {
     getUserPerms,
     getUserInfo,
     userLogout,
-    resetToken,
     fedLogout
   }
 })

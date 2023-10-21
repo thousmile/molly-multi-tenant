@@ -4,7 +4,7 @@ import { computed, ref } from "vue"
 import { Client } from "@stomp/stompjs"
 // @ts-ignore
 import SockJS from "sockjs-client/dist/sockjs.min.js"
-import { getAccessToken } from "@/utils/cache/local-storage"
+import { getToken } from "@/utils/cache/cookies"
 import { useTenantStoreHook } from "./tenant"
 import { getEnvBaseURL } from "@/utils"
 
@@ -26,7 +26,7 @@ export const useNoticeStore = defineStore("notice", () => {
       const tenantStore = useTenantStoreHook()
       const stompClientAgent = new Client({
         connectHeaders: {
-          Authorization: getAccessToken()!,
+          Authorization: getToken()!,
           "x-tenant-id": tenantStore.getCurrentTenantId()
         },
         debug: function () {},
@@ -52,12 +52,14 @@ export const useNoticeStore = defineStore("notice", () => {
         // 订阅广播主题
         stompClientAgent.subscribe("/topic/broadcast/notice", (resp) => {
           const result = JSON.parse(resp.body)
+          console.log("广播 :>> ", result)
           broadcast.value?.push(result)
         })
 
         // 订阅推送主题
         stompClientAgent.subscribe("/user/queue/single/push", (resp) => {
           const result = JSON.parse(resp.body)
+          console.log("推送 :>> ", result)
           pushNotices.value?.push(result)
         })
       }

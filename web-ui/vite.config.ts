@@ -1,11 +1,12 @@
 /// <reference types="vitest" />
 
 import { type ConfigEnv, type UserConfigExport, loadEnv } from "vite"
+import UnoCSS from "unocss/vite"
 import path, { resolve } from "path"
 import vue from "@vitejs/plugin-vue"
+import svgLoader from "vite-svg-loader"
 import vueJsx from "@vitejs/plugin-vue-jsx"
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons"
-import svgLoader from "vite-svg-loader"
 
 /** 配置项文档：https://cn.vitejs.dev/config */
 export default (configEnv: ConfigEnv): UserConfigExport => {
@@ -26,7 +27,7 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
       /** 设置 host: true 才可以使用 Network 的形式，以 IP 访问项目 */
       host: true, // host: "0.0.0.0"
       /** 端口号 */
-      port: 3333,
+      port: 8333,
       /** 是否自动打开浏览器 */
       open: false,
       /** 跨域设置允许 */
@@ -45,24 +46,35 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
       }
     },
     build: {
-      /** 消除打包大小超过 500kb 警告 */
-      chunkSizeWarningLimit: 2000,
-      /** Vite 2.6.x 以上需要配置 minify: "terser", terserOptions 才能生效 */
-      minify: "terser",
-      /** 在打包代码时移除 console.log、debugger 和 注释 */
-      terserOptions: {
-        compress: {
-          drop_console: false,
-          drop_debugger: true,
-          pure_funcs: ["console.log"]
-        },
-        format: {
-          /** 删除注释 */
-          comments: false
-        }
-      },
+      /** 单个 chunk 文件的大小超过 2048KB 时发出警告 */
+      chunkSizeWarningLimit: 2048,
+      /** 禁用 gzip 压缩大小报告 */
+      reportCompressedSize: false,
       /** 打包后静态资源目录 */
-      assetsDir: "static"
+      assetsDir: "static",
+      rollupOptions: {
+        output: {
+          /**
+           * 分块策略
+           * 1. 注意这些包名必须存在，否则打包会报错
+           * 2. 如果你不想自定义 chunk 分割策略，可以直接移除这段配置
+           */
+          manualChunks: {
+            vue: ["vue", "vue-router", "pinia"],
+            element: ["element-plus", "@element-plus/icons-vue"],
+            vxe: ["vxe-table", "vxe-table-plugin-element", "xe-utils"]
+          }
+        }
+      }
+    },
+    /** 混淆器 */
+    esbuild: {
+      /** 打包时移除 console.log */
+      pure: ["console.log"],
+      /** 打包时移除 debugger */
+      drop: ["debugger"],
+      /** 打包时移除所有注释 */
+      legalComments: "none"
     },
     /** Vite 插件 */
     plugins: [
@@ -74,7 +86,9 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
       createSvgIconsPlugin({
         iconDirs: [path.resolve(process.cwd(), "src/icons/svg")],
         symbolId: "icon-[dir]-[name]"
-      })
+      }),
+      /** UnoCSS */
+      UnoCSS()
     ],
     /** Vitest 单元测试配置：https://cn.vitest.dev/config */
     test: {

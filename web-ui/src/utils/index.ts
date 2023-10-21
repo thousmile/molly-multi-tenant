@@ -1,5 +1,9 @@
 import dayjs from "dayjs"
+import { removeConfigLayout } from "@/utils/cache/local-storage"
+import chinaAreaJson from "@/assets/ChinaArea.json"
+import { ISimpleTenant } from "@/types/base"
 
+//#region 格式化日期时间
 export const DEFAULT_DATE_TIME_PATTERN = "YYYY-MM-DD HH:mm:ss"
 
 export const DEFAULT_DATE_PATTERN = "YYYY-MM-DD"
@@ -8,29 +12,17 @@ export const DEFAULT_TIME_PATTERN = "HH:mm:ss"
 
 /** 格式化日期时间 */
 export const formatDateTime = (time: string | number | Date) => {
-  if (!time) {
-    return "N/A"
-  }
-  const date = new Date(time)
-  return dayjs(date).format(DEFAULT_DATE_TIME_PATTERN)
+  return time ? dayjs(new Date(time)).format(DEFAULT_DATE_TIME_PATTERN) : "N/A"
 }
 
 /** 格式化日期 */
 export const formatDate = (time: string | number | Date) => {
-  if (!time) {
-    return "N/A"
-  }
-  const date = new Date(time)
-  return dayjs(date).format(DEFAULT_DATE_PATTERN)
+  return time ? dayjs(new Date(time)).format(DEFAULT_DATE_PATTERN) : "N/A"
 }
 
 /** 格式化时间 */
 export const formatTime = (time: string | number | Date) => {
-  if (!time) {
-    return "N/A"
-  }
-  const date = new Date(time)
-  return dayjs(date).format(DEFAULT_TIME_PATTERN)
+  return time ? dayjs(new Date(time)).format(DEFAULT_TIME_PATTERN) : "N/A"
 }
 
 /** 计算时间差 */
@@ -68,7 +60,7 @@ export function timeAgo(time: string | number | Date) {
 }
 
 export function expiredDateAgo(time: string | number | Date) {
-  const data = dayjs(time, "YYYY-MM-DD HH:mm:ss")
+  const data = dayjs(time, DEFAULT_DATE_TIME_PATTERN)
   const now = dayjs()
   if (data.diff(now, "year") > 0) {
     return `${data.diff(now, "year")}年后`
@@ -83,37 +75,7 @@ export function expiredDateAgo(time: string | number | Date) {
   }
 }
 
-/**
- * @param {string} url
- * @returns {Object}
- */
-export const getQueryObject = (url: string) => {
-  url = url == null ? window.location.href : url
-  const search = url.substring(url.lastIndexOf("?") + 1)
-  const obj: any = {}
-  const reg = /([^?&=]+)=([^?&=]*)/g
-  search.replace(reg, (rs, $1, $2) => {
-    const name = decodeURIComponent($1)
-    const val = String(decodeURIComponent($2))
-    obj[name] = val
-    return rs
-  })
-  return obj
-}
-
-/**
- * @param {Array} actual
- * @returns {Array}
- */
-export const cleanArray = (actual: any[]) => {
-  const newArray: any[] = []
-  for (let i = 0; i < actual.length; i++) {
-    if (actual[i]) {
-      newArray.push(actual[i])
-    }
-  }
-  return newArray
-}
+//#endregion
 
 /** 用 JS 获取全局 css 变量 */
 export const getCssVariableValue = (cssVariableName: string) => {
@@ -136,25 +98,39 @@ export const setCssVariableValue = (cssVariableName: string, cssVariableValue: s
   }
 }
 
+/** 重置项目配置 */
+export const resetConfigLayout = () => {
+  removeConfigLayout()
+  location.reload()
+}
+
+/**
+ * @param {string} url
+ * @returns {Object}
+ */
+export const getQueryObject = (url: string) => {
+  url = url == null ? window.location.href : url
+  const search = url.substring(url.lastIndexOf("?") + 1)
+  const obj: any = {}
+  const reg = /([^?&=]+)=([^?&=]*)/g
+  search.replace(reg, (rs, $1, $2) => {
+    const name = decodeURIComponent($1)
+    const val = String(decodeURIComponent($2))
+    obj[name] = val
+    return rs
+  })
+  return obj
+}
+
 /** 获取 http 请求头 前缀 */
 export const getEnvBaseURLPrefix = () => {
-  return import.meta.env.MODE === "development" ? "/api/v1" : import.meta.env.VITE_BASE_API
+  return import.meta.env.MODE === "development" ? "/api/v1" : getEnvBaseURL()
 }
 
 /** 获取 默认api url */
 export const getEnvBaseURL = () => {
   return import.meta.env.VITE_BASE_API
 }
-
-export default function getPageTitle(pageTitle: string) {
-  if (pageTitle) {
-    return `${pageTitle} - ${defaultSettings.title}`
-  }
-  return `${defaultSettings.title}`
-}
-
-import chinaAreaJson from "@/assets/ChinaArea.json"
-import { defaultSettings } from "@/config"
 
 /** 获取 区域名称 */
 export const chinaAreaDeepQuery = (areaCode: number) => {
@@ -192,6 +168,10 @@ export const futureShortcuts = [
     value: dayjs().add(3, "month").toDate()
   },
   {
+    text: "六个月后",
+    value: dayjs().add(6, "month").toDate()
+  },
+  {
     text: "一年后",
     value: dayjs().add(1, "year").toDate()
   },
@@ -216,6 +196,10 @@ export const pastShortcuts = [
     value: dayjs().subtract(3, "month").toDate()
   },
   {
+    text: "六个月前",
+    value: dayjs().subtract(6, "month").toDate()
+  },
+  {
     text: "一年前",
     value: dayjs().subtract(1, "year").toDate()
   },
@@ -224,3 +208,11 @@ export const pastShortcuts = [
     value: dayjs().subtract(3, "year").toDate()
   }
 ]
+
+// 设置 默认的租户
+export const defaultTenant: ISimpleTenant = {
+  tenantId: "master",
+  logo: "http://images.xaaef.com/molly_master_logo.png",
+  name: "默认租户",
+  linkman: "master"
+}

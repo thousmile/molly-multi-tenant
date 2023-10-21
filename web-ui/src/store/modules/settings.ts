@@ -1,33 +1,42 @@
-import { ref } from "vue"
 import store from "@/store"
 import { defineStore } from "pinia"
-import layoutSettings from "@/config/layout"
-import { getControlSize, setControlSize } from "@/utils/cache/local-storage"
+import { type Ref, ref, watch } from "vue"
+import { type LayoutSettings, layoutSettings } from "@/config/layouts"
+import { setConfigLayout, getControlSize, setControlSize } from "@/utils/cache/local-storage"
+
+type SettingsStore = {
+  // 使用映射类型来遍历 layoutSettings 对象的键
+  [Key in keyof LayoutSettings]: Ref<LayoutSettings[Key]>
+}
+
+type SettingsStoreKey = keyof SettingsStore
 
 export const useSettingsStore = defineStore("settings", () => {
-  const fixedHeader = ref<boolean>(layoutSettings.fixedHeader)
+  /** 状态对象 */
+  const state = {} as SettingsStore
 
-  const showSettings = ref<boolean>(layoutSettings.showSettings)
+  // 遍历 layoutSettings 对象的键值对
+  for (const [key, value] of Object.entries(layoutSettings)) {
+    // 使用类型断言来指定 key 的类型，将 value 包装在 ref 函数中，创建一个响应式变量
+    const refValue = ref(value)
+    state[key as SettingsStoreKey] = refValue
+    // 监听每个响应式变量
+    watch(refValue, () => {
+      // 缓存
+      const settings = _getCacheData()
+      setConfigLayout(settings)
+    })
+  }
 
-  const showTagsView = ref<boolean>(layoutSettings.showTagsView)
-
-  const showSidebarLogo = ref<boolean>(layoutSettings.showSidebarLogo)
-
-  const showNotify = ref<boolean>(layoutSettings.showNotify)
-
-  const showThemeSwitch = ref<boolean>(layoutSettings.showThemeSwitch)
-
-  const showScreenfull = ref<boolean>(layoutSettings.showScreenfull)
-
-  const showGreyMode = ref<boolean>(layoutSettings.showGreyMode)
-
-  const showColorWeakness = ref<boolean>(layoutSettings.showColorWeakness)
-
-  const showSearchTenant = ref<boolean>(layoutSettings.showSearchTenant)
-
-  const showSearchRoute = ref<boolean>(layoutSettings.showSearchRoute)
-
-  const showControlSize = ref<boolean>(layoutSettings.showControlSize)
+  /** 获取要缓存的数据：将 state 对象转化为 settings 对象 */
+  const _getCacheData = () => {
+    const settings = {} as LayoutSettings
+    for (const [key, value] of Object.entries(state)) {
+      // @ts-ignore
+      settings[key as SettingsStoreKey] = value.value
+    }
+    return settings
+  }
 
   const controlSize = ref<string>(getControlSize() || "default")
 
@@ -38,20 +47,9 @@ export const useSettingsStore = defineStore("settings", () => {
   }
 
   return {
+    ...state,
     controlSize,
-    showControlSize,
-    updateControlSize,
-    showSearchRoute,
-    fixedHeader,
-    showSettings,
-    showTagsView,
-    showSidebarLogo,
-    showNotify,
-    showThemeSwitch,
-    showScreenfull,
-    showGreyMode,
-    showColorWeakness,
-    showSearchTenant
+    updateControlSize
   }
 })
 

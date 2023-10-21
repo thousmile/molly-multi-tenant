@@ -1,6 +1,6 @@
 import { IJsonResult, IPageResult, ISearchQuery, ISimpleTenant } from "@/types/base"
 import { ISysTenant, ICreateTenant, ICreateTenantAdmin } from "@/types/sys"
-import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/http"
+import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
 
 // 简单查询
 export const simpleQueryApi = (params: ISearchQuery) => {

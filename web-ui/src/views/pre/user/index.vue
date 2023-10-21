@@ -93,7 +93,7 @@
               >编辑</el-link
             >
             &nbsp;
-            <el-dropdown @command="(cmd:string) => handleCommand(cmd, scope.row)">
+            <el-dropdown @command="(cmd: string) => handleCommand(cmd, scope.row)">
               <span class="el-dropdown-link">
                 更多
                 <el-icon class="el-icon--right">
@@ -298,7 +298,7 @@ import { listRoleApi } from "@/api/role"
 import { ISearchQuery, ISimpleTenant } from "@/types/base"
 import { IPmsUser, IPmsDept, IPmsRole } from "@/types/pms"
 import UserAvatar from "@/components/UserAvatar/index.vue"
-import { testEmail, testPassword, testPhone } from "@/utils/validate"
+import { isEmail, isPassword, isPhone } from "@/utils/validate"
 import { Plus, Edit, Delete, UserFilled, Search, RefreshLeft, Link } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { useDictStoreHook } from "@/store/modules/dict"
@@ -357,7 +357,7 @@ const entityForm = ref<IPmsUser>({
 })
 
 const emailValidator = (rule: any, value: any, callback: any) => {
-  if (!testEmail(value)) {
+  if (!isEmail(value)) {
     callback(new Error("邮箱格式不正确!"))
   } else {
     callback()
@@ -365,7 +365,7 @@ const emailValidator = (rule: any, value: any, callback: any) => {
 }
 
 const phoneValidator = (rule: any, value: any, callback: any) => {
-  if (!testPhone(value)) {
+  if (!isPhone(value)) {
     callback(new Error("手机号码格式不正确!"))
   } else {
     callback()
@@ -373,7 +373,7 @@ const phoneValidator = (rule: any, value: any, callback: any) => {
 }
 
 const passwordValidator = (rule: any, value: any, callback: any) => {
-  if (!testPassword(value)) {
+  if (!isPassword(value)) {
     callback(new Error("包含1个字母并且长度大于5位"))
   } else {
     callback()

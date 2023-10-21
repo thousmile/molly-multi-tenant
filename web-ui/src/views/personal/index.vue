@@ -130,7 +130,7 @@ import UserAvatar from "@/components/UserAvatar/index.vue"
 import { ref, reactive } from "vue"
 import { type FormInstance, FormRules, ElMessageBox } from "element-plus"
 import { updatePasswordApi, updateUserInfoApi } from "@/api/user"
-import { testEmail, testPassword, testPhone } from "@/utils/validate"
+import { isEmail, isPassword, isPhone } from "@/utils/validate"
 import { useRouter } from "vue-router"
 import { ILoginUserInfo } from "@/types/pms"
 const router = useRouter()
@@ -146,7 +146,7 @@ const userInfoFormRef = ref<FormInstance | null>(null)
 const userInfoForm = reactive<ILoginUserInfo>(userStore.userInfo!)
 
 const emailValidator = (rule: any, value: any, callback: any) => {
-  if (!testEmail(value)) {
+  if (!isEmail(value)) {
     callback(new Error("邮箱格式不正确!"))
   } else {
     callback()
@@ -154,7 +154,7 @@ const emailValidator = (rule: any, value: any, callback: any) => {
 }
 
 const phoneValidator = (rule: any, value: any, callback: any) => {
-  if (!testPhone(value)) {
+  if (!isPhone(value)) {
     callback(new Error("手机号码格式不正确!"))
   } else {
     callback()
@@ -231,7 +231,7 @@ const updatePwdForm = reactive({
 })
 
 const newPwdValidator = (rule: any, value: string, callback: any) => {
-  if (!testPassword(value)) {
+  if (!isPassword(value)) {
     callback(new Error("密码必须包含字母和数字!"))
   } else {
     callback()
@@ -239,7 +239,7 @@ const newPwdValidator = (rule: any, value: string, callback: any) => {
 }
 
 const confirmPwdValidator = (rule: any, value: string, callback: any) => {
-  if (!testPassword(value)) {
+  if (!isPassword(value)) {
     callback(new Error("密码必须包含字母和数字!"))
   } else {
     if (value === updatePwdForm.newPwd) {

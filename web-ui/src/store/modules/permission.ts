@@ -3,9 +3,11 @@ import store from "@/store"
 import { defineStore } from "pinia"
 import { type RouteRecordRaw } from "vue-router"
 import { constantRoutes } from "@/router"
+import { flatMultiLevelRoutes } from "@/router/helper"
+import routeSettings from "@/config/route"
 import { IPermsMenus } from "@/types/pms"
 
-const Layout = () => import("@/layout/index.vue")
+const Layout = () => import("@/layouts/index.vue")
 
 // 遍历后台传来的路由字符串，转换为组件对象
 function flatTreeRoutes(arr: IPermsMenus[]): RouteRecordRaw[] {
@@ -54,33 +56,16 @@ export const loadView = (view: string) => {
 }
 
 export const usePermissionStore = defineStore("permission", () => {
-  // 全部路由 = 常量路由 + 动态路由
   const routes = ref<RouteRecordRaw[]>([])
-
-  // 后端传入的动态路由
   const dynamicRoutes = ref<RouteRecordRaw[]>([])
 
-  const getRoutes = (): RouteRecordRaw[] => {
-    return routes.value
+  const setRoutes = (data: IPermsMenus[]) => {
+    const asyncRoutes = flatTreeRoutes(data)
+    routes.value = constantRoutes.concat(asyncRoutes)
+    dynamicRoutes.value = routeSettings.thirdLevelRouteCache ? flatMultiLevelRoutes(asyncRoutes) : asyncRoutes
   }
 
-  // 将后端的菜单数据转换为vue-router的路由
-  const toVueRoutes = (data: IPermsMenus[]): Promise<RouteRecordRaw[]> => {
-    return new Promise<RouteRecordRaw[]>((resolve) => {
-      const asyncRoutes = flatTreeRoutes(data)
-      dynamicRoutes.value = asyncRoutes
-      routes.value = constantRoutes.concat(asyncRoutes)
-      resolve(asyncRoutes)
-    })
-  }
-
-  // 清除路由
-  const clearRoutes = () => {
-    routes.value = []
-    dynamicRoutes.value = []
-  }
-
-  return { routes, getRoutes, dynamicRoutes, toVueRoutes, clearRoutes }
+  return { routes, dynamicRoutes, setRoutes }
 })
 
 /** 在 setup 外使用 */

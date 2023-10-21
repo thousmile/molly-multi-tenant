@@ -1,25 +1,28 @@
 // json 返回值
 export interface IJsonResult<T> {
+  /* 状态码 200: 成功！ 100: 失败！ 其他: 都是报错！ */
   status: number
-
+  /* 返回消息 */
   message: string
-
+  /* 数据 */
   data: T
 }
 
 // 分页
 export interface IPagination<T> {
+  /* 总页数 */
   total: number
-
+  /* 数据列表 */
   list: T[]
 }
 
 // 分页 返回值
 export interface IPageResult<T> {
+  /* 状态码 200: 成功！ 100: 失败！ 其他: 都是报错！ */
   status: number
-
+  /* 返回消息 */
   message: string
-
+  /* 分页数据 */
   data: IPagination<T>
 }
 
@@ -27,16 +30,12 @@ export interface IPageResult<T> {
 export interface ISearchQuery {
   // 当前是第几页
   pageIndex: number
-
   // 每页多少条
   pageSize: number
-
   // 关键字
   keywords: string
-
   // 开始日期 YYYY-MM-DD
   startDate?: string
-
   // 结束日期 YYYY-MM-DD
   endDate?: string
 }

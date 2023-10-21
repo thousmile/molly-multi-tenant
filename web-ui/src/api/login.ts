@@ -1,6 +1,6 @@
 import { IJsonResult } from "@/types/base"
 import { ILoginData, ILoginUserInfo, IOAuth2Token, IUserPerms } from "@/types/pms"
-import { httpGet, httpPost } from "@/utils/http"
+import { httpGet, httpPost } from "@/utils/service"
 
 /** 登录 */
 export const loginApi = (data?: ILoginData) => {

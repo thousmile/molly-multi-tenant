@@ -3,7 +3,7 @@ import { defineStore } from "pinia"
 import { ref } from "vue"
 import { ISimpleTenant } from "@/types/base"
 import { setCurrentTenant as setTenant, getCurrentTenant as getTenant } from "@/utils/cache/local-storage"
-import { defaultTenant } from "@/config"
+import { defaultTenant } from "@/utils"
 
 export const useTenantStore = defineStore("tenant", () => {
   // 当前租户

@@ -1,13 +1,18 @@
+import { type RouteRecordRaw, createRouter } from "vue-router"
+import { history, flatMultiLevelRoutes } from "./helper"
+import routeSettings from "@/config/route"
 import { loginUrl } from "@/config/white-list"
-import { type RouteRecordRaw, createRouter, createWebHashHistory, createWebHistory } from "vue-router"
 
-const Layout = () => import("@/layout/index.vue")
+const Layouts = () => import("@/layouts/index.vue")
 
-/** 常驻路由 */
+/**
+ * 常驻路由
+ * 除了 redirect/403/404/login 等隐藏页面，其他页面建议设置 Name 属性
+ */
 export const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/redirect",
-    component: Layout,
+    component: Layouts,
     meta: {
       hidden: true
     },
@@ -20,16 +25,14 @@ export const constantRoutes: RouteRecordRaw[] = [
   },
   {
     path: "/403",
-    name: "403",
-    component: () => import("@/views/error/403.vue"),
+    component: () => import("@/views/error-page/403.vue"),
     meta: {
       hidden: true
     }
   },
   {
     path: "/404",
-    name: "404",
-    component: () => import("@/views/error/404.vue"),
+    component: () => import("@/views/error-page/404.vue"),
     meta: {
       hidden: true
     },
@@ -44,11 +47,11 @@ export const constantRoutes: RouteRecordRaw[] = [
   },
   {
     path: "/",
-    component: Layout,
+    component: Layouts,
     redirect: "/dashboard",
     children: [
       {
-        path: "/dashboard",
+        path: "dashboard",
         component: () => import("@/views/dashboard/index.vue"),
         name: "Dashboard",
         meta: {
@@ -63,7 +66,51 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "Personal",
         meta: {
           title: "个人信息",
+          affix: true,
           hidden: true
+        }
+      }
+    ]
+  },
+  {
+    path: "/unocss",
+    component: Layouts,
+    redirect: "/unocss/index",
+    children: [
+      {
+        path: "index",
+        component: () => import("@/views/unocss/index.vue"),
+        name: "UnoCSS",
+        meta: {
+          title: "UnoCSS",
+          svgIcon: "unocss"
+        }
+      }
+    ]
+  },
+  {
+    path: "/link",
+    meta: {
+      title: "外链",
+      svgIcon: "link"
+    },
+    children: [
+      {
+        path: "https://juejin.cn/post/7089377403717287972",
+        component: () => {},
+        name: "Link1",
+        meta: {
+          title: "中文文档",
+          svgIcon: "doc"
+        }
+      },
+      {
+        path: "https://github.com/thousmile/molly-multi-tenant",
+        component: () => {},
+        name: "github",
+        meta: {
+          title: "GitHub",
+          svgIcon: "github"
         }
       }
     ]
@@ -71,11 +118,8 @@ export const constantRoutes: RouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-  history:
-    import.meta.env.VITE_ROUTER_HISTORY === "hash"
-      ? createWebHashHistory(import.meta.env.VITE_PUBLIC_PATH)
-      : createWebHistory(import.meta.env.VITE_PUBLIC_PATH),
-  routes: constantRoutes
+  history,
+  routes: routeSettings.thirdLevelRouteCache ? flatMultiLevelRoutes(constantRoutes) : constantRoutes
 })
 
 /** 重置路由 */

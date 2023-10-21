@@ -79,7 +79,7 @@ public class SysMenuDTO implements java.io.Serializable {
     private Byte visible;
 
     /**
-     * 保持状态（1.保持 0.不保持）
+     * 保持状态（0.不保持 1.保持）
      */
     private Byte keepAlive;
 }

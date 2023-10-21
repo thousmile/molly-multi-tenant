@@ -1,6 +1,6 @@
 import { IJsonResult, IPageResult, ISearchQuery, IUpdateMenus } from "@/types/base"
 import { ISysTemplate } from "@/types/sys"
-import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/http"
+import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
 
 /** 根据Id查询 */
 export const getTemplateApi = (id: number) => {

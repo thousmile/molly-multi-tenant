@@ -1,5 +1,5 @@
 import { IJsonResult } from "@/types/base"
-import { httpDelete } from "@/utils/http"
+import { httpDelete } from "@/utils/service"
 
 // 删除 oss 上的图片
 export const deleteFile = (params: string) => {

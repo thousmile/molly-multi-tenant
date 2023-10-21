@@ -153,7 +153,7 @@ import { ref, onMounted, computed } from "vue"
 import { Plus, Edit, Delete, Sort } from "@element-plus/icons-vue"
 
 import { ElMessage, ElMessageBox, FormInstance, FormRules, TableInstance } from "element-plus"
-import { testPhone } from "@/utils/validate"
+import { isPhone } from "@/utils/validate"
 import { cloneDeep } from "lodash-es"
 import { timeAgo } from "@/utils"
 
@@ -201,7 +201,7 @@ const entityForm = ref<IPmsDept>({
 })
 
 const phoneValidator = (rule: any, value: any, callback: any) => {
-  if (!testPhone(value)) {
+  if (!isPhone(value)) {
     callback(new Error("手机号码格式不正确!"))
   } else {
     callback()

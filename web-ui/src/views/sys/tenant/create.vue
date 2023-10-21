@@ -192,7 +192,7 @@ import { Refresh, ArrowLeft, ArrowRight, Check, Close } from "@element-plus/icon
 import ImageUpload from "@/components/ImageUpload/index.vue"
 import SearchChinaArea from "@/components/SearchChinaArea/index.vue"
 import { v4 as uuidv4 } from "uuid"
-import { testEmail, testTelphone } from "@/utils/validate"
+import { isEmail, isTelphone } from "@/utils/validate"
 
 // 随机生成租户ID
 const randomTenantId = () => {
@@ -257,7 +257,7 @@ const tenantIdValidator = (rule: any, value: any, callback: any) => {
 }
 
 const emailValidator = (rule: any, value: any, callback: any) => {
-  if (!testEmail(value)) {
+  if (!isEmail(value)) {
     callback(new Error("邮箱格式不正确!"))
   } else {
     callback()
@@ -265,7 +265,7 @@ const emailValidator = (rule: any, value: any, callback: any) => {
 }
 
 const telphoneValidator = (rule: any, value: any, callback: any) => {
-  if (!testTelphone(value)) {
+  if (!isTelphone(value)) {
     callback(new Error("手机或者电话号码格式不正确!"))
   } else {
     callback()

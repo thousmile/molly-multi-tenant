@@ -1,6 +1,6 @@
 import { IJsonResult, IPageResult, ISearchQuery, IUpdateMenus } from "@/types/base"
 import { IPmsRole } from "@/types/pms"
-import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/http"
+import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
 
 /** 根据Id查询 */
 export const getRoleApi = (id: number) => {

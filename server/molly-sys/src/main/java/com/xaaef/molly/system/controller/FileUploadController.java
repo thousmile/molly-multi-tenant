@@ -2,7 +2,9 @@ package com.xaaef.molly.system.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.xuyanwu.spring.file.storage.FileStorageService;
+import cn.xuyanwu.spring.file.storage.UploadPretreatment;
 import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.system.po.ImageSizePO;
 import com.xaaef.molly.system.vo.FileInfoVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,18 +41,21 @@ public class FileUploadController {
      */
     @Operation(summary = "图片上传", description = "图片上传")
     @PostMapping("/image")
-    public JsonResult<FileInfoVO> image(MultipartFile file) {
+    public JsonResult<FileInfoVO> image(MultipartFile file, ImageSizePO size) {
         try {
             isImage(file.getOriginalFilename());
             var contentType = getContentType(file.getOriginalFilename());
             var now = LocalDate.now();
-            var fileInfo = storageService.of(file)
+            var up = storageService.of(file)
                     .setObjectType("image")
                     .setContentType(contentType)
                     .setPath(
                             String.format("%d/%d/%d/", now.getYear(), now.getMonthValue(), now.getDayOfMonth())
-                    )
-                    .upload();
+                    );
+            if (size.getHeight() != null && size.getWidth() != null) {
+                up.image(size.getWidth(), size.getHeight());
+            }
+            var fileInfo = up.upload();
             return JsonResult.success(
                     new FileInfoVO()
                             .setUrl(fileInfo.getUrl())

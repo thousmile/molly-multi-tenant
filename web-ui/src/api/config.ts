@@ -1,6 +1,6 @@
 import { IJsonResult, IPageResult, ISearchQuery } from "@/types/base"
 import { ISysConfig } from "@/types/sys"
-import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/http"
+import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
 
 /** 根据Id查询 */
 export const getConfigApi = (id: number) => {

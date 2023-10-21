@@ -2,21 +2,19 @@
 import { computed } from "vue"
 
 interface Props {
-  name: string
   prefix?: string
-  size?: number
+  name: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  prefix: "icon",
-  size: 20
+  prefix: "icon"
 })
 
 const symbolId = computed(() => `#${props.prefix}-${props.name}`)
 </script>
 
 <template>
-  <svg class="svg-icon" aria-hidden="true" :font-size="size">
+  <svg class="svg-icon" aria-hidden="true">
     <use :href="symbolId" />
   </svg>
 </template>

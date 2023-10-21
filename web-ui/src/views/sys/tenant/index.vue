@@ -243,7 +243,7 @@ import createTenant from "./create.vue"
 import { useDictStoreHook } from "@/store/modules/dict"
 import { cloneDeep } from "lodash-es"
 import { chinaAreaDeepQuery, expiredDateAgo, timeAgo, futureShortcuts } from "@/utils"
-import { testEmail, testTelphone } from "@/utils/validate"
+import { isEmail, isTelphone } from "@/utils/validate"
 import { useTenantStoreHook } from "@/store/modules/tenant"
 const dictStore = useDictStoreHook()
 
@@ -295,7 +295,7 @@ const entityForm = ref<ISysTenant>({
 const entityFormRef = ref<FormInstance | null>(null)
 
 const emailValidator = (rule: any, value: any, callback: any) => {
-  if (!testEmail(value)) {
+  if (!isEmail(value)) {
     callback(new Error("邮箱格式不正确!"))
   } else {
     callback()
@@ -303,7 +303,7 @@ const emailValidator = (rule: any, value: any, callback: any) => {
 }
 
 const telphoneValidator = (rule: any, value: any, callback: any) => {
-  if (!testTelphone(value)) {
+  if (!isTelphone(value)) {
     callback(new Error("手机或者电话号码格式不正确!"))
   } else {
     callback()

@@ -1,16 +1,18 @@
 <template>
-  <el-upload
-    class="avatar-uploader"
-    :action="getAction"
-    :headers="myHeaders"
-    :show-file-list="false"
-    :on-success="handleAvatarSuccess"
-    :before-upload="beforeAvatarUpload"
-    accept=".jpg,.jpeg,.png,.gif"
-  >
-    <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-  </el-upload>
+  <div class="avatar-wrapper">
+    <el-upload
+      class="avatar-uploader"
+      :action="getAction"
+      :headers="myHeaders"
+      :show-file-list="false"
+      :on-success="handleAvatarSuccess"
+      :before-upload="beforeAvatarUpload"
+      accept=".jpg,.jpeg,.png,.gif"
+    >
+      <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+      <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+    </el-upload>
+  </div>
 </template>
 
 <script setup lang="ts" name="UserAvatar">
@@ -19,8 +21,8 @@ import { ElMessage } from "element-plus"
 import { Plus } from "@element-plus/icons-vue"
 import type { UploadProps } from "element-plus"
 import { deleteFile } from "@/api/upload"
-import { getEnvBaseURL } from "@/utils"
-import { getAccessToken } from "@/utils/cache/local-storage"
+import { getEnvBaseURLPrefix } from "@/utils"
+import { getToken } from "@/utils/cache/cookies"
 import { getCurrentTenant } from "@/utils/cache/local-storage"
 
 const props = defineProps({
@@ -47,11 +49,11 @@ const deleteOldFile = (url: string) => {
 }
 
 // 获取上传地址
-const getAction = `${getEnvBaseURL()}/upload/avatar`
+const getAction = `${getEnvBaseURLPrefix()}/upload/avatar`
 
 // 请求头
 const myHeaders = {
-  Authorization: getAccessToken(),
+  Authorization: getToken(),
   "x-tenant-id": getCurrentTenant().tenantId
 }
 
@@ -86,9 +88,13 @@ const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
 
 <style lang="scss" scoped>
 $size: 100px;
+
+.avatar-wrapper {
+  border: 2px solid #8c939d;
+  border-radius: 3px;
+}
+
 .avatar-uploader .el-upload {
-  border: 1px solid #78f00e;
-  border-radius: 6px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
