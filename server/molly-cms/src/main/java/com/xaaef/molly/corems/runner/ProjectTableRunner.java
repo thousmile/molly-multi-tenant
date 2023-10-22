@@ -41,7 +41,7 @@ public class ProjectTableRunner implements ApplicationRunner {
         if (multiTenantProperties.getEnableProject()) {
             log.info("Execute ProjectTableRunner run() ...");
             // 查询 所有的 不包含 project_id 的表
-            Set<String> tableNames = projectMapper.selectNotExistColumnTableNames(PROJECT_ID);
+            Set<String> tableNames = projectMapper.selectTableNamesByNotIncludeColumn(PROJECT_ID);
             if (!tableNames.isEmpty()) {
                 MbpConst.PROJECT_IGNORE_TABLES.addAll(tableNames);
             }
