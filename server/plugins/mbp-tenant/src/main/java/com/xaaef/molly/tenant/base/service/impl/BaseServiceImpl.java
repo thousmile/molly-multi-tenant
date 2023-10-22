@@ -97,12 +97,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> exte
     }
 
 
-    protected QueryWrapper<T> getKeywordsQueryWrapper2(SearchPO params, SFunction<T, ?>... columns) {
-        return getKeywordsQueryWrapper(params, columns);
-    }
-
-
-    protected QueryWrapper<T> getKeywordsQueryWrapper(SearchPO params, SFunction<T, ?>[] columns) {
+    protected QueryWrapper<T> getKeywordsQueryWrapper(SearchPO params, Collection<SFunction<T, ?>> columns) {
         var wrapper = new QueryWrapper<T>();
         // 开始时间是否为空
         if (ObjectUtils.isNotEmpty(params.getStartDate())) {
@@ -113,12 +108,14 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> exte
                 wrapper.between(CREATE_TIME, params.getStartDate(), LocalDate.now());
             }
         }
-        if (StringUtils.isNotBlank(params.getKeywords()) && columns != null && columns.length > 0) {
-            for (int i = 0; i < columns.length; i++) {
-                if (i == 0)
-                    wrapper.lambda().like(columns[i], params.getKeywords());
+        if (StringUtils.isNotBlank(params.getKeywords()) && columns != null && !columns.isEmpty()) {
+            var index = 0;
+            for (SFunction<T, ?> column : columns) {
+                if (index == 0)
+                    wrapper.lambda().like(column, params.getKeywords());
                 else
-                    wrapper.lambda().or().like(columns[i], params.getKeywords());
+                    wrapper.lambda().or().like(column, params.getKeywords());
+                index++;
             }
         }
         return wrapper;
@@ -126,17 +123,9 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> exte
 
 
     @Override
-    public IPage<T> pageKeywords(SearchPO params, SFunction<T, ?>... columns) {
+    public IPage<T> pageKeywords(SearchPO params, Collection<SFunction<T, ?>> columns) {
         Page<T> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
         QueryWrapper<T> wrapper = getKeywordsQueryWrapper(params, columns);
-        return super.page(pageRequest, wrapper);
-    }
-
-
-    @Override
-    public IPage<T> pageKeywords(SearchPO params, List<SFunction<T, ?>> columns) {
-        Page<T> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
-        QueryWrapper<T> wrapper = getKeywordsQueryWrapper(params, columns.toArray(SFunction[]::new));
         return super.page(pageRequest, wrapper);
     }
 

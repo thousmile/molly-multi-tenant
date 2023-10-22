@@ -57,7 +57,8 @@ public class PmsUserController {
     @Operation(summary = "分页查询", description = "分页 查询所有")
     @GetMapping("/query")
     public JsonResult<Pagination<PmsUser>> pageQuery(UserQueryPO params) {
-        IPage<PmsUser> page = baseService.pageKeywords(params);
+        IPage<PmsUser> page = baseService.pageKeywords(params,
+                List.of(PmsUser::getUsername, PmsUser::getNickname));
         return JsonResult.success(page.getTotal(), page.getRecords());
     }
 

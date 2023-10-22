@@ -19,9 +19,9 @@
         <result property="lastUpdateUser" column="last_update_user"/>
     </resultMap>
 
-
     <sql id="Base_Column_List">
-        dept_id,parent_id,
+        dept_id
+        ,parent_id,
         dept_name,leader,leader_mobile,
         sort,`description`,ancestors,create_time,
         create_user,last_update_time,last_update_user

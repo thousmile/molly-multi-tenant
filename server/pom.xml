@@ -43,7 +43,7 @@
 
         <hutool.version>5.8.22</hutool.version>
         <knife4j.version>4.3.0</knife4j.version>
-        <liquibase.version>4.23.0</liquibase.version>
+        <liquibase.version>4.23.2</liquibase.version>
         <mybatis-plus.version>3.5.3.2</mybatis-plus.version>
 
         <spring-boot.version>3.1.5</spring-boot.version>

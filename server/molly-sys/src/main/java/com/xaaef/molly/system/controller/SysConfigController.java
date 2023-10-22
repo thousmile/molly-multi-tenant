@@ -44,8 +44,7 @@ public class SysConfigController {
     @GetMapping("/query")
     public JsonResult<Pagination<SysConfig>> pageQuery(SearchPO params) {
         var page = baseService.pageKeywords(params,
-                SysConfig::getConfigName,
-                SysConfig::getConfigKey
+                List.of(SysConfig::getConfigName, SysConfig::getConfigKey)
         );
         return JsonResult.success(page.getTotal(), page.getRecords());
     }

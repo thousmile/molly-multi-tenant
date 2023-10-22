@@ -62,23 +62,12 @@ public interface BaseService<T extends BaseEntity> extends IService<T> {
     /**
      * 根据关键字查询
      *
-     * @param params
+     * @param params 参数
      * @param columns 实体类字段
      * @author Wang Chen Chen
      * @date 2021/8/25 9:41
      */
-    IPage<T> pageKeywords(SearchPO params, SFunction<T, ?>... columns);
-
-
-    /**
-     * 根据关键字查询
-     *
-     * @param params
-     * @param columns 实体类字段
-     * @author Wang Chen Chen
-     * @date 2021/8/25 9:41
-     */
-    IPage<T> pageKeywords(SearchPO params, List<SFunction<T, ?>> columns);
+    IPage<T> pageKeywords(SearchPO params, Collection<SFunction<T, ?>> columns);
 
 
     /**

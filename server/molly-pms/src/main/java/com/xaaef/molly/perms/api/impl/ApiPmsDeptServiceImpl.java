@@ -53,4 +53,23 @@ public class ApiPmsDeptServiceImpl implements ApiPmsDeptService {
                 .collect(Collectors.toMap(PmsDeptDTO::getDeptId, a -> a));
     }
 
+
+    @Override
+    public Set<Long> listChildIdByDeptId(Long deptId) {
+        return deptService.listChildIdByDeptId(deptId);
+    }
+
+
+    @Override
+    public Set<PmsDeptDTO> listChildByDeptId(Long deptId) {
+        return deptService.listChildByDeptId(deptId)
+                .stream()
+                .map(source -> {
+                    var target = new PmsDeptDTO();
+                    BeanUtils.copyProperties(source, target);
+                    return target;
+                })
+                .collect(Collectors.toSet());
+    }
+
 }

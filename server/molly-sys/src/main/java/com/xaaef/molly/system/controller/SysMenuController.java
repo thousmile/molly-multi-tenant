@@ -46,8 +46,7 @@ public class SysMenuController {
     @GetMapping("/query")
     public JsonResult<Pagination<SysMenu>> pageQuery(SearchPO params) {
         var page = baseService.pageKeywords(
-                params,
-                SysMenu::getMenuName, SysMenu::getPerms
+                params, List.of(SysMenu::getMenuName, SysMenu::getPerms)
         );
         return JsonResult.success(page.getTotal(), page.getRecords());
     }

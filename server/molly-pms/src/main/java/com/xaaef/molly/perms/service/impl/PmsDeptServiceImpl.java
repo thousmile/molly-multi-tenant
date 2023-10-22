@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.common.po.SearchParentPO;
+import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.perms.entity.PmsDept;
 import com.xaaef.molly.perms.entity.PmsUser;
@@ -43,12 +44,16 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
 
     private final PmsUserMapper userMapper;
 
+    private final ApiCmsProjectService projectService;
+
     @Override
     public IPage<PmsDept> pageKeywords(SearchParentPO po) {
-        var wrapper = super.getKeywordsQueryWrapper2(
+        var wrapper = super.getKeywordsQueryWrapper(
                 po,
-                PmsDept::getDeptName, PmsDept::getDescription,
-                PmsDept::getLeader, PmsDept::getLeaderMobile
+                List.of(
+                        PmsDept::getDeptName, PmsDept::getDescription,
+                        PmsDept::getLeader, PmsDept::getLeaderMobile
+                )
         );
         if (po.getParentId() != null) {
             wrapper.lambda().eq(PmsDept::getParentId, po.getParentId());
@@ -74,20 +79,29 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
     @Override
     public Set<Long> listHaveDeptIds(Long userId) {
         var wrapper = new LambdaQueryWrapper<PmsUser>()
-                .select(PmsUser::getDeptId).eq(PmsUser::getUserId, userId);
+                .select(List.of(PmsUser::getDeptId)).eq(PmsUser::getUserId, userId);
         var one = userMapper.selectOne(wrapper);
         if (one == null) {
             return Set.of();
         }
-        return listChildDeptIds(one.getDeptId());
+        return listChildIdByDeptId(one.getDeptId());
     }
 
 
     @Override
-    public Set<Long> listChildDeptIds(Long deptId) {
+    public Set<Long> listChildIdByDeptId(Long deptId) {
         var list = Optional.ofNullable(baseMapper.selectChildDeptId(deptId))
                 .orElse(new HashSet<>());
         list.add(deptId);
+        return list;
+    }
+
+
+    @Override
+    public Set<PmsDept> listChildByDeptId(Long deptId) {
+        var list = Optional.ofNullable(baseMapper.selectChildDept(deptId))
+                .orElse(new HashSet<>());
+        list.add(super.getById(deptId));
         return list;
     }
 
@@ -118,6 +132,9 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
         }
         if (super.exist(PmsDept::getParentId, dept.getDeptId())) {
             throw new RuntimeException(String.format("请先删除 %s 的下级部门!", dept.getDeptName()));
+        }
+        if (projectService.countProjectByDeptId(dept.getDeptId()) > 0) {
+            throw new RuntimeException(String.format("部门 %s 还有项目关联!", dept.getDeptName()));
         }
         var wrapper = new LambdaQueryWrapper<PmsUser>()
                 .eq(PmsUser::getDeptId, dept.getDeptId());
@@ -151,7 +168,7 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
         for (var child : children) {
             child.setAncestors(child.getAncestors().replaceFirst(oldAncestors, newAncestors));
         }
-        if (children.size() > 0) {
+        if (!children.isEmpty()) {
             baseMapper.updateChilds(children);
         }
     }

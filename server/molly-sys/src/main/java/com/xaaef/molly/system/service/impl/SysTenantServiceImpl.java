@@ -7,9 +7,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.enums.StatusEnum;
+import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.dto.InitUserDTO;
+import com.xaaef.molly.internal.dto.SysTenantDTO;
 import com.xaaef.molly.system.service.SysUserService;
 import com.xaaef.molly.tenant.DatabaseManager;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
@@ -30,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -65,6 +69,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
 
     private final SysUserService sysUserService;
 
+    private final ApiCmsProjectService projectService;
+
 
     /**
      * uuid
@@ -76,41 +82,31 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
 
     @Override
     public IPage<SysTenant> pageKeywords(SearchPO params) {
-        IPage<SysTenant> result = super.pageKeywords(params,
-                SysTenant::getName,
-                SysTenant::getLinkman,
-                SysTenant::getAddress
+        IPage<SysTenant> result = super.pageKeywords(
+                params,
+                List.of(SysTenant::getName, SysTenant::getLinkman, SysTenant::getAddress)
         );
-        var collect = result.getRecords().stream()
-                .map(SysTenant::getTenantId)
-                .collect(Collectors.toSet());
-        if (collect.isEmpty()) {
-            return result;
+        if (!result.getRecords().isEmpty()) {
+            var collect = result.getRecords().stream()
+                    .map(SysTenant::getTenantId)
+                    .collect(Collectors.toSet());
+            var templateMap = templateService.listByTenantIds(collect);
+            result.getRecords().forEach(t -> {
+                t.setTemplates(templateMap.getOrDefault(t.getTenantId(), new HashSet<>()));
+            });
         }
-        var templateMap = templateService.listByTenantIds(collect);
-        if (collect.isEmpty()) {
-            return result;
-        }
-        result.getRecords().forEach(t -> {
-            t.setTemplates(templateMap.get(t.getTenantId()));
-        });
         return result;
     }
 
 
     @Override
     public IPage<SysTenant> simplePageKeywords(SearchPO params) {
-        var wrapper = super.getKeywordsQueryWrapper2(
+        var wrapper = super.getKeywordsQueryWrapper(
                 params,
-                SysTenant::getName,
-                SysTenant::getLinkman,
-                SysTenant::getAddress
+                List.of(SysTenant::getName, SysTenant::getLinkman, SysTenant::getAddress)
         );
         wrapper.lambda().select(
-                SysTenant::getTenantId,
-                SysTenant::getLogo,
-                SysTenant::getName,
-                SysTenant::getLinkman
+                List.of(SysTenant::getTenantId, SysTenant::getLogo, SysTenant::getName, SysTenant::getLinkman)
         );
         // 如果当前登录的用户，关联的有租户，
         var tenantIds = sysUserService.listHaveTenantIds(getUserId());
@@ -218,7 +214,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                     .map(SysTemplate::getId)
                     .collect(Collectors.toSet());
             var wrapper = new LambdaQueryWrapper<SysTemplate>()
-                    .select(SysTemplate::getId)
+                    .select(List.of(SysTemplate::getId))
                     .in(SysTemplate::getId, tempIds);
             var templateIds = templateService.list(wrapper)
                     .stream()
@@ -237,6 +233,11 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         var initUserDTO = new InitUserDTO();
         BeanUtils.copyProperties(po, initUserDTO);
         userService.initUserAndRoleAndDept(initUserDTO);
+
+        // 初始化 项目
+        var initTenantDTO = new SysTenantDTO();
+        BeanUtils.copyProperties(sysTenant, initTenantDTO);
+        projectService.initProject(initTenantDTO);
 
         return TenantCreatedSuccessVO.builder()
                 .adminMobile(po.getAdminMobile())

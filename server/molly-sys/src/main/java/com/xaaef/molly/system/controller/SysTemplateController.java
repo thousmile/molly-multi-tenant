@@ -58,7 +58,7 @@ public class SysTemplateController {
     @GetMapping("/query")
     public JsonResult<Pagination<SysTemplate>> pageQuery(SearchPO params) {
         IPage<SysTemplate> page = baseService.pageKeywords(params,
-                SysTemplate::getName, SysTemplate::getCreateTime);
+                List.of(SysTemplate::getName, SysTemplate::getCreateTime));
         return JsonResult.success(page.getTotal(), page.getRecords());
     }
 

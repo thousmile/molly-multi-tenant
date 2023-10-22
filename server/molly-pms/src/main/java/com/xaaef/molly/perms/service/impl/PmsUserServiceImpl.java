@@ -73,14 +73,12 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
 
     private final JwtTokenService jwtTokenService;
 
-
     @Override
-    public IPage<PmsUser> pageKeywords(SearchPO params, SFunction<PmsUser, ?>... columns) {
+    public IPage<PmsUser> pageKeywords(SearchPO params, Collection<SFunction<PmsUser, ?>> columns) {
         var result = super.pageKeywords(params, columns);
         setRoleAndDept(result.getRecords());
         return result;
     }
-
 
     private void setRoleAndDept(Collection<PmsUser> list) {
         if (!list.isEmpty()) {
@@ -164,15 +162,21 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateById(PmsUser entity) {
-        var wrapper1 = new LambdaQueryWrapper<PmsUser>().eq(PmsUser::getUsername, entity.getUsername()).ne(PmsUser::getUserId, entity.getUserId());
+        var wrapper1 = new LambdaQueryWrapper<PmsUser>()
+                .eq(PmsUser::getUsername, entity.getUsername())
+                .ne(PmsUser::getUserId, entity.getUserId());
         if (this.count(wrapper1) > 0) {
             throw new RuntimeException(String.format("用户名 %s 已经存在了！", entity.getUsername()));
         }
-        var wrapper2 = new LambdaQueryWrapper<PmsUser>().eq(PmsUser::getMobile, entity.getMobile()).ne(PmsUser::getUserId, entity.getUserId());
+        var wrapper2 = new LambdaQueryWrapper<PmsUser>()
+                .eq(PmsUser::getMobile, entity.getMobile())
+                .ne(PmsUser::getUserId, entity.getUserId());
         if (this.count(wrapper2) > 0) {
             throw new RuntimeException(String.format("手机号码 %s 已经存在了！", entity.getMobile()));
         }
-        var wrapper3 = new LambdaQueryWrapper<PmsUser>().eq(PmsUser::getEmail, entity.getEmail()).ne(PmsUser::getUserId, entity.getUserId());
+        var wrapper3 = new LambdaQueryWrapper<PmsUser>()
+                .eq(PmsUser::getEmail, entity.getEmail())
+                .ne(PmsUser::getUserId, entity.getUserId());
         if (this.count(wrapper3) > 0) {
             throw new RuntimeException(String.format("邮箱账号 %s 已经存在了！", entity.getEmail()));
         }

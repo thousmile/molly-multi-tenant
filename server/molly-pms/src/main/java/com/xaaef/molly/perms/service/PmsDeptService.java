@@ -39,9 +39,15 @@ public interface PmsDeptService extends BaseService<PmsDept> {
 
 
     /**
-     * 获取 子部门
+     * 获取 子部门ID
      */
-    Set<Long> listChildDeptIds(Long deptId);
+    Set<Long> listChildIdByDeptId(Long deptId);
+
+
+    /**
+     * 获取 子部门信息
+     */
+    Set<PmsDept> listChildByDeptId(Long deptId);
 
 
 }

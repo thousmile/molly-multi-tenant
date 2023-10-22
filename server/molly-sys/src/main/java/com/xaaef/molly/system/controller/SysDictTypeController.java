@@ -53,8 +53,7 @@ public class SysDictTypeController {
     public JsonResult<Pagination<SysDictType>> pageQuery(SearchPO params) {
         var page = baseService.pageKeywords(
                 params,
-                SysDictType::getTypeName,
-                SysDictType::getDescription
+                List.of(SysDictType::getTypeName, SysDictType::getDescription)
         );
         return JsonResult.success(page.getTotal(), page.getRecords());
     }

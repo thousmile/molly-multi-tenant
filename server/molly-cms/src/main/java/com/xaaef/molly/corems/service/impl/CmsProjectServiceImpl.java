@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +43,7 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
     private final ApiPmsDeptService apiPmsDeptService;
 
     @Override
-    public IPage<CmsProject> pageKeywords(SearchPO params, List<SFunction<CmsProject, ?>> columns) {
+    public IPage<CmsProject> pageKeywords(SearchPO params, Collection<SFunction<CmsProject, ?>> columns) {
         var result = super.pageKeywords(params, columns);
         if (result.getTotal() > 0L) {
             var deptIds = result.getRecords().stream().map(CmsProject::getDeptId).collect(Collectors.toSet());

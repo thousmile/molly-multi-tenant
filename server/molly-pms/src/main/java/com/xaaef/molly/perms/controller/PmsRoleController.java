@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -55,9 +56,7 @@ public class PmsRoleController {
     @GetMapping("/query")
     public JsonResult<Pagination<PmsRole>> pageQuery(SearchPO params) {
         var page = baseService.pageKeywords(
-                params,
-                PmsRole::getRoleName,
-                PmsRole::getDescription
+                params, List.of(PmsRole::getRoleName, PmsRole::getDescription)
         );
         return JsonResult.success(page.getTotal(), page.getRecords());
     }

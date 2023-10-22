@@ -80,18 +80,20 @@ public class SchemaDataSourceManager implements DatabaseManager {
                 changeLogPath = multiTenantProperties.getOtherChangeLog().replaceFirst(CLASSPATH_URL_PREFIX, "");
             }
             var liquibase = new Liquibase(changeLogPath, new ClassLoaderResourceAccessor(), conn1);
-            liquibase.update(tenantId);
+            // 更新 数据库 结构体
+            liquibase.update();
             // 关闭链接
             conn1.close();
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
 
     @Override
     public void deleteTable(String tenantId) {
-        log.info("tenantId: {} delete table ...", tenantId);
+        log.warn("tenantId: {} delete table ...", tenantId);
         String tenantDbName = multiTenantProperties.getPrefix() + tenantId;
         String sql = String.format("DROP DATABASE %s ;", tenantDbName);
         try {
@@ -100,6 +102,7 @@ public class SchemaDataSourceManager implements DatabaseManager {
             conn.close();
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -107,7 +110,6 @@ public class SchemaDataSourceManager implements DatabaseManager {
     /**
      * 创建 临时的 jdbc 连接。 用于生成表结构。用完就关闭
      *
-     * @return
      * @author WangChenChen
      * @date 2022/12/8 12:44
      */
