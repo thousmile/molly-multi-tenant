@@ -5,7 +5,7 @@ x-tenant-id: {{tenantId}}
 Authorization: Bearer {{tokenValue}}
 
 {
-  "tenantId": "baidu",
+  "tenantId": "baidu120",
   "logo": "https://baidu.com/baidu.png",
   "name": "百度科技有限公司",
   "email": "baidu@qq.com",

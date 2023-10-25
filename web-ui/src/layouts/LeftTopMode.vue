@@ -2,13 +2,12 @@
 import { computed } from "vue"
 import { storeToRefs } from "pinia"
 import { useAppStore } from "@/store/modules/app"
-import { useTenantStoreHook } from "@/store/modules/tenant"
+import { useTenantAndProject } from "@/hooks/useTenantAndProject"
 import { useSettingsStore } from "@/store/modules/settings"
 import { AppMain, NavigationBar, Sidebar, TagsView, Logo } from "./components"
 
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
-const tenantStore = useTenantStoreHook()
 
 const { showTagsView, showLogo } = storeToRefs(settingsStore)
 
@@ -19,9 +18,7 @@ const layoutClasses = computed(() => {
   }
 })
 
-const currentTenantId = computed(() => {
-  return tenantStore.getCurrentTenantId()
-})
+const { currentOnlyId } = useTenantAndProject()
 </script>
 
 <template>
@@ -39,7 +36,7 @@ const currentTenantId = computed(() => {
       <!-- 左侧边栏 -->
       <Sidebar class="sidebar-container" />
       <!-- 页面主体内容 -->
-      <AppMain class="app-main" :key="currentTenantId" />
+      <AppMain class="app-main" :key="currentOnlyId" />
     </div>
   </div>
 </template>

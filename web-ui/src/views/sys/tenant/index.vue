@@ -11,7 +11,9 @@
         <el-col :span="2">
           <el-button type="success" :icon="Plus" @click="handleAdd()">新增</el-button>
         </el-col>
-        <el-col :span="10"><div class="grid-content ep-bg-purple" /></el-col>
+        <el-col :span="10">
+          <div class="grid-content ep-bg-purple" />
+        </el-col>
       </el-row>
     </el-header>
     <el-main>
@@ -459,27 +461,36 @@ const handleAdd = () => {
 
 // 删除
 const handleDelete = (data: ISysTenant) => {
-  ElMessageBox.confirm(`确要删除 ${data.name} 吗?`, "警告", {
+  ElMessageBox.prompt(`请在下方的输入框中填写租户ID`, `确要删除 ${data.name} 吗?`, {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
+    inputPattern: /^\w{4,12}$/,
+    inputErrorMessage: "租户ID可以是字母和数字，长度4~12位",
     type: "warning"
   })
-    .then(() => {
-      deleteTenantApi(data.tenantId)
-        .then((resp) => {
-          if (resp.data) {
-            ElMessage({
-              message: `删除 ${data.name} 成功！`,
-              type: "success"
-            })
-          }
+    .then((value) => {
+      if (value.value === data.tenantId) {
+        deleteTenantApi(data.tenantId)
+          .then((resp) => {
+            if (resp.data) {
+              ElMessage({
+                message: `删除 ${data.name} 成功！`,
+                type: "success"
+              })
+            }
+          })
+          .catch((err) => {
+            console.log("err :>> ", err)
+          })
+          .finally(() => {
+            getTableData()
+          })
+      } else {
+        ElMessage({
+          message: `租户ID输入错误！`,
+          type: "error"
         })
-        .catch((err) => {
-          console.log("err :>> ", err)
-        })
-        .finally(() => {
-          getTableData()
-        })
+      }
     })
     .catch((error) => {
       console.log("error :>> ", error)

@@ -24,6 +24,10 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class CmsDeviceServiceImpl extends BaseServiceImpl<CmsDeviceMapper, CmsDevice> implements CmsDeviceService {
 
-
+    @Override
+    public boolean save(CmsDevice entity) {
+        entity.setDeviceId(null);
+        return super.save(entity);
+    }
 
 }

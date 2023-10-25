@@ -249,7 +249,7 @@ const adminResult = ref<ICreateTenantAdmin>({
 const entityFormRef = ref<FormInstance | null>(null)
 
 const tenantIdValidator = (rule: any, value: any, callback: any) => {
-  if (!/\w{4,12}$/.test(value)) {
+  if (!/^\w{4,12}$/.test(value)) {
     callback(new Error("只能是字母和数字，长度4~12位!"))
   } else {
     callback()

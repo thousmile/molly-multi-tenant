@@ -8,6 +8,7 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -34,6 +35,8 @@ public class SchemaDataSourceManager implements DatabaseManager {
 
     // 默认租户的数据源
     private final DataSource dataSource;
+
+    private final JdbcTemplate jdbcTemplate;
 
     private final MultiTenantProperties multiTenantProperties;
 
@@ -65,25 +68,24 @@ public class SchemaDataSourceManager implements DatabaseManager {
     @Override
     public void updateTable(String tenantId) {
         log.info("tenantId: {} update table ...", tenantId);
+        // 判断数据库是否存在！不存在就创建
+        var tenantDbName = multiTenantProperties.getPrefix() + tenantId;
+        var sql = String.format("CREATE DATABASE IF NOT EXISTS %s CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;", tenantDbName);
+        jdbcTemplate.execute(sql);
         try {
-            // 判断 schema 是否存在。不存在就创建
-            var conn = dataSource.getConnection();
-            // 判断数据库是否存在！不存在就创建
-            String tenantDbName = multiTenantProperties.getPrefix() + tenantId;
-            String sql = String.format("CREATE DATABASE IF NOT EXISTS %s CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;", tenantDbName);
-            conn.createStatement().execute(sql);
             // 创建一次性的 jdbc 链接。只是用来生成表结构的。用完就关闭。
-            var conn1 = new JdbcConnection(getTempConnection(tenantDbName));
+            var tempConn = getTempConnection(tenantDbName);
+            log.info("getTempConnection: {} ", tempConn);
             var changeLogPath = multiTenantProperties.getOtherChangeLog();
             // 使用 Liquibase 创建表结构
             if (multiTenantProperties.getOtherChangeLog().startsWith(CLASSPATH_URL_PREFIX)) {
                 changeLogPath = multiTenantProperties.getOtherChangeLog().replaceFirst(CLASSPATH_URL_PREFIX, "");
             }
-            var liquibase = new Liquibase(changeLogPath, new ClassLoaderResourceAccessor(), conn1);
+            var liquibase = new Liquibase(changeLogPath, new ClassLoaderResourceAccessor(), new JdbcConnection(tempConn));
             // 更新 数据库 结构体
             liquibase.update();
             // 关闭链接
-            conn1.close();
+            tempConn.close();
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -96,14 +98,7 @@ public class SchemaDataSourceManager implements DatabaseManager {
         log.warn("tenantId: {} delete table ...", tenantId);
         String tenantDbName = multiTenantProperties.getPrefix() + tenantId;
         String sql = String.format("DROP DATABASE %s ;", tenantDbName);
-        try {
-            var conn = getTempConnection(tenantDbName);
-            conn.createStatement().execute(sql);
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-        }
+        jdbcTemplate.execute(sql);
     }
 
 
@@ -118,6 +113,7 @@ public class SchemaDataSourceManager implements DatabaseManager {
         var oldDbName = getOldDbName(dataSourceProperties.getUrl());
         // 替换连接池中的数据库名称
         var dataSourceUrl = dataSourceProperties.getUrl().replaceFirst(oldDbName, tenantDbName);
+
         //3.获取数据库连接对象
         return DriverManager.getConnection(dataSourceUrl,
                 dataSourceProperties.getUsername(),

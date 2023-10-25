@@ -66,7 +66,7 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
         delegate(po.getTenantId(), () -> {
             var project = new CmsProject()
                     .setProjectId(10001L)
-                    .setProjectName(po.getName())
+                    .setProjectName("默认项目")
                     .setLinkman(po.getLinkman())
                     .setContactNumber(po.getContactNumber())
                     .setAreaCode(po.getAreaCode())

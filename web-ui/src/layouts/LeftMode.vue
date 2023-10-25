@@ -3,13 +3,12 @@ import { computed } from "vue"
 import { storeToRefs } from "pinia"
 import { useAppStore } from "@/store/modules/app"
 import { useSettingsStore } from "@/store/modules/settings"
-import { useTenantStoreHook } from "@/store/modules/tenant"
+import { useTenantAndProject } from "@/hooks/useTenantAndProject"
 import { AppMain, NavigationBar, Sidebar, TagsView } from "./components"
 import { DeviceEnum } from "@/constants/app-key"
 
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
-const tenantStore = useTenantStoreHook()
 
 const { showTagsView, fixedHeader } = storeToRefs(settingsStore)
 
@@ -28,9 +27,7 @@ const handleClickOutside = () => {
   appStore.closeSidebar(false)
 }
 
-const currentTenantId = computed(() => {
-  return tenantStore.getCurrentTenantId()
-})
+const { currentOnlyId } = useTenantAndProject()
 </script>
 
 <template>
@@ -47,7 +44,7 @@ const currentTenantId = computed(() => {
         <TagsView v-show="showTagsView" />
       </div>
       <!-- 页面主体内容 -->
-      <AppMain class="app-main" :key="currentTenantId" />
+      <AppMain class="app-main" :key="currentOnlyId" />
     </div>
   </div>
 </template>

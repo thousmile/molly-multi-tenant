@@ -1,18 +1,12 @@
 <script lang="ts" setup>
-import { computed } from "vue"
 import { storeToRefs } from "pinia"
 import { useSettingsStore } from "@/store/modules/settings"
-import { useTenantStoreHook } from "@/store/modules/tenant"
+import { useTenantAndProject } from "@/hooks/useTenantAndProject"
 import { AppMain, NavigationBar, TagsView, Logo } from "./components"
 
 const settingsStore = useSettingsStore()
-const tenantStore = useTenantStoreHook()
-
 const { showTagsView, showLogo } = storeToRefs(settingsStore)
-
-const currentTenantId = computed(() => {
-  return tenantStore.getCurrentTenantId()
-})
+const { currentOnlyId } = useTenantAndProject()
 </script>
 
 <template>
@@ -28,7 +22,7 @@ const currentTenantId = computed(() => {
     <!-- 主容器 -->
     <div :class="{ hasTagsView: showTagsView }" class="main-container">
       <!-- 页面主体内容 -->
-      <AppMain class="app-main" :key="currentTenantId" />
+      <AppMain class="app-main" :key="currentOnlyId" />
     </div>
   </div>
 </template>

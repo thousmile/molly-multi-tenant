@@ -55,13 +55,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from "vue"
+import { computed, reactive, ref, onMounted } from "vue"
 import { Search, UserFilled } from "@element-plus/icons-vue"
 import { ISearchQuery, ISimpleTenant } from "@/types/base"
 import { simpleQueryTenantApi } from "@/api/tenant"
 import { useTenantStoreHook } from "@/store/modules/tenant"
+import { useProjectStoreHook } from "@/store/modules/project"
 
 const tenantStore = useTenantStoreHook()
+const projectStore = useProjectStoreHook()
 
 const simpleTenants = ref<ISimpleTenant[]>()
 
@@ -75,7 +77,9 @@ const params = reactive({
   keywords: ""
 })
 
-const dialogVisible = ref(false)
+const emit = defineEmits<{
+  (e: "handleSwitch", id: string): void
+}>()
 
 // 切换租户
 const handleSwitchClick = (t: ISimpleTenant) => {
@@ -86,7 +90,9 @@ const handleSwitchClick = (t: ISimpleTenant) => {
     linkman: t.linkman
   }
   tenantStore.setCurrentTenant(tenant)
-  dialogVisible.value = false
+  // 重置当前项目为默认项目
+  projectStore.resetCurrentProject()
+  emit("handleSwitch", t.name)
 }
 
 const handleSizeChange = (val: number) => {
@@ -124,9 +130,16 @@ const searchTenantList = () => {
       loading.value = false
     })
 }
+
+onMounted(() => {
+  searchTenantList()
+})
+
+const searchList = () => searchTenantList()
+
 // 输出组件的方法，让外部组件可以调用
 defineExpose({
-  searchTenantList
+  searchList
 })
 </script>
 

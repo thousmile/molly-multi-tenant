@@ -1,7 +1,8 @@
+import { IBaseEntity } from "./base"
 import { IPmsDept } from "./pms"
 
 /** 项目 */
-export interface ICmsProject {
+export interface ICmsProject extends IBaseEntity {
   /* 项目ID */
   projectId: number
   /*项目名称*/
@@ -24,4 +25,14 @@ export interface ICmsProject {
   deptId: number
   /*部门*/
   dept: IPmsDept | null
+}
+
+/** 项目 */
+export interface ICmsDevice extends IBaseEntity {
+  /* 设备ID */
+  deviceId: number
+  /*设备名称*/
+  deviceName: string
+  /*状态 【0.禁用 1.正常 2.锁定 】*/
+  status: number
 }

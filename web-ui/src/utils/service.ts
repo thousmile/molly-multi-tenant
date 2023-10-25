@@ -4,6 +4,7 @@ import { ElMessage, ElMessageBox } from "element-plus"
 import { get, merge } from "lodash-es"
 import { getToken } from "./cache/cookies"
 import { useTenantStoreHook } from "@/store/modules/tenant"
+import { useProjectStoreHook } from "@/store/modules/project"
 import { getEnvBaseURLPrefix } from "."
 import { ISimpleTenant } from "@/types/base"
 import { defaultTenant } from "@/utils"
@@ -137,15 +138,15 @@ function logout(message: string) {
 function createRequest(service: AxiosInstance) {
   return function <T>(config: AxiosRequestConfig): Promise<T> {
     const tokenValue = getToken()
-    let tenant: ISimpleTenant = useTenantStoreHook().getCurrentTenant()
-    if (config.url === "/auth/login") {
-      tenant = defaultTenant
-    }
+    const projectId = useProjectStoreHook().getCurrentProjectId()
+    // 如果是登录接口，就使用默认的 租户ID 进行登录
+    const tenantId = config.url === "/auth/login" ? defaultTenant.tenantId : useTenantStoreHook().getCurrentTenantId()
     const defaultConfig = {
       headers: {
         // 携带 Token
         Authorization: tokenValue ? tokenValue : undefined,
-        "x-tenant-id": tenant.tenantId,
+        "x-tenant-id": tenantId,
+        "x-project-id": projectId,
         "Content-Type": "application/json"
       },
       timeout: 10000,
