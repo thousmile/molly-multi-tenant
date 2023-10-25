@@ -66,10 +66,11 @@ public class MbpConst {
 
     /**
      * 不需要进行拦截 project_id 的表名称
+     *
      * <p>
      * 在 项目初始化的时候，会自动从数据中读取，不包含 project_id 字段的表名称
      * <p>
-     * 必须添加 COLUMNS 否则
+     * 必须添加 COLUMNS 否则，初始化的时候，自动读取表名称
      * <p>
      *
      * @see com.xaaef.molly.corems.runner.ProjectTableRunner
@@ -77,9 +78,7 @@ public class MbpConst {
      */
     public final static Set<String> PROJECT_IGNORE_TABLES = new HashSet<>(
             Set.of(
-                    "COLUMNS",
-                    "cms_hello",
-                    "cms_test1"
+                    "COLUMNS"
             )
     );
 

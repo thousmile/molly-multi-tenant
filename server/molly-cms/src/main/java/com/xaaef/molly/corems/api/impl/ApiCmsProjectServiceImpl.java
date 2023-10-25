@@ -2,12 +2,12 @@ package com.xaaef.molly.corems.api.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.enums.StatusEnum;
+import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.mapper.CmsProjectMapper;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.dto.CmsProjectDTO;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
-import com.xaaef.molly.perms.entity.CmsProject;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

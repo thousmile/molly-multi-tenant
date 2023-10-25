@@ -3,23 +3,18 @@ package com.xaaef.molly.corems.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.corems.mapper.CmsProjectMapper;
 import com.xaaef.molly.corems.service.CmsProjectService;
 import com.xaaef.molly.corems.vo.ResetPasswordVO;
 import com.xaaef.molly.internal.api.ApiPmsDeptService;
-import com.xaaef.molly.internal.dto.PmsDeptDTO;
-import com.xaaef.molly.perms.entity.CmsProject;
+import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.encryptPassword;

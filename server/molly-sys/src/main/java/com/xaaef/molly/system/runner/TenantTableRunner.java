@@ -2,6 +2,8 @@ package com.xaaef.molly.system.runner;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xaaef.molly.common.consts.MbpConst;
+import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.tenant.DatabaseManager;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
 import com.xaaef.molly.system.entity.SysTenant;
@@ -19,15 +21,21 @@ import java.util.List;
 
 /**
  * TODO 初始化 租户的表结构
+ * <p>
+ *     一定要在
+ *     @see com.xaaef.molly.corems.runner.ProjectTableRunner.run()
+ *     方法之后初始化
+ * </p>
  *
  * @author WangChenChen
  * @date 2022/12/7 21:20
+ * <p>
  */
 
 
 @Slf4j
 @Component
-@Order(Byte.MIN_VALUE)
+@Order(Integer.MIN_VALUE + 10)
 @AllArgsConstructor
 public class TenantTableRunner implements ApplicationRunner {
 
@@ -42,6 +50,7 @@ public class TenantTableRunner implements ApplicationRunner {
         var props = databaseManager.getMultiTenantProperties();
         if (props.getEnable()) {
             log.info("Execute TenantTableRunner run() ...");
+            log.info("ignore tenant_id intercept table name : \n{}", JsonUtils.toJson(MbpConst.TENANT_IGNORE_TABLES));
             var defaultTenantId = props.getDefaultTenantId();
             var count = tenantMapper.selectCount(null);
             var pageSize = 100;

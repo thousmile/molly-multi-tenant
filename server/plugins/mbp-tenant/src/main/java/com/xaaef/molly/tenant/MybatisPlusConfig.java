@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
+import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
 import com.xaaef.molly.tenant.schema.SchemaInterceptor;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static com.xaaef.molly.common.consts.MbpConst.*;
 
@@ -88,7 +90,10 @@ public class MybatisPlusConfig {
 
     @Slf4j
     @Component
+    @AllArgsConstructor
     public static class MyMetaObjectHandler implements MetaObjectHandler {
+
+        private final MultiTenantProperties multiTenantProperties;
 
         @Override
         public void insertFill(MetaObject metaObject) {
@@ -99,7 +104,13 @@ public class MybatisPlusConfig {
             }
             this.strictInsertFill(metaObject, ATTR_CREATE_TIME, LocalDateTime::now, LocalDateTime.class);
             this.strictInsertFill(metaObject, ATTR_LAST_UPDATE_TIME, LocalDateTime::now, LocalDateTime.class);
+            if (metaObject.hasSetter(ATTR_PROJECT_ID)) {
+                var projectId = Optional.ofNullable(TenantUtils.getProjectId())
+                        .orElse(multiTenantProperties.getDefaultProjectId());
+                this.strictInsertFill(metaObject, ATTR_PROJECT_ID, () -> projectId, Long.class);
+            }
         }
+
 
         @Override
         public void updateFill(MetaObject metaObject) {

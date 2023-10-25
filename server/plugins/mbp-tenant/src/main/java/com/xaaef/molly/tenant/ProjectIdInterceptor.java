@@ -10,6 +10,7 @@ import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.internal.dto.CmsProjectDTO;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
+import com.xaaef.molly.tenant.props.MultiTenantProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,8 @@ public class ProjectIdInterceptor implements HandlerInterceptor {
 
     private final ApiCmsProjectService projectService;
 
+    private final MultiTenantProperties multiTenantProperties;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         /*
@@ -59,6 +62,9 @@ public class ProjectIdInterceptor implements HandlerInterceptor {
         if (StrUtil.isNotEmpty(projectIdStr)) {
             var projectId = NumberUtil.parseLong(projectIdStr);
             TenantUtils.setProjectId(projectId);
+        } else {
+            // 使用 默认项目ID
+            TenantUtils.setProjectId(multiTenantProperties.getDefaultProjectId());
         }
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

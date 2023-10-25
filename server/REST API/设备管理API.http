@@ -1,0 +1,20 @@
+### 查询设备
+GET {{baseUrl}}/cms/device/list
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+x-project-id: {{projectId}}
+Authorization: Bearer {{tokenValue}}
+
+
+### 创建设备
+POST {{baseUrl}}/cms/device
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+x-project-id: {{projectId}}
+Authorization: Bearer {{tokenValue}}
+
+{
+  "deviceName": "牛逼网关",
+  "status": "0"
+}
+

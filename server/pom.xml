@@ -37,6 +37,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <!-- spring-file-storage -->
         <storage.version>1.0.3</storage.version>
         <qiniu.version>7.14.0</qiniu.version>
         <oshi.version>6.4.6</oshi.version>
@@ -44,7 +45,7 @@
         <hutool.version>5.8.22</hutool.version>
         <knife4j.version>4.3.0</knife4j.version>
         <liquibase.version>4.23.2</liquibase.version>
-        <mybatis-plus.version>3.5.3.2</mybatis-plus.version>
+        <mybatis-plus.version>3.5.4</mybatis-plus.version>
 
         <spring-boot.version>3.1.5</spring-boot.version>
     </properties>

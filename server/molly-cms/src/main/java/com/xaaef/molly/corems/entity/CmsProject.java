@@ -1,4 +1,4 @@
-package com.xaaef.molly.perms.entity;
+package com.xaaef.molly.corems.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -13,12 +13,12 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 部门表
+ * 项目表
  * </p>
  *
  * @author Wang Chen Chen
  * @version 1.0
- * @date 2021/7/5 9:31
+ * @date 2023/10/10 9:31
  */
 
 @Schema(description = "项目")
