@@ -52,6 +52,20 @@ export interface ISimpleTenant {
   linkman: string
 }
 
+// 简单项目
+export interface ISimpleProject {
+  /** 项目ID */
+  projectId: number
+  /** 项目名称 */
+  projectName: string
+  /** 联系人名称 */
+  linkman: string
+  /** 行政地址 */
+  areaCode: number
+  /** 所在地址 */
+  address: string
+}
+
 // 基础类型
 export interface IBaseEntity {
   /** 创建时间 */

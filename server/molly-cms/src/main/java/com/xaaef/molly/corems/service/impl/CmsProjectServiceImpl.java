@@ -1,23 +1,29 @@
 package com.xaaef.molly.corems.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.mapper.CmsProjectMapper;
 import com.xaaef.molly.corems.service.CmsProjectService;
 import com.xaaef.molly.corems.vo.ResetPasswordVO;
 import com.xaaef.molly.internal.api.ApiPmsDeptService;
+import com.xaaef.molly.internal.dto.PmsDeptDTO;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.encryptPassword;
+import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
 
 
 /**
@@ -84,6 +90,32 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
             return super.updateById(pmsUser);
         }
         throw new RuntimeException("项目不存在，无法重置密码！");
+    }
+
+
+    @Override
+    public IPage<CmsProject> simplePageKeywords(SearchPO po) {
+        var wrapper = super.getKeywordsQueryWrapper(po,
+                        List.of(CmsProject::getProjectName, CmsProject::getLinkman)
+                )
+                .lambda()
+                .select(
+                        List.of(
+                                CmsProject::getProjectId, CmsProject::getProjectName,
+                                CmsProject::getLinkman, CmsProject::getAreaCode, CmsProject::getAddress
+                        )
+                )
+                .eq(CmsProject::getStatus, 1)
+                .orderByAsc(CmsProject::getCreateTime);
+        // 非管理员用户。根据所在部门，查询项目列表
+        if (!isMasterUser()) {
+            var childDeptIds = apiPmsDeptService.listChildIdByDeptId(getLoginUser().getDeptId());
+            if (!childDeptIds.isEmpty()) {
+                wrapper.in(CmsProject::getDeptId, childDeptIds);
+            }
+        }
+        Page<CmsProject> pageRequest = Page.of(po.getPageIndex(), po.getPageSize());
+        return super.page(pageRequest, wrapper);
     }
 
 

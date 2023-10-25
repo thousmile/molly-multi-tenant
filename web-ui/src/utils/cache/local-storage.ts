@@ -5,8 +5,8 @@ import { type SidebarOpened, type SidebarClosed } from "@/constants/app-key"
 import { type ThemeName } from "@/hooks/useTheme"
 import { type TagView } from "@/store/modules/tags-view"
 import { type LayoutSettings } from "@/config/layouts"
-import { type ISimpleTenant } from "@/types/base"
-import { defaultTenant } from "@/utils"
+import { ISimpleProject, type ISimpleTenant } from "@/types/base"
+import { defaultProject, defaultTenant } from "@/utils"
 
 //#region 系统布局配置
 export const getConfigLayout = () => {

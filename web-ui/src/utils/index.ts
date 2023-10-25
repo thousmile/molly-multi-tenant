@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import { removeConfigLayout } from "@/utils/cache/local-storage"
 import chinaAreaJson from "@/assets/ChinaArea.json"
-import { ISimpleTenant } from "@/types/base"
+import { ISimpleProject, ISimpleTenant } from "@/types/base"
 
 //#region 格式化日期时间
 export const DEFAULT_DATE_TIME_PATTERN = "YYYY-MM-DD HH:mm:ss"
@@ -215,4 +215,12 @@ export const defaultTenant: ISimpleTenant = {
   logo: "http://images.xaaef.com/molly_master_logo.png",
   name: "默认租户",
   linkman: "master"
+}
+
+// 设置 默认的项目
+export const defaultProject: ISimpleProject = {
+  projectId: 10001,
+  projectName: "默认项目",
+  linkman: "默认项目",
+  address: "默认项目"
 }

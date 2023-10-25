@@ -2,6 +2,7 @@ package com.xaaef.molly.corems.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.common.domain.Pagination;
+import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.po.SearchParentPO;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.corems.entity.CmsProject;
@@ -41,6 +42,17 @@ public class CmsProjectController {
     @GetMapping("/{id}")
     public JsonResult<CmsProject> findById(@PathVariable("id") Long id) {
         return JsonResult.success(baseService.getById(id));
+    }
+
+
+    @Operation(summary = "简单分页查询", description = "简单分页 搜索查询所有")
+    @GetMapping("/simple/query")
+    public JsonResult<Pagination<CmsProject>> simplePageQuery(SearchPO po) {
+        var pageResult = baseService.simplePageKeywords(po);
+        return JsonResult.success(
+                pageResult.getTotal(),
+                pageResult.getRecords()
+        );
     }
 
 

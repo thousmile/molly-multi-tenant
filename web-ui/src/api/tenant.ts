@@ -3,7 +3,7 @@ import { ISysTenant, ICreateTenant, ICreateTenantAdmin } from "@/types/sys"
 import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
 
 // 简单查询
-export const simpleQueryApi = (params: ISearchQuery) => {
+export const simpleQueryTenantApi = (params: ISearchQuery) => {
   return httpGet<ISearchQuery, IPageResult<ISimpleTenant>>("/sys/tenant/simple/query", params)
 }
 

@@ -8,7 +8,7 @@ import { UserFilled } from "@element-plus/icons-vue"
 import Hamburger from "../Hamburger/index.vue"
 import Breadcrumb from "../Breadcrumb/index.vue"
 import Sidebar from "../Sidebar/index.vue"
-import SearchTenant from "../SearchTenant/index.vue"
+import SearchTenantAndTenant from "../SearchTenantAndTenant/index.vue"
 import Notify from "@/components/Notify/index.vue"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import Screenfull from "@/components/Screenfull/index.vue"
@@ -62,7 +62,7 @@ const logout = () => {
     <Breadcrumb v-if="!isTop || isMobile" class="breadcrumb" />
     <Sidebar v-if="isTop && !isMobile" class="sidebar" />
     <div class="right-menu">
-      <SearchTenant v-if="showSearchTenant" class="right-menu-item" />
+      <SearchTenantAndTenant v-if="showSearchTenant" class="right-menu-item" />
       <SearchMenu v-if="showSearchMenu" class="right-menu-item" />
       <SelectControlSize v-if="showControlSize" class="right-menu-item" />
       <Screenfull v-if="showScreenfull" class="right-menu-item" />

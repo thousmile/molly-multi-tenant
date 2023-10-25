@@ -1,10 +1,15 @@
-import { IJsonResult, IPageResult, ISearchQuery } from "@/types/base"
+import { IJsonResult, IPageResult, ISearchQuery, ISimpleProject } from "@/types/base"
 import { ICmsProject } from "@/types/cms"
 import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
 
 /** 根据Id查询 */
 export const getProjectApi = (id: number) => {
   return httpGet<number, IJsonResult<ICmsProject>>(`/cms/project/${id}`)
+}
+
+// 简单查询
+export const simpleQueryProjectApi = (params: ISearchQuery) => {
+  return httpGet<ISearchQuery, IPageResult<ISimpleProject>>("/cms/project/simple/query", params)
 }
 
 /** 分页查询所有 */
