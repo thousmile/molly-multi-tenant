@@ -1,7 +1,7 @@
 package com.xaaef.molly.perms.service;
 
-import com.xaaef.molly.tenant.base.service.BaseService;
 import com.xaaef.molly.perms.entity.PmsUserSocial;
+import com.xaaef.molly.tenant.base.service.BaseService;
 
 /**
  * <p>

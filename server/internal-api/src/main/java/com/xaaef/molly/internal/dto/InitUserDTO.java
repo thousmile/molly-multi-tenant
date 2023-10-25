@@ -3,8 +3,6 @@ package com.xaaef.molly.internal.dto;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
-
 
 /**
  * <p>

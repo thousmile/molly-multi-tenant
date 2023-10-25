@@ -5,17 +5,13 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.enums.StatusEnum;
+import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.dto.InitUserDTO;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
-import com.xaaef.molly.system.service.SysUserService;
-import com.xaaef.molly.tenant.DatabaseManager;
-import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
-import com.xaaef.molly.tenant.service.MultiTenantManager;
 import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
@@ -23,6 +19,10 @@ import com.xaaef.molly.system.po.CreateTenantPO;
 import com.xaaef.molly.system.po.TenantCreatedSuccessVO;
 import com.xaaef.molly.system.service.SysTemplateService;
 import com.xaaef.molly.system.service.SysTenantService;
+import com.xaaef.molly.system.service.SysUserService;
+import com.xaaef.molly.tenant.DatabaseManager;
+import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
+import com.xaaef.molly.tenant.service.MultiTenantManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +40,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
-import static com.xaaef.molly.common.consts.ConfigName.*;
+import static com.xaaef.molly.common.consts.ConfigName.TENANT_DEFAULT_LOGO;
+import static com.xaaef.molly.common.consts.ConfigName.USER_DEFAULT_PASSWORD;
 
 /**
  * <p>

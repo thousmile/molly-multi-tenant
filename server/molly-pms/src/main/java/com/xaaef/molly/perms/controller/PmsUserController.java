@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Set;
 
-import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.getTenantId;
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 

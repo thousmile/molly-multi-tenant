@@ -2,13 +2,13 @@ package com.xaaef.molly.tenant;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.common.util.ServletUtils;
-import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
+import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiSysTenantService;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
-import com.xaaef.molly.common.util.TenantUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;

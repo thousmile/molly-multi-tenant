@@ -3,8 +3,8 @@ package com.xaaef.molly.perms.api.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.util.IdUtils;
-import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
+import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.dto.InitUserDTO;
 import com.xaaef.molly.internal.dto.PmsUserDTO;
 import com.xaaef.molly.perms.entity.PmsDept;
@@ -13,7 +13,6 @@ import com.xaaef.molly.perms.entity.PmsUser;
 import com.xaaef.molly.perms.mapper.PmsDeptMapper;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import com.xaaef.molly.perms.mapper.PmsUserMapper;
-import com.xaaef.molly.perms.service.PmsUserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -27,7 +26,7 @@ import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.encryptPassword;
 import static com.xaaef.molly.common.consts.ConfigName.TENANT_DEFAULT_ROLE_NAME;
 import static com.xaaef.molly.common.enums.AdminFlag.YES;
 import static com.xaaef.molly.common.enums.GenderType.MALE;
-import static com.xaaef.molly.tenant.util.DelegateUtils.*;
+import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 
 /**

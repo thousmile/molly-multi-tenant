@@ -2,7 +2,6 @@ package com.xaaef.molly.auth.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
@@ -14,7 +13,6 @@ import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.auth.jwt.JwtTokenProperties;
 import com.xaaef.molly.auth.jwt.JwtTokenValue;
 import com.xaaef.molly.auth.service.JwtTokenService;
-import com.xaaef.molly.common.util.TenantUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,10 +25,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.xaaef.molly.common.consts.LoginConst.LOGIN_TOKEN_KEY;
-import static com.xaaef.molly.common.util.JsonUtils.DEFAULT_DATE_TIME_PATTERN;
-import static com.xaaef.molly.common.consts.LoginConst.*;
 import static com.xaaef.molly.auth.enums.OAuth2Error.TOKEN_FORMAT_ERROR;
+import static com.xaaef.molly.common.consts.LoginConst.*;
+import static com.xaaef.molly.common.util.JsonUtils.DEFAULT_DATE_TIME_PATTERN;
 
 
 /**

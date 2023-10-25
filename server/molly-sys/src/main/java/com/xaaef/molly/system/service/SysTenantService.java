@@ -2,10 +2,10 @@ package com.xaaef.molly.system.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.common.po.SearchPO;
-import com.xaaef.molly.tenant.base.service.BaseService;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.po.CreateTenantPO;
 import com.xaaef.molly.system.po.TenantCreatedSuccessVO;
+import com.xaaef.molly.tenant.base.service.BaseService;
 
 import java.util.Set;
 

@@ -6,14 +6,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xaaef.molly.common.po.SearchPO;
-import com.xaaef.molly.monitor.mapper.LmsOperLogMapper;
-import com.xaaef.molly.tenant.service.MultiTenantManager;
-
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
 import com.xaaef.molly.internal.dto.PmsUserDTO;
 import com.xaaef.molly.monitor.entity.LmsOperLog;
+import com.xaaef.molly.monitor.mapper.LmsOperLogMapper;
 import com.xaaef.molly.monitor.service.LmsOperLogService;
+import com.xaaef.molly.tenant.service.MultiTenantManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.xaaef.molly.tenant.util.DelegateUtils.*;
+import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 
 /**

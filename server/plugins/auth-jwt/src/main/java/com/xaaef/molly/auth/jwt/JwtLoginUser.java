@@ -1,10 +1,10 @@
 package com.xaaef.molly.auth.jwt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.xaaef.molly.auth.enums.GrantType;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.enums.UserType;
-import com.xaaef.molly.auth.enums.GrantType;
 import com.xaaef.molly.internal.dto.PmsRoleDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

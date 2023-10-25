@@ -1,12 +1,12 @@
 package com.xaaef.molly.auth;
 
-import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.auth.enums.OAuth2Error;
 import com.xaaef.molly.auth.jwt.JwtAuthTokenFilter;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.auth.jwt.JwtTokenProperties;
 import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.auth.service.impl.JwtTokenServiceImpl;
+import com.xaaef.molly.common.util.ServletUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

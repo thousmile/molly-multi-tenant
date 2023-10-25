@@ -1,8 +1,8 @@
 package com.xaaef.molly.system.service;
 
 import cn.hutool.core.lang.tree.Tree;
-import com.xaaef.molly.tenant.base.service.BaseService;
 import com.xaaef.molly.system.entity.SysMenu;
+import com.xaaef.molly.tenant.base.service.BaseService;
 
 import java.util.List;
 

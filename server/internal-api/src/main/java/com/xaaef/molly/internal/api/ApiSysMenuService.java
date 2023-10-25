@@ -2,7 +2,6 @@ package com.xaaef.molly.internal.api;
 
 import com.xaaef.molly.internal.dto.SysMenuDTO;
 
-import java.util.List;
 import java.util.Set;
 
 /**

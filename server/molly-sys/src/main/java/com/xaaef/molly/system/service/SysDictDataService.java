@@ -1,10 +1,10 @@
 package com.xaaef.molly.system.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.xaaef.molly.tenant.base.service.BaseService;
 import com.xaaef.molly.system.entity.SysDictData;
 import com.xaaef.molly.system.po.DictQueryPO;
 import com.xaaef.molly.system.vo.DictDataVO;
+import com.xaaef.molly.tenant.base.service.BaseService;
 
 import java.util.List;
 import java.util.Map;

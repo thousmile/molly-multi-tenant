@@ -1,6 +1,7 @@
 package com.xaaef.molly.common.consts;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>

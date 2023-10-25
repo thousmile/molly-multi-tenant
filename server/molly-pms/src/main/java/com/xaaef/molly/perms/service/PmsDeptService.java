@@ -3,8 +3,8 @@ package com.xaaef.molly.perms.service;
 import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.common.po.SearchParentPO;
-import com.xaaef.molly.tenant.base.service.BaseService;
 import com.xaaef.molly.perms.entity.PmsDept;
+import com.xaaef.molly.tenant.base.service.BaseService;
 
 import java.util.List;
 import java.util.Set;

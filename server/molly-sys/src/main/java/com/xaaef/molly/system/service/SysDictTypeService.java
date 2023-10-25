@@ -1,7 +1,7 @@
 package com.xaaef.molly.system.service;
 
-import com.xaaef.molly.tenant.base.service.BaseService;
 import com.xaaef.molly.system.entity.SysDictType;
+import com.xaaef.molly.tenant.base.service.BaseService;
 
 
 /**

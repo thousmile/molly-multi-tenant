@@ -1,8 +1,8 @@
 package com.xaaef.molly.auth.jwt;
 
+import com.xaaef.molly.auth.exception.JwtNoLoginException;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.UserType;
-import com.xaaef.molly.auth.exception.JwtNoLoginException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

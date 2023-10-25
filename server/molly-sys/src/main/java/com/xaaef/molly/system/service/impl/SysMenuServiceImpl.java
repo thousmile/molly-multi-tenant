@@ -7,10 +7,10 @@ import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.system.entity.SysMenu;
 import com.xaaef.molly.system.mapper.SysMenuMapper;
 import com.xaaef.molly.system.service.SysMenuService;
+import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.isMasterUser;
 import static com.xaaef.molly.common.enums.UserType.SYSTEM;
 import static com.xaaef.molly.common.enums.UserType.TENANT;
-import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.isMasterUser;
 
 /**
  * <p>

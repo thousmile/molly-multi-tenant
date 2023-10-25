@@ -1,11 +1,10 @@
 package com.xaaef.molly.system.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.Set;

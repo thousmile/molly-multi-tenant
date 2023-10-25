@@ -1,8 +1,8 @@
 package com.xaaef.molly.perms.service;
 
-import com.xaaef.molly.tenant.base.service.BaseService;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.vo.UpdateMenusVO;
+import com.xaaef.molly.tenant.base.service.BaseService;
 
 import java.util.Map;
 import java.util.Set;

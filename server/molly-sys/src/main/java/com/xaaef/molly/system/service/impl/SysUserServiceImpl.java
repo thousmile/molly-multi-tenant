@@ -1,13 +1,9 @@
 package com.xaaef.molly.system.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
-import com.xaaef.molly.internal.dto.PmsUserDTO;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
 import com.xaaef.molly.system.mapper.SysUserMapper;
@@ -22,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;

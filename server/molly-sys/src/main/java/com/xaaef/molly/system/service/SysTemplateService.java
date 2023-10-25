@@ -1,8 +1,8 @@
 package com.xaaef.molly.system.service;
 
-import com.xaaef.molly.tenant.base.service.BaseService;
 import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.vo.UpdateMenusVO;
+import com.xaaef.molly.tenant.base.service.BaseService;
 
 import java.util.Map;
 import java.util.Set;

@@ -1,12 +1,12 @@
 package com.xaaef.molly.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.system.entity.SysDictData;
 import com.xaaef.molly.system.entity.SysDictType;
 import com.xaaef.molly.system.mapper.SysDictTypeMapper;
 import com.xaaef.molly.system.service.SysDictDataService;
 import com.xaaef.molly.system.service.SysDictTypeService;
+import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,6 @@ package com.xaaef.molly.internal.api;
 import com.xaaef.molly.internal.dto.InitUserDTO;
 import com.xaaef.molly.internal.dto.PmsUserDTO;
 
-import java.util.List;
 import java.util.Set;
 
 /**

@@ -1,9 +1,6 @@
 package com.xaaef.molly.system.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.util.JsonResult;
-import com.xaaef.molly.system.entity.SysTenant;
-import com.xaaef.molly.system.service.SysTenantService;
 import com.xaaef.molly.system.service.SysUserService;
 import com.xaaef.molly.system.vo.UpdateUserTenantVO;
 import com.xaaef.molly.system.vo.UserListTenantVO;
@@ -14,11 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Slf4j

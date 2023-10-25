@@ -1,12 +1,12 @@
 package com.xaaef.molly.system.api.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiSysTenantService;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
-import com.xaaef.molly.common.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;

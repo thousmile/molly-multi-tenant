@@ -9,7 +9,6 @@ import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.internal.dto.CmsProjectDTO;
-import com.xaaef.molly.internal.dto.SysTenantDTO;
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import static com.xaaef.molly.auth.enums.OAuth2Error.NO_HAVE_PROJECT_PERMISSIONS;
-import static com.xaaef.molly.auth.enums.OAuth2Error.NO_HAVE_TENANT_PERMISSIONS;
 import static com.xaaef.molly.common.util.TenantUtils.X_PROJECT_ID;
 
 

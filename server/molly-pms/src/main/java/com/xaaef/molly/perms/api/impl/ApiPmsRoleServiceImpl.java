@@ -2,7 +2,6 @@ package com.xaaef.molly.perms.api.impl;
 
 import com.xaaef.molly.internal.api.ApiPmsRoleService;
 import com.xaaef.molly.internal.dto.PmsRoleDTO;
-import com.xaaef.molly.perms.entity.PmsRoleProxy;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

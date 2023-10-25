@@ -1,9 +1,9 @@
 package com.xaaef.molly.auth.jwt;
 
-import com.xaaef.molly.common.util.JsonResult;
-import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.auth.enums.OAuth2Error;
 import com.xaaef.molly.auth.service.JwtTokenService;
+import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.common.util.ServletUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,8 +20,8 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
-import static com.xaaef.molly.common.consts.JwtConst.WHITE_LIST;
 import static com.xaaef.molly.auth.enums.OAuth2Error.ACCESS_TOKEN_INVALID;
+import static com.xaaef.molly.common.consts.JwtConst.WHITE_LIST;
 
 
 /**

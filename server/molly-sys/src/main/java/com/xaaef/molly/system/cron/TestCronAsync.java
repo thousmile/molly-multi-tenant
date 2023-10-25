@@ -1,11 +1,9 @@
 package com.xaaef.molly.system.cron;
 
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.xaaef.molly.common.util.JsonUtils;
-import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.service.JwtTokenService;
+import com.xaaef.molly.common.util.JsonUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * <p>

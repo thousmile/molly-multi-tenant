@@ -2,7 +2,6 @@ package com.xaaef.molly.redis;
 
 import cn.hutool.core.text.StrPool;
 import com.xaaef.molly.common.consts.ConfigName;
-import com.xaaef.molly.common.consts.LoginConst;
 import com.xaaef.molly.common.util.TenantUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +12,6 @@ import org.springframework.util.Assert;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.xaaef.molly.common.consts.LoginConst.*;
