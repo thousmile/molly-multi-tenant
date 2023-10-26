@@ -41,7 +41,7 @@
               :content="item.description"
               placement="top-start"
             >
-              <el-tag>{{ item.roleName }}</el-tag>
+              <el-tag>{{ showStringOverflow(item.roleName, 10) }}</el-tag>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -49,7 +49,7 @@
           <template #default="scope">
             <el-popover placement="top-start" :width="230">
               <template #reference>
-                <el-tag>{{ scope.row.dept.deptName }}</el-tag>
+                <el-tag>{{ showStringOverflow(scope.row.dept.deptName, 10) }}</el-tag>
               </template>
               <div><strong>部门领导:</strong> &nbsp;&nbsp;&nbsp;{{ scope.row.dept.leader }}</div>
               <div><strong>领导手机号:</strong> &nbsp;&nbsp;&nbsp;{{ scope.row.dept.leaderMobile }}</div>
@@ -59,7 +59,8 @@
         </el-table-column>
         <el-table-column prop="adminFlag" label="管理员">
           <template #default="scope">
-            {{ scope.row.adminFlag === 1 ? "是" : "否" }}
+            <el-tag v-if="scope.row.adminFlag" type="success">是</el-tag>
+            <span v-else>否</span>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态">
@@ -216,10 +217,8 @@
               <el-form-item prop="roles" label="角色">
                 <el-select v-model="entityRoles" filterable clearable multiple placeholder="选择角色">
                   <el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId">
-                    <span style="float: left">{{ item.roleName }}</span>
-                    <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px">{{
-                      showStringOverflow(item.description)
-                    }}</span>
+                    <span style="float: left">{{ item.roleId }}</span>
+                    <span style="float: right; font-size: 13px">{{ showStringOverflow(item.roleName) }}</span>
                   </el-option>
                 </el-select>
               </el-form-item>

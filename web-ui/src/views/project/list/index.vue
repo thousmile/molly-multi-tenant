@@ -372,7 +372,8 @@ const handleResetPassword = (data: ICmsProject) => {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     inputPattern: /^\w{5,24}$/,
-    inputErrorMessage: "密码数字和字母长度5~24位"
+    inputErrorMessage: "密码包含数字和字母，长度5~24位",
+    type: "warning"
   })
     .then(({ value }) => {
       const params = {
@@ -426,13 +427,15 @@ const deptCascaderChange = (data: number[]) => {
 
 // 删除
 const handleDelete = (data: ICmsProject) => {
-  ElMessageBox.confirm(`确要删除 ${data.projectName} 吗?`, "警告", {
+  ElMessageBox.prompt(`请在下方的输入框中填写项目密码`, `确定要删除 ${data.projectName} 吗?`, {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
+    inputPattern: /^\w{5,24}$/,
+    inputErrorMessage: "密码包含数字和字母，长度5~24位",
     type: "warning"
   })
-    .then(() => {
-      deleteProjectApi(data.projectId)
+    .then((resp) => {
+      deleteProjectApi(data.projectId, resp.value)
         .then((resp) => {
           if (resp.data) {
             ElMessage({

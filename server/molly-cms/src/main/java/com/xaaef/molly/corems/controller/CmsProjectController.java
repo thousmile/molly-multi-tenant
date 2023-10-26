@@ -96,10 +96,10 @@ public class CmsProjectController {
 
 
     @Operation(summary = "删除", description = "只需要id即可")
-    @DeleteMapping("/{id}")
-    public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
+    @DeleteMapping()
+    public JsonResult<Boolean> delete(CmsProject entity) {
         try {
-            return JsonResult.success(baseService.removeById(id));
+            return JsonResult.success(baseService.removeById(entity));
         } catch (Exception e) {
             return JsonResult.fail(e.getMessage(), Boolean.FALSE);
         }

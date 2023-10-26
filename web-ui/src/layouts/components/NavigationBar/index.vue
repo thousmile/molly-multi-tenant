@@ -17,18 +17,11 @@ import SelectControlSize from "../SelectControlSize/index.vue"
 import { DeviceEnum } from "@/constants/app-key"
 import { ElMessageBox } from "element-plus"
 import { jumpToLogin } from "@/router"
+import { showStringOverflow } from "@/hooks/useIndex"
 
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
-const userStore = useUserStore()
-const userInfo = userStore.userInfo
-
-const nickname = computed(() => {
-  if (userInfo != null) {
-    return userInfo.nickname.length > 6 ? userInfo.nickname.substring(0, 6) : userInfo.nickname
-  }
-  return ""
-})
+const { userInfo, userLogout } = useUserStore()
 
 const { sidebar, device } = storeToRefs(appStore)
 const { layoutMode, showNotify, showThemeSwitch, showScreenfull, showSearchTenant, showSearchMenu, showControlSize } =
@@ -50,7 +43,7 @@ const logout = () => {
     type: "warning"
   })
     .then(() => {
-      userStore.userLogout().then(() => jumpToLogin())
+      userLogout().then(() => jumpToLogin())
     })
     .catch(() => console.log("取消退出登录.. :>> "))
 }
@@ -71,7 +64,7 @@ const logout = () => {
       <el-dropdown class="right-menu-item">
         <div class="right-menu-avatar">
           <el-avatar :src="userInfo?.avatar" :icon="UserFilled" :size="36" />
-          <span>{{ nickname }}</span>
+          <span v-if="userInfo">{{ showStringOverflow(userInfo.nickname, 6) }}</span>
         </div>
         <template #dropdown>
           <el-dropdown-menu>

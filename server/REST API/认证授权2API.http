@@ -12,10 +12,10 @@ x-tenant-id: google
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0
 
 {
-  "username": "ec880dbe6e2a",
+  "username": "cb44dedf9846",
   "password": "123456",
   "codeKey": "applezrgegbtnHNrefh",
-  "codeText": "e9t6"
+  "codeText": "dxfu"
 }
 
 > {%
@@ -44,4 +44,11 @@ Content-Type: application/json
 x-tenant-id: google
 Authorization: Bearer {{tokenValue}}
 
+
+
+### 获取 项目列表
+GET {{baseUrl}}/cms/project/simple/query?pageIndex=1&pageSize=5&keywords=
+Content-Type: application/json
+x-tenant-id: google
+Authorization: Bearer {{tokenValue}}
 

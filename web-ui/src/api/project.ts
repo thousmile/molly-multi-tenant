@@ -33,8 +33,12 @@ export const updateProjectApi = (data: ICmsProject) => {
 }
 
 /** 删除 */
-export const deleteProjectApi = (id: number) => {
-  return httpDelete<number, IJsonResult<boolean>>(`/cms/project/${id}`)
+export const deleteProjectApi = (id: number, password: string) => {
+  const params = {
+    projectId: id,
+    password: password
+  }
+  return httpDelete<any, IJsonResult<boolean>>("/cms/project", params)
 }
 
 /** 重置密码 */

@@ -61,21 +61,11 @@ import { Search } from "@element-plus/icons-vue"
 import { ISearchQuery, ISimpleProject } from "@/types/base"
 import { simpleQueryProjectApi } from "@/api/project"
 import { useProjectStoreHook } from "@/store/modules/project"
-import { chinaAreaDeepQuery } from "@/utils"
+import { showChinaArea } from "@/hooks/useIndex"
 
 const projectStore = useProjectStoreHook()
 
 const simpleProjects = ref<ISimpleProject[]>()
-
-const showChinaArea = computed(() => {
-  return (value: number) => {
-    const area = chinaAreaDeepQuery(value)
-    if (area) {
-      return area.mergerName.replaceAll("-", " / ")
-    }
-    return ""
-  }
-})
 
 /** 加载 */
 const loading = ref(false)
@@ -83,7 +73,7 @@ const loading = ref(false)
 const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
-  pageSize: 5,
+  pageSize: 10,
   keywords: ""
 })
 

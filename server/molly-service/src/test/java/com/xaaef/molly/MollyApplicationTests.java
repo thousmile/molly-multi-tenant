@@ -1,7 +1,6 @@
 package com.xaaef.molly;
 
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 import com.xaaef.molly.auth.enums.GrantType;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.common.enums.AdminFlag;
@@ -12,14 +11,12 @@ import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.po.CreateTenantPO;
-import com.xaaef.molly.system.po.TenantCreatedSuccessVO;
 import com.xaaef.molly.system.service.SysTenantService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import java.time.LocalDateTime;
 import java.util.Set;

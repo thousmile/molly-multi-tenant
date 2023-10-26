@@ -103,8 +103,8 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
                 )
                 .eq(CmsProject::getStatus, 1)
                 .orderByAsc(CmsProject::getCreateTime);
-        // 非管理员用户。根据所在部门，查询项目列表
-        if (!isMasterUser()) {
+        // 非系统用户和管理员用户。根据所在部门，查询项目列表
+        if (!isMasterUser() && !isAdminUser()) {
             var childDeptIds = apiPmsDeptService.listChildIdByDeptId(getLoginUser().getDeptId());
             if (!childDeptIds.isEmpty()) {
                 wrapper.in(CmsProject::getDeptId, childDeptIds);
@@ -112,6 +112,26 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
         }
         Page<CmsProject> pageRequest = Page.of(po.getPageIndex(), po.getPageSize());
         return super.page(pageRequest, wrapper);
+    }
+
+
+    @Override
+    public boolean removeById(CmsProject entity) {
+        if (entity.getProjectId() == null) {
+            throw new RuntimeException("请输入项目Id！");
+        }
+        if (StrUtil.isEmpty(entity.getPassword())) {
+            throw new RuntimeException("请输入项目密码！");
+        }
+        var dbProject = super.getById(entity.getProjectId());
+        if (dbProject == null) {
+            throw new RuntimeException(StrUtil.format("项目Id {} 不存在！", entity.getProjectId()));
+        }
+        var flag = matchesPassword(entity.getPassword(), dbProject.getPassword());
+        if (!flag) {
+            throw new RuntimeException(StrUtil.format("项目 {} 密码输入错误！", dbProject.getProjectName()));
+        }
+        return super.removeById(dbProject.getProjectId());
     }
 
 
