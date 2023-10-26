@@ -201,12 +201,12 @@ import { treeMenuApi, saveMenuApi, updateMenuApi, deleteMenuApi } from "@/api/me
 import { useDictStoreHook } from "@/store/modules/dict"
 import { cloneDeep } from "lodash-es"
 import { ISysMenu } from "@/types/pms"
-import { ref, onMounted, computed } from "vue"
+import { ref, onMounted } from "vue"
 import { Plus, Edit, Delete, Sort } from "@element-plus/icons-vue"
 import SvgIconSelect from "@/components/SvgIconSelect/index.vue"
 
 import { ElMessage, ElMessageBox, FormInstance, FormRules, TableInstance } from "element-plus"
-import { timeAgo } from "@/utils"
+import { showTimeAgo } from "@/hooks/useIndex"
 
 // 系统权限
 export interface ISimpleSysMenu {
@@ -359,10 +359,6 @@ const resetEntity = () => {
 const cascaderChange = (data: number[]) => {
   entityForm.value.parentId = data[data.length - 1]
 }
-
-const showTimeAgo = computed(() => {
-  return (value: string) => timeAgo(value)
-})
 
 // 添加
 const handleAdd = (data: ISysMenu | null) => {

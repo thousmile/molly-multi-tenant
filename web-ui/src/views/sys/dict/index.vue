@@ -49,11 +49,13 @@
         </el-table-column>
         <el-table-column label="操作" width="130">
           <template #default="scope">
-            <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
-            &nbsp;
-            <el-link v-if="scope.row.configType !== 1" :icon="Delete" type="danger" @click="handleDelete(scope.row)"
-              >删除</el-link
-            >
+            <div v-admin>
+              <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
+              &nbsp;
+              <el-link v-if="scope.row.configType !== 1" :icon="Delete" type="danger" @click="handleDelete(scope.row)"
+                >删除</el-link
+              >
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -113,13 +115,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from "vue"
+import { ref, reactive, onMounted } from "vue"
 import { Plus, Edit, Delete, Search } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { queryDictTypeApi, saveDictTypeApi, updateDictTypeApi, deleteDictTypeApi } from "@/api/dict"
 import { cloneDeep } from "lodash-es"
 import { IDictType } from "@/types/dict"
-import { timeAgo } from "@/utils"
+import { showStringOverflow, showTimeAgo } from "@/hooks/useIndex"
+
 import { useDictStoreHook } from "@/store/modules/dict"
 const dictStore = useDictStoreHook()
 
@@ -184,14 +187,6 @@ const resetEntity = () => {
     description: ""
   }
 }
-
-const showTimeAgo = computed(() => {
-  return (value: string) => timeAgo(value)
-})
-
-const showStringOverflow = computed(() => {
-  return (value: string) => (value.length <= 20 ? value : value.substring(0, 20))
-})
 
 const searchTableData = () => {
   params.pageIndex = 1

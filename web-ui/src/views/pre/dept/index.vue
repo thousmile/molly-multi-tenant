@@ -149,13 +149,13 @@
 <script setup lang="ts">
 import { treeDeptApi, saveDeptApi, updateDeptApi, deleteDeptApi } from "@/api/dept"
 import { IPmsDept } from "@/types/pms"
-import { ref, onMounted, computed } from "vue"
+import { ref, onMounted } from "vue"
 import { Plus, Edit, Delete, Sort } from "@element-plus/icons-vue"
 
 import { ElMessage, ElMessageBox, FormInstance, FormRules, TableInstance } from "element-plus"
 import { isPhone } from "@/utils/validate"
 import { cloneDeep } from "lodash-es"
-import { timeAgo } from "@/utils"
+import { showStringOverflow, showTimeAgo } from "@/hooks/useIndex"
 
 // 部门
 export interface ISimplePmsDept {
@@ -245,14 +245,6 @@ const flatTree = (arr: IPmsDept[]) => {
   deep(arr, result)
   return result
 }
-
-const showTimeAgo = computed(() => {
-  return (value: string) => timeAgo(value)
-})
-
-const showStringOverflow = computed(() => {
-  return (value: string) => (value.length <= 20 ? value : value.substring(0, 20))
-})
 
 const expandAndCollapse = ref(true)
 

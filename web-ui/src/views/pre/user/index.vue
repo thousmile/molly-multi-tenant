@@ -11,7 +11,9 @@
         <el-col :span="2">
           <el-button type="success" :icon="Plus" v-has="['pre_user:create']" @click="handleAdd()">新增</el-button>
         </el-col>
-        <el-col :span="10"><div class="grid-content ep-bg-purple" /></el-col>
+        <el-col :span="10">
+          <div class="grid-content ep-bg-purple" />
+        </el-col>
       </el-row>
     </el-header>
     <el-main>
@@ -105,7 +107,7 @@
                   <div v-has="['pre_user:reset:password']">
                     <el-dropdown-item :icon="Link" command="ResetPassword">重置密码</el-dropdown-item>
                   </div>
-                  <div v-if="isDefaultTenantId" v-has="['pre_user:reset:password']">
+                  <div v-if="isDefaultTenantId()" v-has="['pre_user:link:tenant']">
                     <el-dropdown-item :icon="RefreshLeft" command="LinkTenant">关联租户</el-dropdown-item>
                   </div>
                   <div v-if="scope.row.adminFlag !== 1" v-has="['pre_user:delete']">
@@ -308,18 +310,17 @@ import { isEmail, isPassword, isPhone } from "@/utils/validate"
 import { Plus, Edit, Delete, UserFilled, Search, RefreshLeft, Link } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { useDictStoreHook } from "@/store/modules/dict"
-import { expiredDateAgo, timeAgo, futureShortcuts } from "@/utils"
-import { cloneDeep } from "lodash-es"
 import { useTenantStoreHook } from "@/store/modules/tenant"
+import { futureShortcuts } from "@/utils"
+import { showExpiredDateAgo, showStringOverflow, showTimeAgo } from "@/hooks/useIndex"
+import { cloneDeep } from "lodash-es"
+
+// 判读 当前选中的租户是否 默认租户
+const { isDefaultTenantId } = useTenantStoreHook()
+
+console.log("isDefaultTenantId() :>>", isDefaultTenantId())
 
 const dictStore = useDictStoreHook()
-
-const tenantStore = useTenantStoreHook()
-
-// 判断当前租户，是否默认租户
-const isDefaultTenantId = computed(() => {
-  return tenantStore.isDefaultTenantId()
-})
 
 /** 加载 */
 const loading = ref(false)
@@ -457,20 +458,6 @@ const resetEntity = () => {
 const getAvatar = (data: string) => {
   entityForm.value.avatar = data
 }
-
-// 过期时间
-const showExpiredDateAgo = computed(() => {
-  return (value: string) => expiredDateAgo(value)
-})
-
-const showStringOverflow = computed(() => {
-  return (value: string) => (value.length <= 20 ? value : value.substring(0, 20))
-})
-
-// 过期时间
-const showTimeAgo = computed(() => {
-  return (value: string) => timeAgo(value)
-})
 
 const searchTableData = () => {
   params.pageIndex = 1

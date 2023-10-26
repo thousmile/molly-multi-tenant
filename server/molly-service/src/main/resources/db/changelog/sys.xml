@@ -227,6 +227,12 @@
     </changeSet>
 
 
+    <!-- 初始化 菜单权限表 -->
+    <changeSet id="1670815177-3" author="WangChenChen (generated)">
+        <sqlFile path="db/changelog/sql/sys_menu_2.sql"/>
+    </changeSet>
+
+
     <!--[ 通用 ] 文件记录表 -->
     <changeSet id="1670815179-1" author="WangChenChen (generated)">
         <sql stripComments="true">

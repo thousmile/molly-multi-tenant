@@ -222,5 +222,6 @@ export const defaultProject: ISimpleProject = {
   projectId: 10001,
   projectName: "默认项目",
   linkman: "默认项目",
+  areaCode: 110000000000,
   address: "默认项目"
 }

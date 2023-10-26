@@ -86,13 +86,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from "vue"
+import { ref, reactive, onMounted } from "vue"
 import { Plus, Edit, Delete, Search } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { queryDeviceApi, saveDeviceApi, updateDeviceApi, deleteDeviceApi } from "@/api/device"
 import { cloneDeep } from "lodash-es"
 import { ICmsDevice } from "@/types/cms"
-import { timeAgo } from "@/utils"
+import { showTimeAgo } from "@/hooks/useIndex"
+
 import { useDictStoreHook } from "@/store/modules/dict"
 const dictStore = useDictStoreHook()
 
@@ -154,10 +155,6 @@ const resetEntity = () => {
     status: 1
   }
 }
-
-const showTimeAgo = computed(() => {
-  return (value: string) => timeAgo(value)
-})
 
 const searchTableData = () => {
   params.pageIndex = 1

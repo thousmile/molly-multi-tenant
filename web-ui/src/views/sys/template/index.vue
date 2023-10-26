@@ -11,7 +11,9 @@
         <el-col :span="2">
           <el-button type="success" :icon="Plus" @click="handleAdd()">新增</el-button>
         </el-col>
-        <el-col :span="10"><div class="grid-content ep-bg-purple" /></el-col>
+        <el-col :span="10">
+          <div class="grid-content ep-bg-purple" />
+        </el-col>
       </el-row>
     </el-header>
     <el-main>
@@ -53,7 +55,7 @@
             &nbsp;
             <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
             &nbsp;
-            <el-link :icon="Delete" type="danger" @click="handleDelete(scope.row)">删除</el-link>
+            <el-link v-admin :icon="Delete" type="danger" @click="handleDelete(scope.row)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -143,7 +145,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed, watch } from "vue"
+import { ref, reactive, onMounted, watch } from "vue"
 import { Plus, Edit, Delete, Search, EditPen, Sort } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules, ElTree } from "element-plus"
 import {
@@ -156,8 +158,8 @@ import {
 } from "@/api/template"
 import { cloneDeep } from "lodash-es"
 import { ISysTemplate } from "@/types/sys"
-import { timeAgo } from "@/utils"
 import { ISimpleMenu, IUpdateMenus } from "@/types/base"
+import { showTimeAgo, showStringOverflow } from "@/hooks/useIndex"
 
 /** 加载 */
 const loading = ref(false)
@@ -274,14 +276,6 @@ const resetEntity = () => {
     description: ""
   }
 }
-
-const showTimeAgo = computed(() => {
-  return (value: string) => timeAgo(value)
-})
-
-const showStringOverflow = computed(() => {
-  return (value: string) => (value.length <= 20 ? value : value.substring(0, 20))
-})
 
 const searchTableData = () => {
   params.pageIndex = 1

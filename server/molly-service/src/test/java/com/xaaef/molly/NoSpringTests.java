@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import static com.xaaef.molly.common.util.IpUtils.getLocalIPS;
 
 
-class NoSpringTests {
+public class NoSpringTests {
 
     @Test
     public void test1() {

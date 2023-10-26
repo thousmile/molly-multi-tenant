@@ -75,7 +75,6 @@ public class SchemaDataSourceManager implements DatabaseManager {
         try {
             // 创建一次性的 jdbc 链接。只是用来生成表结构的。用完就关闭。
             var tempConn = getTempConnection(tenantDbName);
-            log.info("getTempConnection: {} ", tempConn);
             var changeLogPath = multiTenantProperties.getOtherChangeLog();
             // 使用 Liquibase 创建表结构
             if (multiTenantProperties.getOtherChangeLog().startsWith(CLASSPATH_URL_PREFIX)) {
@@ -113,7 +112,6 @@ public class SchemaDataSourceManager implements DatabaseManager {
         var oldDbName = getOldDbName(dataSourceProperties.getUrl());
         // 替换连接池中的数据库名称
         var dataSourceUrl = dataSourceProperties.getUrl().replaceFirst(oldDbName, tenantDbName);
-
         //3.获取数据库连接对象
         return DriverManager.getConnection(dataSourceUrl,
                 dataSourceProperties.getUsername(),

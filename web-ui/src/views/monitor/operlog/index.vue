@@ -100,12 +100,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from "vue"
+import { ref, reactive, onMounted } from "vue"
 import { Delete, Search, UserFilled, View } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { queryOperLogApi, deleteOperLogApi } from "@/api/loginLog"
 import { IOperLog } from "@/types/lms"
-import { timeAgo } from "@/utils"
+import { showTimeAgo } from "@/hooks/useIndex"
 
 /** 加载 */
 const loading = ref(false)
@@ -220,10 +220,6 @@ const getTableData = () => {
       loading.value = false
     })
 }
-
-const showTimeAgo = computed(() => {
-  return (value: string) => timeAgo(value)
-})
 
 const searchTableData = () => {
   params.pageIndex = 1

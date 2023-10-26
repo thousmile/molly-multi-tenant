@@ -164,7 +164,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed, watch } from "vue"
+import { ref, reactive, onMounted, watch } from "vue"
 import { Plus, Edit, Delete, Search, EditPen, Sort } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules, ElTree } from "element-plus"
 import {
@@ -177,7 +177,8 @@ import {
 } from "@/api/role"
 import { cloneDeep } from "lodash-es"
 import { IPmsRole } from "@/types/pms"
-import { timeAgo } from "@/utils"
+import { showStringOverflow, showTimeAgo } from "@/hooks/useIndex"
+
 import { ISimpleMenu, IUpdateMenus } from "@/types/base"
 
 /** 加载 */
@@ -298,14 +299,6 @@ const resetEntity = () => {
     description: ""
   }
 }
-
-const showTimeAgo = computed(() => {
-  return (value: string) => timeAgo(value)
-})
-
-const showStringOverflow = computed(() => {
-  return (value: string) => (value.length <= 20 ? value : value.substring(0, 20))
-})
 
 const searchTableData = () => {
   params.pageIndex = 1

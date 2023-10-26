@@ -62,8 +62,9 @@
             <el-link :icon="Edit" type="warning" v-has="['cms_project:update']" @click="handleEdit(scope.row)"
               >编辑</el-link
             >
+            <!-- v-admin 只有管理员才可以，重置项目密码和删除项目 -->
             &nbsp;
-            <el-dropdown @command="(cmd: string) => handleCommand(cmd, scope.row)">
+            <el-dropdown v-admin @command="(cmd: string) => handleCommand(cmd, scope.row)">
               <span class="el-dropdown-link">
                 更多
                 <el-icon class="el-icon--right">
@@ -203,7 +204,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from "vue"
+import { ref, reactive, onMounted } from "vue"
 import { deleteProjectApi, queryProjectApi, saveProjectApi, updateProjectApi, resetPasswordApi } from "@/api/project"
 import { treeDeptApi } from "@/api/dept"
 import { ISearchQuery } from "@/types/base"
@@ -215,7 +216,7 @@ import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import SearchChinaArea from "@/components/SearchChinaArea/index.vue"
 import { useDictStoreHook } from "@/store/modules/dict"
 import { cloneDeep } from "lodash-es"
-import { chinaAreaDeepQuery, timeAgo } from "@/utils"
+import { showChinaArea, showTimeAgo } from "@/hooks/useIndex"
 
 const dictStore = useDictStoreHook()
 
@@ -327,21 +328,6 @@ const resetEntity = () => {
     dept: null
   }
 }
-
-// 过期时间
-const showTimeAgo = computed(() => {
-  return (value: string) => timeAgo(value)
-})
-
-const showChinaArea = computed(() => {
-  return (value: number) => {
-    const area = chinaAreaDeepQuery(value)
-    if (area) {
-      return area.mergerName.replaceAll("-", " / ")
-    }
-    return ""
-  }
-})
 
 const searchTableData = () => {
   params.pageIndex = 1

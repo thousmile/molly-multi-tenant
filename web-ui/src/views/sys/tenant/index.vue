@@ -78,8 +78,10 @@
           <template #default="scope">
             <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
             &nbsp;
+            <!-- v-admin 只有管理员才可以删除租户 -->
             <el-link
               :icon="Delete"
+              v-admin
               v-if="!isDefaultTenantId(scope.row.tenantId)"
               type="danger"
               @click="handleDelete(scope.row)"
@@ -244,19 +246,12 @@ import SearchChinaArea from "@/components/SearchChinaArea/index.vue"
 import createTenant from "./create.vue"
 import { useDictStoreHook } from "@/store/modules/dict"
 import { cloneDeep } from "lodash-es"
-import { chinaAreaDeepQuery, expiredDateAgo, timeAgo, futureShortcuts } from "@/utils"
+import { showExpiredDateAgo, showStringOverflow, showChinaArea, showTimeAgo, isDefaultTenantId } from "@/hooks/useIndex"
+
 import { isEmail, isTelphone } from "@/utils/validate"
-import { useTenantStoreHook } from "@/store/modules/tenant"
+import { futureShortcuts } from "@/utils"
+
 const dictStore = useDictStoreHook()
-
-const tenantStore = useTenantStoreHook()
-
-// 判断当前租户，是否默认租户
-const isDefaultTenantId = computed(() => {
-  return (tenantId: string) => {
-    return tenantStore.getDefaultTenantId() === tenantId
-  }
-})
 
 /** 加载 */
 const loading = ref(false)
@@ -380,33 +375,9 @@ const resetEntity = () => {
   }
 }
 
-// 过期时间
-const showExpiredDateAgo = computed(() => {
-  return (value: string) => expiredDateAgo(value)
-})
-
-const showStringOverflow = computed(() => {
-  return (value: string) => (value.length <= 20 ? value : value.substring(0, 20))
-})
-
-const showChinaArea = computed(() => {
-  return (value: number) => {
-    const area = chinaAreaDeepQuery(value)
-    if (area) {
-      return area.mergerName.replaceAll("-", " / ")
-    }
-    return ""
-  }
-})
-
 const getLogoSrc = (data: string) => {
   entityForm.value.logo = data
 }
-
-// 过期时间
-const showTimeAgo = computed(() => {
-  return (value: string) => timeAgo(value)
-})
 
 const entityTemplates = computed({
   get() {

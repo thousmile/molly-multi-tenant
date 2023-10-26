@@ -168,6 +168,11 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
             throw new RuntimeException("只有系统用户，才能创建租户！");
         }
 
+        // 如果 租户ID 为空，就随机给一个
+        if (StringUtils.isBlank(po.getTenantId())) {
+            po.setTenantId(getUUIDSuffix());
+        }
+
         // 如果 管理员 用户名为空，就随机给一个
         if (StringUtils.isBlank(po.getAdminUsername())) {
             po.setAdminUsername(getUUIDSuffix());

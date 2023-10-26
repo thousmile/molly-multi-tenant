@@ -184,7 +184,7 @@
 
 <script setup lang="ts">
 import { ElMessage, FormInstance, FormRules } from "element-plus"
-import { ref, onMounted, computed, toRefs } from "vue"
+import { ref, computed, toRefs } from "vue"
 import { ISysTemplate, ICreateTenant, ICreateTenantAdmin } from "@/types/sys"
 import { futureShortcuts } from "@/utils"
 import { saveTenantApi } from "@/api/tenant"
@@ -193,6 +193,7 @@ import ImageUpload from "@/components/ImageUpload/index.vue"
 import SearchChinaArea from "@/components/SearchChinaArea/index.vue"
 import { v4 as uuidv4 } from "uuid"
 import { isEmail, isTelphone } from "@/utils/validate"
+import { showStringOverflow } from "@/hooks/useIndex"
 
 // 随机生成租户ID
 const randomTenantId = () => {
@@ -343,10 +344,6 @@ const resetEntity = () => {
   }
 }
 
-const showStringOverflow = computed(() => {
-  return (value: string) => (value.length <= 20 ? value : value.substring(0, 20))
-})
-
 const getLogoSrc = (data: string) => {
   entityForm.value.logo = data
 }
@@ -404,10 +401,6 @@ const close = () => {
   resetEntity()
   emit("close")
 }
-
-onMounted(() => {
-  console.log("3.-组件挂载到页面之后执行")
-})
 </script>
 
 <style lang="scss" scoped></style>

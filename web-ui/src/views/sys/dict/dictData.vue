@@ -33,11 +33,13 @@
         </el-table-column>
         <el-table-column label="操作" width="130">
           <template #default="scope">
-            <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
-            &nbsp;
-            <el-link v-if="scope.row.configType !== 1" :icon="Delete" type="danger" @click="handleDelete(scope.row)"
-              >删除</el-link
-            >
+            <div v-admin>
+              <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
+              &nbsp;
+              <el-link v-if="scope.row.configType !== 1" :icon="Delete" type="danger" @click="handleDelete(scope.row)"
+                >删除</el-link
+              >
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -97,15 +99,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from "vue"
+import { ref, reactive, onMounted } from "vue"
 import { useRoute } from "vue-router"
 import { Plus, Edit, Delete, Search } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { queryDictDataApi, saveDictDataApi, updateDictDataApi, deleteDictDataApi } from "@/api/dict"
 import { cloneDeep } from "lodash-es"
 import { IDictData } from "@/types/dict"
-import { timeAgo } from "@/utils"
 import { useDictStoreHook } from "@/store/modules/dict"
+import { showTimeAgo } from "@/hooks/useIndex"
+
 const dictStore = useDictStoreHook()
 
 const route = useRoute()
@@ -178,10 +181,6 @@ const resetEntity = () => {
     isDefault: 0
   }
 }
-
-const showTimeAgo = computed(() => {
-  return (value: string) => timeAgo(value)
-})
 
 const searchTableData = () => {
   params.pageIndex = 1
