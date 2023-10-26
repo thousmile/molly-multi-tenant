@@ -10,6 +10,8 @@ export interface ILoginData {
   codeText: string
   /** 验证码key */
   codeKey: string
+  /** 记住我 */
+  rememberMe: boolean
 }
 
 /** 用户登录的信息 */

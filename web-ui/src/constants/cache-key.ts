@@ -10,6 +10,7 @@ class CacheKey {
   static readonly CACHED_VIEWS = `${SYSTEM_NAME}-cached-views-key`
   static readonly TENANT_ID = `${SYSTEM_NAME}-tenant-id-key`
   static readonly CONTROL_SIZE = `${SYSTEM_NAME}-control-size`
+  static readonly USER_AND_PASSWORD = `${SYSTEM_NAME}-user-and-password`
 }
 
 export default CacheKey

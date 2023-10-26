@@ -7,7 +7,9 @@ import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import { v4 as uuidv4 } from "uuid"
 import { getEnvBaseURL } from "@/utils"
+import { getUserAndPassword, setUserAndPassword, removeUserAndPassword } from "@/utils/cache/local-storage"
 import { type ILoginData } from "@/types/pms"
+import { merge } from "lodash-es"
 
 const router = useRouter()
 
@@ -23,19 +25,27 @@ const appTitle = import.meta.env.VITE_APP_TITLE
 /** 验证码图片 URL */
 const codeUrl = ref("")
 
-/** 登录表单数据 */
-const loginFormData: ILoginData = reactive({
+const target: ILoginData = {
   username: "admin",
   password: "123456",
   codeKey: uuidv4().replace(/-/g, ""),
-  codeText: ""
-})
+  codeText: "",
+  rememberMe: false
+}
+const source = getUserAndPassword()
+if (source) {
+  source.codeKey = target.codeKey
+  source.codeText = ""
+  merge(target, source)
+}
+/** 登录表单数据 */
+const loginFormData: ILoginData = reactive(target)
 
 /** 登录表单校验规则 */
 const loginFormRules: FormRules = {
   username: [
     { required: true, message: "请输入用户名", trigger: "blur" },
-    { min: 5, max: 32, message: "长度在 5 个字符", trigger: "blur" }
+    { min: 5, max: 32, message: "长度在 5 到 32 个字符", trigger: "blur" }
   ],
   password: [
     { required: true, message: "请输入密码", trigger: "blur" },
@@ -55,6 +65,8 @@ const handleLogin = () => {
       useUserStore()
         .userLogin(loginFormData)
         .then(() => {
+          // 登录成功后，是否记住密码 ?
+          loginFormData.rememberMe ? setUserAndPassword(loginFormData) : removeUserAndPassword()
           router.push({ path: "/" })
         })
         .catch(() => {
@@ -123,16 +135,23 @@ createCode()
               size="large"
             >
               <template #append>
-                <el-image :src="codeUrl" @click="createCode" draggable="false">
+                <el-image :src="codeUrl" @click="createCode" class="code-url" draggable="false">
                   <template #placeholder>
-                    <el-icon><Picture /></el-icon>
+                    <el-icon>
+                      <Picture />
+                    </el-icon>
                   </template>
                   <template #error>
-                    <el-icon><Loading /></el-icon>
+                    <el-icon>
+                      <Loading />
+                    </el-icon>
                   </template>
                 </el-image>
               </template>
             </el-input>
+          </el-form-item>
+          <el-form-item prop="rememberMe">
+            <el-checkbox v-model="loginFormData.rememberMe" label="记住密码" size="large" />
           </el-form-item>
           <el-button :loading="loading" type="primary" size="large" @click.prevent="handleLogin">登 录</el-button>
         </el-form>
@@ -169,6 +188,7 @@ createCode()
       justify-content: center;
       align-items: center;
       height: 60px;
+
       img {
         height: 100%;
       }
@@ -176,9 +196,11 @@ createCode()
 
     .content {
       padding: 20px 30px 30px 30px;
+
       :deep(.el-input-group__append) {
         padding: 0;
         overflow: hidden;
+
         .el-image {
           width: 100px;
           height: 40px;
@@ -188,11 +210,16 @@ createCode()
           text-align: center;
         }
       }
+
       .el-button {
         width: 100%;
         margin-top: 10px;
       }
     }
+  }
+
+  .code-url {
+    border: #dcdfe6 2px solid;
   }
 }
 </style>

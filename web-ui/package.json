@@ -30,6 +30,7 @@
     "dayjs": "1.11.10",
     "echarts": "^5.4.3",
     "element-plus": "2.4.1",
+    "js-base64": "^3.7.5",
     "js-cookie": "3.0.5",
     "lodash-es": "4.17.21",
     "mitt": "3.0.1",

@@ -7,6 +7,8 @@ import { type TagView } from "@/store/modules/tags-view"
 import { type LayoutSettings } from "@/config/layouts"
 import { type ISimpleTenant } from "@/types/base"
 import { defaultTenant } from "@/utils"
+import { ILoginData } from "@/types/pms"
+import { encode, decode } from "js-base64"
 
 //#region 系统布局配置
 export const getConfigLayout = () => {
@@ -96,4 +98,25 @@ export const getControlSize = () => {
 export const setControlSize = (size: string) => {
   localStorage.setItem(CacheKey.CONTROL_SIZE, size)
 }
+//#endregion
+
+//#region 获取保存的 用户名和密码
+export const getUserAndPassword = () => {
+  const jsonStr = localStorage.getItem(CacheKey.USER_AND_PASSWORD)
+  if (jsonStr) {
+    return JSON.parse(decode(jsonStr)) as ILoginData
+  }
+  return null
+}
+
+// 保存 用户名和密码
+export function setUserAndPassword(data: ILoginData) {
+  return localStorage.setItem(CacheKey.USER_AND_PASSWORD, encode(JSON.stringify(data)))
+}
+
+// 删除 用户名和密码
+export function removeUserAndPassword() {
+  return localStorage.removeItem(CacheKey.USER_AND_PASSWORD)
+}
+
 //#endregion
