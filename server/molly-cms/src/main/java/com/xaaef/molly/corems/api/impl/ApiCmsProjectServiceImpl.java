@@ -11,6 +11,7 @@ import com.xaaef.molly.internal.dto.SysTenantDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +59,7 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
     }
 
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void initProject(SysTenantDTO po) {
         var password = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD))

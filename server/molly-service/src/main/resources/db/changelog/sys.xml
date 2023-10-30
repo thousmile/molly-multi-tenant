@@ -142,6 +142,14 @@
     </changeSet>
 
 
+    <!-- 修改 全局配置 -->
+    <changeSet id="1698632340-1" author="WangChenChen (generated)">
+        <sql>
+            UPDATE sys_config SET config_value = "操作员" WHERE config_key = "default_role_name"
+        </sql>
+    </changeSet>
+
+
     <!--[ 通用 ] 字典类型表-->
     <changeSet id="1670812891-1" author="WangChenChen (generated)">
         <sql splitStatements="true">

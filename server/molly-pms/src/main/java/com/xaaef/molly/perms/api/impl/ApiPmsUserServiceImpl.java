@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
@@ -104,16 +105,17 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
     }
 
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void initUserAndRoleAndDept(InitUserDTO po) {
         // 租户默认角色名称
         var roleName = Optional.ofNullable(configService.getValueByKey(TENANT_DEFAULT_ROLE_NAME))
-                .orElse("管理员");
-
+                .orElse("操作员");
         // 委托，新的租户id。执行初始化数据
         delegate(po.getTenantId(), () -> {
 
             var pmsDept = new PmsDept()
+                    .setDeptId(10001L)
                     .setParentId(0L)
                     .setDeptName(po.getName())
                     .setLeader(po.getAdminNickname())
@@ -121,20 +123,19 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
                     .setSort(1L)
                     .setDescription(po.getName())
                     .setAncestors("0");
-
             // 保存部门
             deptMapper.insert(pmsDept);
 
+            var newRoleName = String.format("%s %s", po.getName(), roleName);
             var pmsRole = new PmsRole()
-                    .setRoleName(String.format("%s %s", po.getName(), roleName))
-                    .setSort(1L);
-            pmsRole.setDescription(pmsRole.getRoleName());
-
+                    .setRoleId(10001L)
+                    .setRoleName(newRoleName)
+                    .setSort(1L)
+                    .setDescription(newRoleName);
             // 保存角色
             roleMapper.insert(pmsRole);
 
             var password = encryptPassword(po.getAdminPwd());
-
             var pmsUser = new PmsUser()
                     .setUserId(IdUtils.getStandaloneId())
                     .setAvatar(po.getLogo())
@@ -148,7 +149,6 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
                     .setStatus(StatusEnum.NORMAL.getCode())
                     .setDeptId(pmsDept.getDeptId())
                     .setRoles(Set.of(pmsRole));
-
             userMapper.insert(pmsUser);
 
             // 保存关联
