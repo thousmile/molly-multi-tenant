@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { type ListItem } from "./data"
+import { IPushMessage } from "@/types/base"
 
 interface Props {
-  list: ListItem[]
+  list: IPushMessage[]
 }
 
 const props = defineProps<Props>()
@@ -14,19 +14,13 @@ const props = defineProps<Props>()
     <template #header>
       <div class="card-header">
         <div>
-          <span>
-            <span class="card-title">{{ item.title }}</span>
-            <el-tag v-if="item.extra" :type="item.status" effect="plain" size="small">{{ item.extra }}</el-tag>
-          </span>
-          <div class="card-time">{{ item.datetime }}</div>
-        </div>
-        <div v-if="item.avatar" class="card-avatar">
-          <img :src="item.avatar" width="34" />
+          <span class="card-title">{{ item.title }}</span>
+          <div class="card-time">{{ item.createTime }}</div>
         </div>
       </div>
     </template>
     <div class="card-body">
-      {{ item.description ?? "No Data" }}
+      {{ item.message ?? "No Data" }}
     </div>
   </el-card>
 </template>
@@ -34,25 +28,29 @@ const props = defineProps<Props>()
 <style lang="scss" scoped>
 .card-container {
   margin-bottom: 10px;
+
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .card-title {
       font-weight: bold;
       margin-right: 10px;
     }
+
     .card-time {
       font-size: 12px;
       color: grey;
     }
+
     .card-avatar {
       display: flex;
       align-items: center;
     }
   }
+
   .card-body {
     font-size: 12px;
   }
-}
-</style>
+}</style>

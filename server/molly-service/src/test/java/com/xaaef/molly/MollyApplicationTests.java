@@ -21,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import static com.xaaef.molly.system.cron.TestCronAsync.randomChinese;
+
 
 @SpringBootTest
 public class MollyApplicationTests {
@@ -73,15 +75,6 @@ public class MollyApplicationTests {
             var success = tenantService.create(po);
             System.out.println(JsonUtils.toFormatJson(success));
         }
-    }
-
-
-    private String randomChinese(int len) {
-        var chars = new char[len];
-        for (int i = 0; i < len; i++) {
-            chars[i] = RandomUtil.randomChinese();
-        }
-        return new String(chars);
     }
 
 }

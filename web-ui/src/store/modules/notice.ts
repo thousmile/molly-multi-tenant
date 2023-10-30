@@ -7,13 +7,14 @@ import SockJS from "sockjs-client/dist/sockjs.min.js"
 import { getToken } from "@/utils/cache/cookies"
 import { useTenantStoreHook } from "./tenant"
 import { getEnvBaseURL } from "@/utils"
+import { IPushMessage } from "@/types/base"
 
 export const useNoticeStore = defineStore("notice", () => {
   // 广播消息
-  const broadcast = ref<any[]>([])
+  const broadcast = ref<IPushMessage[]>([])
 
   // 推送消息
-  const pushNotices = ref<any[]>([])
+  const pushNotices = ref<IPushMessage[]>([])
 
   const stompClientActive = ref<boolean>(false)
 
@@ -51,15 +52,13 @@ export const useNoticeStore = defineStore("notice", () => {
 
         // 订阅广播主题
         stompClientAgent.subscribe("/topic/broadcast/notice", (resp) => {
-          const result = JSON.parse(resp.body)
-          console.log("广播 :>> ", result)
+          const result = JSON.parse(resp.body) as IPushMessage
           broadcast.value?.push(result)
         })
 
         // 订阅推送主题
         stompClientAgent.subscribe("/user/queue/single/push", (resp) => {
-          const result = JSON.parse(resp.body)
-          console.log("推送 :>> ", result)
+          const result = JSON.parse(resp.body) as IPushMessage
           pushNotices.value?.push(result)
         })
       }

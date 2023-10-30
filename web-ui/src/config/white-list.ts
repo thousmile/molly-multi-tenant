@@ -3,7 +3,7 @@ import { type RouteLocationNormalized } from "vue-router"
 const loginUrl = "/login"
 
 /** 免登录白名单（匹配路由 path） */
-const whiteListByPath: string[] = ["/login"]
+const whiteListByPath: string[] = [loginUrl]
 
 /** 免登录白名单（匹配路由 name） */
 const whiteListByName: string[] = []

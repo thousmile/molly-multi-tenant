@@ -44,6 +44,7 @@
       <el-pagination
         v-model:current-page="params.pageIndex"
         :page-size="params.pageSize"
+        :page-sizes="[5, 10, 20, 50]"
         :background="true"
         layout="sizes, total, prev, pager, next, jumper"
         :total="params.pageTotal"
@@ -73,7 +74,7 @@ const loading = ref(false)
 const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
-  pageSize: 10,
+  pageSize: 5,
   keywords: ""
 })
 

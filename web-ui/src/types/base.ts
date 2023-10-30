@@ -99,3 +99,15 @@ export interface IUpdateMenus {
   /** 全部的菜单 */
   all: ISimpleMenu[]
 }
+
+// 推送消息
+export interface IPushMessage {
+  /** ID */
+  id: number
+  /** 标题 */
+  title: string
+  /** 消息 */
+  message: string
+  /** 创建时间 */
+  createTime: string
+}

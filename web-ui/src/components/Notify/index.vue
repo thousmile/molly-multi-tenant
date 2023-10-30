@@ -3,14 +3,17 @@ import { ref, computed } from "vue"
 import { ElMessage } from "element-plus"
 import { Bell } from "@element-plus/icons-vue"
 import NotifyList from "./NotifyList.vue"
-import { type ListItem, notifyData, messageData, todoData } from "./data"
+import { useNoticeStoreHook } from "@/store/modules/notice"
+import { IPushMessage } from "@/types/base"
+
+const { broadcast, pushNotices } = useNoticeStoreHook()
 
 type TabName = "通知" | "消息" | "待办"
 
 interface DataItem {
   name: TabName
   type: "primary" | "success" | "warning" | "danger" | "info"
-  list: ListItem[]
+  list: IPushMessage[]
 }
 
 /** 角标当前值 */
@@ -29,19 +32,19 @@ const data = ref<DataItem[]>([
   {
     name: "通知",
     type: "primary",
-    list: notifyData
+    list: broadcast
   },
   // 消息数据
   {
     name: "消息",
     type: "danger",
-    list: messageData
+    list: pushNotices
   },
   // 待办数据
   {
     name: "待办",
     type: "warning",
-    list: todoData
+    list: []
   }
 ])
 

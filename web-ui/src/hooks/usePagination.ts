@@ -14,6 +14,7 @@ interface PaginationData {
   pageSizes?: number[]
   pageSize?: number
   layout?: string
+  keywords?: string
 }
 
 /** 默认的分页参数 */
@@ -25,16 +26,20 @@ const defaultPaginationData: DefaultPaginationData = {
   layout: "total, sizes, prev, pager, next, jumper"
 }
 
-export function usePagination(initialPaginationData: PaginationData = {}) {
+export function usePagination(fn: Function, initialPaginationData: PaginationData = {}) {
   /** 合并分页参数 */
   const paginationData = reactive({ ...defaultPaginationData, ...initialPaginationData })
+
   /** 改变当前页码 */
   const handleCurrentChange = (value: number) => {
     paginationData.currentPage = value
+    fn()
   }
+
   /** 改变页面大小 */
   const handleSizeChange = (value: number) => {
     paginationData.pageSize = value
+    fn()
   }
 
   return { paginationData, handleCurrentChange, handleSizeChange }
