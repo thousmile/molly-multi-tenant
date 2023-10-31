@@ -144,7 +144,7 @@
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="menusDialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="handleUpdateMenus">确定</el-button>
+            <el-button type="primary" v-preventReClick @click="handleUpdateMenus">确定</el-button>
           </span>
         </template>
       </el-dialog>

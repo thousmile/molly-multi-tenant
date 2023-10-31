@@ -8,6 +8,8 @@ export function loadDirectives(app: App) {
   app.directive("has", permission)
   // example: v-admin
   app.directive("admin", adminFlag)
+  // example: v-preventReClick
+  app.directive("preventReClick", preventReClick)
 }
 
 /** 权限指令，和权限判断函数 checkPermission 功能类似 */
@@ -35,5 +37,20 @@ const adminFlag: Directive = {
     if (!hasPermission) {
       el.style.display = "none"
     }
+  }
+}
+
+/** 防止重复请求 指令 */
+const preventReClick: Directive = {
+  mounted(el, binding) {
+    const { value } = binding
+    el.addEventListener("click", () => {
+      el.disabled = true
+      el.loading = true
+      setTimeout(() => {
+        el.disabled = false
+        el.loading = false
+      }, value || 3000)
+    })
   }
 }

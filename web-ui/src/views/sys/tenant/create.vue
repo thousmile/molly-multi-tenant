@@ -168,7 +168,7 @@
     </template>
     <template v-if="active === 1">
       <el-button type="info" :icon="ArrowLeft" @click="previous" v-loading="loading">上一步</el-button>
-      <el-button type="primary" @click="next" v-loading="loading">
+      <el-button type="primary" @click="next" v-preventReClick v-loading="loading">
         确定 <el-icon class="el-icon--right"><Check /></el-icon>
       </el-button>
     </template>

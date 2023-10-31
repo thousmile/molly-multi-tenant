@@ -53,4 +53,5 @@ const props = defineProps<Props>()
   .card-body {
     font-size: 12px;
   }
-}</style>
+}
+</style>

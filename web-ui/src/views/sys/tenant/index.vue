@@ -215,7 +215,7 @@
         <template v-if="!saveFlag" #footer>
           <span class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="handleUpdate">确定</el-button>
+            <el-button type="primary" v-preventReClick @click="handleUpdate">确定</el-button>
           </span>
         </template>
       </el-dialog>

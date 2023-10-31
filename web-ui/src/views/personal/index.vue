@@ -89,7 +89,7 @@
                     <select-dict-data v-model:value="userInfoForm.gender" dictTypeKey="sys_user_sex" />
                   </el-form-item>
                   <el-form-item>
-                    <el-button type="primary" @click="onUpdateUserInfo">立即修改</el-button>
+                    <el-button type="primary" v-preventReClick @click="onUpdateUserInfo">立即修改</el-button>
                   </el-form-item>
                 </el-form>
               </el-tab-pane>
@@ -112,7 +112,7 @@
                     <el-input v-model="updatePwdForm.confirmPwd" show-password />
                   </el-form-item>
                   <el-form-item>
-                    <el-button type="primary" @click="onUpdatePassword">立即修改</el-button>
+                    <el-button type="primary" v-preventReClick @click="onUpdatePassword">立即修改</el-button>
                   </el-form-item>
                 </el-form>
               </el-tab-pane>
