@@ -10,10 +10,13 @@ import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xaaef.molly.common.po.SearchPO;
+import com.xaaef.molly.internal.api.ApiOperateUserService;
 import com.xaaef.molly.tenant.base.BaseEntity;
 import com.xaaef.molly.tenant.base.service.BaseService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Lazy;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -34,6 +37,16 @@ import static com.xaaef.molly.common.consts.MbpConst.CREATE_TIME;
 
 @Slf4j
 public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> extends ServiceImpl<M, T> implements BaseService<T> {
+
+    @Lazy
+    @Resource
+    private ApiOperateUserService apiOperateUserService;
+
+
+    @Override
+    public void reflectionFill(Object objList) {
+        apiOperateUserService.reflectionFill(objList);
+    }
 
 
     @Override
@@ -126,7 +139,11 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> exte
     public IPage<T> pageKeywords(SearchPO params, Collection<SFunction<T, ?>> columns) {
         Page<T> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
         QueryWrapper<T> wrapper = getKeywordsQueryWrapper(params, columns);
-        return super.page(pageRequest, wrapper);
+        Page<T> result = super.page(pageRequest, wrapper);
+        if (params.getIncludeCauu() != null && params.getIncludeCauu()) {
+            reflectionFill(result.getRecords());
+        }
+        return result;
     }
 
 

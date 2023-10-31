@@ -1,5 +1,13 @@
+### 分页查询设备
+GET {{baseUrl}}/cms/device/query?includeCauu=true
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+x-project-id: {{projectId}}
+Authorization: Bearer {{tokenValue}}
+
+
 ### 查询设备
-GET {{baseUrl}}/cms/device/list
+GET {{baseUrl}}/cms/device/list?includeCauu=true
 Content-Type: application/json
 x-tenant-id: {{tenantId}}
 x-project-id: {{projectId}}

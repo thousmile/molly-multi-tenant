@@ -1,7 +1,6 @@
 package com.xaaef.molly.system.cron;
 
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.common.util.JsonUtils;

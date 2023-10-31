@@ -5,6 +5,7 @@ import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
+import com.xaaef.molly.internal.api.ApiSysTenantService;
 import com.xaaef.molly.internal.dto.InitUserDTO;
 import com.xaaef.molly.internal.dto.PmsUserDTO;
 import com.xaaef.molly.perms.entity.PmsDept;
@@ -46,6 +47,8 @@ import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 public class ApiPmsUserServiceImpl implements ApiPmsUserService {
 
     private final ApiSysConfigService configService;
+
+    private final ApiSysTenantService tenantService;
 
     private final PmsUserMapper userMapper;
 

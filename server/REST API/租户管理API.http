@@ -64,7 +64,15 @@ Authorization: Bearer {{tokenValue}}
 
 
 ### 获取租户列表
-GET {{baseUrl}}/sys/tenant/query
+GET {{baseUrl}}/sys/tenant/query?includeCauu=true
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+#x-tenant-id: apple
+Authorization: Bearer {{tokenValue}}
+
+
+### 获取租户列表[简单字段]
+GET {{baseUrl}}/sys/tenant/simple/query?includeCauu=true
 Content-Type: application/json
 x-tenant-id: {{tenantId}}
 #x-tenant-id: apple

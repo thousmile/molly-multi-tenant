@@ -26,4 +26,10 @@ public class SearchPO extends PagePO implements java.io.Serializable {
     @Schema(description = "关键字搜索")
     private String keywords;
 
+    /**
+     * 包含创建和修改用户信息
+     */
+    @Schema(description = "包含创建和修改用户信息")
+    private Boolean includeCauu;
+
 }

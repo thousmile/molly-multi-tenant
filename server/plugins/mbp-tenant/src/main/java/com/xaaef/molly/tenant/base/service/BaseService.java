@@ -28,6 +28,10 @@ import java.util.Map;
 
 public interface BaseService<T extends BaseEntity> extends IService<T> {
 
+    /**
+     * 根据 用户ID 获取 操作用户
+     */
+    void reflectionFill(Object objList);
 
     /**
      * 插入时 填写
@@ -62,7 +66,7 @@ public interface BaseService<T extends BaseEntity> extends IService<T> {
     /**
      * 根据关键字查询
      *
-     * @param params 参数
+     * @param params  参数
      * @param columns 实体类字段
      * @author Wang Chen Chen
      * @date 2021/8/25 9:41

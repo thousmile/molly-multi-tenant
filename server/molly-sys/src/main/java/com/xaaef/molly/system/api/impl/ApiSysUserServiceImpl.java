@@ -25,10 +25,10 @@ public class ApiSysUserServiceImpl implements ApiSysUserService {
 
     private final SysUserService userService;
 
+
     @Override
     public Set<String> listHaveTenantIds(Long userId) {
         return userService.listHaveTenantIds(userId);
     }
-
 
 }

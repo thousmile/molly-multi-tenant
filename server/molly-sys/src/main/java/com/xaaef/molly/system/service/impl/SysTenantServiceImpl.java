@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
+import com.xaaef.molly.internal.api.ApiOperateUserService;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.dto.InitUserDTO;
@@ -71,6 +72,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     private final SysUserService sysUserService;
 
     private final ApiCmsProjectService projectService;
+
+    private final ApiOperateUserService operateUserService;
 
 
     /**

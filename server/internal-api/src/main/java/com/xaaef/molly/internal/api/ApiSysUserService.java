@@ -16,9 +16,6 @@ public interface ApiSysUserService {
 
     /**
      * 根据 用户ID 获取 租户ID
-     *
-     * @author WangChenChen
-     * @date 2023/2/14 10:53
      */
     Set<String> listHaveTenantIds(Long userId);
 
