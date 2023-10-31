@@ -8,6 +8,7 @@ import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.service.SysTemplateService;
 import com.xaaef.molly.system.vo.BindingMenusVO;
 import com.xaaef.molly.system.vo.UpdateMenusVO;
+import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -63,6 +64,7 @@ public class SysTemplateController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
     public JsonResult<Boolean> create(@RequestBody SysTemplate entity) {
@@ -75,6 +77,7 @@ public class SysTemplateController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody SysTemplate entity) {
@@ -87,6 +90,7 @@ public class SysTemplateController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable("id") Integer id) {
@@ -106,6 +110,7 @@ public class SysTemplateController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改菜单列表", description = "修改权限模板的菜单列表")
     @PostMapping("/menus")
     public JsonResult<Boolean> updateMenusId(@RequestBody @Validated BindingMenusVO params, BindingResult br) {

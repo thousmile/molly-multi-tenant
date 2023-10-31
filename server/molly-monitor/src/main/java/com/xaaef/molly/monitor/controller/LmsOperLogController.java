@@ -5,6 +5,7 @@ import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.monitor.entity.LmsOperLog;
 import com.xaaef.molly.monitor.service.LmsOperLogService;
+import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -42,6 +43,7 @@ public class LmsOperLogController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "批量删除", description = "只需要id即可")
     @PostMapping()
     public JsonResult<Boolean> delete(@RequestBody Set<String> ids) {

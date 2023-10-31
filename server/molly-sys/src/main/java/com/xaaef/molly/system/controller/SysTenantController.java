@@ -8,6 +8,7 @@ import com.xaaef.molly.system.po.CreateTenantPO;
 import com.xaaef.molly.system.po.TenantCreatedSuccessVO;
 import com.xaaef.molly.system.service.SysTenantService;
 import com.xaaef.molly.system.vo.UpdateTenantTemplateIdVO;
+import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -63,6 +64,7 @@ public class SysTenantController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "新增租户", description = "新增租户")
     @PostMapping
     public JsonResult<TenantCreatedSuccessVO> save(@Validated @RequestBody CreateTenantPO po, BindingResult br) {
@@ -74,6 +76,7 @@ public class SysTenantController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping
     public JsonResult<Boolean> updateById(@RequestBody SysTenant tenant) {
@@ -82,6 +85,7 @@ public class SysTenantController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> deleteById(@PathVariable("id") String id) {
@@ -90,6 +94,7 @@ public class SysTenantController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改权限模板", description = "修改租户权限")
     @PostMapping("/update/templates")
     public JsonResult<Boolean> updateTemplateId(@RequestBody @Validated UpdateTenantTemplateIdVO params,

@@ -22,4 +22,9 @@ public class LoginConst {
      */
     public static final String FORCED_OFFLINE_KEY = "forced_offline_user:";
 
+    /**
+     * 防止重复提交 令牌前缀
+     */
+    public static final String NO_REPEAT_SUBMIT = "no_repeat_submit";
+
 }

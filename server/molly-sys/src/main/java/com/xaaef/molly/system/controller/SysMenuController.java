@@ -6,6 +6,7 @@ import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.system.entity.SysMenu;
 import com.xaaef.molly.system.service.SysMenuService;
+import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -93,6 +94,7 @@ public class SysMenuController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
     public JsonResult<SysMenu> create(@RequestBody SysMenu entity) {
@@ -105,6 +107,7 @@ public class SysMenuController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody SysMenu entity) {
@@ -117,6 +120,7 @@ public class SysMenuController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable("id") Long id) {

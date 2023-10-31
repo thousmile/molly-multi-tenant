@@ -65,6 +65,14 @@ public class JwtSecurityUtils {
 
 
     /**
+     * 获取用户 唯一登录ID
+     **/
+    public static String getLoginId() {
+        return getLoginUser().getLoginId();
+    }
+
+
+    /**
      * 获取用户账户
      **/
     public static Long getUserId() {

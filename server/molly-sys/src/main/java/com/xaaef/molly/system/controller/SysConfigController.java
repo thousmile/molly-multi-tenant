@@ -6,6 +6,7 @@ import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.system.entity.SysConfig;
 import com.xaaef.molly.system.service.SysConfigService;
+import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -50,6 +51,7 @@ public class SysConfigController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
     public JsonResult<Boolean> create(@RequestBody SysConfig entity) {
@@ -58,6 +60,7 @@ public class SysConfigController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody SysConfig entity) {
@@ -66,6 +69,7 @@ public class SysConfigController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable("id") Long id) {

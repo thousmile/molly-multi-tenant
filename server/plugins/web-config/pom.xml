@@ -24,6 +24,12 @@
 
         <dependency>
             <groupId>com.xaaef.molly</groupId>
+            <artifactId>redis-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xaaef.molly</groupId>
             <artifactId>internal-api</artifactId>
             <version>${project.version}</version>
         </dependency>

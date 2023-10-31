@@ -1,6 +1,7 @@
 package com.xaaef.molly.corems.service.impl;
 
 
+import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.corems.entity.CmsDevice;
 import com.xaaef.molly.corems.mapper.CmsDeviceMapper;
 import com.xaaef.molly.corems.service.CmsDeviceService;
@@ -26,7 +27,7 @@ public class CmsDeviceServiceImpl extends BaseServiceImpl<CmsDeviceMapper, CmsDe
 
     @Override
     public boolean save(CmsDevice entity) {
-        entity.setDeviceId(null);
+        entity.setDeviceId(IdUtils.getStandaloneId());
         return super.save(entity);
     }
 

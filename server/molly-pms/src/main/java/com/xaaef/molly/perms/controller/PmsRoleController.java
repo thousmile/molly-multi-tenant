@@ -7,6 +7,7 @@ import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.po.BindingMenusVO;
 import com.xaaef.molly.perms.service.PmsRoleService;
 import com.xaaef.molly.perms.vo.UpdateMenusVO;
+import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -61,6 +62,7 @@ public class PmsRoleController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
     public JsonResult<Boolean> create(@RequestBody PmsRole entity) {
@@ -69,6 +71,7 @@ public class PmsRoleController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody PmsRole entity) {
@@ -77,6 +80,7 @@ public class PmsRoleController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
@@ -93,6 +97,7 @@ public class PmsRoleController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "关联菜单", description = "会删除原有的菜单！")
     @PostMapping("/menus")
     public JsonResult<Boolean> bindingMenus(@RequestBody @Validated BindingMenusVO entity,

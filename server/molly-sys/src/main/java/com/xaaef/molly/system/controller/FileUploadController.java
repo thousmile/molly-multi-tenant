@@ -5,6 +5,7 @@ import cn.xuyanwu.spring.file.storage.FileStorageService;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.system.po.ImageSizePO;
 import com.xaaef.molly.system.vo.FileInfoVO;
+import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,7 @@ public class FileUploadController {
     /**
      * 上传文件，成功返回文件 url
      */
+    @NoRepeatSubmit
     @Operation(summary = "图片上传", description = "图片上传")
     @PostMapping("/image")
     public JsonResult<FileInfoVO> image(MultipartFile file, ImageSizePO size) {
@@ -73,6 +75,7 @@ public class FileUploadController {
     /**
      * 头像上传，成功返回文件 url，会压缩
      */
+    @NoRepeatSubmit
     @Operation(summary = "头像上传", description = "头像上传 压缩头像的宽高 200 * 200")
     @PostMapping("/avatar")
     public JsonResult<FileInfoVO> avatar(MultipartFile file) {
@@ -107,6 +110,7 @@ public class FileUploadController {
      * @author Wang Chen Chen
      * @date 2021/7/19 18:28
      */
+    @NoRepeatSubmit
     @Operation(summary = "文件删除", description = "文件删除")
     @DeleteMapping
     public JsonResult<Boolean> delete(String fileUrl) {

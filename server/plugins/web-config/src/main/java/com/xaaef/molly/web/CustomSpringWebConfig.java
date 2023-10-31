@@ -7,6 +7,7 @@ import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.tenant.ProjectIdInterceptor;
 import com.xaaef.molly.tenant.TenantIdInterceptor;
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
+import com.xaaef.molly.web.repeat.NoRepeatSubmitInterceptor;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,9 +57,13 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
         localIPS.forEach(ip -> log.info("http://{}:{}/doc.html", ip, sp.getPort()));
     }
 
+    // 防止重复提交 拦截器
+    private final NoRepeatSubmitInterceptor noRepeatSubmitInterceptor;
 
+    // 获取租户ID 拦截器
     private final TenantIdInterceptor tenantIdInterceptor;
 
+    // 获取项目ID 拦截器
     private final ProjectIdInterceptor projectIdInterceptor;
 
     private final MultiTenantProperties multiTenantProperties;
@@ -87,6 +92,9 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
             log.info("Enable ProjectIdInterceptor Success ...");
         }
 
+        // 添加 防止重复提交 拦截器
+        registry.addInterceptor(noRepeatSubmitInterceptor)
+                .addPathPatterns("/**");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 

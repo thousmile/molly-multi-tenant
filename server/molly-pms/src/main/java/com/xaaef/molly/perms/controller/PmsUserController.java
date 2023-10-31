@@ -12,6 +12,7 @@ import com.xaaef.molly.perms.vo.ResetPasswordVO;
 import com.xaaef.molly.perms.vo.UpdatePasswordVO;
 import com.xaaef.molly.perms.vo.UpdateUserRoleIdVO;
 import com.xaaef.molly.perms.vo.UserRightsVO;
+import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -69,6 +70,7 @@ public class PmsUserController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
     public JsonResult<PmsUser> create(@RequestBody PmsUser entity) {
@@ -81,6 +83,7 @@ public class PmsUserController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody PmsUser entity) {
@@ -93,6 +96,7 @@ public class PmsUserController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping("/info")
     public JsonResult<Boolean> updateInfo(@RequestBody PmsUser entity) {
@@ -106,6 +110,7 @@ public class PmsUserController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "删除", description = "修改必须要id")
     @DeleteMapping("/{id}")
     public JsonResult<Boolean> delete(@PathVariable Long id) {
@@ -118,6 +123,7 @@ public class PmsUserController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改用户密码", description = "修改用户密码")
     @PostMapping("/update/password")
     public JsonResult<Boolean> updatePassword(@RequestBody @Validated UpdatePasswordVO data,
@@ -132,6 +138,7 @@ public class PmsUserController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "重置用户密码", description = "重置用户密码")
     @PostMapping("/reset/password")
     public JsonResult<Boolean> resetPassword(@RequestBody @Validated ResetPasswordVO data,
@@ -146,6 +153,7 @@ public class PmsUserController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改用户角色", description = "修改用户角色,会删除之前的角色信息。")
     @PostMapping("/update/roles")
     public JsonResult<Boolean> updateRole(@RequestBody @Validated UpdateUserRoleIdVO data,

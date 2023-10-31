@@ -4,6 +4,7 @@ import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.system.service.SysUserService;
 import com.xaaef.molly.system.vo.UpdateUserTenantVO;
 import com.xaaef.molly.system.vo.UserListTenantVO;
+import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public class SysUserController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改关联租户", description = "修改系统用户关联的租户")
     @PostMapping("/update/tenant")
     public JsonResult<Boolean> updateTemplateId(@RequestBody @Validated UpdateUserTenantVO params,

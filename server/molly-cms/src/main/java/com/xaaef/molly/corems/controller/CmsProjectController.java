@@ -8,6 +8,7 @@ import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.service.CmsProjectService;
 import com.xaaef.molly.corems.vo.ResetPasswordVO;
+import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -72,6 +73,7 @@ public class CmsProjectController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
     public JsonResult<Boolean> create(@RequestBody CmsProject entity) {
@@ -84,6 +86,7 @@ public class CmsProjectController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
     public JsonResult<Boolean> update(@RequestBody CmsProject entity) {
@@ -95,6 +98,7 @@ public class CmsProjectController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping()
     public JsonResult<Boolean> delete(CmsProject entity) {
@@ -106,6 +110,7 @@ public class CmsProjectController {
     }
 
 
+    @NoRepeatSubmit
     @Operation(summary = "重置项目密码", description = "重置项目密码")
     @PostMapping("/reset/password")
     public JsonResult<Boolean> resetPassword(@RequestBody @Validated ResetPasswordVO data,
