@@ -24,11 +24,14 @@
             {{ dictStore.getYesNo(scope.row.isDefault) }}
           </template>
         </el-table-column>
+        <el-table-column prop="createTime" label="创建时间">
+          <template #default="scope">
+            <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
+          </template>
+        </el-table-column>
         <el-table-column prop="lastUpdateTime" label="修改时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.lastUpdateTime" :content="scope.row.lastUpdateTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.lastUpdateTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
           </template>
         </el-table-column>
         <el-table-column label="操作" width="130">
@@ -107,7 +110,7 @@ import { queryDictDataApi, saveDictDataApi, updateDictDataApi, deleteDictDataApi
 import { cloneDeep } from "lodash-es"
 import { IDictData } from "@/types/dict"
 import { useDictStoreHook } from "@/store/modules/dict"
-import { showTimeAgo } from "@/hooks/useIndex"
+import { ISearchQuery } from "@/types/base"
 
 const dictStore = useDictStoreHook()
 
@@ -157,7 +160,13 @@ const entityFormRules: FormRules = {
 // 获取数据
 const getTableData = () => {
   loading.value = true
-  queryDictDataApi(params)
+  const p: ISearchQuery = {
+    pageIndex: params.pageIndex,
+    pageSize: params.pageSize,
+    keywords: params.keywords,
+    includeCauu: true
+  }
+  queryDictDataApi(p)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total

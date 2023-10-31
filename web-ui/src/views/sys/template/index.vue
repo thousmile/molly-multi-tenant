@@ -37,16 +37,12 @@
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.createTime" :content="scope.row.createTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.createTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
           </template>
         </el-table-column>
         <el-table-column prop="lastUpdateTime" label="修改时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.lastUpdateTime" :content="scope.row.lastUpdateTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.lastUpdateTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200">
@@ -158,8 +154,8 @@ import {
 } from "@/api/template"
 import { cloneDeep } from "lodash-es"
 import { ISysTemplate } from "@/types/sys"
-import { ISimpleMenu, IUpdateMenus } from "@/types/base"
-import { showTimeAgo, showStringOverflow } from "@/hooks/useIndex"
+import { ISearchQuery, ISimpleMenu, IUpdateMenus } from "@/types/base"
+import { showStringOverflow } from "@/hooks/useIndex"
 
 /** 加载 */
 const loading = ref(false)
@@ -255,7 +251,13 @@ const entityFormRules: FormRules = {
 // 获取数据
 const getTableData = () => {
   loading.value = true
-  queryTemplateApi(params)
+  const p: ISearchQuery = {
+    pageIndex: params.pageIndex,
+    pageSize: params.pageSize,
+    keywords: params.keywords,
+    includeCauu: true
+  }
+  queryTemplateApi(p)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total

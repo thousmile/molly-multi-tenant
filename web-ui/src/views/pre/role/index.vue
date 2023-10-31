@@ -11,7 +11,9 @@
         <el-col :span="2">
           <el-button type="success" :icon="Plus" v-has="['pre_role:create']" @click="handleAdd()">新增</el-button>
         </el-col>
-        <el-col :span="10"><div class="grid-content ep-bg-purple" /></el-col>
+        <el-col :span="10">
+          <div class="grid-content ep-bg-purple" />
+        </el-col>
       </el-row>
     </el-header>
     <el-main>
@@ -36,16 +38,12 @@
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.createTime" :content="scope.row.createTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.createTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
           </template>
         </el-table-column>
         <el-table-column prop="lastUpdateTime" label="修改时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.lastUpdateTime" :content="scope.row.lastUpdateTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.lastUpdateTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200">
@@ -177,9 +175,9 @@ import {
 } from "@/api/role"
 import { cloneDeep } from "lodash-es"
 import { IPmsRole } from "@/types/pms"
-import { showStringOverflow, showTimeAgo } from "@/hooks/useIndex"
+import { showStringOverflow } from "@/hooks/useIndex"
 
-import { ISimpleMenu, IUpdateMenus } from "@/types/base"
+import { ISearchQuery, ISimpleMenu, IUpdateMenus } from "@/types/base"
 
 /** 加载 */
 const loading = ref(false)
@@ -277,7 +275,13 @@ const entityFormRules: FormRules = {
 // 获取数据
 const getTableData = () => {
   loading.value = true
-  queryRoleApi(params)
+  const p: ISearchQuery = {
+    pageIndex: params.pageIndex,
+    pageSize: params.pageSize,
+    keywords: params.keywords,
+    includeCauu: true
+  }
+  queryRoleApi(p)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total

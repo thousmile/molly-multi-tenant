@@ -32,16 +32,12 @@
         <el-table-column prop="sort" label="排序" width="80" />
         <el-table-column prop="createTime" label="创建时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.createTime" :content="scope.row.createTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.createTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
           </template>
         </el-table-column>
         <el-table-column prop="lastUpdateTime" label="修改时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.lastUpdateTime" :content="scope.row.lastUpdateTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.lastUpdateTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200">
@@ -155,7 +151,7 @@ import { Plus, Edit, Delete, Sort } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules, TableInstance } from "element-plus"
 import { isPhone } from "@/utils/validate"
 import { cloneDeep } from "lodash-es"
-import { showStringOverflow, showTimeAgo } from "@/hooks/useIndex"
+import { showStringOverflow } from "@/hooks/useIndex"
 
 // 部门
 export interface ISimplePmsDept {

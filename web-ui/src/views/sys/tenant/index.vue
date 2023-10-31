@@ -62,16 +62,12 @@
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.createTime" :content="scope.row.createTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.createTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
           </template>
         </el-table-column>
         <el-table-column prop="lastUpdateTime" label="修改时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.lastUpdateTime" :content="scope.row.lastUpdateTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.lastUpdateTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
           </template>
         </el-table-column>
         <el-table-column label="操作" width="130">
@@ -246,10 +242,11 @@ import SearchChinaArea from "@/components/SearchChinaArea/index.vue"
 import createTenant from "./create.vue"
 import { useDictStoreHook } from "@/store/modules/dict"
 import { cloneDeep } from "lodash-es"
-import { showExpiredDateAgo, showStringOverflow, showChinaArea, showTimeAgo, isDefaultTenantId } from "@/hooks/useIndex"
+import { showExpiredDateAgo, showStringOverflow, showChinaArea, isDefaultTenantId } from "@/hooks/useIndex"
 
 import { isEmail, isTelphone } from "@/utils/validate"
 import { futureShortcuts } from "@/utils"
+import { ISearchQuery } from "@/types/base"
 
 const dictStore = useDictStoreHook()
 
@@ -345,7 +342,13 @@ const getListTemplateData = () => {
 // 获取数据
 const getTableData = () => {
   loading.value = true
-  queryTenantApi(params)
+  const p: ISearchQuery = {
+    pageIndex: params.pageIndex,
+    pageSize: params.pageSize,
+    keywords: params.keywords,
+    includeCauu: true
+  }
+  queryTenantApi(p)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total

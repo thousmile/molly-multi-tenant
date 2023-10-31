@@ -40,11 +40,14 @@
             </el-popover>
           </template>
         </el-table-column>
+        <el-table-column prop="createTime" label="创建时间">
+          <template #default="scope">
+            <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
+          </template>
+        </el-table-column>
         <el-table-column prop="lastUpdateTime" label="修改时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.lastUpdateTime" :content="scope.row.lastUpdateTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.lastUpdateTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
           </template>
         </el-table-column>
         <el-table-column label="操作" width="130">
@@ -121,9 +124,10 @@ import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { queryDictTypeApi, saveDictTypeApi, updateDictTypeApi, deleteDictTypeApi } from "@/api/dict"
 import { cloneDeep } from "lodash-es"
 import { IDictType } from "@/types/dict"
-import { showStringOverflow, showTimeAgo } from "@/hooks/useIndex"
+import { showStringOverflow } from "@/hooks/useIndex"
 
 import { useDictStoreHook } from "@/store/modules/dict"
+import { ISearchQuery } from "@/types/base"
 const dictStore = useDictStoreHook()
 
 /** 加载 */
@@ -165,7 +169,13 @@ const entityFormRules: FormRules = {
 // 获取数据
 const getTableData = () => {
   loading.value = true
-  queryDictTypeApi(params)
+  const p: ISearchQuery = {
+    pageIndex: params.pageIndex,
+    pageSize: params.pageSize,
+    keywords: params.keywords,
+    includeCauu: true
+  }
+  queryDictTypeApi(p)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total

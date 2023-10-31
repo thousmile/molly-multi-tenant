@@ -78,16 +78,12 @@
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.createTime" :content="scope.row.createTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.createTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
           </template>
         </el-table-column>
         <el-table-column prop="lastUpdateTime" label="修改时间">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.lastUpdateTime" :content="scope.row.lastUpdateTime" placement="top">
-              <el-link> {{ showTimeAgo(scope.row.lastUpdateTime) }}</el-link>
-            </el-tooltip>
+            <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
           </template>
         </el-table-column>
         <el-table-column label="操作" width="130">
@@ -311,7 +307,7 @@ import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { useDictStoreHook } from "@/store/modules/dict"
 import { useTenantStoreHook } from "@/store/modules/tenant"
 import { futureShortcuts } from "@/utils"
-import { showExpiredDateAgo, showStringOverflow, showTimeAgo } from "@/hooks/useIndex"
+import { showExpiredDateAgo, showStringOverflow } from "@/hooks/useIndex"
 import { cloneDeep } from "lodash-es"
 
 // 判读 当前选中的租户是否 默认租户
@@ -417,6 +413,7 @@ const entityFormRules: FormRules = {
 const getTableData = () => {
   loading.value = true
   const p: ISearchQuery = {
+    includeCauu: true,
     pageIndex: params.pageIndex,
     pageSize: params.pageSize,
     keywords: params.keywords

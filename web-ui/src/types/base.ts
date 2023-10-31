@@ -28,6 +28,8 @@ export interface IPageResult<T> {
 
 // 搜索分页查询
 export interface ISearchQuery {
+  // 包含操作用户信息
+  includeCauu?: boolean
   // 当前是第几页
   pageIndex: number
   // 每页多少条
@@ -72,10 +74,24 @@ export interface IBaseEntity {
   createTime?: string
   /** 创建人 id */
   createUser?: number
+  /** 创建人信息 */
+  createUserEntity?: IOperateUserEntity
   /** 最后一次修改时间 */
   lastUpdateTime?: string
   /** 最后一次修改人 id */
   lastUpdateUser?: number
+  /** 最后一次修改人信息 */
+  lastUpdateUserEntity?: IOperateUserEntity
+}
+
+// 操作用户信息
+export interface IOperateUserEntity {
+  /** 操作的用户ID */
+  userId: number
+  /** 操作的用户头像 */
+  avatar: string
+  /** 操作的用户昵称 */
+  nickname: string
 }
 
 // 简单菜单
