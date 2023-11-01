@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:21-jre-jammy
 MAINTAINER Wang Chen Chen<932560435@qq.com>
 ENV VERSION 1.1
 # 挂载容器目录
