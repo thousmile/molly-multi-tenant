@@ -1,4 +1,3 @@
-import { IJsonResult } from "@/types/base"
 import { ILoginData, ILoginUserInfo, IOAuth2Token, IUserPerms } from "@/types/pms"
 import { httpGet, httpPost } from "@/utils/service"
 

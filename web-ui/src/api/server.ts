@@ -1,4 +1,3 @@
-import { IJsonResult } from "@/types/base"
 import { IServerInfo } from "@/types/sys"
 import { httpGet } from "@/utils/service"
 

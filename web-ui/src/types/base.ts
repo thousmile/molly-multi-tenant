@@ -1,31 +1,3 @@
-// json 返回值
-export interface IJsonResult<T> {
-  /* 状态码 200: 成功！ 100: 失败！ 其他: 都是报错！ */
-  status: number
-  /* 返回消息 */
-  message: string
-  /* 数据 */
-  data: T
-}
-
-// 分页
-export interface IPagination<T> {
-  /* 总页数 */
-  total: number
-  /* 数据列表 */
-  list: T[]
-}
-
-// 分页 返回值
-export interface IPageResult<T> {
-  /* 状态码 200: 成功！ 100: 失败！ 其他: 都是报错！ */
-  status: number
-  /* 返回消息 */
-  message: string
-  /* 分页数据 */
-  data: IPagination<T>
-}
-
 // 搜索分页查询
 export interface ISearchQuery {
   // 包含操作用户信息

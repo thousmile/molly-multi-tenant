@@ -313,8 +313,6 @@ import { cloneDeep } from "lodash-es"
 // 判读 当前选中的租户是否 默认租户
 const { isDefaultTenantId } = useTenantStoreHook()
 
-console.log("isDefaultTenantId() :>>", isDefaultTenantId())
-
 const dictStore = useDictStoreHook()
 
 /** 加载 */

@@ -1,4 +1,3 @@
-import { IJsonResult } from "@/types/base"
 import { httpDelete } from "@/utils/service"
 
 // 删除 oss 上的图片

@@ -1,4 +1,4 @@
-import { IJsonResult, IPageResult, ISearchQuery, IUpdateMenus } from "@/types/base"
+import { ISearchQuery, IUpdateMenus } from "@/types/base"
 import { ISysTemplate } from "@/types/sys"
 import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
 

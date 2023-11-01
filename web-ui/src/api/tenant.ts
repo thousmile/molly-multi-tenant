@@ -1,4 +1,4 @@
-import { IJsonResult, IPageResult, ISearchQuery, ISimpleTenant } from "@/types/base"
+import { ISearchQuery, ISimpleTenant } from "@/types/base"
 import { ISysTenant, ICreateTenant, ICreateTenantAdmin } from "@/types/sys"
 import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
 

@@ -1,4 +1,4 @@
-import { IJsonResult, IPageResult, ISearchQuery } from "@/types/base"
+import { ISearchQuery } from "@/types/base"
 import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
 import { IMapDictData, IDictType, IDictData, IDictSearchQuery } from "@/types/dict"
 

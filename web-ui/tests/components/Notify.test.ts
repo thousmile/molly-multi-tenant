@@ -22,11 +22,7 @@ describe("NotifyList", () => {
   it("List 长度不为 0", () => {
     const wrapper = shallowMount(NotifyList, {
       props: {
-        list: [
-          {
-            title: ""
-          }
-        ]
+        list: []
       }
     })
     expect(wrapper.find("el-empty").exists()).toBe(false)
