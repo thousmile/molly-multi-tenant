@@ -105,6 +105,35 @@ public class JsonUtils {
         return StringUtils.EMPTY;
     }
 
+
+    /**
+     * 判断 string 是否为json
+     *
+     * @param jsonStr
+     * @return boolean
+     * @author Wang Chen Chen <932560435@qq.com>
+     * @date 2023/11/03 15:26
+     */
+    public static boolean isJsonValid(String jsonStr) {
+        var stringObjectMap = toMap(jsonStr, String.class, Object.class);
+        return stringObjectMap != null && !stringObjectMap.isEmpty();
+    }
+
+
+    /**
+     * 判断 string 是否为json
+     *
+     * @param jsonBytes
+     * @return boolean
+     * @author Wang Chen Chen <932560435@qq.com>
+     * @date 2023/11/03 15:26
+     */
+    public static boolean isJsonValid(byte[] jsonBytes) {
+        var stringObjectMap = toMap(jsonBytes, String.class, Object.class);
+        return stringObjectMap != null && !stringObjectMap.isEmpty();
+    }
+
+
     /**
      * 将对象转换成 二进制
      *
@@ -119,7 +148,7 @@ public class JsonUtils {
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
         }
-        return null;
+        return new byte[0];
     }
 
 
@@ -132,9 +161,9 @@ public class JsonUtils {
      * @author Wang Chen Chen <932560435@qq.com>
      * @date 2019/4/18 15:26
      */
-    public static <T> T toPojo(String jsonData, Class<T> beanType) {
+    public static <T> T toPojo(String jsonStr, Class<T> beanType) {
         try {
-            return MAPPER.readValue(jsonData, beanType);
+            return MAPPER.readValue(jsonStr, beanType);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -151,87 +180,89 @@ public class JsonUtils {
      * @author Wang Chen Chen <932560435@qq.com>
      * @date 2019/4/18 15:26
      */
-    public static <T> T toPojo(byte[] src, Class<T> beanType) {
+    public static <T> T toPojo(byte[] jsonBytes, Class<T> beanType) {
         try {
-            return MAPPER.readValue(src, beanType);
+            return MAPPER.readValue(jsonBytes, beanType);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
         return null;
     }
 
+
     /**
      * 将json数据转换成pojo对象list
      *
-     * @param jsonData
+     * @param jsonStr
      * @param beanType
      * @return java.util.List<T>
      * @author Wang Chen Chen <932560435@qq.com>
      * @date 2019/4/18 15:26
      */
-    public static <T> List<T> toListPojo(String jsonData, Class<T> beanType) {
+    public static <T> List<T> toListPojo(String jsonStr, Class<T> beanType) {
         try {
-            return MAPPER.readValue(jsonData, MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, beanType));
+            return MAPPER.readValue(jsonStr, MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, beanType));
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        return null;
+        return new ArrayList<>();
     }
 
 
     /**
      * 将json数据转换成 Map
      *
-     * @param jsonData
+     * @param jsonBytes
      * @param keyType
      * @param valueType
      * @return java.util.List<T>
      * @author Wang Chen Chen <932560435@qq.com>
      * @date 2019/4/18 15:26
      */
-    public static <K, V> Map<K, V> toMap(byte[] src, Class<K> keyType, Class<V> valueType) {
+    public static <K, V> Map<K, V> toMap(byte[] jsonBytes, Class<K> keyType, Class<V> valueType) {
         try {
-            return MAPPER.readValue(src, MAPPER.getTypeFactory().constructMapType(HashMap.class, keyType, valueType));
+            return MAPPER.readValue(jsonBytes, MAPPER.getTypeFactory().constructMapType(HashMap.class, keyType, valueType));
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        return null;
+        return new HashMap<>();
     }
 
 
     /**
      * 将json数据转换成 Map
      *
-     * @param jsonData
+     * @param jsonStr
      * @param keyType
      * @param valueType
      * @return java.util.List<T>
      * @author Wang Chen Chen <932560435@qq.com>
      * @date 2019/4/18 15:26
      */
-    public static <K, V> Map<K, V> toMap(String jsonData, Class<K> keyType, Class<V> valueType) {
+    public static <K, V> Map<K, V> toMap(String jsonStr, Class<K> keyType, Class<V> valueType) {
         try {
-            return MAPPER.readValue(jsonData, MAPPER.getTypeFactory().constructMapType(HashMap.class, keyType, valueType));
+            return MAPPER.readValue(jsonStr, MAPPER.getTypeFactory().constructMapType(HashMap.class, keyType, valueType));
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        return null;
+        return new HashMap<>();
     }
+
 
     /**
      * 将json数据转换成pojo对象list
      *
-     * @param jsonData
+     * @param jsonStr
      * @param keyType
      * @param valueType
      * @return java.util.List<T>
      * @author Wang Chen Chen <932560435@qq.com>
      * @date 2019/4/18 15:26
      */
-    public static <K, V> List<Map<K, V>> toListMap(String jsonData, Class<K> keyType, Class<V> valueType) {
+    public static <K, V> List<Map<K, V>> toListMap(String jsonStr, Class<K> keyType, Class<V> valueType) {
         try {
             return MAPPER.readValue(
-                    jsonData,
+                    jsonStr,
                     MAPPER.getTypeFactory().constructCollectionType(List.class,
                             MAPPER.getTypeFactory().constructMapType(HashMap.class, keyType, valueType)
                     )
@@ -239,29 +270,7 @@ public class JsonUtils {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        return null;
-    }
-
-
-    /**
-     * 判断字符串是否为 json
-     *
-     * @param str
-     * @return java.util.List<T>
-     * @author Wang Chen Chen <932560435@qq.com>
-     * @date 2019/4/18 15:26
-     */
-    public static boolean isJson(String str) {
-        boolean result = false;
-        if (StringUtils.isNotBlank(str)) {
-            str = str.trim();
-            if (str.startsWith("{") && str.endsWith("}")) {
-                result = true;
-            } else if (str.startsWith("[") && str.endsWith("]")) {
-                result = true;
-            }
-        }
-        return result;
+        return new ArrayList<>();
     }
 
 

@@ -5,9 +5,12 @@ import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.IdUtil;
+import com.mysql.cj.jdbc.MysqlDataSource;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.util.JsonUtils;
+import liquibase.integration.spring.MultiTenantSpringLiquibase;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.FileSystemResourceLoader;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -84,6 +87,21 @@ public class NoSpringTests {
     public void test9() {
         System.out.println(JwtSecurityUtils.encryptPassword("test123456"));
         System.out.println(JwtSecurityUtils.encryptPassword("test456789"));
+    }
+
+
+    @Test
+    public void test10() throws Exception {
+        var ds1 = new MysqlDataSource();
+        ds1.setURL("jdbc:mysql://192.168.0.188:3306/hello1?characterEncoding=utf8&useSSL=false");
+        ds1.setUser("test123");
+        ds1.setPassword("mht123456");
+        var liquibase1 = new MultiTenantSpringLiquibase();
+        liquibase1.setDataSource(ds1);
+        liquibase1.setResourceLoader(new FileSystemResourceLoader());
+        liquibase1.setChangeLog("C:\\Users\\demo\\code\\javaProjects\\molly-multi-tenant\\server\\molly-service\\src\\main\\resources\\db\\changelog-other.xml");
+        liquibase1.setSchemas(List.of("hello1", "hello2", "hello3"));
+        liquibase1.afterPropertiesSet();
     }
 
 

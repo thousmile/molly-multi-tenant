@@ -85,9 +85,9 @@ public class SysMenu extends BaseEntity {
     private Byte target;
 
     /**
-     * 菜单类型（0.菜单 1.按钮）
+     * 菜单类型（0.菜单 1.按钮 2.外链）
      */
-    @Schema(description = "菜单类型（0.菜单 1.按钮）")
+    @Schema(description = "菜单类型（0.菜单 1.按钮 2.外链）")
     private Byte menuType;
 
     /**

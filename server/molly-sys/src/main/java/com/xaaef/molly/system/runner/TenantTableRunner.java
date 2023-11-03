@@ -51,7 +51,10 @@ public class TenantTableRunner implements ApplicationRunner {
         if (props.getEnable()) {
             log.info("Execute TenantTableRunner run() ...");
             log.info("ignore tenant_id intercept table name : \n{}", JsonUtils.toJson(MbpConst.TENANT_IGNORE_TABLES));
+            // 获取默认租户Id
             var defaultTenantId = props.getDefaultTenantId();
+            // 是否创建表结构
+            var createTable = props.getCreateTable();
             var count = tenantMapper.selectCount(null);
             var pageSize = 100;
             var pageCount = (count / pageSize) + 1;
@@ -66,7 +69,9 @@ public class TenantTableRunner implements ApplicationRunner {
                         .filter(tenantId -> !StringUtils.equals(tenantId, defaultTenantId))
                         .forEach(tenantId -> {
                             tenantManager.addTenantId(tenantId);
-                            databaseManager.updateTable(tenantId);
+                            if (createTable) {
+                                databaseManager.updateTable(tenantId);
+                            }
                         });
             }
         }

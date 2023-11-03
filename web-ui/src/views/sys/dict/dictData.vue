@@ -135,7 +135,8 @@ const params = reactive({
   pageIndex: 1,
   pageSize: 10,
   keywords: "",
-  dictTypeKey: typeKey
+  dictTypeKey: typeKey,
+  includeCauu: true
 })
 
 /// 表单数据
@@ -160,13 +161,7 @@ const entityFormRules: FormRules = {
 // 获取数据
 const getTableData = () => {
   loading.value = true
-  const p: ISearchQuery = {
-    pageIndex: params.pageIndex,
-    pageSize: params.pageSize,
-    keywords: params.keywords,
-    includeCauu: true
-  }
-  queryDictDataApi(p)
+  queryDictDataApi(params)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total

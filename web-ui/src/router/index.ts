@@ -61,7 +61,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: "/personal",
+        path: "personal",
         component: () => import("@/views/personal/index.vue"),
         name: "Personal",
         meta: {

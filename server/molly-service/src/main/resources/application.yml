@@ -26,7 +26,6 @@ spring:
 # 多租户配置
 multi:
   tenant:
-    create-table: true
     master-change-log: classpath:db/changelog-master.xml
     other-change-log: classpath:db/changelog-other.xml
     prefix: molly_
@@ -35,6 +34,7 @@ multi:
     db-name: ${multi.tenant.prefix}${multi.tenant.default-tenant-id}
     enable: true
     enable-project: true
+    create-table: true
 
 
 # mybatis-plus 自动配置

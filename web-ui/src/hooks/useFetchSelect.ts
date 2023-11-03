@@ -9,23 +9,18 @@ interface SelectOption {
   disabled?: boolean
 }
 
-/** 接口响应格式 */
-interface ApiData {
-  code: number
-  data: SelectOption[]
-  message: string
-}
-
 /** 入参格式，暂时只需要传递 api 函数即可 */
 interface FetchSelectProps {
-  api: () => Promise<ApiData>
+  api: () => Promise<IJsonResult<SelectOption[]>>
 }
 
 export function useFetchSelect(props: FetchSelectProps) {
   const { api } = props
 
   const loading = ref<boolean>(false)
+
   const options = ref<SelectOption[]>([])
+
   const value = ref<OptionValue>("")
 
   /** 调用接口获取数据 */
@@ -33,8 +28,11 @@ export function useFetchSelect(props: FetchSelectProps) {
     loading.value = true
     options.value = []
     api()
-      .then((res) => {
-        options.value = res.data
+      .then((resp) => {
+        const { status, data } = resp
+        if (status === 200) {
+          options.value = data
+        }
       })
       .finally(() => {
         loading.value = false
