@@ -90,12 +90,12 @@ public class IpUtils {
             if (Ipv4Util.isInnerIP(ip)) {
                 return StrUtil.format("内网 {} IP", ip);
             }
-            var response = HttpUtil.get(String.format(IP_URL, ip));
-            if (!JsonUtils.isJson(response)) {
+            var jsonStr = HttpUtil.get(String.format(IP_URL, ip), 1500);
+            if (!JsonUtils.isJsonValid(jsonStr)) {
                 return "未知";
             }
-            Map<String, String> stringMap = JsonUtils.toMap(response, String.class, String.class);
-            if (stringMap == null) {
+            Map<String, String> stringMap = JsonUtils.toMap(jsonStr, String.class, String.class);
+            if (stringMap == null || stringMap.isEmpty()) {
                 return "未知";
             }
             return stringMap.getOrDefault("addr", "未知");
