@@ -121,10 +121,10 @@ public class PmsUser extends BaseEntity {
     private Set<PmsRole> roles;
 
     /**
-     * 是否登录 【 0.离线  1.在线】
+     * 如果为空，表示 未登录。
      */
-    @Schema(description = "是否登录 【 0.离线  1.在线】")
+    @Schema(description = "如果为空，表示 未登录")
     @TableField(exist = false)
-    private Byte loginFlag;
+    private String loginId;
 
 }

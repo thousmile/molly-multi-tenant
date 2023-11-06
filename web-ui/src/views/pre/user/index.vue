@@ -59,16 +59,14 @@
         </el-table-column>
         <el-table-column prop="adminFlag" label="管理员">
           <template #default="scope">
-            <el-tag v-if="scope.row.adminFlag">是</el-tag>
+            <el-tag v-if="scope.row.adminFlag" type="success">是</el-tag>
             <span v-else>否</span>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态">
           <template #default="scope">
-            <el-tag v-if="scope.row.loginFlag" type="success">在线</el-tag>
-            <span v-else>
-              {{ dictStore.getNormalDisable(scope.row.status) }}
-            </span>
+            <el-link v-if="scope.row.loginId" @click="showUserLoginLog(scope.row.loginId)" type="success">在线</el-link>
+            <span v-else>{{ dictStore.getNormalDisable(scope.row.status) }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="expired" label="过期时间">
@@ -107,7 +105,7 @@
                   <div v-has="['pre_user:reset:password']">
                     <el-dropdown-item :icon="Link" command="ResetPassword">重置密码</el-dropdown-item>
                   </div>
-                  <div v-if="isDefaultTenantId()" v-has="['pre_user:link:tenant']">
+                  <div v-if="isDefaultTenantId() && scope.row.adminFlag !== 1" v-has="['pre_user:link:tenant']">
                     <el-dropdown-item :icon="RefreshLeft" command="LinkTenant">关联租户</el-dropdown-item>
                   </div>
                   <div v-if="scope.row.adminFlag !== 1" v-has="['pre_user:delete']">
@@ -119,6 +117,11 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <!-- 登录日志的弹窗 -->
+      <el-dialog v-model="userLoginLog.dialogVisible" width="50%">
+        <UserLoginLog :key="userLoginLog.loginId" :value="userLoginLog.loginId" />
+      </el-dialog>
 
       <!-- 新增和修改的弹窗 -->
       <el-dialog v-model="dialogVisible" :title="dialogTitle" width="50%" :close-on-click-modal="false">
@@ -301,9 +304,10 @@ import {
 } from "@/api/user"
 import { treeDeptApi } from "@/api/dept"
 import { listRoleApi } from "@/api/role"
-import { ISearchQuery, ISimpleTenant } from "@/types/base"
+import { ISimpleTenant } from "@/types/base"
 import { IPmsUser, IPmsDept, IPmsRole } from "@/types/pms"
 import UserAvatar from "@/components/UserAvatar/index.vue"
+import UserLoginLog from "@/components/UserLoginLog/index.vue"
 import { isEmail, isPassword, isPhone } from "@/utils/validate"
 import { Plus, Edit, Delete, UserFilled, Search, RefreshLeft, Link } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
@@ -317,6 +321,17 @@ import { cloneDeep } from "lodash-es"
 const { isDefaultTenantId } = useTenantStoreHook()
 
 const dictStore = useDictStoreHook()
+
+// 显示登录日志
+const userLoginLog = ref({
+  dialogVisible: false,
+  loginId: ""
+})
+
+const showUserLoginLog = (loginId: string) => {
+  userLoginLog.value.loginId = loginId
+  userLoginLog.value.dialogVisible = true
+}
 
 /** 加载 */
 const loading = ref(false)
@@ -338,7 +353,8 @@ const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
-  keywords: ""
+  keywords: "",
+  includeCauu: true
 })
 
 /// 表单数据
@@ -356,7 +372,8 @@ const entityForm = ref<IPmsUser>({
   deptId: 0,
   expired: "",
   dept: null,
-  roles: []
+  roles: [],
+  loginId: ""
 })
 
 const emailValidator = (rule: any, value: any, callback: any) => {
@@ -413,13 +430,7 @@ const entityFormRules: FormRules = {
 
 const getTableData = () => {
   loading.value = true
-  const p: ISearchQuery = {
-    includeCauu: true,
-    pageIndex: params.pageIndex,
-    pageSize: params.pageSize,
-    keywords: params.keywords
-  }
-  queryUserApi(p)
+  queryUserApi(params)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total
@@ -448,7 +459,8 @@ const resetEntity = () => {
     deptId: 0,
     expired: "",
     dept: null,
-    roles: []
+    roles: [],
+    loginId: ""
   }
 }
 

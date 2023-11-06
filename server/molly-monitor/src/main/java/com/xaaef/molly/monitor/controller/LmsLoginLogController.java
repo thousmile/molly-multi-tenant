@@ -4,6 +4,7 @@ import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.monitor.entity.LmsLoginLog;
+import com.xaaef.molly.monitor.entity.LmsOperLog;
 import com.xaaef.molly.monitor.service.LmsLoginLogService;
 import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +34,13 @@ import java.util.Set;
 public class LmsLoginLogController {
 
     private final LmsLoginLogService baseService;
+
+
+    @Operation(summary = "单个查询", description = "根据Id查询")
+    @GetMapping("/{id}")
+    public JsonResult<LmsLoginLog> findById(@PathVariable("id") String id) {
+        return JsonResult.success(baseService.getById(id));
+    }
 
 
     @Operation(summary = "分页", description = "分页 查询所有")

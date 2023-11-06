@@ -203,7 +203,6 @@
 import { ref, reactive, onMounted } from "vue"
 import { deleteProjectApi, queryProjectApi, saveProjectApi, updateProjectApi, resetPasswordApi } from "@/api/project"
 import { treeDeptApi } from "@/api/dept"
-import { ISearchQuery } from "@/types/base"
 import { IPmsDept } from "@/types/pms"
 import { ICmsProject } from "@/types/cms"
 import { isTelphone } from "@/utils/validate"
@@ -234,7 +233,8 @@ const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
-  keywords: ""
+  keywords: "",
+  includeCauu: true
 })
 
 /// 表单数据
@@ -290,13 +290,7 @@ const entityFormRules: FormRules = {
 
 const getTableData = () => {
   loading.value = true
-  const p: ISearchQuery = {
-    pageIndex: params.pageIndex,
-    pageSize: params.pageSize,
-    keywords: params.keywords,
-    includeCauu: true
-  }
-  queryProjectApi(p)
+  queryProjectApi(params)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total

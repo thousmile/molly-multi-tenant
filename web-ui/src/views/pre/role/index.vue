@@ -176,8 +176,7 @@ import {
 import { cloneDeep } from "lodash-es"
 import { IPmsRole } from "@/types/pms"
 import { showStringOverflow } from "@/hooks/useIndex"
-
-import { ISearchQuery, ISimpleMenu, IUpdateMenus } from "@/types/base"
+import { ISimpleMenu, IUpdateMenus } from "@/types/base"
 
 /** 加载 */
 const loading = ref(false)
@@ -252,7 +251,8 @@ const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
-  keywords: ""
+  keywords: "",
+  includeCauu: true
 })
 
 /// 表单数据
@@ -275,13 +275,7 @@ const entityFormRules: FormRules = {
 // 获取数据
 const getTableData = () => {
   loading.value = true
-  const p: ISearchQuery = {
-    pageIndex: params.pageIndex,
-    pageSize: params.pageSize,
-    keywords: params.keywords,
-    includeCauu: true
-  }
-  queryRoleApi(p)
+  queryRoleApi(params)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total

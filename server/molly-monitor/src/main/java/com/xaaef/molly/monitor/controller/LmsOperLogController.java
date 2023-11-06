@@ -35,6 +35,13 @@ public class LmsOperLogController {
     private final LmsOperLogService baseService;
 
 
+    @Operation(summary = "单个查询", description = "根据Id查询")
+    @GetMapping("/{id}")
+    public JsonResult<LmsOperLog> findById(@PathVariable("id") String id) {
+        return JsonResult.success(baseService.getById(id));
+    }
+
+
     @Operation(summary = "分页", description = "分页 查询所有")
     @GetMapping("/query")
     public JsonResult<Pagination<LmsOperLog>> pageQuery(SearchPO params) {

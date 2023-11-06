@@ -131,7 +131,6 @@ import { cloneDeep } from "lodash-es"
 import { ISysConfig } from "@/types/sys"
 import { useDictStoreHook } from "@/store/modules/dict"
 import { showStringOverflow } from "@/hooks/useIndex"
-import { ISearchQuery } from "@/types/base"
 
 const dictStore = useDictStoreHook()
 
@@ -151,7 +150,8 @@ const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
-  keywords: ""
+  keywords: "",
+  includeCauu: true
 })
 
 /// 表单数据
@@ -176,13 +176,7 @@ const entityFormRules: FormRules = {
 // 获取数据
 const getTableData = () => {
   loading.value = true
-  const p: ISearchQuery = {
-    pageIndex: params.pageIndex,
-    pageSize: params.pageSize,
-    keywords: params.keywords,
-    includeCauu: true
-  }
-  queryConfigApi(p)
+  queryConfigApi(params)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total

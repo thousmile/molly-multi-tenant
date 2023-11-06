@@ -154,7 +154,7 @@ import {
 } from "@/api/template"
 import { cloneDeep } from "lodash-es"
 import { ISysTemplate } from "@/types/sys"
-import { ISearchQuery, ISimpleMenu, IUpdateMenus } from "@/types/base"
+import { ISimpleMenu, IUpdateMenus } from "@/types/base"
 import { showStringOverflow } from "@/hooks/useIndex"
 
 /** 加载 */
@@ -230,7 +230,8 @@ const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
-  keywords: ""
+  keywords: "",
+  includeCauu: true
 })
 
 /// 表单数据
@@ -251,13 +252,7 @@ const entityFormRules: FormRules = {
 // 获取数据
 const getTableData = () => {
   loading.value = true
-  const p: ISearchQuery = {
-    pageIndex: params.pageIndex,
-    pageSize: params.pageSize,
-    keywords: params.keywords,
-    includeCauu: true
-  }
-  queryTemplateApi(p)
+  queryTemplateApi(params)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total

@@ -4,9 +4,11 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.auth.service.UserLoginService;
@@ -99,8 +101,8 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
                 r.setRoles(roleMaps.get(r.getUserId()));
                 r.setDept(deptMaps.get(r.getDeptId()));
                 // 如果包含，那么就是在线。【 0.离线  1.在线】
-                var loginFlag = loginUserMap.containsKey(r.getUserId()) ? (byte) 1 : (byte) 0;
-                r.setLoginFlag(loginFlag);
+                var loginUser = loginUserMap.getOrDefault(r.getUserId(), new JwtLoginUser().setLoginId(StrUtil.EMPTY));
+                r.setLoginId(loginUser.getLoginId());
             });
         }
     }

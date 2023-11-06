@@ -115,7 +115,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         target.setLoginTime(LocalDateTime.now());
         target.setTenantId(currentTenant.getTenantId());
         // 生成一个随机ID 跟当前用户关联
-        target.setLoginId(IdUtil.simpleUUID());
+        target.setLoginId(IdUtil.getSnowflakeNextIdStr());
 
         // 判断当前登录的用户类型。系统用户 还是 租户用户
         String defaultTenantId = tenantService.getByDefaultTenantId();
@@ -236,7 +236,7 @@ public class UserLoginServiceImpl implements UserLoginService {
     private void asyncLoginLogSave(JwtLoginUser loginUser, CustomRequestInfo request) {
         var loginLog = new LoginLogDTO();
         BeanUtils.copyProperties(loginUser, loginLog);
-        loginLog.setId(IdUtil.getSnowflakeNextIdStr());
+        loginLog.setId(loginUser.getLoginId());
         loginLog.setRequestUrl(request.getRequestUrl());
         loginLog.setRequestIp(request.getIp());
         loginLog.setAddress(request.getAddress());

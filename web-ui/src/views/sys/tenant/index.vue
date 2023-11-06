@@ -243,10 +243,8 @@ import createTenant from "./create.vue"
 import { useDictStoreHook } from "@/store/modules/dict"
 import { cloneDeep } from "lodash-es"
 import { showExpiredDateAgo, showStringOverflow, showChinaArea, isDefaultTenantId } from "@/hooks/useIndex"
-
 import { isEmail, isTelphone } from "@/utils/validate"
 import { futureShortcuts } from "@/utils"
-import { ISearchQuery } from "@/types/base"
 
 const dictStore = useDictStoreHook()
 
@@ -268,7 +266,8 @@ const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
-  keywords: ""
+  keywords: "",
+  includeCauu: true
 })
 
 /// 表单数据
@@ -342,13 +341,7 @@ const getListTemplateData = () => {
 // 获取数据
 const getTableData = () => {
   loading.value = true
-  const p: ISearchQuery = {
-    pageIndex: params.pageIndex,
-    pageSize: params.pageSize,
-    keywords: params.keywords,
-    includeCauu: true
-  }
-  queryTenantApi(p)
+  queryTenantApi(params)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total

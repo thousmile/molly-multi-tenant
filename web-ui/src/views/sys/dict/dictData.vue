@@ -110,7 +110,6 @@ import { queryDictDataApi, saveDictDataApi, updateDictDataApi, deleteDictDataApi
 import { cloneDeep } from "lodash-es"
 import { IDictData } from "@/types/dict"
 import { useDictStoreHook } from "@/store/modules/dict"
-import { ISearchQuery } from "@/types/base"
 
 const dictStore = useDictStoreHook()
 

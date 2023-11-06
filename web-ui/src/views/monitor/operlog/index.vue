@@ -11,7 +11,9 @@
         <el-col :span="2">
           <el-button type="danger" :icon="Delete" @click="handleBatchDelete">批量删除</el-button>
         </el-col>
-        <el-col :span="10"><div class="grid-content ep-bg-purple" /></el-col>
+        <el-col :span="10">
+          <div class="grid-content ep-bg-purple" />
+        </el-col>
       </el-row>
     </el-header>
     <el-main>
@@ -65,17 +67,23 @@
           ref="entityFormRef"
           :model="entityForm"
           label-position="right"
-          label-width="80px"
+          label-width="50px"
           @keyup.enter="dialogVisible = false"
         >
-          <el-form-item label="标题">
-            {{ entityForm.title }}
+          <el-form-item label="描述">
+            {{ entityForm.description }}
           </el-form-item>
-          <el-form-item label="方法参数">
-            {{ entityForm.methodArgs }}
+          <el-form-item label="地址">
+            {{ entityForm.requestUrl }}
           </el-form-item>
-          <el-form-item label="响应结果">
-            {{ entityForm.responseResult }}
+          <el-form-item label="类型">
+            {{ entityForm.requestMethod }}
+          </el-form-item>
+          <el-form-item label="参数">
+            <el-input v-model="entityForm.methodArgs" rows="5" type="textarea" />
+          </el-form-item>
+          <el-form-item label="结果">
+            <el-input v-model="entityForm.responseResult" rows="10" type="textarea" />
           </el-form-item>
         </el-form>
         <template #footer>
@@ -202,7 +210,8 @@ const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
-  keywords: ""
+  keywords: "",
+  includeCauu: true
 })
 
 // 获取数据
@@ -242,6 +251,8 @@ const handleSelectionChange = (data: IOperLog[]) => {
 
 // 详情
 const handleInfo = (data: IOperLog) => {
+  data.methodArgs = JSON.stringify(JSON.parse(data.methodArgs), null, "\t")
+  data.responseResult = JSON.stringify(JSON.parse(data.responseResult), null, "\t")
   entityForm.value = data
   dialogVisible.value = true
   dialogTitle.value = data.title

@@ -193,6 +193,10 @@ export interface IPmsUser extends IBaseEntity {
    * 角色列表
    */
   roles: IPmsRole[]
+  /**
+   * 如果为空，表示 未登录。
+   */
+  loginId: string
 }
 
 /** 系统角色 */

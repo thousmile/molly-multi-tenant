@@ -125,9 +125,8 @@ import { queryDictTypeApi, saveDictTypeApi, updateDictTypeApi, deleteDictTypeApi
 import { cloneDeep } from "lodash-es"
 import { IDictType } from "@/types/dict"
 import { showStringOverflow } from "@/hooks/useIndex"
-
 import { useDictStoreHook } from "@/store/modules/dict"
-import { ISearchQuery } from "@/types/base"
+
 const dictStore = useDictStoreHook()
 
 /** 加载 */
@@ -146,7 +145,8 @@ const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
-  keywords: ""
+  keywords: "",
+  includeCauu: true
 })
 
 /// 表单数据
@@ -169,13 +169,7 @@ const entityFormRules: FormRules = {
 // 获取数据
 const getTableData = () => {
   loading.value = true
-  const p: ISearchQuery = {
-    pageIndex: params.pageIndex,
-    pageSize: params.pageSize,
-    keywords: params.keywords,
-    includeCauu: true
-  }
-  queryDictTypeApi(p)
+  queryDictTypeApi(params)
     .then((resp) => {
       tableData.value = resp.data.list
       params.pageTotal = resp.data.total
