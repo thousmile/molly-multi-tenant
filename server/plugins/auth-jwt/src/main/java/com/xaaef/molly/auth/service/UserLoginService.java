@@ -1,6 +1,7 @@
 package com.xaaef.molly.auth.service;
 
 import com.xaaef.molly.auth.exception.JwtAuthException;
+import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtTokenValue;
 import com.xaaef.molly.auth.po.LoginFormPO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +36,12 @@ public interface UserLoginService {
      * 刷新内存中用户的权限
      */
     void refreshAuthoritys();
+
+
+    /**
+     * 刷新内存中用户的权限
+     */
+    void refreshAuthoritys(JwtLoginUser loginUser);
 
 
 }

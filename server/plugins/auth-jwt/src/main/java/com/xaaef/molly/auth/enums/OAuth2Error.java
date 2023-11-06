@@ -157,7 +157,7 @@ public enum OAuth2Error {
     /**
      * 此系统用户不包含 此项目ID
      */
-    NO_HAVE_PROJECT_PERMISSIONS(400447, "此用户不包含此项目ID");
+    NO_HAVE_PROJECT_PERMISSIONS(400447, "用户没有操作此项目的权限");
 
 
     OAuth2Error(Integer status, String error) {

@@ -31,6 +31,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -69,6 +70,8 @@ public class UserLoginServiceImpl implements UserLoginService {
     private final ApiSysTenantService tenantService;
 
     private final ApiSysUserService sysUserService;
+
+    private final ApiCmsProjectService cmsProjectService;
 
 
     /**
@@ -111,6 +114,8 @@ public class UserLoginServiceImpl implements UserLoginService {
         target.setGrantType(GrantType.PASSWORD);
         target.setLoginTime(LocalDateTime.now());
         target.setTenantId(currentTenant.getTenantId());
+        // 生成一个随机ID 跟当前用户关联
+        target.setLoginId(IdUtil.simpleUUID());
 
         // 判断当前登录的用户类型。系统用户 还是 租户用户
         String defaultTenantId = tenantService.getByDefaultTenantId();
@@ -118,14 +123,20 @@ public class UserLoginServiceImpl implements UserLoginService {
                 ? UserType.SYSTEM : UserType.TENANT;
         target.setUserType(userType);
 
-        // 生成一个随机ID 跟当前用户关联
-        target.setLoginId(IdUtil.simpleUUID());
+        target.setHaveProjectIds(new HashSet<>());
+        target.setHaveTenantIds(new HashSet<>());
 
         // 如果当前登录的用户，是否系统用户
         if (userType == UserType.SYSTEM) {
-            target.setHaveTenantIds(
-                    sysUserService.listHaveTenantIds(target.getUserId())
-            );
+            var haveTenantIds = sysUserService.listHaveTenantIds(target.getUserId());
+            target.setHaveTenantIds(haveTenantIds);
+        } else {
+            // 非管理员 用户。根据部门Id获取关联的项目Id
+            if (target.getAdminFlag() == AdminFlag.NO) {
+                // 获取当前登录的用户 项目ID 列表
+                var haveProjectIds = cmsProjectService.listProjectByDeptId(target.getDeptId());
+                target.setHaveProjectIds(haveProjectIds);
+            }
         }
 
         // 设置角色和菜单权限
@@ -154,14 +165,18 @@ public class UserLoginServiceImpl implements UserLoginService {
     public void refreshAuthoritys() {
         // 判断用户是否登录
         if (JwtSecurityUtils.isAuthenticated()) {
-            // 获取登录用户
-            var target = JwtSecurityUtils.getLoginUser();
-            target.setAuthorities(List.of());
-            // 设置用户的权限
-            setAuthoritys(target);
-            // 更新用户的权限
-            tokenService.updateLoginUser(target);
+            refreshAuthoritys(JwtSecurityUtils.getLoginUser());
         }
+    }
+
+
+    @Override
+    public void refreshAuthoritys(JwtLoginUser target) {
+        target.setAuthorities(List.of());
+        // 设置用户的权限
+        setAuthoritys(target);
+        // 更新用户的权限
+        tokenService.updateLoginUser(target);
     }
 
 

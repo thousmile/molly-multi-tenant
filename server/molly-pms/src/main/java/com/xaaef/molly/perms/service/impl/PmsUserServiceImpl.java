@@ -2,19 +2,20 @@ package com.xaaef.molly.perms.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.auth.service.JwtTokenService;
+import com.xaaef.molly.auth.service.UserLoginService;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.StatusEnum;
+import com.xaaef.molly.common.enums.UserType;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.IdUtils;
+import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.api.ApiSysMenuService;
 import com.xaaef.molly.internal.dto.PmsRoleDTO;
@@ -64,7 +65,11 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
 
     private final ApiSysConfigService configService;
 
+    private final ApiCmsProjectService cmsProjectService;
+
     private final ApiSysMenuService menuService;
+
+    private final UserLoginService userLoginService;
 
     private final PmsRoleService roleService;
 
@@ -73,6 +78,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
     private final PmsRoleMapper roleMapper;
 
     private final JwtTokenService jwtTokenService;
+
 
     @Override
     public IPage<PmsUser> pageKeywords(SearchPO params, Collection<SFunction<PmsUser, ?>> columns) {
@@ -87,13 +93,14 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
             var deptIds = list.stream().map(PmsUser::getDeptId).collect(Collectors.toSet());
             var roleMaps = roleService.listByUserIds(userIds);
             var deptMaps = deptService.listByIds(deptIds).stream().collect(Collectors.toMap(PmsDept::getDeptId, d -> d));
-            var online = jwtTokenService.listUsernames();
+            var loginUserMap = jwtTokenService.mapLoginUser();
             list.forEach(r -> {
                 r.setPassword(null);
                 r.setRoles(roleMaps.get(r.getUserId()));
                 r.setDept(deptMaps.get(r.getDeptId()));
                 // 如果包含，那么就是在线。【 0.离线  1.在线】
-                r.setLoginFlag(CollectionUtil.contains(online, r.getUsername()) ? (byte) 1 : (byte) 0);
+                var loginFlag = loginUserMap.containsKey(r.getUserId()) ? (byte) 1 : (byte) 0;
+                r.setLoginFlag(loginFlag);
             });
         }
     }
@@ -194,7 +201,14 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
             var copyOptions = CopyOptions.create();
             copyOptions.setIgnoreNullValue(true);
             BeanUtil.copyProperties(entity, loginUser, copyOptions);
-            jwtTokenService.updateLoginUser(loginUser);
+            // 非管理员 用户。根据部门Id获取关联的项目Id
+            if (loginUser.getUserType() == UserType.TENANT
+                    && Objects.equals(entity.getAdminFlag(), AdminFlag.NO.getCode())) {
+                // 获取当前登录的用户 项目ID 列表
+                var haveProjectIds = cmsProjectService.listProjectByDeptId(entity.getDeptId());
+                loginUser.setHaveProjectIds(haveProjectIds);
+            }
+            userLoginService.refreshAuthoritys(loginUser);
         }
         return super.updateById(entity);
     }
@@ -277,17 +291,6 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
 
             return new UserRightsVO().setMenus(treeMenus).setButtons(buttons);
         });
-    }
-
-
-    @Override
-    public Set<JwtLoginUser> listLoginUsers() {
-        return jwtTokenService.listLoginUsers()
-                .stream()
-                .peek(r -> {
-                    r.setPassword(null);
-                    r.setAuthorities(null);
-                }).collect(Collectors.toSet());
     }
 
 

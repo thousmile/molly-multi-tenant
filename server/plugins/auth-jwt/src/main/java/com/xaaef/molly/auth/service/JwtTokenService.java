@@ -5,6 +5,7 @@ import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtTokenProperties;
 import com.xaaef.molly.auth.jwt.JwtTokenValue;
 
+import java.util.Map;
 import java.util.Set;
 
 
@@ -88,13 +89,13 @@ public interface JwtTokenService {
 
 
     /**
-     * 获取 所有的在线的用户名
+     * 获取 当前租户，在线的用户信息
      *
      * @return String 用户名称
      * @author Wang Chen Chen
      * @date 2021/7/12 16:29
      */
-    Set<String> listUsernames();
+    Set<String> listLoginUsername();
 
 
     /**
@@ -108,13 +109,27 @@ public interface JwtTokenService {
 
 
     /**
-     * 获取 所有的在线的用户信息
+     * 获取 当前租户，在线的 用户信息
+     * key: 用户ID
+     * value: 用户信息
      *
      * @return String 用户名称
      * @author Wang Chen Chen
      * @date 2021/7/12 16:29
      */
-    Set<JwtLoginUser> listLoginUsers();
+    Map<Long, JwtLoginUser> mapLoginUser();
+
+
+    /**
+     * 获取 所有租户 在线的 用户信息
+     * key: 用户ID
+     * value: 用户信息
+     *
+     * @return String 用户名称
+     * @author Wang Chen Chen
+     * @date 2021/7/12 16:29
+     */
+    Map<Long, JwtLoginUser> mapAllLoginUser();
 
 
     /**

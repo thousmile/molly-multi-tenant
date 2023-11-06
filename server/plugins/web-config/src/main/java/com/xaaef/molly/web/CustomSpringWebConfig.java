@@ -4,9 +4,9 @@ import cn.hutool.core.net.Ipv4Util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xaaef.molly.common.consts.JwtConst;
 import com.xaaef.molly.common.util.JsonUtils;
-import com.xaaef.molly.tenant.ProjectIdInterceptor;
-import com.xaaef.molly.tenant.TenantIdInterceptor;
-import com.xaaef.molly.tenant.props.MultiTenantProperties;
+import com.xaaef.molly.internal.api.ApiSysTenantService;
+import com.xaaef.molly.web.interceptor.ProjectIdInterceptor;
+import com.xaaef.molly.web.interceptor.TenantIdInterceptor;
 import com.xaaef.molly.web.repeat.NoRepeatSubmitInterceptor;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
@@ -66,7 +66,7 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
     // 获取项目ID 拦截器
     private final ProjectIdInterceptor projectIdInterceptor;
 
-    private final MultiTenantProperties multiTenantProperties;
+    private final ApiSysTenantService tenantService;
 
 
     @Override
@@ -76,6 +76,7 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
                 .filter(s -> !JwtConst.LOGIN_URL.equals(s))
                 .collect(Collectors.toList());
 
+        var multiTenantProperties = tenantService.getByMultiTenantProperties();
         // 启用 租户ID 拦截器
         if (multiTenantProperties.getEnable()) {
             registry.addInterceptor(tenantIdInterceptor)

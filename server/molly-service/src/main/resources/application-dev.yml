@@ -2,7 +2,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://192.168.0.188:3306/${multi.tenant.db-name:molly_master}?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-    username: root
+    username: test123
     password: mht123456
     type: com.zaxxer.hikari.HikariDataSource
 
@@ -10,7 +10,7 @@ spring:
   data:
     redis:
       host: 192.168.0.188
-      database: 6
+      database: 7
       port: 6379
       timeout: 5000
       lettuce:

@@ -100,7 +100,7 @@ public class AuthController {
         try {
             var tokenValue = loginService.login(user, request);
             return JsonResult.success("登录成功", tokenValue);
-        } catch (Exception failed) {
+        } catch (RuntimeException failed) {
             String msg = null;
             if (failed instanceof UsernameNotFoundException) {
                 msg = StrUtil.format("用户名 {} 不存在", user.getUsername());

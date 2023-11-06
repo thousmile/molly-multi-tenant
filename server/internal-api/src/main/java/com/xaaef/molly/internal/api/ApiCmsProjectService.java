@@ -3,6 +3,8 @@ package com.xaaef.molly.internal.api;
 import com.xaaef.molly.internal.dto.CmsProjectDTO;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
 
+import java.util.Set;
+
 
 /**
  * <p>
@@ -41,5 +43,15 @@ public interface ApiCmsProjectService {
      * @date 2023/8/11 10:47
      */
     long countProjectByDeptId(Long deptId);
+
+
+    /**
+     * 根据 部门ID 获取 关联的 项目列表
+     *
+     * @author WangChenChen
+     * @date 2023/8/11 10:47
+     */
+    Set<Long> listProjectByDeptId(Long deptId);
+
 
 }

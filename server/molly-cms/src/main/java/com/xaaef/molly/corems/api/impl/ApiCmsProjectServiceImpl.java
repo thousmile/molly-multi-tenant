@@ -5,16 +5,21 @@ import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.mapper.CmsProjectMapper;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
+import com.xaaef.molly.internal.api.ApiPmsDeptService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.dto.CmsProjectDTO;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.encryptPassword;
 import static com.xaaef.molly.common.consts.ConfigName.USER_DEFAULT_PASSWORD;
@@ -32,30 +37,41 @@ import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
+
+    @Autowired
+    @Lazy
+    private ApiPmsDeptService pmsDeptService;
 
     private final CmsProjectMapper projectMapper;
 
     private final ApiSysConfigService configService;
 
+    public ApiCmsProjectServiceImpl(CmsProjectMapper projectMapper,
+                                    ApiSysConfigService configService) {
+        this.projectMapper = projectMapper;
+        this.configService = configService;
+    }
+
 
     @Override
     public CmsProjectDTO getSimpleById(Long projectId) {
         var wrapper = new LambdaQueryWrapper<CmsProject>()
-                .select(List.of(CmsProject::getProjectId, CmsProject::getProjectName,
-                        CmsProject::getLinkman, CmsProject::getContactNumber))
+                .select(
+                        List.of(
+                                CmsProject::getProjectId, CmsProject::getProjectName,
+                                CmsProject::getLinkman, CmsProject::getAreaCode, CmsProject::getAddress
+                        )
+                )
                 .eq(CmsProject::getStatus, StatusEnum.NORMAL.getCode())
                 .eq(CmsProject::getProjectId, projectId);
         var source = projectMapper.selectOne(wrapper);
         if (source == null) {
             return null;
         }
-        return new CmsProjectDTO()
-                .setProjectId(source.getProjectId())
-                .setProjectName(source.getProjectName())
-                .setLinkman(source.getLinkman())
-                .setContactNumber(source.getContactNumber());
+        var target = new CmsProjectDTO();
+        BeanUtils.copyProperties(source, target);
+        return target;
     }
 
 
@@ -87,6 +103,19 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
         var wrapper = new LambdaQueryWrapper<CmsProject>()
                 .eq(CmsProject::getDeptId, deptId);
         return projectMapper.selectCount(wrapper);
+    }
+
+
+    @Override
+    public Set<Long> listProjectByDeptId(Long deptId) {
+        var deptIds = pmsDeptService.listChildIdByDeptId(deptId);
+        var wrapper = new LambdaQueryWrapper<CmsProject>()
+                .select(CmsProject::getProjectId)
+                .in(CmsProject::getDeptId, deptIds);
+        return projectMapper.selectList(wrapper)
+                .stream()
+                .map(CmsProject::getProjectId)
+                .collect(Collectors.toSet());
     }
 
 

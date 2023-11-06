@@ -3,6 +3,7 @@ package com.xaaef.molly.perms.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
+import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.perms.entity.PmsUser;
@@ -21,8 +22,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
@@ -45,6 +46,8 @@ public class PmsUserController {
 
     private final PmsUserService baseService;
 
+    private final JwtTokenService jwtTokenService;
+
 
     @Operation(summary = "用户权限", description = "用户权限")
     @GetMapping("/rights")
@@ -65,8 +68,8 @@ public class PmsUserController {
 
     @Operation(summary = "在线用户查询", description = "在线用户 查询所有")
     @GetMapping("/online/query")
-    public JsonResult<Set<JwtLoginUser>> pageQuery2() {
-        return JsonResult.success(baseService.listLoginUsers());
+    public JsonResult<Collection<JwtLoginUser>> pageQuery2() {
+        return JsonResult.success(jwtTokenService.mapLoginUser().values());
     }
 
 

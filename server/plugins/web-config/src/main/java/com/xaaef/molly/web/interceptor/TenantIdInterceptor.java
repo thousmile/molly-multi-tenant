@@ -1,4 +1,4 @@
-package com.xaaef.molly.tenant;
+package com.xaaef.molly.web.interceptor;
 
 
 import cn.hutool.core.util.StrUtil;
@@ -8,7 +8,6 @@ import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiSysTenantService;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
-import com.xaaef.molly.tenant.service.MultiTenantManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -35,8 +34,6 @@ import static com.xaaef.molly.common.util.TenantUtils.X_TENANT_ID;
 @Component
 @AllArgsConstructor
 public class TenantIdInterceptor implements HandlerInterceptor {
-
-    private final MultiTenantManager tenantManager;
 
     private final ApiSysTenantService tenantService;
 
@@ -73,13 +70,13 @@ public class TenantIdInterceptor implements HandlerInterceptor {
             }
         }
         // 校验租户，是否存在系统中
-        if (!tenantManager.existById(tenantId)) {
+        if (!tenantService.existById(tenantId)) {
             var err = StrUtil.format("租户ID {} 不存在！", tenantId);
             ServletUtils.renderError(response, JsonResult.result(TENANT_ID_DOES_NOT_EXIST.getStatus(), err));
             return false;
         }
         TenantUtils.setTenantId(tenantId);
-        log.debug("preHandle.tenantId: {}", tenantId);
+        // 校验 当前用户是否 有操作此租户的权限
         if (!haveTenantPermissions(response, tenantId)) {
             return false;
         }

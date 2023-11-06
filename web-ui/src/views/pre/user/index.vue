@@ -59,13 +59,16 @@
         </el-table-column>
         <el-table-column prop="adminFlag" label="管理员">
           <template #default="scope">
-            <el-tag v-if="scope.row.adminFlag" type="success">是</el-tag>
+            <el-tag v-if="scope.row.adminFlag">是</el-tag>
             <span v-else>否</span>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态">
           <template #default="scope">
-            {{ dictStore.getNormalDisable(scope.row.status) }}
+            <el-tag v-if="scope.row.loginFlag" type="success">在线</el-tag>
+            <span v-else>
+              {{ dictStore.getNormalDisable(scope.row.status) }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column prop="expired" label="过期时间">

@@ -1,4 +1,4 @@
-package com.xaaef.molly.tenant;
+package com.xaaef.molly.web.interceptor;
 
 
 import cn.hutool.core.util.NumberUtil;
@@ -8,8 +8,8 @@ import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
+import com.xaaef.molly.internal.api.ApiSysTenantService;
 import com.xaaef.molly.internal.dto.CmsProjectDTO;
-import com.xaaef.molly.tenant.props.MultiTenantProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -38,7 +38,8 @@ public class ProjectIdInterceptor implements HandlerInterceptor {
 
     private final ApiCmsProjectService projectService;
 
-    private final MultiTenantProperties multiTenantProperties;
+    private final ApiSysTenantService tenantService;
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -62,7 +63,12 @@ public class ProjectIdInterceptor implements HandlerInterceptor {
             TenantUtils.setProjectId(projectId);
         } else {
             // 使用 默认项目ID
-            TenantUtils.setProjectId(multiTenantProperties.getDefaultProjectId());
+            var defaultProjectId = tenantService.getByMultiTenantProperties().getDefaultProjectId();
+            TenantUtils.setProjectId(defaultProjectId);
+        }
+        // 校验 当前用户是否 有操作此项目的权限
+        if (!haveProjectPermissions(response, TenantUtils.getProjectId())) {
+            return false;
         }
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
@@ -72,8 +78,8 @@ public class ProjectIdInterceptor implements HandlerInterceptor {
      * 判断 当前用户是否拥有 此项目的 操作权限
      */
     private boolean haveProjectPermissions(HttpServletResponse response, Long projectId) {
-        // 如果当前用户是 系统用户
-        if (JwtSecurityUtils.isMasterUser()) {
+        // 如果当前用户是 租户的非管理员用户。
+        if (JwtSecurityUtils.isAuthenticated() && (!JwtSecurityUtils.isMasterUser() && !JwtSecurityUtils.isAdminUser())) {
             var haveProjectIds = JwtSecurityUtils.getLoginUser().getHaveProjectIds();
             if (!haveProjectIds.isEmpty() && !haveProjectIds.contains(projectId)) {
                 var err = StrUtil.format("您没有 项目ID {} 的操作权限！", projectId);

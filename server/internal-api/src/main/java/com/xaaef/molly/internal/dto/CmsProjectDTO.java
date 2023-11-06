@@ -15,6 +15,7 @@ import lombok.experimental.Accessors;
  * @date 2021/7/5 9:31
  */
 
+
 @Schema(description = "项目")
 @Getter
 @Setter
@@ -49,7 +50,13 @@ public class CmsProjectDTO implements java.io.Serializable {
     private String contactNumber;
 
     /**
-     * 联系地址
+     * 行政地址
+     */
+    @Schema(description = "行政地址")
+    private Long areaCode;
+
+    /**
+     * 联系地址 如：左右云创谷1栋A座
      */
     @Schema(description = "联系地址")
     private String address;
@@ -71,5 +78,11 @@ public class CmsProjectDTO implements java.io.Serializable {
      */
     @Schema(description = "状态 【0.禁用 1.正常 2.锁定 】")
     private Byte status;
+
+    /**
+     * 所属部门
+     */
+    @Schema(description = "所属部门Id")
+    private Long deptId;
 
 }

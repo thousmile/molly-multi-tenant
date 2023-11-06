@@ -21,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -223,7 +225,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
 
     @Override
-    public Set<String> listUsernames() {
+    public Set<String> listLoginUsername() {
         var onlineUserKey = ONLINE_USER_KEY + "*";
         return Objects.requireNonNull(strRedisTemplate.keys(onlineUserKey))
                 .stream()
@@ -243,11 +245,43 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
 
     @Override
-    public Set<JwtLoginUser> listLoginUsers() {
-        return this.listLoginIds()
+    public Map<Long, JwtLoginUser> mapLoginUser() {
+        var onlineUserKey = ONLINE_USER_KEY + "*";
+        var keys = strRedisTemplate.keys(onlineUserKey);
+        if (keys == null || keys.isEmpty()) {
+            return new HashMap<>();
+        }
+        var loginIds = strRedisTemplate.opsForValue().multiGet(keys);
+        if (loginIds == null || loginIds.isEmpty()) {
+            return new HashMap<>();
+        }
+        var loginUserKeys = loginIds
                 .stream()
-                .map(this::getLoginUser)
+                .map(loginId -> LOGIN_TOKEN_KEY + loginId)
                 .collect(Collectors.toSet());
+        return mapLoginUser(loginUserKeys);
+    }
+
+
+    @Override
+    public Map<Long, JwtLoginUser> mapAllLoginUser() {
+        var keys = strRedisTemplate.keys(LOGIN_TOKEN_KEY + "*");
+        return mapLoginUser(keys);
+    }
+
+
+    private Map<Long, JwtLoginUser> mapLoginUser(Set<String> keys) {
+        var result = new HashMap<Long, JwtLoginUser>();
+        if (keys == null || keys.isEmpty()) {
+            return result;
+        }
+        var objects = redisTemplate.opsForValue().multiGet(keys);
+        if (objects == null || objects.isEmpty()) {
+            return result;
+        }
+        return objects.stream()
+                .map(a -> BeanUtil.copyProperties(a, JwtLoginUser.class))
+                .collect(Collectors.toMap(JwtLoginUser::getUserId, a -> a));
     }
 
 
@@ -255,5 +289,6 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     public JwtTokenProperties getProps() {
         return props;
     }
+
 
 }

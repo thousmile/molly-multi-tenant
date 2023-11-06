@@ -1,11 +1,11 @@
 ## 安全认证
 
 ### 获取验证码
-###  http://localhost:18891/auth/captcha/codes?codeKey=5jXzuwcoUzbtnHNh
-GET {{baseUrl}}/auth/captcha/codes?codeKey=applezrgegbtnHNrefh
+###  http://localhost:18891/auth/captcha/codes?codeKey=sNHnDNSliZe7ynOLem
+GET {{baseUrl}}/auth/captcha/codes?codeKey=sNHnDNSliZe7ynOLem
 
 
-### [master]密码模式登录
+### [google]密码模式登录
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 x-tenant-id: google
@@ -14,8 +14,8 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Fi
 {
   "username": "cb44dedf9846",
   "password": "123456",
-  "codeKey": "applezrgegbtnHNrefh",
-  "codeText": "dxfu"
+  "codeKey": "sNHnDNSliZe7ynOLem",
+  "codeText": "8mp8"
 }
 
 > {%
@@ -28,6 +28,7 @@ client.global.set("refreshToken", response.body.data.refresh_token);
 POST {{baseUrl}}/auth/logout
 Content-Type: application/json
 x-tenant-id: google
+x-project-id: 10003
 Authorization: Bearer {{tokenValue}}
 
 
@@ -42,6 +43,7 @@ Authorization: Bearer {{tokenValue}}
 GET {{baseUrl}}/auth/login/user
 Content-Type: application/json
 x-tenant-id: google
+x-project-id: 10001
 Authorization: Bearer {{tokenValue}}
 
 
@@ -50,5 +52,6 @@ Authorization: Bearer {{tokenValue}}
 GET {{baseUrl}}/cms/project/simple/query?pageIndex=1&pageSize=5&keywords=
 Content-Type: application/json
 x-tenant-id: google
+x-project-id: 10002
 Authorization: Bearer {{tokenValue}}
 

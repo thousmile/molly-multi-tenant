@@ -1,6 +1,5 @@
 package com.xaaef.molly.perms.service;
 
-import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.perms.entity.PmsUser;
 import com.xaaef.molly.perms.vo.ResetPasswordVO;
 import com.xaaef.molly.perms.vo.UpdatePasswordVO;
@@ -20,15 +19,6 @@ import java.util.Set;
  */
 
 public interface PmsUserService extends BaseService<PmsUser> {
-
-    /**
-     * TODO 在线的所有用户
-     *
-     * @author WangChenChen
-     * @date 2023/4/22 8:50
-     */
-    Set<JwtLoginUser> listLoginUsers();
-
 
     /**
      * 修改密码

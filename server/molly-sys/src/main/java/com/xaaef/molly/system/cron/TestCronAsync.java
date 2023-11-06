@@ -70,7 +70,7 @@ public class TestCronAsync {
     @Scheduled(fixedRate = 60000)
     public void cron2() {
         var ind = count2.decrementAndGet();
-        tokenService.listLoginUsers().forEach(user -> {
+        tokenService.mapAllLoginUser().forEach((userId, user) -> {
             var map = Map.of(
                     "id", IdUtils.getStandaloneId(),
                     "title", String.format("推送消息=>%d", RandomUtil.randomInt(10000, 99999)),
