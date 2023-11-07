@@ -1,125 +1,126 @@
 <template>
-  <el-container class="app-container" v-loading="loading">
-    <el-header>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-input v-model="params.keywords" clearable placeholder="根据关键字搜索" />
-        </el-col>
-        <el-col :span="2">
+  <div class="app-container" v-loading="loading">
+    <el-card v-loading="loading" shadow="never" class="search-wrapper">
+      <el-form ref="searchFormRef" :inline="true" :model="params">
+        <el-form-item>
+          <el-input v-model="params.keywords" clearable placeholder="根据 参数名称、参数键名 搜索" />
+        </el-form-item>
+        <el-form-item>
           <el-button type="primary" :icon="Search" @click="searchTableData">搜索</el-button>
-        </el-col>
-        <el-col :span="2">
+        </el-form-item>
+        <el-form-item>
           <el-button type="success" :icon="Plus" @click="handleAdd()">新增</el-button>
-        </el-col>
-        <el-col :span="10">
-          <div class="grid-content ep-bg-purple" />
-        </el-col>
-      </el-row>
-    </el-header>
-    <el-main>
-      <el-table :data="tableData">
-        <el-table-column prop="configId" label="配置ID" />
-        <el-table-column prop="configName" label="参数名称" />
-        <el-table-column prop="configKey" label="参数键名" />
-        <el-table-column prop="configValue" label="参数键值">
-          <template #default="scope">
-            <el-popover
-              placement="top-start"
-              :width="300"
-              trigger="hover"
-              v-if="scope.row.configValue"
-              :content="scope.row.configValue"
-            >
-              <template #reference>
-                <el-link> {{ showStringOverflow(scope.row.configValue) }}</el-link>
-              </template>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column prop="configType" label="系统内置">
-          <template #default="scope">
-            {{ dictStore.getYesNo(scope.row.configType) }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="createTime" label="创建时间">
-          <template #default="scope">
-            <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="lastUpdateTime" label="修改时间">
-          <template #default="scope">
-            <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="130">
-          <template #default="scope">
-            <div v-admin>
-              <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
-              &nbsp;
-              <el-link v-if="scope.row.configType !== 1" :icon="Delete" type="danger" @click="handleDelete(scope.row)"
-                >删除</el-link
+        </el-form-item>
+      </el-form>
+    </el-card>
+
+    <el-card v-loading="loading" shadow="never">
+      <div class="toolbar-wrapper">
+        <el-table :data="tableData">
+          <el-table-column prop="configId" label="配置ID" />
+          <el-table-column prop="configName" label="参数名称" />
+          <el-table-column prop="configKey" label="参数键名" />
+          <el-table-column prop="configValue" label="参数键值">
+            <template #default="scope">
+              <el-popover
+                placement="top-start"
+                :width="300"
+                trigger="hover"
+                v-if="scope.row.configValue"
+                :content="scope.row.configValue"
               >
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+                <template #reference>
+                  <el-link> {{ showStringOverflow(scope.row.configValue) }}</el-link>
+                </template>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column prop="configType" label="系统内置">
+            <template #default="scope">
+              {{ dictStore.getYesNo(scope.row.configType) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="createTime" label="创建时间">
+            <template #default="scope">
+              <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="lastUpdateTime" label="修改时间">
+            <template #default="scope">
+              <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="130">
+            <template #default="scope">
+              <div v-admin>
+                <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
+                &nbsp;
+                <el-link v-if="scope.row.configType !== 1" :icon="Delete" type="danger" @click="handleDelete(scope.row)"
+                  >删除</el-link
+                >
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
 
-      <!-- 新增和修改的弹窗 -->
-      <el-dialog v-model="dialogVisible" :title="dialogTitle" width="30%" :close-on-click-modal="false">
-        <el-form
-          ref="entityFormRef"
-          :model="entityForm"
-          :rules="entityFormRules"
-          label-position="right"
-          label-width="80px"
-        >
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item prop="configName" label="参数名称">
-                <el-input v-model.trim="entityForm.configName" placeholder="参数名称" type="text" tabindex="1" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="configType" label="系统内置">
-                <select-dict-data v-model:value="entityForm.configType" dictTypeKey="sys_yes_no" />
-              </el-form-item>
-            </el-col>
-          </el-row>
+      <div class="pager-wrapper">
+        <el-pagination
+          v-model:current-page="params.pageIndex"
+          :page-size="params.pageSize"
+          :background="true"
+          layout="sizes, total, prev, pager, next, jumper"
+          :total="params.pageTotal"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+    </el-card>
 
-          <el-form-item prop="configKey" label="参数键名">
-            <el-input v-model.trim="entityForm.configKey" placeholder="参数键名" type="text" tabindex="2" />
-          </el-form-item>
-          <el-form-item prop="configValue" label="参数键值">
-            <el-input
-              v-model="entityForm.configValue"
-              placeholder="参数键值"
-              show-word-limit
-              type="textarea"
-              :rows="5"
-              tabindex="3"
-            />
-          </el-form-item>
-        </el-form>
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" v-preventReClick @click="handleSaveAndFlush">确定</el-button>
-          </span>
-        </template>
-      </el-dialog>
-    </el-main>
-    <el-footer>
-      <el-pagination
-        v-model:current-page="params.pageIndex"
-        :page-size="params.pageSize"
-        :background="true"
-        layout="sizes, total, prev, pager, next, jumper"
-        :total="params.pageTotal"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </el-footer>
-  </el-container>
+    <!-- 新增和修改的弹窗 -->
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="30%" :close-on-click-modal="false">
+      <el-form
+        ref="entityFormRef"
+        :model="entityForm"
+        :rules="entityFormRules"
+        label-position="right"
+        label-width="80px"
+      >
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="configName" label="参数名称">
+              <el-input v-model.trim="entityForm.configName" placeholder="参数名称" type="text" tabindex="1" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="configType" label="系统内置">
+              <select-dict-data v-model:value="entityForm.configType" dictTypeKey="sys_yes_no" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-form-item prop="configKey" label="参数键名">
+          <el-input v-model.trim="entityForm.configKey" placeholder="参数键名" type="text" tabindex="2" />
+        </el-form-item>
+        <el-form-item prop="configValue" label="参数键值">
+          <el-input
+            v-model="entityForm.configValue"
+            placeholder="参数键值"
+            show-word-limit
+            type="textarea"
+            :rows="5"
+            tabindex="3"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" v-preventReClick @click="handleSaveAndFlush">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">

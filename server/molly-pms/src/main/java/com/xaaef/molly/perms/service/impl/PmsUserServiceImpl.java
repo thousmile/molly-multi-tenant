@@ -7,7 +7,7 @@ import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.auth.service.JwtTokenService;
@@ -15,7 +15,6 @@ import com.xaaef.molly.auth.service.UserLoginService;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.enums.UserType;
-import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
@@ -27,6 +26,7 @@ import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.entity.PmsUser;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import com.xaaef.molly.perms.mapper.PmsUserMapper;
+import com.xaaef.molly.perms.po.UserQueryPO;
 import com.xaaef.molly.perms.service.PmsDeptService;
 import com.xaaef.molly.perms.service.PmsRoleService;
 import com.xaaef.molly.perms.service.PmsUserService;
@@ -83,11 +83,23 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
 
 
     @Override
-    public IPage<PmsUser> pageKeywords(SearchPO params, Collection<SFunction<PmsUser, ?>> columns) {
-        var result = super.pageKeywords(params, columns);
-        setRoleAndDept(result.getRecords());
+    public IPage<PmsUser> pageKeywords(UserQueryPO params) {
+        var wrapper = super.getKeywordsQueryWrapper(params, List.of(PmsUser::getUsername, PmsUser::getNickname));
+        if (params.getDeptId() != null && params.getDeptId() > 0L) {
+            wrapper.lambda().eq(PmsUser::getDeptId, params.getDeptId());
+        }
+        Page<PmsUser> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
+        Page<PmsUser> result = super.page(pageRequest, wrapper);
+        if (params.isIncludeCauu()) {
+            reflectionFill(result.getRecords());
+        }
+        // 包含 角色和用户信息
+        if (params.isIncludeRad()) {
+            setRoleAndDept(result.getRecords());
+        }
         return result;
     }
+
 
     private void setRoleAndDept(Collection<PmsUser> list) {
         if (!list.isEmpty()) {
@@ -100,7 +112,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
                 r.setPassword(null);
                 r.setRoles(roleMaps.get(r.getUserId()));
                 r.setDept(deptMaps.get(r.getDeptId()));
-                // 如果包含，那么就是在线。【 0.离线  1.在线】
+                // 如果 LoginId 为空。表示未在线！
                 var loginUser = loginUserMap.getOrDefault(r.getUserId(), new JwtLoginUser().setLoginId(StrUtil.EMPTY));
                 r.setLoginId(loginUser.getLoginId());
             });

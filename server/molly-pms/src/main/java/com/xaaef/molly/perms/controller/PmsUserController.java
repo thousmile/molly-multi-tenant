@@ -23,7 +23,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
 
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
@@ -60,8 +59,7 @@ public class PmsUserController {
     @Operation(summary = "分页查询", description = "分页 查询所有")
     @GetMapping("/query")
     public JsonResult<Pagination<PmsUser>> pageQuery(UserQueryPO params) {
-        IPage<PmsUser> page = baseService.pageKeywords(params,
-                List.of(PmsUser::getUsername, PmsUser::getNickname));
+        IPage<PmsUser> page = baseService.pageKeywords(params);
         return JsonResult.success(page.getTotal(), page.getRecords());
     }
 

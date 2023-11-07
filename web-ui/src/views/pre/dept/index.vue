@@ -1,145 +1,146 @@
 <template>
-  <el-container class="app-container" v-loading="loading" v-has="['pre_dept:view']">
-    <el-header height="30px">
+  <div class="app-container" v-loading="loading" v-has="['pre_dept:view']">
+    <el-card v-loading="loading" shadow="never" class="search-wrapper">
       <div class="flex">
         <el-button type="primary" :icon="Plus" v-has="['pre_dept:create']" @click="handleAdd(null)">新增</el-button>
         <el-button type="success" :icon="Sort" @click="switchExpandAndCollapse">{{
           expandAndCollapse ? "折叠" : "展开"
         }}</el-button>
       </div>
-    </el-header>
-    <el-main>
-      <el-table ref="tableRef" :data="tableData" row-key="id" :default-expand-all="expandAndCollapse">
-        <el-table-column prop="deptId" label="部门ID" />
-        <el-table-column prop="deptName" label="部门名称" />
-        <el-table-column prop="leader" label="领导名称" />
-        <el-table-column prop="leaderMobile" label="领导联系方式" />
-        <el-table-column prop="description" label="描述">
-          <template #default="scope">
-            <el-popover
-              placement="top-start"
-              :width="300"
-              trigger="hover"
-              v-if="scope.row.description"
-              :content="scope.row.description"
-            >
-              <template #reference>
-                <el-link> {{ showStringOverflow(scope.row.description) }}</el-link>
-              </template>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column prop="sort" label="排序" width="80" />
-        <el-table-column prop="createTime" label="创建时间">
-          <template #default="scope">
-            <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="lastUpdateTime" label="修改时间">
-          <template #default="scope">
-            <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200">
-          <template #default="scope">
-            <el-link :icon="Plus" type="primary" v-has="['pre_dept:create']" @click="handleAdd(scope.row)"
-              >新增</el-link
-            >
-            &nbsp;
-            <el-link :icon="Edit" type="warning" v-has="['pre_dept:update']" @click="handleEdit(scope.row)"
-              >编辑</el-link
-            >
-            &nbsp;
-            <el-link
-              :icon="Delete"
-              v-if="!scope.row.children"
-              type="danger"
-              v-has="['pre_dept:delete']"
-              @click="handleDelete(scope.row)"
-              >删除</el-link
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+    </el-card>
+    <el-card v-loading="loading" shadow="never">
+      <div class="toolbar-wrapper">
+        <el-table ref="tableRef" :data="tableData" row-key="id" :default-expand-all="expandAndCollapse">
+          <el-table-column prop="deptId" label="部门ID" />
+          <el-table-column prop="deptName" label="部门名称" />
+          <el-table-column prop="leader" label="领导名称" />
+          <el-table-column prop="leaderMobile" label="领导联系方式" />
+          <el-table-column prop="description" label="描述">
+            <template #default="scope">
+              <el-popover
+                placement="top-start"
+                :width="300"
+                trigger="hover"
+                v-if="scope.row.description"
+                :content="scope.row.description"
+              >
+                <template #reference>
+                  <el-link> {{ showStringOverflow(scope.row.description) }}</el-link>
+                </template>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column prop="sort" label="排序" width="80" />
+          <el-table-column prop="createTime" label="创建时间">
+            <template #default="scope">
+              <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="lastUpdateTime" label="修改时间">
+            <template #default="scope">
+              <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="200">
+            <template #default="scope">
+              <el-link :icon="Plus" type="primary" v-has="['pre_dept:create']" @click="handleAdd(scope.row)"
+                >新增</el-link
+              >
+              &nbsp;
+              <el-link :icon="Edit" type="warning" v-has="['pre_dept:update']" @click="handleEdit(scope.row)"
+                >编辑</el-link
+              >
+              &nbsp;
+              <el-link
+                :icon="Delete"
+                v-if="!scope.row.children"
+                type="danger"
+                v-has="['pre_dept:delete']"
+                @click="handleDelete(scope.row)"
+                >删除</el-link
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-card>
+    <!-- 新增和修改的弹窗 -->
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="50%" :close-on-click-modal="false">
+      <el-form
+        ref="entityFormRef"
+        :model="entityForm"
+        :rules="entityFormRules"
+        label-position="right"
+        label-width="80px"
+        @keyup.enter="handleSaveAndFlush"
+      >
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="deptName" label="部门名称">
+              <el-input v-model.trim="entityForm.deptName" placeholder="名称" type="text" tabindex="1" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="parentId" label="上级部门">
+              <el-cascader
+                v-model="entityForm.parentId"
+                :options="parentMenus"
+                :props="{ checkStrictly: true }"
+                @change="cascaderChange"
+                filterable
+                tabindex="2"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-      <!-- 新增和修改的弹窗 -->
-      <el-dialog v-model="dialogVisible" :title="dialogTitle" width="50%" :close-on-click-modal="false">
-        <el-form
-          ref="entityFormRef"
-          :model="entityForm"
-          :rules="entityFormRules"
-          label-position="right"
-          label-width="80px"
-          @keyup.enter="handleSaveAndFlush"
-        >
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item prop="deptName" label="部门名称">
-                <el-input v-model.trim="entityForm.deptName" placeholder="名称" type="text" tabindex="1" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="parentId" label="上级部门">
-                <el-cascader
-                  v-model="entityForm.parentId"
-                  :options="parentMenus"
-                  :props="{ checkStrictly: true }"
-                  @change="cascaderChange"
-                  filterable
-                  tabindex="2"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="leader" label="领导名称">
+              <el-input v-model.trim="entityForm.leader" placeholder="领导名称" type="text" tabindex="3" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="leaderMobile" label="联系方式">
+              <el-input
+                v-model.trim="entityForm.leaderMobile"
+                placeholder="领导联系方式"
+                type="text"
+                maxlength="11"
+                show-word-limit
+                tabindex="4"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item prop="leader" label="领导名称">
-                <el-input v-model.trim="entityForm.leader" placeholder="领导名称" type="text" tabindex="3" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="leaderMobile" label="联系方式">
-                <el-input
-                  v-model.trim="entityForm.leaderMobile"
-                  placeholder="领导联系方式"
-                  type="text"
-                  maxlength="11"
-                  show-word-limit
-                  tabindex="4"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item prop="sort" label="部门排序">
-                <el-input-number v-model="entityForm.sort" :min="1" :max="9999999" tabindex="5" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="description" label="描述">
-                <el-input
-                  v-model.trim="entityForm.description"
-                  placeholder="描述"
-                  :rows="3"
-                  type="textarea"
-                  tabindex="6"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" v-preventReClick @click="handleSaveAndFlush">确定</el-button>
-          </span>
-        </template>
-      </el-dialog>
-    </el-main>
-  </el-container>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="sort" label="部门排序">
+              <el-input-number v-model="entityForm.sort" :min="1" :max="9999999" tabindex="5" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="description" label="描述">
+              <el-input
+                v-model.trim="entityForm.description"
+                placeholder="描述"
+                :rows="3"
+                type="textarea"
+                tabindex="6"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" v-preventReClick @click="handleSaveAndFlush">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">

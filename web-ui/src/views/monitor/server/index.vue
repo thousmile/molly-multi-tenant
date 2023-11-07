@@ -397,8 +397,8 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .card-box {
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-right: 5px;
+  padding-left: 5px;
   margin-bottom: 10px;
 }
 </style>

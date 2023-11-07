@@ -28,8 +28,13 @@ public class SearchPO extends PagePO implements java.io.Serializable {
 
     /**
      * 包含创建和修改用户信息
+     * include create and update user
      */
     @Schema(description = "包含创建和修改用户信息")
     private Boolean includeCauu;
+
+    public boolean isIncludeCauu() {
+        return this.getIncludeCauu() != null && this.getIncludeCauu();
+    }
 
 }

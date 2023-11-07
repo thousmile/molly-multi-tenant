@@ -1,294 +1,292 @@
 <template>
-  <el-container class="app-container" v-loading="loading" v-has="['pre_user:view']">
-    <el-header>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-input v-model="params.keywords" clearable placeholder="根据关键字搜索" />
-        </el-col>
-        <el-col :span="2">
+  <div class="app-container" v-loading="loading" v-has="['pre_user:view']">
+    <el-card v-loading="loading" shadow="never" class="search-wrapper">
+      <el-form ref="searchFormRef" :inline="true" :model="params">
+        <el-form-item>
+          <el-input v-model="params.keywords" clearable placeholder="根据 用户名、昵称 搜索" />
+        </el-form-item>
+        <el-form-item>
           <el-button type="primary" :icon="Search" @click="searchTableData">搜索</el-button>
-        </el-col>
-        <el-col :span="2">
+        </el-form-item>
+        <el-form-item>
           <el-button type="success" :icon="Plus" v-has="['pre_user:create']" @click="handleAdd()">新增</el-button>
-        </el-col>
-        <el-col :span="10">
-          <div class="grid-content ep-bg-purple" />
-        </el-col>
-      </el-row>
-    </el-header>
-    <el-main>
-      <el-table :data="tableData">
-        <el-table-column prop="userId" label="用户ID" />
-        <el-table-column prop="avatar" label="头像">
-          <template #default="scope">
-            <el-avatar :size="40" :icon="UserFilled" :src="scope.row.avatar" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="nickname" label="昵称" />
-        <el-table-column prop="username" label="用户名" />
-        <el-table-column prop="mobile" label="手机号" />
-        <el-table-column prop="gender" label="性别">
-          <template #default="scope">
-            {{ dictStore.getUserSex(scope.row.gender) }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="roles" label="角色" width="150">
-          <template #default="scope">
-            <el-tooltip
-              v-for="(item, index) in scope.row.roles"
-              :key="index"
-              effect="dark"
-              :content="item.description"
-              placement="top-start"
-            >
-              <el-tag>{{ showStringOverflow(item.roleName, 10) }}</el-tag>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-        <el-table-column prop="roles" label="部门" width="120">
-          <template #default="scope">
-            <el-popover placement="top-start" :width="230">
-              <template #reference>
-                <el-tag>{{ showStringOverflow(scope.row.dept.deptName, 10) }}</el-tag>
-              </template>
-              <div><strong>部门领导:</strong> &nbsp;&nbsp;&nbsp;{{ scope.row.dept.leader }}</div>
-              <div><strong>领导手机号:</strong> &nbsp;&nbsp;&nbsp;{{ scope.row.dept.leaderMobile }}</div>
-              <div><strong>部门描述:</strong> &nbsp;&nbsp;&nbsp;{{ scope.row.dept.description }}</div>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column prop="adminFlag" label="管理员">
-          <template #default="scope">
-            <el-tag v-if="scope.row.adminFlag" type="success">是</el-tag>
-            <span v-else>否</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="status" label="状态">
-          <template #default="scope">
-            <el-link v-if="scope.row.loginId" @click="showUserLoginLog(scope.row.loginId)" type="success">在线</el-link>
-            <span v-else>{{ dictStore.getNormalDisable(scope.row.status) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="expired" label="过期时间">
-          <template #default="scope">
-            <el-tooltip v-if="scope.row.expired" :content="scope.row.expired" placement="top">
-              <el-link> {{ showExpiredDateAgo(scope.row.expired) }}</el-link>
-            </el-tooltip>
-            <span v-else>永久</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createTime" label="创建时间">
-          <template #default="scope">
-            <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="lastUpdateTime" label="修改时间">
-          <template #default="scope">
-            <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="130">
-          <template #default="scope">
-            <el-link :icon="Edit" type="warning" v-has="['pre_user:update']" @click="handleEdit(scope.row)"
-              >编辑</el-link
-            >
-            &nbsp;
-            <el-dropdown @command="(cmd: string) => handleCommand(cmd, scope.row)">
-              <span class="el-dropdown-link">
-                更多
-                <el-icon class="el-icon--right">
-                  <arrow-down />
-                </el-icon>
-              </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <div v-has="['pre_user:reset:password']">
-                    <el-dropdown-item :icon="Link" command="ResetPassword">重置密码</el-dropdown-item>
-                  </div>
-                  <div v-if="isDefaultTenantId() && scope.row.adminFlag !== 1" v-has="['pre_user:link:tenant']">
-                    <el-dropdown-item :icon="RefreshLeft" command="LinkTenant">关联租户</el-dropdown-item>
-                  </div>
-                  <div v-if="scope.row.adminFlag !== 1" v-has="['pre_user:delete']">
-                    <el-dropdown-item :icon="Delete" command="Delete">删除</el-dropdown-item>
-                  </div>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </template>
-        </el-table-column>
-      </el-table>
+        </el-form-item>
+      </el-form>
+    </el-card>
 
-      <!-- 登录日志的弹窗 -->
-      <el-dialog v-model="userLoginLog.dialogVisible" width="50%">
-        <UserLoginLog :key="userLoginLog.loginId" :value="userLoginLog.loginId" />
-      </el-dialog>
+    <el-card v-loading="loading" shadow="never">
+      <div class="toolbar-wrapper">
+        <el-table :data="tableData">
+          <el-table-column prop="userId" label="用户ID" />
+          <el-table-column prop="avatar" label="头像">
+            <template #default="scope">
+              <el-avatar :size="40" :icon="UserFilled" :src="scope.row.avatar" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="nickname" label="昵称" />
+          <el-table-column prop="username" label="用户名" />
+          <el-table-column prop="mobile" label="手机号" />
+          <el-table-column prop="gender" label="性别">
+            <template #default="scope">
+              {{ dictStore.getUserSex(scope.row.gender) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="roles" label="角色" width="150">
+            <template #default="scope">
+              <el-tooltip
+                v-for="(item, index) in scope.row.roles"
+                :key="index"
+                effect="dark"
+                :content="item.description"
+                placement="top-start"
+              >
+                <el-tag>{{ showStringOverflow(item.roleName, 10) }}</el-tag>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="roles" label="部门" width="120">
+            <template #default="scope">
+              <el-popover placement="top-start" :width="230">
+                <template #reference>
+                  <el-tag>{{ showStringOverflow(scope.row.dept.deptName, 10) }}</el-tag>
+                </template>
+                <div><strong>部门领导:</strong> &nbsp;&nbsp;&nbsp;{{ scope.row.dept.leader }}</div>
+                <div><strong>领导手机号:</strong> &nbsp;&nbsp;&nbsp;{{ scope.row.dept.leaderMobile }}</div>
+                <div><strong>部门描述:</strong> &nbsp;&nbsp;&nbsp;{{ scope.row.dept.description }}</div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column prop="adminFlag" label="管理员">
+            <template #default="scope">
+              <el-tag v-if="scope.row.adminFlag" type="success">是</el-tag>
+              <span v-else>否</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="status" label="状态">
+            <template #default="scope">
+              <el-link v-if="scope.row.loginId" @click="showUserLoginLog(scope.row.loginId)" type="success"
+                >在线</el-link
+              >
+              <span v-else>{{ dictStore.getNormalDisable(scope.row.status) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="expired" label="过期时间">
+            <template #default="scope">
+              <el-tooltip v-if="scope.row.expired" :content="scope.row.expired" placement="top">
+                <el-link> {{ showExpiredDateAgo(scope.row.expired) }}</el-link>
+              </el-tooltip>
+              <span v-else>永久</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="createTime" label="创建时间">
+            <template #default="scope">
+              <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="lastUpdateTime" label="修改时间">
+            <template #default="scope">
+              <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="130">
+            <template #default="scope">
+              <el-link :icon="Edit" type="warning" v-has="['pre_user:update']" @click="handleEdit(scope.row)"
+                >编辑</el-link
+              >
+              &nbsp;
+              <el-dropdown @command="(cmd: string) => handleCommand(cmd, scope.row)">
+                <span class="el-dropdown-link">
+                  更多
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <div v-has="['pre_user:reset:password']">
+                      <el-dropdown-item :icon="Link" command="ResetPassword">重置密码</el-dropdown-item>
+                    </div>
+                    <div v-if="isDefaultTenantId() && scope.row.adminFlag !== 1" v-has="['pre_user:link:tenant']">
+                      <el-dropdown-item :icon="RefreshLeft" command="LinkTenant">关联租户</el-dropdown-item>
+                    </div>
+                    <div v-if="scope.row.adminFlag !== 1" v-has="['pre_user:delete']">
+                      <el-dropdown-item :icon="Delete" command="Delete">删除</el-dropdown-item>
+                    </div>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
 
-      <!-- 新增和修改的弹窗 -->
-      <el-dialog v-model="dialogVisible" :title="dialogTitle" width="50%" :close-on-click-modal="false">
-        <el-form
-          ref="entityFormRef"
-          :model="entityForm"
-          :rules="entityFormRules"
-          label-position="right"
-          label-width="80px"
-          @keyup.enter="handleSaveAndFlush"
-        >
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item prop="avatar" label="头像">
-                <user-avatar :key="entityForm.avatar" :src="entityForm.avatar" @change="getAvatar" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item prop="username" label="用户名">
-                <el-input
-                  v-model.trim="entityForm.username"
-                  placeholder="用户名"
-                  type="text"
-                  tabindex="1"
-                  :disabled="!saveFlag"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="password" label="密码" v-if="saveFlag">
-                <el-input
-                  v-model.trim="entityForm.password"
-                  placeholder="密码"
-                  type="password"
-                  tabindex="2"
-                  show-password
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item prop="mobile" label="手机号">
-                <el-input
-                  v-model.trim="entityForm.mobile"
-                  placeholder="手机号"
-                  type="text"
-                  maxlength="11"
-                  show-word-limit
-                  tabindex="3"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="email" label="邮箱">
-                <el-input v-model.trim="entityForm.email" placeholder="邮箱" type="text" tabindex="4" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item prop="nickname" label="昵称">
-                <el-input v-model.trim="entityForm.nickname" placeholder="昵称" type="text" tabindex="5" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="gender" label="性别">
-                <select-dict-data v-model:value="entityForm.gender" dictTypeKey="sys_user_sex" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item prop="status" label="状态">
-                <select-dict-data v-model:value="entityForm.status" dictTypeKey="sys_normal_disable" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="deptId" label="部门">
-                <el-cascader
-                  v-model="entityForm.deptId"
-                  :options="deptTree"
-                  :props="{ checkStrictly: true, value: 'deptId', label: 'deptName' }"
-                  @change="deptCascaderChange"
-                  filterable
-                  tabindex="6"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item prop="roles" label="角色">
-                <el-select v-model="entityRoles" filterable clearable multiple placeholder="选择角色">
-                  <el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId">
-                    <span style="float: left">{{ item.roleId }}</span>
-                    <span style="float: right; font-size: 13px">{{ showStringOverflow(item.roleName) }}</span>
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="expired" label="过期">
-                <el-date-picker
-                  v-model="entityForm.expired"
-                  type="datetime"
-                  placeholder="请选择过期时间，不填即是永久"
-                  format="YYYY-MM-DD HH:mm:ss"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                  :shortcuts="futureShortcuts"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" v-preventReClick @click="handleSaveAndFlush">确定</el-button>
-          </span>
-        </template>
-      </el-dialog>
+      <div class="pager-wrapper">
+        <el-pagination
+          v-model:current-page="params.pageIndex"
+          :page-size="params.pageSize"
+          :background="true"
+          layout="sizes, total, prev, pager, next, jumper"
+          :total="params.pageTotal"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+    </el-card>
 
-      <!-- 新增和修改的弹窗 -->
-      <el-dialog
-        v-model="linkTenantForm.visible"
-        :title="linkTenantForm.title"
-        width="30%"
-        :close-on-click-modal="false"
+    <!-- 登录日志的弹窗 -->
+    <el-dialog v-model="userLoginLog.dialogVisible" width="50%">
+      <UserLoginLog :key="userLoginLog.loginId" :value="userLoginLog.loginId" />
+    </el-dialog>
+
+    <!-- 新增和修改的弹窗 -->
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="50%" :close-on-click-modal="false">
+      <el-form
+        ref="entityFormRef"
+        :model="entityForm"
+        :rules="entityFormRules"
+        label-position="right"
+        label-width="80px"
+        @keyup.enter="handleSaveAndFlush"
       >
-        <el-select-v2
-          v-model="linkTenantForm.have"
-          :options="linkTenantForm.all"
-          placeholder="请选择租户"
-          style="width: 100%"
-          multiple
-          clearable
-        >
-          <template #default="{ item }">
-            <span style="margin-right: 8px">{{ item.value }}</span>
-            <span style="color: var(--el-text-color-secondary); font-size: 13px">
-              {{ item.label }}
-            </span>
-          </template>
-        </el-select-v2>
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="linkTenantForm.visible = false">取消</el-button>
-            <el-button type="primary" v-preventReClick @click="handleSaveLinkTenant">确定</el-button>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="avatar" label="头像">
+              <user-avatar :key="entityForm.avatar" :src="entityForm.avatar" @change="getAvatar" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="username" label="用户名">
+              <el-input
+                v-model.trim="entityForm.username"
+                placeholder="用户名"
+                type="text"
+                tabindex="1"
+                :disabled="!saveFlag"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="password" label="密码" v-if="saveFlag">
+              <el-input
+                v-model.trim="entityForm.password"
+                placeholder="密码"
+                type="password"
+                tabindex="2"
+                show-password
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="mobile" label="手机号">
+              <el-input
+                v-model.trim="entityForm.mobile"
+                placeholder="手机号"
+                type="text"
+                maxlength="11"
+                show-word-limit
+                tabindex="3"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="email" label="邮箱">
+              <el-input v-model.trim="entityForm.email" placeholder="邮箱" type="text" tabindex="4" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="nickname" label="昵称">
+              <el-input v-model.trim="entityForm.nickname" placeholder="昵称" type="text" tabindex="5" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="gender" label="性别">
+              <select-dict-data v-model:value="entityForm.gender" dictTypeKey="sys_user_sex" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="status" label="状态">
+              <select-dict-data v-model:value="entityForm.status" dictTypeKey="sys_normal_disable" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="deptId" label="部门">
+              <el-cascader
+                v-model="entityForm.deptId"
+                :options="deptTree"
+                :props="{ checkStrictly: true, value: 'deptId', label: 'deptName' }"
+                @change="deptCascaderChange"
+                filterable
+                tabindex="6"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="roles" label="角色">
+              <el-select v-model="entityRoles" filterable clearable multiple placeholder="选择角色">
+                <el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId">
+                  <span style="float: left">{{ item.roleId }}</span>
+                  <span style="float: right; font-size: 13px">{{ showStringOverflow(item.roleName) }}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="expired" label="过期">
+              <el-date-picker
+                v-model="entityForm.expired"
+                type="datetime"
+                placeholder="请选择过期时间，不填即是永久"
+                format="YYYY-MM-DD HH:mm:ss"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                :shortcuts="futureShortcuts"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" v-preventReClick @click="handleSaveAndFlush">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!-- 新增和修改的弹窗 -->
+    <el-dialog v-model="linkTenantForm.visible" :title="linkTenantForm.title" width="30%" :close-on-click-modal="false">
+      <el-select-v2
+        v-model="linkTenantForm.have"
+        :options="linkTenantForm.all"
+        placeholder="请选择租户"
+        style="width: 100%"
+        multiple
+        clearable
+      >
+        <template #default="{ item }">
+          <span style="margin-right: 8px">{{ item.value }}</span>
+          <span style="color: var(--el-text-color-secondary); font-size: 13px">
+            {{ item.label }}
           </span>
         </template>
-      </el-dialog>
-    </el-main>
-    <el-footer>
-      <el-pagination
-        v-model:current-page="params.pageIndex"
-        :page-size="params.pageSize"
-        :background="true"
-        layout="sizes, total, prev, pager, next, jumper"
-        :total="params.pageTotal"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </el-footer>
-  </el-container>
+      </el-select-v2>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="linkTenantForm.visible = false">取消</el-button>
+          <el-button type="primary" v-preventReClick @click="handleSaveLinkTenant">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -354,7 +352,8 @@ const params = reactive({
   pageIndex: 1,
   pageSize: 10,
   keywords: "",
-  includeCauu: true
+  includeCauu: true,
+  includeRad: true
 })
 
 /// 表单数据

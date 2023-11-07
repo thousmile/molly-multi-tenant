@@ -41,9 +41,9 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public Set<String> listHaveTenantIds(Long userId) {
-        return delegate(tenantManager.getDefaultTenantId(), () -> {
-            return baseMapper.selectHaveTenants(userId);
-        });
+        return delegate(tenantManager.getDefaultTenantId(),
+                () -> baseMapper.selectHaveTenants(userId)
+        );
     }
 
 
@@ -78,13 +78,13 @@ public class SysUserServiceImpl implements SysUserService {
             var collect = tenantIds.stream().filter(tenantManager::existById).collect(Collectors.toSet());
             return delegate(tenantManager.getDefaultTenantId(), () -> {
                 var sysUser = pmsUserService.getByUserId(userId);
-                // 判断系统用户是否存在
+                // 判断 系统用户 是否存在
                 if (sysUser == null) {
-                    throw new RuntimeException(StrUtil.format("只有系统用户 {} 不存在！", userId));
+                    throw new RuntimeException(StrUtil.format("系统用户 {} 不存在！", userId));
                 }
-                // 删除 用户 之前关联的租户
+                // 删除 系统用户 之前关联的租户
                 baseMapper.deleteHaveTenants(userId);
-                // 根据用户名，获取 登录的用户信息
+                // 根据 用户名，获取登录的用户信息
                 var loginUser = jwtTokenService.getLoginUserByUsername(sysUser.getUsername());
                 if (loginUser != null) {
                     // 更新 系统用户 关联的租户ID
@@ -92,7 +92,7 @@ public class SysUserServiceImpl implements SysUserService {
                     jwtTokenService.updateLoginUser(loginUser);
                 }
                 if (!collect.isEmpty()) {
-                    // 用户 关联 新的租户
+                    // 系统用户 关联 新的租户
                     var r2 = baseMapper.insertByTenants(userId, collect);
                     return r2 > 0;
                 }

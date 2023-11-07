@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container1">
+  <div class="app-container">
     <el-row :gutter="10" class="chart">
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
         <v-chart autoresize :option="option1" />

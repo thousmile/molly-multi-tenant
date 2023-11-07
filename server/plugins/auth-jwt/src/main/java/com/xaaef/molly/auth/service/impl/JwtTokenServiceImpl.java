@@ -280,6 +280,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             return result;
         }
         return objects.stream()
+                .filter(Objects::nonNull)
                 .map(a -> BeanUtil.copyProperties(a, JwtLoginUser.class))
                 .collect(Collectors.toMap(JwtLoginUser::getUserId, a -> a));
     }

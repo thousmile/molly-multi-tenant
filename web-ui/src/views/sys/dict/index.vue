@@ -1,120 +1,123 @@
 <template>
-  <el-container class="app-container" v-loading="loading">
-    <el-header>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-input v-model="params.keywords" clearable placeholder="根据关键字搜索" />
-        </el-col>
-        <el-col :span="2">
+  <div class="app-container" v-loading="loading">
+    <el-card v-loading="loading" shadow="never" class="search-wrapper">
+      <el-form ref="searchFormRef" :inline="true" :model="params">
+        <el-form-item>
+          <el-input v-model="params.keywords" clearable placeholder="根据 字典名称 搜索" />
+        </el-form-item>
+        <el-form-item>
           <el-button type="primary" :icon="Search" @click="searchTableData">搜索</el-button>
-        </el-col>
-        <el-col :span="2">
+        </el-form-item>
+        <el-form-item>
           <el-button type="success" :icon="Plus" @click="handleAdd()">新增</el-button>
-        </el-col>
-        <el-col :span="10"><div class="grid-content ep-bg-purple" /></el-col>
-      </el-row>
-    </el-header>
-    <el-main>
-      <el-table :data="tableData">
-        <el-table-column prop="typeId" label="字典ID" />
-        <el-table-column prop="typeName" label="字典名称" />
-        <el-table-column prop="typeKey" label="字典关键字">
-          <template #default="scope">
-            <router-link :to="{ path: '/sys/dict/data', query: { typeKey: scope.row.typeKey } }">
-              <el-link type="primary">{{ scope.row.typeKey }}</el-link>
-            </router-link>
-          </template>
-        </el-table-column>
-        <el-table-column prop="description" label="字典描述">
-          <template #default="scope">
-            <el-popover
-              placement="top-start"
-              :width="300"
-              trigger="hover"
-              v-if="scope.row.description"
-              :content="scope.row.description"
-            >
-              <template #reference>
-                <el-link> {{ showStringOverflow(scope.row.description) }}</el-link>
-              </template>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createTime" label="创建时间">
-          <template #default="scope">
-            <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="lastUpdateTime" label="修改时间">
-          <template #default="scope">
-            <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="130">
-          <template #default="scope">
-            <div v-admin>
-              <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
-              &nbsp;
-              <el-link v-if="scope.row.configType !== 1" :icon="Delete" type="danger" @click="handleDelete(scope.row)"
-                >删除</el-link
-              >
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+        </el-form-item>
+      </el-form>
+    </el-card>
 
-      <!-- 新增和修改的弹窗 -->
-      <el-dialog v-model="dialogVisible" :title="dialogTitle" width="30%" :close-on-click-modal="false">
-        <el-form
-          ref="entityFormRef"
-          :model="entityForm"
-          :rules="entityFormRules"
-          label-position="right"
-          label-width="80px"
-        >
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item prop="typeName" label="字典名称">
-                <el-input v-model.trim="entityForm.typeName" placeholder="字典名称" type="text" tabindex="1" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="typeKey" label="字典KEY">
-                <el-input v-model.trim="entityForm.typeKey" placeholder="字典KEY" type="text" tabindex="1" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item prop="description" label="字典描述">
-            <el-input
-              v-model="entityForm.description"
-              placeholder="字典描述"
-              show-word-limit
-              type="textarea"
-              :rows="5"
-              tabindex="3"
-            />
-          </el-form-item>
-        </el-form>
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" v-preventReClick @click="handleSaveAndFlush">确定</el-button>
-          </span>
-        </template>
-      </el-dialog>
-    </el-main>
-    <el-footer>
-      <el-pagination
-        v-model:current-page="params.pageIndex"
-        :page-size="params.pageSize"
-        :background="true"
-        layout="sizes, total, prev, pager, next, jumper"
-        :total="params.pageTotal"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </el-footer>
-  </el-container>
+    <el-card v-loading="loading" shadow="never">
+      <div class="toolbar-wrapper">
+        <el-table :data="tableData">
+          <el-table-column prop="typeId" label="字典ID" />
+          <el-table-column prop="typeName" label="字典名称" />
+          <el-table-column prop="typeKey" label="字典关键字">
+            <template #default="scope">
+              <router-link :to="{ path: '/sys/dict/data', query: { typeKey: scope.row.typeKey } }">
+                <el-link type="primary">{{ scope.row.typeKey }}</el-link>
+              </router-link>
+            </template>
+          </el-table-column>
+          <el-table-column prop="description" label="字典描述">
+            <template #default="scope">
+              <el-popover
+                placement="top-start"
+                :width="300"
+                trigger="hover"
+                v-if="scope.row.description"
+                :content="scope.row.description"
+              >
+                <template #reference>
+                  <el-link> {{ showStringOverflow(scope.row.description) }}</el-link>
+                </template>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column prop="createTime" label="创建时间">
+            <template #default="scope">
+              <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="lastUpdateTime" label="修改时间">
+            <template #default="scope">
+              <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="130">
+            <template #default="scope">
+              <div v-admin>
+                <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
+                &nbsp;
+                <el-link v-if="scope.row.configType !== 1" :icon="Delete" type="danger" @click="handleDelete(scope.row)"
+                  >删除</el-link
+                >
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
+      <div class="pager-wrapper">
+        <el-pagination
+          v-model:current-page="params.pageIndex"
+          :page-size="params.pageSize"
+          :background="true"
+          layout="sizes, total, prev, pager, next, jumper"
+          :total="params.pageTotal"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+    </el-card>
+
+    <!-- 新增和修改的弹窗 -->
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="30%" :close-on-click-modal="false">
+      <el-form
+        ref="entityFormRef"
+        :model="entityForm"
+        :rules="entityFormRules"
+        label-position="right"
+        label-width="80px"
+      >
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="typeName" label="字典名称">
+              <el-input v-model.trim="entityForm.typeName" placeholder="字典名称" type="text" tabindex="1" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="typeKey" label="字典KEY">
+              <el-input v-model.trim="entityForm.typeKey" placeholder="字典KEY" type="text" tabindex="1" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item prop="description" label="字典描述">
+          <el-input
+            v-model="entityForm.description"
+            placeholder="字典描述"
+            show-word-limit
+            type="textarea"
+            :rows="5"
+            tabindex="3"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" v-preventReClick @click="handleSaveAndFlush">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">

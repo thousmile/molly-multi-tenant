@@ -49,10 +49,27 @@ div:focus {
 
 // 业务页面几乎都应该在根元素上挂载 class="app-container"，以保持页面美观
 .app-container {
-  padding-top: 1rem;
+  padding: 10px;
 }
 
-// 业务页面几乎都应该在根元素上挂载 class="app-container1"，以保持页面美观
-.app-container1 {
-  padding: 1rem;
+.search-wrapper {
+  margin-bottom: 10px;
+  :deep(.el-card__body) {
+    padding-bottom: 2px;
+  }
+}
+
+.toolbar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.table-wrapper {
+  margin-bottom: 20px;
+}
+
+.pager-wrapper {
+  display: flex;
+  justify-content: flex-end;
 }

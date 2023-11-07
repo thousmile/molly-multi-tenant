@@ -29,4 +29,15 @@ public class UserQueryPO extends SearchParentPO {
      */
     private Long deptId;
 
+    /**
+     * 包含关联的角色和部门信息
+     * include roles and departments
+     */
+    @Schema(description = "包含关联的角色和部门信息")
+    private Boolean includeRad;
+
+    public boolean isIncludeRad() {
+        return this.getIncludeRad() != null && this.getIncludeRad();
+    }
+
 }

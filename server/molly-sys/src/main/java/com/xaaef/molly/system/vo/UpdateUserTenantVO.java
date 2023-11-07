@@ -31,10 +31,6 @@ public class UpdateUserTenantVO {
     @NotNull(message = "用户ID不能为空!")
     private Long userId;
 
-
-    @Schema(description = "租户Id！最少选择一个！")
-    @NotNull(message = "租户Id必须填写！")
     private Set<String> tenantIds;
-
 
 }

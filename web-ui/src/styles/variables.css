@@ -1,7 +1,7 @@
 /** 全局 CSS 变量，这种变量不仅可以在 CSS 和 SCSS 中使用，还可以导入到 JS 中使用 */
 :root {
   /** 全局背景色 */
-  --v3-body-bg-color: #ffffff;
+  --v3-body-bg-color: #f2f3f5;
   /** Header 区域 = NavigationBar 组件 + TagsView 组件 */
   --v3-header-height: calc(var(--v3-navigationbar-height) + var(--v3-tagsview-height));
   --v3-header-bg-color: #ffffff;

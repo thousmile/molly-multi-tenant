@@ -1,6 +1,8 @@
 package com.xaaef.molly.perms.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.perms.entity.PmsUser;
+import com.xaaef.molly.perms.po.UserQueryPO;
 import com.xaaef.molly.perms.vo.ResetPasswordVO;
 import com.xaaef.molly.perms.vo.UpdatePasswordVO;
 import com.xaaef.molly.perms.vo.UserRightsVO;
@@ -19,6 +21,10 @@ import java.util.Set;
  */
 
 public interface PmsUserService extends BaseService<PmsUser> {
+
+
+    IPage<PmsUser> pageKeywords(UserQueryPO params);
+
 
     /**
      * 修改密码
