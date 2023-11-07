@@ -102,3 +102,8 @@ Content-Type: application/json
 x-tenant-id: {{tenantId}}
 Authorization: Bearer {{tokenValue}}
 
+
+### 搜索租户列表
+GET {{baseUrl}}/sys/tenant/simple/search?keywords=google
+Content-Type: application/json
+

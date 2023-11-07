@@ -5,8 +5,10 @@ import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.po.CreateTenantPO;
 import com.xaaef.molly.system.po.TenantCreatedSuccessVO;
+import com.xaaef.molly.system.vo.TenantSimpleDataVO;
 import com.xaaef.molly.tenant.base.service.BaseService;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -36,6 +38,9 @@ public interface SysTenantService extends BaseService<SysTenant> {
      * @date 2021/8/25 9:41
      */
     IPage<SysTenant> simplePageKeywords(SearchPO params);
+
+
+    Collection<TenantSimpleDataVO> simpleSearchQuery(SearchPO po);
 
 
     /**

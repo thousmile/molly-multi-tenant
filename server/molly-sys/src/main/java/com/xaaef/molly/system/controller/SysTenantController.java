@@ -7,6 +7,7 @@ import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.po.CreateTenantPO;
 import com.xaaef.molly.system.po.TenantCreatedSuccessVO;
 import com.xaaef.molly.system.service.SysTenantService;
+import com.xaaef.molly.system.vo.TenantSimpleDataVO;
 import com.xaaef.molly.system.vo.UpdateTenantTemplateIdVO;
 import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 
 @Slf4j
@@ -61,6 +64,14 @@ public class SysTenantController {
                 pageResult.getTotal(),
                 pageResult.getRecords()
         );
+    }
+
+
+    @Operation(summary = "简单搜索", description = "简单搜索 搜索查询所有")
+    @GetMapping("/simple/search")
+    public JsonResult<Collection<TenantSimpleDataVO>> simpleSearchQuery(SearchPO po) {
+        var pageResult = baseService.simpleSearchQuery(po);
+        return JsonResult.success(pageResult);
     }
 
 

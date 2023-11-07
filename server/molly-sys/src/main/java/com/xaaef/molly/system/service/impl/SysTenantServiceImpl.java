@@ -21,6 +21,7 @@ import com.xaaef.molly.system.po.TenantCreatedSuccessVO;
 import com.xaaef.molly.system.service.SysTemplateService;
 import com.xaaef.molly.system.service.SysTenantService;
 import com.xaaef.molly.system.service.SysUserService;
+import com.xaaef.molly.system.vo.TenantSimpleDataVO;
 import com.xaaef.molly.tenant.DatabaseManager;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
@@ -33,16 +34,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
 import static com.xaaef.molly.common.consts.ConfigName.TENANT_DEFAULT_LOGO;
 import static com.xaaef.molly.common.consts.ConfigName.USER_DEFAULT_PASSWORD;
+import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 /**
  * <p>
@@ -72,8 +71,6 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     private final SysUserService sysUserService;
 
     private final ApiCmsProjectService projectService;
-
-    private final ApiOperateUserService operateUserService;
 
 
     /**
@@ -119,6 +116,30 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         }
         Page<SysTenant> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
         return super.page(pageRequest, wrapper);
+    }
+
+
+    @Override
+    public Collection<TenantSimpleDataVO> simpleSearchQuery(SearchPO po) {
+        if (StringUtils.isBlank(po.getKeywords())) {
+            return new ArrayList<>();
+        }
+        return delegate(tenantManager.getDefaultTenantId(), () -> {
+            var wrapper = new LambdaQueryWrapper<SysTenant>()
+                    .select(List.of(SysTenant::getTenantId, SysTenant::getLogo, SysTenant::getName))
+                    .like(SysTenant::getTenantId, po.getKeywords())
+                    .or()
+                    .like(SysTenant::getName, po.getKeywords());
+            Page<SysTenant> pageRequest = Page.of(po.getPageIndex(), po.getPageSize());
+            return super.page(pageRequest, wrapper)
+                    .getRecords()
+                    .stream()
+                    .map(t -> new TenantSimpleDataVO()
+                            .setTenantId(t.getTenantId())
+                            .setLogo(t.getLogo())
+                            .setName(t.getName())
+                    ).collect(Collectors.toSet());
+        });
     }
 
 
