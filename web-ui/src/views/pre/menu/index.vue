@@ -1,6 +1,6 @@
 <template>
   <div class="app-container" v-loading="loading" v-has="['pre_menu:view']">
-    <el-card v-loading="loading" shadow="never" class="search-wrapper">
+    <el-card shadow="never" class="search-wrapper">
       <div class="flex">
         <el-button type="primary" :icon="Plus" v-has="['pre_menu:create']" @click="handleAdd(null)">新增</el-button>
         <el-button type="success" :icon="Sort" @click="switchExpandAndCollapse">{{
@@ -9,14 +9,24 @@
       </div>
     </el-card>
 
-    <el-card v-loading="loading" shadow="never">
+    <el-card shadow="never">
       <div class="toolbar-wrapper">
         <el-table ref="tableRef" :data="tableData" row-key="id" :default-expand-all="expandAndCollapse">
           <el-table-column prop="menuId" label="权限ID" />
           <el-table-column prop="menuName" label="权限名称" />
           <el-table-column prop="perms" label="权限标识" />
           <el-table-column prop="component" label="权限组件" />
-          <el-table-column prop="path" label="路由地址" />
+          <el-table-column prop="path" label="路由地址">
+            <template #default="scope">
+              <el-popover :content="scope.row.path" placement="top-start" :width="200" trigger="hover">
+                <template #reference>
+                  <el-text class="w-150px mb-2" truncated>
+                    {{ scope.row.path }}
+                  </el-text>
+                </template>
+              </el-popover>
+            </template>
+          </el-table-column>
           <el-table-column prop="icon" label="权限图标">
             <template #default="scope">
               <svg-icon v-if="scope.row.icon" :name="scope.row.icon" :size="28" />
@@ -236,7 +246,7 @@ const dialogTitle = ref("")
 
 const tableRef = ref<TableInstance | null>(null)
 
-const tableData = ref<ISysMenu[]>()
+const tableData = ref<ISysMenu[]>([])
 
 /// 表单数据
 const entityForm = ref<ISysMenu>({
@@ -365,11 +375,15 @@ const handleAdd = (data: ISysMenu | null) => {
     // 上级权限
     entityForm.value.parentId = data.menuId
     // 排序
-    entityForm.value.sort = data.children ? data.children.length + 1 : 0
+    if (data.children) {
+      entityForm.value.sort = (data.children.length + 1) * 10
+    } else {
+      entityForm.value.sort = 0
+    }
   } else {
     // 上级权限
     entityForm.value.parentId = 0
-    entityForm.value.sort = 1
+    entityForm.value.sort = (tableData.value.length + 1) * 10
   }
   // 显示和隐藏
   entityForm.value.visible = 1

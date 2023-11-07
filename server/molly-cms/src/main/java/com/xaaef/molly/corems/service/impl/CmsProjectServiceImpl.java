@@ -2,14 +2,15 @@ package com.xaaef.molly.corems.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.mapper.CmsProjectMapper;
+import com.xaaef.molly.corems.po.ProjectQueryPO;
 import com.xaaef.molly.corems.service.CmsProjectService;
 import com.xaaef.molly.corems.vo.ResetPasswordVO;
 import com.xaaef.molly.internal.api.ApiPmsDeptService;
+import com.xaaef.molly.internal.dto.PmsDeptDTO;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
@@ -39,21 +41,40 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
 
     private final ApiPmsDeptService apiPmsDeptService;
 
+
     @Override
-    public IPage<CmsProject> pageKeywords(SearchPO params, Collection<SFunction<CmsProject, ?>> columns) {
-        var result = super.pageKeywords(params, columns);
-        if (result.getTotal() > 0L) {
-            var deptIds = result.getRecords().stream().map(CmsProject::getDeptId).collect(Collectors.toSet());
-            if (!deptIds.isEmpty()) {
-                var mapDept = apiPmsDeptService.mapByDeptIds(deptIds);
-                result.getRecords().forEach(p -> {
-                    var dept = mapDept.getOrDefault(p.getDeptId(), null);
-                    p.setPassword(null);
-                    p.setDept(dept);
-                });
-            }
+    public IPage<CmsProject> pageKeywords(ProjectQueryPO params) {
+        var wrapper = super.getKeywordsQueryWrapper(params,
+                List.of(CmsProject::getProjectName, CmsProject::getLinkman));
+        if (params.getDeptId() != null && params.getDeptId() > 0L) {
+            var childIds = apiPmsDeptService.listChildIdByDeptId(params.getDeptId());
+            wrapper.lambda().in(CmsProject::getDeptId, childIds);
+        }
+        Page<CmsProject> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
+        Page<CmsProject> result = super.page(pageRequest, wrapper);
+        if (params.isIncludeCauu()) {
+            reflectionFill(result.getRecords());
+        }
+        if (params.isIncludeDept()) {
+            setDept(result.getRecords());
         }
         return result;
+    }
+
+
+    private void setDept(Collection<CmsProject> list) {
+        if (!list.isEmpty()) {
+            var deptIds = list.stream().map(CmsProject::getDeptId).collect(Collectors.toSet());
+            if (deptIds.isEmpty()) {
+                return;
+            }
+            var mapDept = apiPmsDeptService.mapByDeptIds(deptIds);
+            list.forEach(p -> {
+                var dept = mapDept.getOrDefault(p.getDeptId(), null);
+                p.setPassword(null);
+                p.setDept(dept);
+            });
+        }
     }
 
 

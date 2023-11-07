@@ -1,6 +1,6 @@
 <template>
   <div class="app-container" v-loading="loading" v-has="['pre_dept:view']">
-    <el-card v-loading="loading" shadow="never" class="search-wrapper">
+    <el-card shadow="never" class="search-wrapper">
       <div class="flex">
         <el-button type="primary" :icon="Plus" v-has="['pre_dept:create']" @click="handleAdd(null)">新增</el-button>
         <el-button type="success" :icon="Sort" @click="switchExpandAndCollapse">{{
@@ -8,7 +8,7 @@
         }}</el-button>
       </div>
     </el-card>
-    <el-card v-loading="loading" shadow="never">
+    <el-card shadow="never">
       <div class="toolbar-wrapper">
         <el-table ref="tableRef" :data="tableData" row-key="id" :default-expand-all="expandAndCollapse">
           <el-table-column prop="deptId" label="部门ID" />
@@ -182,7 +182,7 @@ const dialogTitle = ref("")
 
 const tableRef = ref<TableInstance | null>(null)
 
-const tableData = ref<IPmsDept[]>()
+const tableData = ref<IPmsDept[]>([])
 
 /// 表单数据
 const entityForm = ref<IPmsDept>({
@@ -301,11 +301,15 @@ const handleAdd = (data: IPmsDept | null) => {
     // 上级权限
     entityForm.value.parentId = data.deptId
     // 排序
-    entityForm.value.sort = data.children ? data.children.length + 1 : 0
+    if (data.children) {
+      entityForm.value.sort = (data.children.length + 1) * 10
+    } else {
+      entityForm.value.sort = 0
+    }
   } else {
     // 上级权限
     entityForm.value.parentId = 0
-    entityForm.value.sort = 1
+    entityForm.value.sort = (tableData.value.length + 1) * 10
   }
   dialogTitle.value = "新增"
   saveFlag.value = true

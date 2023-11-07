@@ -27,6 +27,7 @@ public class UserQueryPO extends SearchParentPO {
     /**
      * 部门 ID
      */
+    @Schema(description = "部门ID")
     private Long deptId;
 
     /**

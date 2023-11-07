@@ -87,33 +87,6 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       }
     ]
-  },
-  {
-    path: "/link",
-    meta: {
-      title: "外链",
-      svgIcon: "link"
-    },
-    children: [
-      {
-        path: "https://juejin.cn/post/7089377403717287972",
-        component: () => {},
-        name: "Link1",
-        meta: {
-          title: "中文文档",
-          svgIcon: "doc"
-        }
-      },
-      {
-        path: "https://github.com/thousmile/molly-multi-tenant",
-        component: () => {},
-        name: "github",
-        meta: {
-          title: "GitHub",
-          svgIcon: "github"
-        }
-      }
-    ]
   }
 ]
 

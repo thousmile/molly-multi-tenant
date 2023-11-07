@@ -6,6 +6,7 @@ import { constantRoutes } from "@/router"
 import { flatMultiLevelRoutes } from "@/router/helper"
 import routeSettings from "@/config/route"
 import { IPermsMenus } from "@/types/pms"
+import { isExternal } from "@/utils/validate"
 
 const Layout = () => import("@/layouts/index.vue")
 
@@ -14,20 +15,26 @@ function flatTreeRoutes(arr: IPermsMenus[]): RouteRecordRaw[] {
   const result: RouteRecordRaw[] = []
   const deep = (arr1: IPermsMenus[], arr2: RouteRecordRaw[]) => {
     arr1.forEach((source: IPermsMenus) => {
+      const { title, icon, hidden, keepAlive } = source.meta
       const target: any = {
         path: source.path,
         name: source.name,
         meta: {
-          title: source.meta.title,
-          svgIcon: source.meta.icon,
-          hidden: source.meta.hidden,
-          keepAlive: source.meta.keepAlive
+          title: title,
+          svgIcon: icon,
+          hidden: hidden,
+          keepAlive: keepAlive
         }
       }
-      if (source.component === "Layout") {
-        target.component = Layout
+      // 判断 路径是否为外链。
+      if (isExternal(source.path)) {
+        target.component = () => {}
       } else {
-        target.component = loadView(source.component)
+        if (source.component === "Layout") {
+          target.component = Layout
+        } else {
+          target.component = loadView(source.component)
+        }
       }
       arr2.push(target)
       if (source.children && source.children.length > 0) {

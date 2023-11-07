@@ -1,6 +1,6 @@
 <template>
   <div class="app-container" v-loading="loading">
-    <el-card v-loading="loading" shadow="never" class="search-wrapper">
+    <el-card shadow="never" class="search-wrapper">
       <el-form ref="searchFormRef" :inline="true" :model="params">
         <el-form-item>
           <el-input v-model="params.keywords" clearable placeholder="根据 昵称、用户名 搜索" />
@@ -14,7 +14,7 @@
       </el-form>
     </el-card>
 
-    <el-card v-loading="loading" shadow="never">
+    <el-card shadow="never">
       <div class="toolbar-wrapper">
         <el-table :data="tableData" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" />

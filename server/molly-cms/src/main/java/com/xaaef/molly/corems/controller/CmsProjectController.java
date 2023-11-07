@@ -6,6 +6,7 @@ import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.po.SearchParentPO;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.corems.entity.CmsProject;
+import com.xaaef.molly.corems.po.ProjectQueryPO;
 import com.xaaef.molly.corems.service.CmsProjectService;
 import com.xaaef.molly.corems.vo.ResetPasswordVO;
 import com.xaaef.molly.web.repeat.NoRepeatSubmit;
@@ -59,9 +60,8 @@ public class CmsProjectController {
 
     @Operation(summary = "分页", description = "分页 查询所有")
     @GetMapping("/query")
-    public JsonResult<Pagination<CmsProject>> pageQuery(SearchParentPO params) {
-        IPage<CmsProject> page = baseService.pageKeywords(params,
-                List.of(CmsProject::getProjectName));
+    public JsonResult<Pagination<CmsProject>> pageQuery(ProjectQueryPO params) {
+        IPage<CmsProject> page = baseService.pageKeywords(params);
         return JsonResult.success(page.getTotal(), page.getRecords());
     }
 

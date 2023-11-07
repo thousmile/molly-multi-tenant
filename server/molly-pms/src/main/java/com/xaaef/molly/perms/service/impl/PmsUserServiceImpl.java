@@ -40,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
@@ -84,9 +85,11 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
 
     @Override
     public IPage<PmsUser> pageKeywords(UserQueryPO params) {
-        var wrapper = super.getKeywordsQueryWrapper(params, List.of(PmsUser::getUsername, PmsUser::getNickname));
+        var wrapper = super.getKeywordsQueryWrapper(params,
+                List.of(PmsUser::getUsername, PmsUser::getNickname));
         if (params.getDeptId() != null && params.getDeptId() > 0L) {
-            wrapper.lambda().eq(PmsUser::getDeptId, params.getDeptId());
+            var childIds = deptService.listChildIdByDeptId(params.getDeptId());
+            wrapper.lambda().in(PmsUser::getDeptId, childIds);
         }
         Page<PmsUser> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
         Page<PmsUser> result = super.page(pageRequest, wrapper);
@@ -251,54 +254,65 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
         String tenantId = JwtSecurityUtils.getTenantId();
         return delegate(tenantId, () -> {
             // 用户菜单权限
-            Set<SysMenuDTO> userMenus = null;
+            var userMenus = new HashMap<Long, SysMenuDTO>();
             // 如果是管理员，就获取全部的权限
             if (isAdminUser()) {
                 if (isMasterUser()) {
                     // 系统管理员就获取 非租户的全部菜单
-                    userMenus = menuService.listMenuByNonTenant();
+                    var menuMap = menuService.listMenuByNonTenant()
+                            .stream()
+                            .collect(Collectors.toMap(SysMenuDTO::getMenuId, Function.identity(), (oldValue, newValue) -> newValue));
+                    userMenus.putAll(menuMap);
                 } else {
                     // 租户管理员，就获取租户全部的菜单
-                    userMenus = menuService.listMenuByTenantId(tenantId);
+                    var menuMap = menuService.listMenuByTenantId(tenantId)
+                            .stream()
+                            .collect(Collectors.toMap(SysMenuDTO::getMenuId, Function.identity(), (oldValue, newValue) -> newValue));
+                    userMenus.putAll(menuMap);
                 }
             } else {
                 // 获取当前用户，拥有的 角色ID
                 var roleIds = getLoginUser().getRoles().stream().map(PmsRoleDTO::getRoleId).collect(Collectors.toSet());
                 if (roleIds.isEmpty()) {
-                    return new UserRightsVO().setButtons(Set.of()).setMenus(List.of());
+                    return new UserRightsVO().setButtons(new HashSet<>()).setMenus(new ArrayList<>());
                 }
                 // 根据 角色ID , 获取全部菜单
                 var menuIds = roleMapper.selectMenuIdByRoleIds(roleIds);
                 if (menuIds.isEmpty()) {
-                    return new UserRightsVO().setButtons(Set.of()).setMenus(List.of());
+                    return new UserRightsVO().setButtons(new HashSet<>()).setMenus(new ArrayList<>());
                 }
-                userMenus = menuService.listMenuByMenuIds(menuIds);
+                var menuMap = menuService.listMenuByMenuIds(menuIds)
+                        .stream()
+                        .collect(Collectors.toMap(SysMenuDTO::getMenuId, Function.identity(), (oldValue, newValue) -> newValue));
+                userMenus.putAll(menuMap);
             }
 
             // 获取菜单
-            var nodeList = userMenus.stream().distinct().filter(r -> r.getMenuType() == MENU.getCode()).map(r -> {
-                var meta = new MenuMetaVO()
-                        .setTitle(r.getMenuName())
-                        .setIcon(r.getIcon())
-                        .setHidden(r.getVisible() == 0)
-                        .setKeepAlive(r.getKeepAlive() == 1);
-                var node = new TreeNode<>(r.getMenuId(), r.getParentId(), r.getPerms(), r.getSort());
-                node.setExtra(
-                        Map.of(
-                                "meta", meta,
-                                "component", r.getComponent(),
-                                "path", r.getPath()
-                        )
-                );
-                return node;
-            }).collect(Collectors.toList());
+            var nodeList = userMenus.values()
+                    .stream()
+                    .filter(r -> r.getMenuType() == MENU.getCode()).map(r -> {
+                        var meta = new MenuMetaVO()
+                                .setTitle(r.getMenuName())
+                                .setIcon(r.getIcon())
+                                .setHidden(r.getVisible() == 0)
+                                .setKeepAlive(r.getKeepAlive() == 1);
+                        var node = new TreeNode<>(r.getMenuId(), r.getParentId(), r.getPerms(), r.getSort());
+                        node.setExtra(
+                                Map.of(
+                                        "meta", meta,
+                                        "component", r.getComponent(),
+                                        "path", r.getPath()
+                                )
+                        );
+                        return node;
+                    }).collect(Collectors.toList());
 
             // 将 菜单列表，递归成 树节点的形式
             var treeMenus = TreeUtil.build(nodeList, 0L);
 
             // 获取所有的按钮
-            var buttons = userMenus.stream()
-                    .distinct()
+            var buttons = userMenus.values()
+                    .stream()
                     .filter(r -> r.getMenuType() == BUTTON.getCode())
                     .map(r -> new ButtonVO().setPerms(r.getPerms()).setTitle(r.getMenuName()))
                     .collect(Collectors.toSet());

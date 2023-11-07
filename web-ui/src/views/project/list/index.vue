@@ -1,7 +1,10 @@
 <template>
   <div class="app-container" v-loading="loading" v-has="['cms_project:view']">
-    <el-card v-loading="loading" shadow="never" class="search-wrapper">
+    <el-card shadow="never" class="search-wrapper">
       <el-form ref="searchFormRef" :inline="true" :model="params">
+        <el-form-item label="部门">
+          <CascaderDept v-model="params.deptId" :options="deptTree" />
+        </el-form-item>
         <el-form-item>
           <el-input v-model="params.keywords" clearable placeholder="根据 项目名称 搜索" />
         </el-form-item>
@@ -14,7 +17,7 @@
       </el-form>
     </el-card>
 
-    <el-card v-loading="loading" shadow="never">
+    <el-card shadow="never">
       <div class="toolbar-wrapper">
         <el-table :data="tableData">
           <el-table-column prop="projectId" label="项目ID" />
@@ -161,14 +164,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item prop="deptId" label="部门">
-              <el-cascader
-                v-model="entityForm.deptId"
-                :options="deptTree"
-                :props="{ checkStrictly: true, value: 'deptId', label: 'deptName' }"
-                @change="deptCascaderChange"
-                filterable
-                tabindex="6"
-              />
+              <CascaderDept v-model="entityForm.deptId" :options="deptTree" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -212,6 +208,7 @@ import { isTelphone } from "@/utils/validate"
 import { Plus, Edit, Delete, Search, Link } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import SearchChinaArea from "@/components/SearchChinaArea/index.vue"
+import CascaderDept from "@/components/CascaderDept/index.vue"
 import { useDictStoreHook } from "@/store/modules/dict"
 import { cloneDeep } from "lodash-es"
 import { showChinaArea } from "@/hooks/useIndex"
@@ -228,16 +225,18 @@ const dialogVisible = ref(false)
 
 const dialogTitle = ref("")
 
-const tableData = ref<ICmsProject[]>()
+const tableData = ref<ICmsProject[]>([])
 
-const deptTree = ref<IPmsDept[]>()
+const deptTree = ref<IPmsDept[]>([])
 
 const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
+  deptId: 0,
   keywords: "",
-  includeCauu: true
+  includeCauu: true,
+  includeDept: true
 })
 
 /// 表单数据
@@ -412,11 +411,6 @@ const getDeptTreeData = () => {
     .finally(() => {
       loading.value = false
     })
-}
-
-// 选择部门
-const deptCascaderChange = (data: number[]) => {
-  entityForm.value.deptId = data[data.length - 1]
 }
 
 // 删除

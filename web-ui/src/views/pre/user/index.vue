@@ -1,7 +1,10 @@
 <template>
   <div class="app-container" v-loading="loading" v-has="['pre_user:view']">
-    <el-card v-loading="loading" shadow="never" class="search-wrapper">
+    <el-card shadow="never" class="search-wrapper">
       <el-form ref="searchFormRef" :inline="true" :model="params">
+        <el-form-item label="部门">
+          <CascaderDept v-model="params.deptId" :options="deptTree" />
+        </el-form-item>
         <el-form-item>
           <el-input v-model="params.keywords" clearable placeholder="根据 用户名、昵称 搜索" />
         </el-form-item>
@@ -14,7 +17,7 @@
       </el-form>
     </el-card>
 
-    <el-card v-loading="loading" shadow="never">
+    <el-card shadow="never">
       <div class="toolbar-wrapper">
         <el-table :data="tableData">
           <el-table-column prop="userId" label="用户ID" />
@@ -218,14 +221,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item prop="deptId" label="部门">
-              <el-cascader
-                v-model="entityForm.deptId"
-                :options="deptTree"
-                :props="{ checkStrictly: true, value: 'deptId', label: 'deptName' }"
-                @change="deptCascaderChange"
-                filterable
-                tabindex="6"
-              />
+              <CascaderDept v-model="entityForm.deptId" :options="deptTree" tabindex="6" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -306,6 +302,7 @@ import { ISimpleTenant } from "@/types/base"
 import { IPmsUser, IPmsDept, IPmsRole } from "@/types/pms"
 import UserAvatar from "@/components/UserAvatar/index.vue"
 import UserLoginLog from "@/components/UserLoginLog/index.vue"
+import CascaderDept from "@/components/CascaderDept/index.vue"
 import { isEmail, isPassword, isPhone } from "@/utils/validate"
 import { Plus, Edit, Delete, UserFilled, Search, RefreshLeft, Link } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
@@ -341,16 +338,17 @@ const dialogVisible = ref(false)
 
 const dialogTitle = ref("")
 
-const tableData = ref<IPmsUser[]>()
+const tableData = ref<IPmsUser[]>([])
 
-const deptTree = ref<IPmsDept[]>()
+const deptTree = ref<IPmsDept[]>([])
 
-const roleList = ref<IPmsRole[]>()
+const roleList = ref<IPmsRole[]>([])
 
 const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
+  deptId: 0,
   keywords: "",
   includeCauu: true,
   includeRad: true
@@ -594,11 +592,6 @@ const getListRoleData = () => {
     .finally(() => {
       loading.value = false
     })
-}
-
-// 选择部门
-const deptCascaderChange = (data: number[]) => {
-  entityForm.value.deptId = data[data.length - 1]
 }
 
 // 删除
