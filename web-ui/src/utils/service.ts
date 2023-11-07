@@ -6,7 +6,7 @@ import { getToken } from "./cache/cookies"
 import { useTenantStoreHook } from "@/store/modules/tenant"
 import { useProjectStoreHook } from "@/store/modules/project"
 import { getEnvBaseURLPrefix } from "."
-import { ISimpleTenant } from "@/types/base"
+import { ISimpleProject, ISimpleTenant } from "@/types/base"
 import { defaultTenant } from "@/utils"
 
 /** 创建请求实例 */
@@ -35,6 +35,7 @@ function createService() {
         return Promise.reject(new Error("非本系统的接口"))
       }
       const tenantStore = useTenantStoreHook()
+      const projectStore = useProjectStoreHook()
       switch (code) {
         case 200:
           // code === 200 代表没有错误
@@ -46,16 +47,22 @@ function createService() {
           logout(apiData.message)
           return Promise.reject(new Error(apiData.message))
         case 400444:
+        case 400445:
           // 如果租户ID 不存在，就重置为默认租户
           ElMessage.error(apiData.message)
           // 表示租户不存在，已经被删除了
           tenantStore.resetCurrentTenant()
-          return resetTenant(service, response)
+          return resendRequest(service, response)
         case 400446:
-          // 此用户不包含此租户ID
+          // 此系统用户 没有操作 租户 的权限
           ElMessage.error(`您没有操作 ${tenantStore.getCurrentTenant().name} 租户的权限`)
           tenantStore.setCurrentTenant(apiData.data as ISimpleTenant)
-          return resetTenant(service, response)
+          return resendRequest(service, response)
+        case 400447:
+          // 此用户 没有操作 项目 的权限
+          ElMessage.error(`您没有操作 ${projectStore.getCurrentProject().projectName} 项目的权限`)
+          projectStore.setCurrentProject(apiData.data as ISimpleProject)
+          return resendRequest(service, response)
         default:
           // 不是正确的 Code
           ElMessage.error(apiData.message || "Error")
@@ -110,12 +117,13 @@ function createService() {
   return service
 }
 
-// 重置租户
-function resetTenant(service: AxiosInstance, response: AxiosResponse) {
+// 重新发送请求
+function resendRequest(service: AxiosInstance, response: AxiosResponse) {
   const config = response.config
-  const tenant = useTenantStoreHook().getCurrentTenant()
-  config.headers["x-tenant-id"] = tenant.tenantId
-  // 获取当前失败的请求，重新发起请求
+  const tenantId = useTenantStoreHook().getCurrentTenantId()
+  const projectId = useProjectStoreHook().getCurrentProjectId()
+  config.headers["x-tenant-id"] = tenantId
+  config.headers["x-project-id"] = projectId
   return service(config)
 }
 
