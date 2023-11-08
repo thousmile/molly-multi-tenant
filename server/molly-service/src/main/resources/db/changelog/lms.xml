@@ -7,52 +7,81 @@
 
 
     <!-- [ 日志 ] 操作日志 -->
-    <changeSet id="1675663013-1" author="WangChenChen (generated)">
-        <sql splitStatements="true">
-            CREATE TABLE `lms_oper_log`
-            (
-                `id`              varchar(20)  NOT NULL COMMENT 'ID',
-                `title`           varchar(255) NOT NULL COMMENT '标题',
-                `description`     varchar(255) NOT NULL COMMENT '描述',
-                `service_name`    varchar(255) NOT NULL COMMENT '服务名称',
-                `user_id`         bigint(20) COMMENT '用户ID',
-                `method`          varchar(255) NOT NULL COMMENT '方法',
-                `method_args`     text COMMENT '方法参数',
-                `request_method`  varchar(255) COMMENT '请求类型',
-                `request_url`     varchar(255) COMMENT '请求地址',
-                `request_ip`      varchar(255) COMMENT '请求IP',
-                `address`         varchar(255) COMMENT '请求地址',
-                `response_result` text COMMENT '请求响应',
-                `status`          int(11) NOT NULL COMMENT '状态',
-                `error_log`       text COMMENT '错误日志',
-                `time_cost`       bigint(20) NOT NULL COMMENT '耗时(毫秒)',
-                `create_time`     datetime     NOT NULL COMMENT '创建时间',
-                PRIMARY KEY (`id`) USING BTREE
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 日志 ] 操作日志';
-        </sql>
+    <changeSet author="WangChenChen (generated)" id="1699414162182-1">
+        <createTable remarks="[ 日志 ] 操作日志" tableName="lms_oper_log">
+            <column name="id" remarks="ID" type="VARCHAR(50)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="title" remarks="标题" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" remarks="描述" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_name" remarks="服务名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" remarks="用户ID" type="BIGINT"/>
+            <column name="method" remarks="方法" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="method_args" remarks="方法参数" type="TEXT"/>
+            <column name="request_method" remarks="请求类型" type="VARCHAR(255)"/>
+            <column name="request_url" remarks="请求地址" type="VARCHAR(255)"/>
+            <column name="request_ip" remarks="请求IP" type="VARCHAR(255)"/>
+            <column name="address" remarks="请求地址" type="VARCHAR(255)"/>
+            <column name="response_result" remarks="请求响应" type="TEXT"/>
+            <column name="status" remarks="状态" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="error_log" remarks="错误日志" type="TEXT"/>
+            <column name="time_cost" remarks="耗时(毫秒)" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" remarks="创建时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 
+
     <!-- [ 日志 ] 登录日志 -->
-    <changeSet id="1675663115-1" author="WangChenChen (generated)">
-        <sql splitStatements="true">
-            CREATE TABLE `lms_login_log`
-            (
-                `id`          varchar(20)  NOT NULL COMMENT 'ID',
-                `grant_type`  varchar(255) NOT NULL COMMENT '授权类型',
-                `user_id`     bigint(20) NOT NULL COMMENT '用户ID',
-                `nickname`    varchar(255) NOT NULL COMMENT '用户昵称',
-                `username`    varchar(255) NOT NULL COMMENT '用户名',
-                `avatar`      varchar(255) NOT NULL COMMENT '头像',
-                `request_url` varchar(255) NOT NULL COMMENT '请求地址',
-                `request_ip`  varchar(255) NOT NULL COMMENT '请求IP',
-                `address`     varchar(255) NOT NULL COMMENT '请求地址',
-                `os_name`     varchar(255) COMMENT '操作系统',
-                `browser`     varchar(255) COMMENT '浏览器',
-                `create_time` datetime     NOT NULL COMMENT '创建时间',
-                PRIMARY KEY (`id`) USING BTREE
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 日志 ] 登录日志';
-        </sql>
+    <changeSet author="WangChenChen (generated)" id="1699414165075-1">
+        <createTable remarks="[ 日志 ] 登录日志" tableName="lms_login_log">
+            <column name="id" remarks="ID" type="VARCHAR(50)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="grant_type" remarks="授权类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" remarks="用户ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nickname" remarks="用户昵称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" remarks="用户名" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="avatar" remarks="头像" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="request_url" remarks="请求地址" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="request_ip" remarks="请求IP" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" remarks="请求地址" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="os_name" remarks="操作系统" type="VARCHAR(255)"/>
+            <column name="browser" remarks="浏览器" type="VARCHAR(255)"/>
+            <column name="create_time" remarks="创建时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 

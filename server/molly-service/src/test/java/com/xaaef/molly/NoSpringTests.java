@@ -100,7 +100,7 @@ public class NoSpringTests {
         liquibase1.setDataSource(ds1);
         liquibase1.setResourceLoader(new FileSystemResourceLoader());
         liquibase1.setChangeLog("C:\\Users\\demo\\code\\javaProjects\\molly-multi-tenant\\server\\molly-service\\src\\main\\resources\\db\\changelog-other.xml");
-        liquibase1.setSchemas(List.of("hello1", "hello2", "hello3"));
+        liquibase1.setSchemas(List.of("hello1", "hello2"));
         liquibase1.afterPropertiesSet();
     }
 

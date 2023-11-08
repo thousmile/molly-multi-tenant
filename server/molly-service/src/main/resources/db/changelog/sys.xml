@@ -7,266 +7,349 @@
 
 
     <!-- [ 租户 ] 租户表 -->
-    <changeSet id="1670813888-1" author="WangChenChen (generated)">
-        <sql splitStatements="true">
-            CREATE TABLE `sys_tenant`
-            (
-                `tenant_id`        varchar(20)  NOT NULL COMMENT '租户 ID',
-                `logo`             varchar(255) NOT NULL COMMENT '租户 logo',
-                `name`             varchar(255) NOT NULL COMMENT '租户名称',
-                `email`            varchar(50)  NOT NULL COMMENT '租户邮箱',
-                `linkman`          varchar(255) NOT NULL COMMENT '联系人名称',
-                `contact_number`   varchar(50)  NOT NULL COMMENT '联系电话',
-                `area_code`        bigint(20) NOT NULL COMMENT '行政区域',
-                `address`          varchar(255) NOT NULL COMMENT '联系地址',
-                `status`           tinyint(4) NOT NULL DEFAULT '1' COMMENT '租户状态 0.禁用 1.正常',
-                `expired`          datetime     NOT NULL COMMENT '过期时间。默认是 10 年',
-                `create_time`      datetime     NOT NULL COMMENT '添加时间',
-                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
-                `last_update_time` datetime     NOT NULL COMMENT '最后一次，修改时间',
-                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次，修改人',
-                PRIMARY KEY (`tenant_id`) USING BTREE,
-                UNIQUE KEY `UK_sys_tenant_tenant_id` (`tenant_id`) USING BTREE
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 租户 ] 租户表';
-        </sql>
+    <changeSet author="WangChenChen (generated)" id="1699414015975-1">
+        <createTable remarks="[ 租户 ] 租户表" tableName="sys_tenant">
+            <column name="tenant_id" remarks="租户 ID" type="VARCHAR(20)">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="logo" remarks="租户 logo" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" remarks="租户名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" remarks="租户邮箱" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="linkman" remarks="联系人名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact_number" remarks="联系电话" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="area_code" remarks="行政区域" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" remarks="联系地址" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="status" remarks="租户状态 0.禁用 1.正常 9.初始化中" type="TINYINT(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expired" remarks="过期时间。默认是 10 年" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" remarks="添加时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" remarks="创建人" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" remarks="最后一次，修改时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" remarks="最后一次，修改人" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 
     <!-- [ 租户 ] 租户和权限模板表 -->
-    <changeSet id="1671072305-1" author="WangChenChen (generated)">
-        <sql stripComments="true">
-            CREATE TABLE `sys_tenant_template`
-            (
-                `tenant_id`   varchar(20) NOT NULL COMMENT '租户ID',
-                `template_id` bigint(20) NOT NULL COMMENT '模板 ID'
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 租户 ] 租户和权限模板表';
-        </sql>
+    <changeSet author="WangChenChen (generated)" id="1699414015975-2">
+        <createTable remarks="[ 租户 ] 租户和权限模板表" tableName="sys_tenant_template">
+            <column name="tenant_id" remarks="租户ID" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="template_id" remarks="模板 ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 
     <!-- [ 租户 ] 用户和租户表 -->
-    <changeSet id="1677205971-1" author="WangChenChen (generated)">
-        <sql stripComments="true">
-            CREATE TABLE `sys_user_tenant`
-            (
-                `user_id`   bigint(20) NOT NULL COMMENT '用户 ID',
-                `tenant_id` varchar(20) NOT NULL COMMENT '租户 ID'
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 租户 ] 用户和租户表';
-        </sql>
+    <changeSet author="WangChenChen (generated)" id="1699414015975-3">
+        <createTable remarks="[ 租户 ] 用户和租户表" tableName="sys_user_tenant">
+            <column name="user_id" remarks="用户 ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tenant_id" remarks="租户 ID" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 
     <!-- [ 租户 ] 权限模板表 -->
-    <changeSet id="1670814962-1" author="WangChenChen (generated)">
-        <sql stripComments="true">
-            CREATE TABLE `sys_template`
-            (
-                `id`               bigint(20) NOT NULL AUTO_INCREMENT COMMENT '模板ID',
-                `name`             varchar(50)  NOT NULL COMMENT '模板名称',
-                `description`      varchar(200) NOT NULL COMMENT '备注',
-                `create_time`      datetime     NOT NULL COMMENT '添加时间',
-                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
-                `last_update_time` datetime     NOT NULL COMMENT '最后一次，修改时间',
-                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次，修改人',
-                PRIMARY KEY (`id`) USING BTREE
-            ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 租户 ] 权限模板表';
-        </sql>
+    <changeSet author="WangChenChen (generated)" id="1699414015975-4">
+        <createTable remarks="[ 租户 ] 权限模板表" tableName="sys_template">
+            <column autoIncrement="true" name="id" remarks="模板ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" remarks="模板名称" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" remarks="备注" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" remarks="添加时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" remarks="创建人" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" remarks="最后一次，修改时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" remarks="最后一次，修改人" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement tableName="sys_template" columnDataType="BIGINT" columnName="id" startWith="10001"/>
     </changeSet>
 
 
     <!-- [ 租户 ] 模板和菜单权限表 -->
-    <changeSet id="1670814962-2" author="WangChenChen (generated)">
-        <sql stripComments="true">
-            CREATE TABLE `sys_template_menu`
-            (
-                `template_id` bigint(20) NOT NULL COMMENT '模板 ID',
-                `menu_id`     bigint(20) NOT NULL COMMENT '菜单ID'
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 租户 ] 模板和菜单权限表';
-        </sql>
+    <changeSet author="WangChenChen (generated)" id="1699414015975-5">
+        <createTable remarks="[ 租户 ] 模板和菜单权限表" tableName="sys_template_menu">
+            <column name="template_id" remarks="模板 ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="menu_id" remarks="菜单ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 
     <!-- 中国行政区域 -->
-    <changeSet id="1670812786-1" author="WangChenChen (generated)">
-        <sql splitStatements="true">
-            CREATE TABLE `china_area`
-            (
-                `area_code`   bigint(20) unsigned NOT NULL COMMENT '行政代码 [ 唯一 ]',
-                `level`       tinyint(3) unsigned NOT NULL COMMENT '层级 1.省级  2.城市  3.区域',
-                `parent_code` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '父级行政代码',
-                `zip_code`    mediumint(6) unsigned zerofill NOT NULL DEFAULT '000000' COMMENT '邮政编码',
-                `city_code`   char(6)        NOT NULL DEFAULT '' COMMENT '区号',
-                `name`        varchar(50)    NOT NULL DEFAULT '' COMMENT '名称',
-                `short_name`  varchar(50)    NOT NULL DEFAULT '' COMMENT '简称',
-                `merger_name` varchar(50)    NOT NULL DEFAULT '' COMMENT '组合名',
-                `pinyin`      varchar(30)    NOT NULL DEFAULT '' COMMENT '拼音',
-                `lng`         decimal(10, 6) NOT NULL DEFAULT '0.000000' COMMENT '经度',
-                `lat`         decimal(10, 6) NOT NULL DEFAULT '0.000000' COMMENT '纬度',
-                PRIMARY KEY (`area_code`) USING BTREE,
-                UNIQUE KEY `UK_china_area_area_code` (`area_code`) USING BTREE
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 通用 ] 中国行政地区表';
-        </sql>
-    </changeSet>
-
-
-    <!-- 初始化 中国行政区域 -->
-    <changeSet id="1670812786-2" author="WangChenChen (generated)">
-        <sqlFile path="db/changelog/sql/china_area.sql"/>
+    <changeSet author="WangChenChen (generated)" id="1699414053280-1">
+        <createTable remarks="[ 通用 ] 中国行政地区表" tableName="china_area">
+            <column name="area_code" remarks="行政代码 [ 唯一 ]" type="BIGINT UNSIGNED">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="level" remarks="层级 1.省级  2.城市  3.区域" type="TINYINT(3) UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="parent_code" remarks="父级行政代码" type="BIGINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="zip_code" remarks="邮政编码" type="MEDIUMINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="city_code" remarks="区号" type="CHAR(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="name" remarks="名称" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="short_name" remarks="简称" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="merger_name" remarks="组合名" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="pinyin" remarks="拼音" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.000000" name="lng" remarks="经度" type="DECIMAL(10, 6)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.000000" name="lat" remarks="纬度" type="DECIMAL(10, 6)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 
     <!--[ 通用 ]全局配置-->
-    <changeSet id="1670812792-1" author="WangChenChen (generated)">
-        <sql splitStatements="true">
-            CREATE TABLE `sys_config`
-            (
-                `config_id`        bigint(20) NOT NULL AUTO_INCREMENT COMMENT '参数主键',
-                `config_name`      varchar(100) NOT NULL DEFAULT '' COMMENT '参数名称',
-                `config_key`       varchar(100) NOT NULL DEFAULT '' COMMENT '参数键名',
-                `config_value`     text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '参数键值',
-                `config_type`      tinyint(1) NOT NULL DEFAULT '0' COMMENT '系统内置（1.是 0.否）',
-                `create_time`      datetime     NOT NULL COMMENT '创建时间',
-                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
-                `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
-                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
-                PRIMARY KEY (`config_id`) USING BTREE,
-                UNIQUE KEY `UK_sys_config_config_key` (`config_key`) USING BTREE
-            ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 通用 ] 参数配置表';
-        </sql>
-    </changeSet>
-
-
-    <!-- 初始化 全局配置-->
-    <changeSet id="1670812792-2" author="WangChenChen (generated)">
-        <sqlFile path="db/changelog/sql/sys_config.sql"/>
-    </changeSet>
-
-
-    <!-- 修改 全局配置 -->
-    <changeSet id="1698632340-1" author="WangChenChen (generated)">
-        <sql>
-            UPDATE sys_config SET config_value = "操作员" WHERE config_key = "default_role_name"
-        </sql>
+    <changeSet author="WangChenChen (generated)" id="1699414059273-1">
+        <createTable remarks="[ 通用 ] 参数配置表" tableName="sys_config">
+            <column autoIncrement="true" name="config_id" remarks="参数主键" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValue="" name="config_name" remarks="参数名称" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="config_key" remarks="参数键名" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="config_value" remarks="参数键值" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="config_type" remarks="系统内置（1.是 0.否）" type="TINYINT(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" remarks="创建时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" remarks="创建人" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" remarks="最后一次修改时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" remarks="最后一次修改人" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement tableName="sys_config" columnDataType="BIGINT" columnName="config_id" startWith="10001"/>
     </changeSet>
 
 
     <!--[ 通用 ] 字典类型表-->
-    <changeSet id="1670812891-1" author="WangChenChen (generated)">
-        <sql splitStatements="true">
-            CREATE TABLE `sys_dict_type`
-            (
-                `type_id`          bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典类型 ID',
-                `type_name`        varchar(50)  NOT NULL COMMENT '字典类型名',
-                `type_key`         varchar(50)  NOT NULL COMMENT '字典类型关键字',
-                `description`      varchar(255) NOT NULL COMMENT '部门描述',
-                `create_time`      datetime     NOT NULL COMMENT '创建时间',
-                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
-                `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
-                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
-                PRIMARY KEY (`type_id`) USING BTREE
-            ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 通用 ] 字典类型表';
-        </sql>
-    </changeSet>
-
-
-    <!-- 初始化 字典类型表-->
-    <changeSet id="1670812891-2" author="WangChenChen (generated)">
-        <sqlFile path="db/changelog/sql/sys_dict_type.sql"/>
+    <changeSet author="WangChenChen (generated)" id="1699412931547-1">
+        <createTable remarks="[ 通用 ] 字典类型表" tableName="sys_dict_type">
+            <column autoIncrement="true" name="type_id" remarks="字典类型 ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="type_name" remarks="字典类型名" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_key" remarks="字典类型关键字" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" remarks="部门描述" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" remarks="创建时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" remarks="创建人" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" remarks="最后一次修改时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" remarks="最后一次修改人" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement tableName="sys_dict_type" columnDataType="BIGINT" columnName="type_id" startWith="10001"/>
     </changeSet>
 
 
     <!--[ 通用 ] 字典数据表-->
-    <changeSet id="1670813871-1" author="WangChenChen (generated)">
-        <sql splitStatements="true">
-            CREATE TABLE `sys_dict_data`
-            (
-                `dict_code`        bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典编码',
-                `dict_sort`        bigint(20) NOT NULL DEFAULT '0' COMMENT '字典排序',
-                `dict_label`       varchar(100) NOT NULL DEFAULT '' COMMENT '字典标签',
-                `dict_value`       varchar(100) NOT NULL DEFAULT '' COMMENT '字典键值',
-                `type_key`         varchar(50)  NOT NULL DEFAULT '' COMMENT '字典类型',
-                `is_default`       tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否默认（1.是 0.否）',
-                `create_user`      bigint(20) NOT NULL COMMENT '创建者',
-                `create_time`      datetime     NOT NULL COMMENT '创建时间',
-                `last_update_user` bigint(20) NOT NULL COMMENT '更新者',
-                `last_update_time` datetime     NOT NULL COMMENT '更新时间',
-                PRIMARY KEY (`dict_code`) USING BTREE
-            ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 通用 ] 字典数据表';
-        </sql>
-    </changeSet>
-
-
-    <!-- 初始化 字典数据表-->
-    <changeSet id="1670813871-2" author="WangChenChen (generated)">
-        <sqlFile path="db/changelog/sql/sys_dict_data.sql"/>
+    <changeSet author="WangChenChen (generated)" id="1699414089273-1">
+        <createTable remarks="[ 通用 ] 字典数据表" tableName="sys_dict_data">
+            <column autoIncrement="true" name="dict_code" remarks="字典编码" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueNumeric="0" name="dict_sort" remarks="字典排序" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="dict_label" remarks="字典标签" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="dict_value" remarks="字典键值" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="type_key" remarks="字典类型" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_default" remarks="是否默认（1.是 0.否）" type="TINYINT(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" remarks="创建者" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" remarks="创建时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" remarks="更新者" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" remarks="更新时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement tableName="sys_dict_data" columnDataType="BIGINT" columnName="dict_code" startWith="10001"/>
     </changeSet>
 
 
     <!--[ 通用 ] 菜单权限表-->
-    <changeSet id="1670815177-1" author="WangChenChen (generated)">
-        <sql stripComments="true">
-            CREATE TABLE `sys_menu`
-            (
-                `menu_id`          bigint(20) NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
-                `menu_name`        varchar(255) NOT NULL COMMENT '菜单名称',
-                `parent_id`        bigint(20) NOT NULL DEFAULT '0' COMMENT '父主键',
-                `perms`            varchar(255) NOT NULL COMMENT '权限标识',
-                `component`        varchar(255) NOT NULL DEFAULT '#' COMMENT '组件',
-                `icon`             varchar(255) NOT NULL DEFAULT '#' COMMENT '菜单图标',
-                `path`             varchar(255) NOT NULL DEFAULT '#' COMMENT '路由地址',
-                `sort`             bigint(20) NOT NULL COMMENT '排序',
-                `menu_type`        tinyint(1) NOT NULL DEFAULT '1' COMMENT '菜单类型（1.菜单 2.按钮）',
-                `visible`          tinyint(1) NOT NULL DEFAULT '1' COMMENT '菜单状态（1.显示 0.隐藏）',
-                `target`           tinyint(1) NOT NULL DEFAULT '2' COMMENT '0.租户用户   1. 系统用户   2.全部用户',
-                `keep_alive`       tinyint(1) NOT NULL DEFAULT '0' COMMENT '保持状态（1.保持 0.不保持）',
-                `create_time`      datetime     NOT NULL COMMENT '创建时间',
-                `create_user`      bigint(20) NOT NULL COMMENT '创建人',
-                `last_update_time` datetime     NOT NULL COMMENT '最后一次修改时间',
-                `last_update_user` bigint(20) NOT NULL COMMENT '最后一次修改人',
-                PRIMARY KEY (`menu_id`) USING BTREE
-            ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='[ 通用 ] 菜单权限表';
-        </sql>
-    </changeSet>
-
-
-    <!-- 初始化 菜单权限表 -->
-    <changeSet id="1670815177-2" author="WangChenChen (generated)">
-        <sqlFile path="db/changelog/sql/sys_menu.sql"/>
-    </changeSet>
-
-
-    <!-- 初始化 菜单权限表 -->
-    <changeSet id="1670815177-3" author="WangChenChen (generated)">
-        <sqlFile path="db/changelog/sql/sys_menu_2.sql"/>
+    <changeSet author="WangChenChen (generated)" id="1699414100077-1">
+        <createTable remarks="[ 通用 ] 菜单权限表" tableName="sys_menu">
+            <column autoIncrement="true" name="menu_id" remarks="菜单ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="menu_name" remarks="菜单名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="parent_id" remarks="父主键" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="perms" remarks="权限标识" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="#" name="component" remarks="组件" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="#" name="icon" remarks="菜单图标" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="#" name="path" remarks="路由地址" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sort" remarks="排序" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="menu_type" remarks="菜单类型（1.菜单 2.按钮）" type="TINYINT(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="visible" remarks="菜单状态（1.显示 0.隐藏）" type="TINYINT(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="2" name="target" remarks="0.租户用户   1. 系统用户   2.全部用户" type="TINYINT(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="keep_alive" remarks="保持状态（1.保持 0.不保持）" type="TINYINT(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" remarks="创建时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_user" remarks="创建人" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_time" remarks="最后一次修改时间" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_user" remarks="最后一次修改人" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement tableName="sys_menu" columnDataType="BIGINT" columnName="menu_id" startWith="10001"/>
     </changeSet>
 
 
     <!--[ 通用 ] 文件记录表 -->
-    <changeSet id="1670815179-1" author="WangChenChen (generated)">
-        <sql stripComments="true">
-            CREATE TABLE `sys_file_detail`
-            (
-                `id`                varchar(32)  NOT NULL COMMENT '文件id',
-                `url`               varchar(512) NOT NULL COMMENT '文件访问地址',
-                `size`              bigint NULL DEFAULT NULL COMMENT '文件大小，单位字节',
-                `filename`          varchar(256) NULL DEFAULT NULL COMMENT '文件名称',
-                `original_filename` varchar(256) NULL DEFAULT NULL COMMENT '原始文件名',
-                `base_path`         varchar(256) NULL DEFAULT NULL COMMENT '基础存储路径',
-                `path`              varchar(256) NULL DEFAULT NULL COMMENT '存储路径',
-                `ext`               varchar(32) NULL DEFAULT NULL COMMENT '文件扩展名',
-                `content_type`      varchar(32) NULL DEFAULT NULL COMMENT 'MIME类型',
-                `platform`          varchar(32) NULL DEFAULT NULL COMMENT '存储平台',
-                `th_url`            varchar(512) NULL DEFAULT NULL COMMENT '缩略图访问路径',
-                `th_filename`       varchar(256) NULL DEFAULT NULL COMMENT '缩略图名称',
-                `th_size`           bigint NULL DEFAULT NULL COMMENT '缩略图大小，单位字节',
-                `th_content_type`   varchar(32) NULL DEFAULT NULL COMMENT '缩略图MIME类型',
-                `object_id`         varchar(32) NULL DEFAULT NULL COMMENT '文件所属对象id',
-                `object_type`       varchar(32) NULL DEFAULT NULL COMMENT '文件所属对象类型，例如用户头像，评价图片',
-                `attr`              text NULL COMMENT '附加属性',
-                `create_time`       datetime NULL DEFAULT NULL COMMENT '创建时间',
-                PRIMARY KEY (`id`) USING BTREE
-            ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '[ 通用 ] 文件记录表' ROW_FORMAT = DYNAMIC;
-        </sql>
+    <changeSet author="WangChenChen (generated)" id="1699414106974-1">
+        <createTable remarks="[ 通用 ] 文件记录表" tableName="sys_file_detail">
+            <column name="id" remarks="文件id" type="VARCHAR(32)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="url" remarks="文件访问地址" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="size" remarks="文件大小，单位字节" type="BIGINT"/>
+            <column name="filename" remarks="文件名称" type="VARCHAR(256)"/>
+            <column name="original_filename" remarks="原始文件名" type="VARCHAR(256)"/>
+            <column name="base_path" remarks="基础存储路径" type="VARCHAR(256)"/>
+            <column name="path" remarks="存储路径" type="VARCHAR(256)"/>
+            <column name="ext" remarks="文件扩展名" type="VARCHAR(32)"/>
+            <column name="content_type" remarks="MIME类型" type="VARCHAR(32)"/>
+            <column name="platform" remarks="存储平台" type="VARCHAR(32)"/>
+            <column name="th_url" remarks="缩略图访问路径" type="VARCHAR(512)"/>
+            <column name="th_filename" remarks="缩略图名称" type="VARCHAR(256)"/>
+            <column name="th_size" remarks="缩略图大小，单位字节" type="BIGINT"/>
+            <column name="th_content_type" remarks="缩略图MIME类型" type="VARCHAR(32)"/>
+            <column name="object_id" remarks="文件所属对象id" type="VARCHAR(32)"/>
+            <column name="object_type" remarks="文件所属对象类型，例如用户头像，评价图片" type="VARCHAR(32)"/>
+            <column name="attr" remarks="附加属性" type="TEXT"/>
+            <column name="create_time" remarks="创建时间" type="datetime"/>
+        </createTable>
     </changeSet>
 
 

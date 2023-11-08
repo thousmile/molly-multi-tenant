@@ -126,6 +126,7 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
                     .setSort(1L)
                     .setDescription(po.getName())
                     .setAncestors("0");
+
             // 保存部门
             deptMapper.insert(pmsDept);
 

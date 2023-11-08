@@ -2,6 +2,7 @@ package com.xaaef.molly.system.cron;
 
 import cn.hutool.core.util.RandomUtil;
 import com.xaaef.molly.auth.service.JwtTokenService;
+import com.xaaef.molly.common.domain.SimpPushMessage;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.common.util.JsonUtils;
 import lombok.AllArgsConstructor;
@@ -12,8 +13,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.xaaef.molly.common.consts.SimpMessageConst.BROADCAST_NOTICE;
+import static com.xaaef.molly.common.consts.SimpMessageConst.QUEUE_SINGLE_PUSH;
 
 /**
  * <p>
@@ -48,15 +51,14 @@ public class TestCronAsync {
     public void cron1() {
         if (!tokenService.listLoginIds().isEmpty()) {
             var ind = count1.decrementAndGet();
-            var map = Map.of(
-                    "id", IdUtils.getStandaloneId(),
-                    "title", String.format("广播消息=>%d", RandomUtil.randomInt(10000, 99999)),
-                    "message", randomChinese(20),
-                    "createTime", LocalDateTime.now().minusHours(ind)
-            );
-            var json = JsonUtils.toJson(map);
+            var msg = new SimpPushMessage()
+                    .setId(IdUtils.getStandaloneId())
+                    .setTitle(String.format("广播消息=>%d", RandomUtil.randomInt(10000, 99999)))
+                    .setContent(randomChinese(20))
+                    .setCreateTime(LocalDateTime.now());
+            var json = JsonUtils.toJson(msg);
             // 广播通知  给所有用户
-            messagingTemplate.convertAndSend("/topic/broadcast/notice", json);
+            messagingTemplate.convertAndSend(BROADCAST_NOTICE, json);
             if (ind == 1) {
                 count2.set(8760);
             }
@@ -71,15 +73,14 @@ public class TestCronAsync {
     public void cron2() {
         var ind = count2.decrementAndGet();
         tokenService.mapAllLoginUser().forEach((userId, user) -> {
-            var map = Map.of(
-                    "id", IdUtils.getStandaloneId(),
-                    "title", String.format("推送消息=>%d", RandomUtil.randomInt(10000, 99999)),
-                    "message", randomChinese(20),
-                    "createTime", LocalDateTime.now().minusHours(ind)
-            );
-            var json = JsonUtils.toJson(map);
+            var msg = new SimpPushMessage()
+                    .setId(IdUtils.getStandaloneId())
+                    .setTitle(String.format("推送消息=>%d", RandomUtil.randomInt(10000, 99999)))
+                    .setContent(randomChinese(20))
+                    .setCreateTime(LocalDateTime.now());
+            var json = JsonUtils.toJson(msg);
             // 推送给指定用户 ,  /user/queue/single/push
-            messagingTemplate.convertAndSendToUser(user.getLoginId(), "/queue/single/push", json);
+            messagingTemplate.convertAndSendToUser(user.getLoginId(), QUEUE_SINGLE_PUSH, json);
             if (ind == 1) {
                 count2.set(8760);
             }

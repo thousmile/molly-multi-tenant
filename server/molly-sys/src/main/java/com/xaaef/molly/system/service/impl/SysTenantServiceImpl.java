@@ -5,10 +5,13 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
+import com.xaaef.molly.common.domain.SimpPushMessage;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.po.SearchPO;
+import com.xaaef.molly.common.util.IdUtils;
+import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
-import com.xaaef.molly.internal.api.ApiOperateUserService;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.dto.InitUserDTO;
@@ -29,6 +32,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +45,7 @@ import java.util.stream.Collectors;
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
 import static com.xaaef.molly.common.consts.ConfigName.TENANT_DEFAULT_LOGO;
 import static com.xaaef.molly.common.consts.ConfigName.USER_DEFAULT_PASSWORD;
+import static com.xaaef.molly.common.consts.SimpMessageConst.QUEUE_SINGLE_CREATE_TENANT;
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 /**
@@ -71,6 +76,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     private final SysUserService sysUserService;
 
     private final ApiCmsProjectService projectService;
+
+    private final SimpMessagingTemplate messagingTemplate;
 
 
     /**
@@ -187,7 +194,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public TenantCreatedSuccessVO create(CreateTenantPO po) {
+    public TenantCreatedSuccessVO create(CreateTenantPO po) throws Exception {
         if (!isMasterUser()) {
             throw new RuntimeException("只有系统用户，才能创建租户！");
         }
@@ -233,7 +240,9 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                 .setContactNumber(po.getContactNumber())
                 .setAreaCode(po.getAreaCode())
                 .setAddress(po.getAddress())
-                .setExpired(po.getExpired());
+                .setExpired(po.getExpired())
+                // 状态 设置为初始化中...
+                .setStatus((byte) 9);
 
         // 保存租户
         this.save(sysTenant);
@@ -253,21 +262,16 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
             baseMapper.insertByTemplates(sysTenant.getTenantId(), templateIds);
         }
 
-        // 新创建的 租户 创建表结构
-        dataSourceManager.updateTable(sysTenant.getTenantId());
-
-        // 将 新创建的 租户ID 保存到 redis 中
-        tenantManager.addTenantId(sysTenant.getTenantId());
-
         // 初始化 用户 角色 部门
         var initUserDTO = new InitUserDTO();
         BeanUtils.copyProperties(po, initUserDTO);
-        userService.initUserAndRoleAndDept(initUserDTO);
 
         // 初始化 项目
         var initTenantDTO = new SysTenantDTO();
         BeanUtils.copyProperties(sysTenant, initTenantDTO);
-        projectService.initProject(initTenantDTO);
+
+        // 初始化租户数据
+        initData(initTenantDTO, initUserDTO);
 
         return TenantCreatedSuccessVO.builder()
                 .adminMobile(po.getAdminMobile())
@@ -276,6 +280,83 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                 .adminUsername(po.getAdminUsername())
                 .adminPwd(po.getAdminPwd())
                 .build();
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void resetData(String tenantId) {
+        if (!isMasterUser() && !isAdminUser()) {
+            throw new RuntimeException("非系统管理员，无法重置租户数据！");
+        }
+        var source = super.getById(tenantId);
+        if (source == null) {
+            throw new RuntimeException(String.format("租户ID %s 不存在！", tenantId));
+        }
+        var initTenantDTO = new SysTenantDTO();
+        BeanUtils.copyProperties(source, initTenantDTO);
+
+        var password = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD))
+                .orElse("123456");
+        var initUser = new InitUserDTO()
+                .setTenantId(source.getTenantId())
+                .setName(source.getName())
+                .setLogo(source.getLogo())
+                .setAdminNickname(source.getName())
+                .setAdminUsername(getUUIDSuffix())
+                .setAdminMobile(source.getContactNumber())
+                .setAdminEmail(source.getEmail())
+                .setAdminPwd(password);
+
+        // 删库，
+        dataSourceManager.deleteTable(source.getTenantId());
+
+        // 重新创建库，创建数据
+        initData(initTenantDTO, initUser);
+    }
+
+
+    // 初始化 数据库表结构 和 默认数据
+    private void initData(SysTenantDTO tenant, InitUserDTO initUser) {
+        // 获取 当前登录的用户
+        var loginUser = getLoginUser();
+        // 异步初始化  数据库表结构  和  基础数据
+        dataSourceManager.asyncUpdateTable(tenant.getTenantId(),
+                (Exception ex) -> {
+                    // 设置登录用户
+                    JwtSecurityUtils.setLoginUser(loginUser);
+                    var msg = new SimpPushMessage()
+                            .setId(IdUtils.getStandaloneId())
+                            .setTitle("初始化租户数据结果")
+                            .setStatus((byte) 1)
+                            .setCreateTime(LocalDateTime.now());
+                    if (ex == null) {
+                        // 将 新创建的 租户ID 保存到 redis 中
+                        tenantManager.addTenantId(tenant.getTenantId());
+
+                        // 初始化 用户 角色 部门
+                        userService.initUserAndRoleAndDept(initUser);
+
+                        // 初始化 项目
+                        projectService.initProject(tenant);
+
+                        // 将状态修改为 初始化成功
+                        var t1 = new SysTenant()
+                                .setTenantId(tenant.getTenantId())
+                                .setStatus((byte) 1);
+
+                        baseMapper.updateById(t1);
+                        msg.setContent(String.format("租户 %s 初始化数据完成！", tenant.getName()));
+                    } else {
+                        log.error("tenantId: {} async update table : \n{}", tenant.getTenantId(), ex.getMessage());
+                        msg.setStatus((byte) 0);
+                        msg.setContent(String.format("租户 %s 初始化数据异常，原因 %s ！", tenant.getName(), ex.getMessage()));
+                    }
+                    messagingTemplate.convertAndSendToUser(loginUser.getLoginId(), QUEUE_SINGLE_CREATE_TENANT, JsonUtils.toJson(msg));
+                    // 清除登录的用户信息
+                    JwtSecurityUtils.setLoginUser(null);
+                }
+        );
     }
 
 

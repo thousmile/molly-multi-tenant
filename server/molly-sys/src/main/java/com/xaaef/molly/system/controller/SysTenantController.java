@@ -87,6 +87,20 @@ public class SysTenantController {
     }
 
 
+
+    @NoRepeatSubmit
+    @Operation(summary = "重置租户数据", description = "重置租户数据")
+    @GetMapping("/reset/data")
+    public JsonResult<Boolean> resetData(String tenantId) {
+        try {
+            baseService.resetData(tenantId);
+            return JsonResult.success(Boolean.TRUE);
+        } catch (Exception e) {
+            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
+        }
+    }
+
+
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping

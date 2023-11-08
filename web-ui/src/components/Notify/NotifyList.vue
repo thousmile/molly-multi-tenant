@@ -20,7 +20,7 @@ const props = defineProps<Props>()
       </div>
     </template>
     <div class="card-body">
-      {{ item.message ?? "No Data" }}
+      {{ item.content ?? "No Data" }}
     </div>
   </el-card>
 </template>

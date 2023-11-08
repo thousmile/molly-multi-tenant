@@ -83,9 +83,9 @@ public class SysTenant extends BaseEntity {
     private String address;
 
     /**
-     * 状态 【0.禁用 1.正常】
+     * 状态 【 0.禁用  1.正常  9.初始化中】
      */
-    @Schema(description = "状态 【0.禁用 1.正常】")
+    @Schema(description = "状态 【0.禁用 1.正常 9.初始化中】")
     private Byte status;
 
     /**

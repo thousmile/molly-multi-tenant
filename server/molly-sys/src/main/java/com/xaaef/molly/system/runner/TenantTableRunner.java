@@ -17,6 +17,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -62,17 +63,16 @@ public class TenantTableRunner implements ApplicationRunner {
                 Page<SysTenant> pageRequest = Page.of(i, pageSize);
                 var wrapper = new LambdaQueryWrapper<SysTenant>()
                         .select(List.of(SysTenant::getTenantId));
-                tenantMapper.selectPage(pageRequest, wrapper)
+                var tenantIds = tenantMapper.selectPage(pageRequest, wrapper)
                         .getRecords()
                         .stream()
                         .map(SysTenant::getTenantId)
                         .filter(tenantId -> !StringUtils.equals(tenantId, defaultTenantId))
-                        .forEach(tenantId -> {
-                            tenantManager.addTenantId(tenantId);
-                            if (createTable) {
-                                databaseManager.updateTable(tenantId);
-                            }
-                        });
+                        .collect(Collectors.toSet());
+                tenantManager.addTenantIdBatch(tenantIds);
+                if (createTable) {
+                    databaseManager.updateTable(tenantIds);
+                }
             }
         }
     }

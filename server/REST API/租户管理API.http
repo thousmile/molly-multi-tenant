@@ -103,6 +103,14 @@ x-tenant-id: {{tenantId}}
 Authorization: Bearer {{tokenValue}}
 
 
+
+### 重置租户数据
+GET {{baseUrl}}/sys/tenant/reset/data?tenantId=d9a4e12ae4ef
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+Authorization: Bearer {{tokenValue}}
+
+
 ### 搜索租户列表
 GET {{baseUrl}}/sys/tenant/simple/search?keywords=google
 Content-Type: application/json

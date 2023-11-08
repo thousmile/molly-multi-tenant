@@ -1,22 +1,19 @@
 package com.xaaef.molly.tenant.schema;
 
+import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.tenant.DatabaseManager;
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
-import liquibase.Liquibase;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.resource.ClassLoaderResourceAccessor;
+import liquibase.integration.spring.MultiTenantSpringLiquibase;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DriverManager;
-
-import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
-
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * 多租户 基于 模式（Schema）
@@ -40,7 +37,7 @@ public class SchemaDataSourceManager implements DatabaseManager {
 
     private final MultiTenantProperties multiTenantProperties;
 
-    private final DataSourceProperties dataSourceProperties;
+    private final MultiTenantSpringLiquibase mtsl;
 
 
     @Override
@@ -54,41 +51,54 @@ public class SchemaDataSourceManager implements DatabaseManager {
         return dataSource;
     }
 
+
     @Override
     public DataSource getDataSource(String tenantId) {
         return getDefaultDataSource();
     }
 
+
+    @Async
+    @Override
+    public void asyncUpdateTable(String tenantId, Consumer<Exception> consumer) {
+        try {
+            updateTable(Set.of(tenantId));
+            consumer.accept(null);
+        } catch (Exception ex) {
+            consumer.accept(ex);
+        }
+    }
+
+
     /**
      * 创建表
-     *
-     * @author WangChenChen
-     * @date 2022/12/7 21:05
      */
     @Override
-    public void updateTable(String tenantId) {
-        log.info("tenantId: {} update table ...", tenantId);
-        // 判断数据库是否存在！不存在就创建
-        var tenantDbName = multiTenantProperties.getPrefix() + tenantId;
-        var sql = String.format("CREATE DATABASE IF NOT EXISTS %s CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;", tenantDbName);
-        jdbcTemplate.execute(sql);
-        try {
-            // 创建一次性的 jdbc 链接。只是用来生成表结构的。用完就关闭。
-            var tempConn = getTempConnection(tenantDbName);
-            var changeLogPath = multiTenantProperties.getOtherChangeLog();
-            // 使用 Liquibase 创建表结构
-            if (multiTenantProperties.getOtherChangeLog().startsWith(CLASSPATH_URL_PREFIX)) {
-                changeLogPath = multiTenantProperties.getOtherChangeLog().replaceFirst(CLASSPATH_URL_PREFIX, "");
-            }
-            var liquibase = new Liquibase(changeLogPath, new ClassLoaderResourceAccessor(), new JdbcConnection(tempConn));
-            // 更新 数据库 结构体
-            liquibase.update();
-            // 关闭链接
-            tempConn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
+    public synchronized void updateTable(String tenantId) throws Exception {
+        updateTable(Set.of(tenantId));
+    }
+
+
+    /**
+     * 创建表
+     */
+    @Override
+    public synchronized void updateTable(Set<String> tenantIds) throws Exception {
+        if (tenantIds == null || tenantIds.isEmpty()) {
+            return;
         }
+        log.info("update table tenantId: \n{}", JsonUtils.toFormatJson(tenantIds));
+        // 拼接数据库前缀。如: molly_google
+        var dbNames = tenantIds.stream()
+                .map(tenantId -> multiTenantProperties.getPrefix() + tenantId)
+                .collect(Collectors.toList());
+        // 判断数据库是否存在！不存在就创建
+        dbNames.forEach(dbName -> {
+            var sql = String.format("CREATE DATABASE IF NOT EXISTS %s CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;", dbName);
+            jdbcTemplate.execute(sql);
+        });
+        mtsl.setSchemas(dbNames);
+        mtsl.afterPropertiesSet();
     }
 
 
@@ -98,24 +108,6 @@ public class SchemaDataSourceManager implements DatabaseManager {
         String tenantDbName = multiTenantProperties.getPrefix() + tenantId;
         String sql = String.format("DROP DATABASE %s ;", tenantDbName);
         jdbcTemplate.execute(sql);
-    }
-
-
-    /**
-     * 创建 临时的 jdbc 连接。 用于生成表结构。用完就关闭
-     *
-     * @author WangChenChen
-     * @date 2022/12/8 12:44
-     */
-    private Connection getTempConnection(String tenantDbName) throws Exception {
-        // 获取默认的数据名称
-        var oldDbName = getOldDbName(dataSourceProperties.getUrl());
-        // 替换连接池中的数据库名称
-        var dataSourceUrl = dataSourceProperties.getUrl().replaceFirst(oldDbName, tenantDbName);
-        //3.获取数据库连接对象
-        return DriverManager.getConnection(dataSourceUrl,
-                dataSourceProperties.getUsername(),
-                dataSourceProperties.getPassword());
     }
 
 

@@ -51,7 +51,18 @@ public interface SysTenantService extends BaseService<SysTenant> {
      * @author Wang Chen Chen
      * @date 2021/7/16 17:31
      */
-    TenantCreatedSuccessVO create(CreateTenantPO po);
+    TenantCreatedSuccessVO create(CreateTenantPO po) throws Exception;
+
+
+    /**
+     * 商户 重置 数据
+     *
+     * @param params
+     * @return
+     * @author Wang Chen Chen
+     * @date 2021/7/16 17:31
+     */
+    void resetData(String tenantId);
 
 
     /**

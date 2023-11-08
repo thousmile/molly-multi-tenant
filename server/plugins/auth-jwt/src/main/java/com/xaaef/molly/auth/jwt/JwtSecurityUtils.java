@@ -4,6 +4,7 @@ import com.xaaef.molly.auth.exception.JwtNoLoginException;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.UserType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -96,6 +97,22 @@ public class JwtSecurityUtils {
             return (JwtLoginUser) getAuthentication().getPrincipal();
         } else {
             throw new JwtNoLoginException("用户暂无登录！", new RuntimeException());
+        }
+    }
+
+
+
+    /**
+     * 设置用户
+     **/
+    public static void setLoginUser(JwtLoginUser loginUser) {
+        if (loginUser == null) {
+            SecurityContextHolder.clearContext();
+        } else {
+            var authentication = new UsernamePasswordAuthenticationToken(
+                    loginUser, null, loginUser.getAuthorities());
+            // 将用户信息，设置到 SecurityContext 中，可以在任何地方 使用 下面语句获取 获取 当前用户登录信息
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
     }
 

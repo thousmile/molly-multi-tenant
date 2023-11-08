@@ -57,8 +57,9 @@ public class MollyApplicationTests {
      * @date 2023/10/26 9:24
      */
     @Test
-    public void test1() {
-        for (int i = 0; i < 5; i++) {
+    public void test1() throws Exception {
+        for (int i = 0; i < 1; i++) {
+            var start = System.currentTimeMillis();
             var email = String.format("%s@qq.com", RandomUtil.randomString(10));
             var contactNumber = String.format("0755-%s", RandomUtil.randomNumbers(7));
             var expired = LocalDateTime.now().plusDays(RandomUtil.randomInt(30, 3650));
@@ -74,6 +75,8 @@ public class MollyApplicationTests {
                     .setExpired(expired);
             var success = tenantService.create(po);
             System.out.println(JsonUtils.toFormatJson(success));
+            var end = System.currentTimeMillis() - start;
+            System.out.printf("耗时: %d ms\n", end);
         }
     }
 

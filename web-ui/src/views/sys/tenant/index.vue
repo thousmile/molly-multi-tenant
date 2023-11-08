@@ -48,7 +48,15 @@
           </el-table-column>
           <el-table-column prop="status" label="状态">
             <template #default="scope">
-              {{ dictStore.getNormalDisable(scope.row.status) }}
+              <template v-if="scope.row.status === 9">
+                <el-text class="mx-1" type="warning">初始化中...</el-text>
+                <el-icon class="is-loading">
+                  <Loading />
+                </el-icon>
+              </template>
+              <span v-else>
+                {{ dictStore.getNormalDisable(scope.row.status) }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column prop="expired" label="过期时间">
@@ -232,8 +240,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from "vue"
-import { Plus, Edit, Delete, Search, UserFilled } from "@element-plus/icons-vue"
+import { ref, reactive, onMounted, computed, watch } from "vue"
+import { Plus, Edit, Delete, Search, UserFilled, Loading } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { queryTenantApi, updateTenantApi, deleteTenantApi } from "@/api/tenant"
 import { listTemplateApi } from "@/api/template"
@@ -246,8 +254,25 @@ import { cloneDeep } from "lodash-es"
 import { showExpiredDateAgo, showStringOverflow, showChinaArea, isDefaultTenantId } from "@/hooks/useIndex"
 import { isEmail, isTelphone } from "@/utils/validate"
 import { futureShortcuts } from "@/utils"
+import { useNoticeStoreHook } from "@/store/modules/notice"
 
 const dictStore = useDictStoreHook()
+
+const noticeStore = useNoticeStoreHook()
+
+// 监听
+watch(
+  () => noticeStore.createTenantNotice,
+  (newValue, _) => {
+    ElMessageBox.confirm(newValue!.content, "是否重新加载数据?", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning"
+    })
+      .then(() => getTableData())
+      .catch(() => console.log())
+  }
+)
 
 /** 加载 */
 const loading = ref(false)

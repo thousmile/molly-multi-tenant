@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : my-mysql
+ Source Server         : 188-mysql8.0
  Source Server Type    : MySQL
- Source Server Version : 80031 (8.0.31)
- Source Host           : localhost:3306
+ Source Server Version : 80034 (8.0.34)
+ Source Host           : 192.168.0.188:3306
  Source Schema         : molly_master
 
  Target Server Type    : MySQL
- Target Server Version : 80031 (8.0.31)
+ Target Server Version : 80034 (8.0.34)
  File Encoding         : 65001
 
- Date: 15/12/2022 10:30:48
+ Date: 08/11/2023 11:25:01
 */
 
 SET NAMES utf8mb4;
@@ -55,12 +55,12 @@ INSERT INTO `sys_menu` VALUES (10033, '新增', 10006, 'pre_menu:create', '#', '
 INSERT INTO `sys_menu` VALUES (10034, '修改', 10006, 'pre_menu:update', '#', '', '', 3, 1, 1, 1, 0, '2022-06-25 15:03:42', 19980817, '2022-06-27 20:39:53', 19980817);
 INSERT INTO `sys_menu` VALUES (10035, '删除', 10006, 'pre_menu:delete', '#', '', '', 4, 1, 1, 1, 0, '2022-06-25 15:03:42', 19980817, '2022-06-27 20:39:25', 19980817);
 INSERT INTO `sys_menu` VALUES (10036, '字典数据', 10001, 'sys:dict:data', 'sys/dict/dictData', '#', '/sys/dict/data', 7, 0, 0, 1, 0, '2022-06-27 20:36:39', 19980817, '2022-06-30 12:10:50', 19980817);
-INSERT INTO `sys_menu` VALUES (10038, '数据统计', 0, 'statistics', 'Layout', 'statistics', '/statistics', 1, 0, 1, 2, 0, '2022-07-30 18:17:42', 19980817, '2022-07-30 18:17:42', 19980817);
+INSERT INTO `sys_menu` VALUES (10038, '数据统计', 0, 'statistics', 'Layout', 'statistics', '/statistics', 2, 0, 1, 2, 0, '2022-07-30 18:17:42', 19980817, '2023-11-07 15:19:13', 19980817);
 INSERT INTO `sys_menu` VALUES (10039, '能耗统计', 10038, 'statistics:energy', 'statistics/energy/index', 'statistics_energy', '/statistics/energy', 5, 0, 1, 2, 0, '2022-07-30 18:18:27', 19980817, '2022-07-30 18:18:27', 19980817);
 INSERT INTO `sys_menu` VALUES (10040, '趋势分析', 10038, 'statistics:trend', 'statistics/trend/index', 'statistics_trend', '/statistics/trend', 10, 0, 1, 2, 0, '2022-07-30 18:19:12', 19980817, '2022-07-30 18:19:12', 19980817);
 INSERT INTO `sys_menu` VALUES (10041, '设备管理', 0, 'device', 'Layout', 'device', '/device', 3, 0, 1, 2, 0, '2022-07-30 18:19:45', 19980817, '2022-07-30 18:19:45', 19980817);
 INSERT INTO `sys_menu` VALUES (10042, '设备列表', 10041, 'device:list', 'device/list/index', 'device_list', '/device/list', 5, 0, 1, 2, 0, '2022-07-30 18:20:24', 19980817, '2022-07-30 18:20:24', 19980817);
-INSERT INTO `sys_menu` VALUES (10043, '设备规划', 10041, 'device:deploy', 'device/deploy/index', 'device_deploy', '/device/deploy', 3, 0, 1, 2, 0, '2022-07-30 18:20:56', 19980817, '2022-07-30 18:20:56', 19980817);
+INSERT INTO `sys_menu` VALUES (10043, '设备规划', 10041, 'device:deploy', 'device/deploy/index', 'device_deploy', '/device/deploy', 10, 0, 1, 2, 0, '2022-07-30 18:20:56', 19980817, '2023-10-26 10:52:14', 19980817);
 INSERT INTO `sys_menu` VALUES (10044, '项目管理', 0, 'project', 'Layout', 'project', '/project', 3, 0, 1, 2, 0, '2022-07-30 18:19:45', 19980817, '2022-07-30 18:19:45', 19980817);
 INSERT INTO `sys_menu` VALUES (10045, '项目列表', 10044, 'project:list', 'project/list/index', 'project_list', '/project/list', 5, 0, 1, 2, 0, '2022-07-30 18:20:24', 19980817, '2022-07-30 18:20:24', 19980817);
 INSERT INTO `sys_menu` VALUES (10046, '新增', 10045, 'cms_project:create', '#', '', '', 2, 1, 1, 2, 0, '2022-06-25 15:01:56', 19980817, '2022-06-25 15:01:56', 19980817);
@@ -68,5 +68,9 @@ INSERT INTO `sys_menu` VALUES (10047, '视图', 10045, 'cms_project:view', '#', 
 INSERT INTO `sys_menu` VALUES (10048, '修改', 10045, 'cms_project:update', '#', '', '', 3, 1, 1, 2, 0, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
 INSERT INTO `sys_menu` VALUES (10049, '删除', 10045, 'cms_project:delete', '#', '', '', 4, 1, 1, 2, 0, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
 INSERT INTO `sys_menu` VALUES (10050, '重置密码', 10045, 'cms_project:reset:password', '#', '', '', 5, 1, 1, 2, 0, '2022-06-25 15:03:42', 19980817, '2022-06-25 15:03:42', 19980817);
+INSERT INTO `sys_menu` VALUES (10051, '用户关联租户', 10004, 'pre_user:link:tenant', '', '', '', 14, 1, 1, 1, 0, '2023-10-26 11:22:19', 19980817, '2023-10-26 11:22:42', 19980817);
+INSERT INTO `sys_menu` VALUES (10052, '外链', 0, 'external:links', '#', 'link', '/link', 1, 0, 1, 2, 0, '2023-11-07 15:18:21', 19980817, '2023-11-07 15:18:21', 19980817);
+INSERT INTO `sys_menu` VALUES (10053, 'GitHub', 10052, 'GitHub', '#', 'github', 'https://github.com/thousmile/molly-multi-tenant', 5, 0, 1, 2, 0, '2023-11-07 15:50:29', 19980817, '2023-11-07 15:50:55', 19980817);
+INSERT INTO `sys_menu` VALUES (10054, '文档', 10052, 'link:doc', '#', 'doc', 'https://github.com/thousmile/molly-multi-tenant', 20, 0, 1, 2, 0, '2023-11-07 16:02:42', 19980817, '2023-11-07 16:02:42', 19980817);
 
 SET FOREIGN_KEY_CHECKS = 1;

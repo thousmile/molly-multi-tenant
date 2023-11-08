@@ -16,6 +16,9 @@ export const useNoticeStore = defineStore("notice", () => {
   // 推送消息
   const pushNotices = ref<IPushMessage[]>([])
 
+  // 创建租户结果 消息
+  const createTenantNotice = ref<IPushMessage>()
+
   const stompClientActive = ref<boolean>(false)
 
   // websocket 客户端
@@ -59,6 +62,13 @@ export const useNoticeStore = defineStore("notice", () => {
         // 订阅推送主题
         stompClientAgent.subscribe("/user/queue/single/push", (resp) => {
           const result = JSON.parse(resp.body) as IPushMessage
+          pushNotices.value?.push(result)
+        })
+
+        // 订阅 租户创建结果的 主题
+        stompClientAgent.subscribe("/user/queue/single/create/tenant", (resp) => {
+          const result = JSON.parse(resp.body) as IPushMessage
+          createTenantNotice.value = result
           pushNotices.value?.push(result)
         })
       }
@@ -105,6 +115,7 @@ export const useNoticeStore = defineStore("notice", () => {
   return {
     broadcast,
     pushNotices,
+    createTenantNotice,
     getBroadcast,
     getPushNotices,
     startWebSocket,

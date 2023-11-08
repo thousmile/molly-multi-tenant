@@ -95,7 +95,9 @@ export interface IPushMessage {
   /** 标题 */
   title: string
   /** 消息 */
-  message: string
+  content: string
   /** 创建时间 */
   createTime: string
+  /** 状态 0.失败  1.成功  */
+  status: number
 }
