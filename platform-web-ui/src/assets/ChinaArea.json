@@ -2263,7 +2263,7 @@
     "areaCode": 140000000000,
     "name": "山西省",
     "parentCode": 0,
-    "mergerName": "-山西省"
+    "mergerName": "山西省"
   },
   {
     "children": [
@@ -3075,7 +3075,7 @@
     "areaCode": 150000000000,
     "name": "内蒙古自治区",
     "parentCode": 0,
-    "mergerName": "-内蒙古自治区"
+    "mergerName": "内蒙古自治区"
   },
   {
     "children": [
@@ -3874,7 +3874,7 @@
     "areaCode": 210000000000,
     "name": "辽宁省",
     "parentCode": 0,
-    "mergerName": "-辽宁省"
+    "mergerName": "辽宁省"
   },
   {
     "children": [
@@ -4416,7 +4416,7 @@
     "areaCode": 220000000000,
     "name": "吉林省",
     "parentCode": 0,
-    "mergerName": "-吉林省"
+    "mergerName": "吉林省"
   },
   {
     "children": [
@@ -5404,7 +5404,7 @@
     "areaCode": 230000000000,
     "name": "黑龙江省",
     "parentCode": 0,
-    "mergerName": "-黑龙江省"
+    "mergerName": "黑龙江省"
   },
   {
     "children": [
@@ -5516,7 +5516,7 @@
     "areaCode": 310000000000,
     "name": "上海市",
     "parentCode": 0,
-    "mergerName": "-上海市"
+    "mergerName": "上海市"
   },
   {
     "children": [
@@ -6338,7 +6338,7 @@
     "areaCode": 320000000000,
     "name": "江苏省",
     "parentCode": 0,
-    "mergerName": "-江苏省"
+    "mergerName": "江苏省"
   },
   {
     "children": [
@@ -7040,7 +7040,7 @@
     "areaCode": 330000000000,
     "name": "浙江省",
     "parentCode": 0,
-    "mergerName": "-浙江省"
+    "mergerName": "浙江省"
   },
   {
     "children": [
@@ -7952,7 +7952,7 @@
     "areaCode": 340000000000,
     "name": "安徽省",
     "parentCode": 0,
-    "mergerName": "-安徽省"
+    "mergerName": "安徽省"
   },
   {
     "children": [
@@ -8591,7 +8591,7 @@
     "areaCode": 350000000000,
     "name": "福建省",
     "parentCode": 0,
-    "mergerName": "-福建省"
+    "mergerName": "福建省"
   },
   {
     "children": [
@@ -9353,7 +9353,7 @@
     "areaCode": 360000000000,
     "name": "江西省",
     "parentCode": 0,
-    "mergerName": "-江西省"
+    "mergerName": "江西省"
   },
   {
     "children": [
@@ -10505,7 +10505,7 @@
     "areaCode": 370000000000,
     "name": "山东省",
     "parentCode": 0,
-    "mergerName": "-山东省"
+    "mergerName": "山东省"
   },
   {
     "children": [
@@ -11801,7 +11801,7 @@
     "areaCode": 410000000000,
     "name": "河南省",
     "parentCode": 0,
-    "mergerName": "-河南省"
+    "mergerName": "河南省"
   },
   {
     "children": [
@@ -12613,7 +12613,7 @@
     "areaCode": 420000000000,
     "name": "湖北省",
     "parentCode": 0,
-    "mergerName": "-湖北省"
+    "mergerName": "湖北省"
   },
   {
     "children": [
@@ -13625,7 +13625,7 @@
     "areaCode": 430000000000,
     "name": "湖南省",
     "parentCode": 0,
-    "mergerName": "-湖南省"
+    "mergerName": "湖南省"
   },
   {
     "children": [
@@ -14996,7 +14996,7 @@
     "areaCode": 440000000000,
     "name": "广东省",
     "parentCode": 0,
-    "mergerName": "-广东省"
+    "mergerName": "广东省"
   },
   {
     "children": [
@@ -15866,7 +15866,7 @@
     "areaCode": 450000000000,
     "name": "广西壮族自治区",
     "parentCode": 0,
-    "mergerName": "-广西壮族自治区"
+    "mergerName": "广西壮族自治区"
   },
   {
     "children": [
@@ -16190,7 +16190,7 @@
     "areaCode": 460000000000,
     "name": "海南省",
     "parentCode": 0,
-    "mergerName": "-海南省"
+    "mergerName": "海南省"
   },
   {
     "children": [
@@ -16437,7 +16437,7 @@
     "areaCode": 500000000000,
     "name": "重庆市",
     "parentCode": 0,
-    "mergerName": "-重庆市"
+    "mergerName": "重庆市"
   },
   {
     "children": [
@@ -17812,7 +17812,7 @@
     "areaCode": 510000000000,
     "name": "四川省",
     "parentCode": 0,
-    "mergerName": "-四川省"
+    "mergerName": "四川省"
   },
   {
     "children": [
@@ -18450,7 +18450,7 @@
     "areaCode": 520000000000,
     "name": "贵州省",
     "parentCode": 0,
-    "mergerName": "-贵州省"
+    "mergerName": "贵州省"
   },
   {
     "children": [
@@ -19403,7 +19403,7 @@
     "areaCode": 530000000000,
     "name": "云南省",
     "parentCode": 0,
-    "mergerName": "-云南省"
+    "mergerName": "云南省"
   },
   {
     "children": [
@@ -19947,7 +19947,7 @@
     "areaCode": 540000000000,
     "name": "西藏自治区",
     "parentCode": 0,
-    "mergerName": "-西藏自治区"
+    "mergerName": "西藏自治区"
   },
   {
     "children": [
@@ -20697,7 +20697,7 @@
     "areaCode": 610000000000,
     "name": "陕西省",
     "parentCode": 0,
-    "mergerName": "-陕西省"
+    "mergerName": "陕西省"
   },
   {
     "children": [
@@ -21366,7 +21366,7 @@
     "areaCode": 620000000000,
     "name": "甘肃省",
     "parentCode": 0,
-    "mergerName": "-甘肃省"
+    "mergerName": "甘肃省"
   },
   {
     "children": [
@@ -21714,7 +21714,7 @@
     "areaCode": 630000000000,
     "name": "青海省",
     "parentCode": 0,
-    "mergerName": "-青海省"
+    "mergerName": "青海省"
   },
   {
     "children": [
@@ -21924,7 +21924,7 @@
     "areaCode": 640000000000,
     "name": "宁夏回族自治区",
     "parentCode": 0,
-    "mergerName": "-宁夏回族自治区"
+    "mergerName": "宁夏回族自治区"
   },
   {
     "children": [
@@ -22688,7 +22688,7 @@
     "areaCode": 650000000000,
     "name": "新疆维吾尔自治区",
     "parentCode": 0,
-    "mergerName": "-新疆维吾尔自治区"
+    "mergerName": "新疆维吾尔自治区"
   },
   {
     "children": [
@@ -22828,7 +22828,7 @@
     "areaCode": 7013135772653,
     "name": "香港特别行政区",
     "parentCode": 0,
-    "mergerName": "-香港特别行政区"
+    "mergerName": "香港特别行政区"
   },
   {
     "children": [
@@ -22902,7 +22902,7 @@
     "areaCode": 7112407077174,
     "name": "澳门特别行政区",
     "parentCode": 0,
-    "mergerName": "-澳门特别行政区"
+    "mergerName": "澳门特别行政区"
   },
   {
     "children": [
@@ -25315,6 +25315,6 @@
     "areaCode": 7212684281636,
     "name": "台湾省",
     "parentCode": 0,
-    "mergerName": "-台湾省"
+    "mergerName": "台湾省"
   }
 ]

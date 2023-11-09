@@ -26,7 +26,7 @@ const showChinaArea = computed(() => {
   return (value: number) => {
     const area = chinaAreaDeepQuery(value)
     if (area) {
-      return area.mergerName.replaceAll("-", " / ")
+      return area.mergerName
     }
     return ""
   }
