@@ -38,6 +38,13 @@ public class SysTenantController {
     }
 
 
+    @Operation(summary = "简单Id查询", description = "根据Id查询 最基础的字段")
+    @GetMapping("/simple/{id}")
+    public JsonResult<SysTenant> findSimpleById(@PathVariable("id") String id) {
+        return JsonResult.success(baseService.getSimpleById(id));
+    }
+
+
     @Operation(summary = "租户ID是否存在", description = "判断租户ID是否存在")
     @GetMapping("/exist/{id}")
     public JsonResult<Boolean> existById(@PathVariable("id") String id) {
@@ -90,10 +97,10 @@ public class SysTenantController {
 
     @NoRepeatSubmit
     @Operation(summary = "重置租户数据", description = "重置租户数据")
-    @GetMapping("/reset/data")
-    public JsonResult<Boolean> resetData(String tenantId) {
+    @PostMapping("/reset/data/{id}")
+    public JsonResult<Boolean> resetData(@PathVariable("id") String id) {
         try {
-            baseService.resetData(tenantId);
+            baseService.resetData(id);
             return JsonResult.success(Boolean.TRUE);
         } catch (Exception e) {
             return JsonResult.fail(e.getMessage(), Boolean.FALSE);

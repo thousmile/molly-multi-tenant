@@ -43,6 +43,10 @@ public interface SysTenantService extends BaseService<SysTenant> {
     Collection<TenantSimpleDataVO> simpleSearchQuery(SearchPO po);
 
 
+
+    SysTenant getSimpleById(String id);
+
+
     /**
      * 创建商户
      *
@@ -62,7 +66,7 @@ public interface SysTenantService extends BaseService<SysTenant> {
      * @author Wang Chen Chen
      * @date 2021/7/16 17:31
      */
-    void resetData(String tenantId);
+    boolean resetData(String tenantId);
 
 
     /**
@@ -75,5 +79,6 @@ public interface SysTenantService extends BaseService<SysTenant> {
      * @date 2021/7/16 17:31
      */
     boolean updateTemplate(String tenantId, Set<Long> templateIds);
+
 
 }

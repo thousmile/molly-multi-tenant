@@ -26,9 +26,9 @@ const appTitle = import.meta.env.VITE_APP_TITLE
 const codeUrl = ref("")
 
 const target: ILoginData = {
-  tenantId: "google",
-  username: "cd0a7f6e7050",
-  password: "123456",
+  tenantId: "",
+  username: "",
+  password: "",
   codeKey: uuidv4().replace(/-/g, ""),
   codeText: "",
   rememberMe: false
@@ -179,7 +179,7 @@ createCode()
   align-items: center;
   width: 100%;
   min-height: 100%;
-  background: url("@/assets/login-bg3.svg") no-repeat;
+  background: url("@/assets/login-bg1.svg") no-repeat;
 
   .theme-switch {
     position: fixed;

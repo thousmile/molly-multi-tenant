@@ -12,6 +12,7 @@ import { setRouteChange } from "@/hooks/useRouteListener"
 import { isWhiteList, loginUrl } from "@/config/white-list"
 import NProgress from "nprogress"
 import "nprogress/nprogress.css"
+import { useTenantStoreHook } from "@/store/modules/tenant"
 
 const { setTitle } = useTitle()
 NProgress.configure({ showSpinner: false })
@@ -19,6 +20,7 @@ NProgress.configure({ showSpinner: false })
 const userStore = useUserStoreHook()
 const dictStore = useDictStoreHook()
 const noticeStore = useNoticeStoreHook()
+const tenantStore = useTenantStoreHook()
 const permissionStore = usePermissionStoreHook()
 
 router.beforeEach(async (to, _from, next) => {
@@ -87,6 +89,11 @@ async function initBasicData() {
   // 获取用户信息
   if (userStore.userInfo === undefined || !userStore.userInfo) {
     await userStore.getUserInfo()
+  }
+
+  // 获取当前登录用户，所在的租户信息
+  if (tenantStore.tenant === undefined || !tenantStore.tenant) {
+    await tenantStore.getLoginUserTenant()
   }
 
   // 获取字典数据

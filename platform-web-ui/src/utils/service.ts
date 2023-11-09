@@ -44,7 +44,7 @@ function createService() {
         case 400010:
         case 400011:
         case 400012:
-          logout(apiData.message)
+          logout(apiData.message, "登录过期")
           return Promise.reject(new Error(apiData.message))
         case 400444:
         case 400445:
@@ -55,14 +55,24 @@ function createService() {
           return resendRequest(service, response)
         case 400446:
           // 此系统用户 没有操作 租户 的权限
-          ElMessage.error(`您没有操作 ${tenantStore.getCurrentTenant().name} 租户的权限`)
-          tenantStore.setCurrentTenant(apiData.data as ISimpleTenant)
-          return resendRequest(service, response)
+          if (apiData.data) {
+            ElMessage.error(`您没有操作 ${tenantStore.getCurrentTenant().name} 租户的权限`)
+            tenantStore.setCurrentTenant(apiData.data as ISimpleTenant)
+            return resendRequest(service, response)
+          } else {
+            logout("暂无任何租户的操作权限", "权限不足")
+            return Promise.reject(new Error("暂无任何租户的操作权限"))
+          }
         case 400447:
           // 此用户 没有操作 项目 的权限
-          ElMessage.error(`您没有操作 ${projectStore.getCurrentProject().projectName} 项目的权限`)
-          projectStore.setCurrentProject(apiData.data as ISimpleProject)
-          return resendRequest(service, response)
+          if (apiData.data) {
+            ElMessage.error(`您没有操作 ${projectStore.getCurrentProject().projectName} 项目的权限`)
+            projectStore.setCurrentProject(apiData.data as ISimpleProject)
+            return resendRequest(service, response)
+          } else {
+            logout("暂无任何项目的操作权限", "权限不足")
+            return Promise.reject(new Error("暂无任何项目的操作权限"))
+          }
         default:
           // 不是正确的 Code
           ElMessage.error(apiData.message || "Error")
@@ -78,7 +88,7 @@ function createService() {
           break
         case 401:
           // Token 过期时
-          logout("认证已经过期，请从新登录！")
+          logout("认证已经过期，请重新登录！", "重新登录")
           break
         case 403:
           error.message = "拒绝访问"
@@ -128,9 +138,9 @@ function resendRequest(service: AxiosInstance, response: AxiosResponse) {
 }
 
 // 退出登录
-function logout(message: string) {
-  ElMessageBox.confirm(message || "登录已经过期，需要重新登录", "登录过期", {
-    confirmButtonText: "重新登录",
+function logout(title: string, message: string) {
+  ElMessageBox.confirm(message || "登录已经过期，需要重新登录", title, {
+    confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning"
   })
@@ -152,7 +162,7 @@ function createRequest(service: AxiosInstance) {
     const defaultConfig = {
       headers: {
         // 携带 Token
-        Authorization: tokenValue ? tokenValue : undefined,
+        Authorization: tokenValue ? tokenValue : "",
         "x-tenant-id": tenantId,
         "x-project-id": projectId,
         "Content-Type": "application/json"

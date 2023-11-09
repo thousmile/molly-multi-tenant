@@ -29,4 +29,11 @@
     </insert>
 
 
+    <update id="truncateTableData">
+        <foreach collection='tableNames' item='item' index='index'>
+            truncate table ${item};
+        </foreach>
+    </update>
+
+
 </mapper>

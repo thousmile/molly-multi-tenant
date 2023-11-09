@@ -81,15 +81,25 @@
             <template #default="scope">
               <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
               &nbsp;
-              <!-- v-admin 只有管理员才可以删除租户 -->
-              <el-link
-                :icon="Delete"
-                v-admin
-                v-if="!isDefaultTenantId(scope.row.tenantId)"
-                type="danger"
-                @click="handleDelete(scope.row)"
-                >删除</el-link
-              >
+              <!-- v-admin 只有管理员才可以 删除租户、重置数据 -->
+              <el-dropdown v-admin @command="(cmd: string) => handleCommand(cmd, scope.row)">
+                <span class="el-dropdown-link">
+                  更多
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item v-if="!isDefaultTenantId(scope.row.tenantId)" :icon="Link" command="ResetData">
+                      重置数据
+                    </el-dropdown-item>
+                    <el-dropdown-item v-if="!isDefaultTenantId(scope.row.tenantId)" :icon="Delete" command="Delete">
+                      删除
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
         </el-table>
@@ -241,9 +251,9 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed, watch } from "vue"
-import { Plus, Edit, Delete, Search, UserFilled, Loading } from "@element-plus/icons-vue"
+import { Plus, Edit, Delete, Search, UserFilled, Loading, Link } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
-import { queryTenantApi, updateTenantApi, deleteTenantApi } from "@/api/tenant"
+import { queryTenantApi, updateTenantApi, deleteTenantApi, resetDataTenantApi } from "@/api/tenant"
 import { listTemplateApi } from "@/api/template"
 import { ISysTenant, ISysTemplate } from "@/types/sys"
 import ImageUpload from "@/components/ImageUpload/index.vue"
@@ -452,6 +462,20 @@ const handleAdd = () => {
   dialogVisible.value = true
 }
 
+
+const handleCommand = (command: string, data: ISysTenant) => {
+  switch (command) {
+    case "ResetData":
+      handleResetData(data)
+      break
+    case "Delete":
+      handleDelete(data)
+      break
+    default:
+      console.log("command :>> ", command)
+      break
+  }
+}
 // 删除
 const handleDelete = (data: ISysTenant) => {
   ElMessageBox.prompt(`请在下方的输入框中填写租户ID`, `确要删除 ${data.name} 吗?`, {
@@ -464,6 +488,44 @@ const handleDelete = (data: ISysTenant) => {
     .then((value) => {
       if (value.value === data.tenantId) {
         deleteTenantApi(data.tenantId)
+          .then((resp) => {
+            if (resp.data) {
+              ElMessage({
+                message: `删除 ${data.name} 成功！`,
+                type: "success"
+              })
+            }
+          })
+          .catch((err) => {
+            console.log("err :>> ", err)
+          })
+          .finally(() => {
+            getTableData()
+          })
+      } else {
+        ElMessage({
+          message: `租户ID输入错误！`,
+          type: "error"
+        })
+      }
+    })
+    .catch((error) => {
+      console.log("error :>> ", error)
+    })
+}
+
+// 重置数据
+const handleResetData = (data: ISysTenant) => {
+  ElMessageBox.prompt(`请在下方的输入框中填写租户ID`, `确要重置 ${data.name} 的数据吗?`, {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    inputPattern: /^\w{4,12}$/,
+    inputErrorMessage: "租户ID可以是字母和数字，长度4~12位",
+    type: "warning"
+  })
+    .then((value) => {
+      if (value.value === data.tenantId) {
+        resetDataTenantApi(data.tenantId)
           .then((resp) => {
             if (resp.data) {
               ElMessage({

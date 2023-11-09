@@ -37,7 +37,7 @@ const switchSettings = {
   显示切换主题按钮: showThemeSwitch,
   显示全屏按钮: showScreenfull,
   显示搜索按钮: showSearchMenu,
-  显示租户切换: showSearchTenant,
+  显示项目切换: showSearchTenant,
   显示控件尺寸: showControlSize,
   是否缓存标签栏: cacheTagsView,
   开启系统水印: showWatermark,

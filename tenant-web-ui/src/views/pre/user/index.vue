@@ -97,7 +97,10 @@
                 >编辑</el-link
               >
               &nbsp;
-              <el-dropdown @command="(cmd: string) => handleCommand(cmd, scope.row)">
+              <el-dropdown
+                @command="(cmd: string) => handleCommand(cmd, scope.row)"
+                v-has="['pre_user:reset:password', 'pre_user:delete']"
+              >
                 <span class="el-dropdown-link">
                   更多
                   <el-icon class="el-icon--right">

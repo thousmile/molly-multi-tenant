@@ -111,8 +111,12 @@ export const useUserStore = defineStore("user", () => {
     userInfo.value = undefined
     accessToken.value = ""
     resetRouter()
+
     // 关闭 WebSocket
     noticeStore.stopWebSocket()
+    noticeStore.broadcast = []
+    noticeStore.pushNotices = []
+
     buttons.value = []
     menus.value = []
     _resetTagsView()

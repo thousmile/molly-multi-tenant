@@ -34,5 +34,10 @@ export const updateTenantApi = (data: ISysTenant) => {
 
 /** 删除 */
 export const deleteTenantApi = (id: string) => {
-  return httpDelete<number, IJsonResult<boolean>>(`/sys/tenant/${id}`)
+  return httpDelete<string, IJsonResult<boolean>>(`/sys/tenant/${id}`)
+}
+
+/** 重置租户数据 */
+export const resetDataTenantApi = (id: string) => {
+  return httpPost<string, IJsonResult<boolean>>(`/sys/tenant/reset/data/${id}`)
 }

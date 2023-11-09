@@ -8,8 +8,13 @@ export const simpleQueryTenantApi = (params: ISearchQuery) => {
 }
 
 /** 根据Id查询 */
-export const getTenantApi = (id: number) => {
-  return httpGet<number, IJsonResult<ISysTenant>>(`/sys/tenant/${id}`)
+export const getTenantApi = (id: string) => {
+  return httpGet<string, IJsonResult<ISysTenant>>(`/sys/tenant/${id}`)
+}
+
+/** 根据Id简单查询 */
+export const getSimpleTenantApi = (id: string) => {
+  return httpGet<string, IJsonResult<ISimpleTenant>>(`/sys/tenant/simple/${id}`)
 }
 
 /** 分页查询所有 */
@@ -34,5 +39,5 @@ export const updateTenantApi = (data: ISysTenant) => {
 
 /** 删除 */
 export const deleteTenantApi = (id: string) => {
-  return httpDelete<number, IJsonResult<boolean>>(`/sys/tenant/${id}`)
+  return httpDelete<string, IJsonResult<boolean>>(`/sys/tenant/${id}`)
 }

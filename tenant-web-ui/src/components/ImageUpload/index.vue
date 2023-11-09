@@ -96,11 +96,13 @@ $size: 100px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  width: $size;
 }
 
 .avatar-wrapper {
   border: 2px solid #8c939d;
   border-radius: 3px;
+  width: $size;
 }
 
 .avatar-uploader .el-upload:hover {

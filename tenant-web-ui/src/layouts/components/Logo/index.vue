@@ -4,6 +4,7 @@ import { useSettingsStore } from "@/store/modules/settings"
 import logo from "@/assets/layouts/logo.png?url"
 import logoText1 from "@/assets/layouts/logo-text-1.png?url"
 import logoText2 from "@/assets/layouts/logo-text-2.png?url"
+import { useTenantStoreHook } from "@/store/modules/tenant"
 
 interface Props {
   collapse?: boolean
@@ -14,6 +15,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const settingsStore = useSettingsStore()
+const { tenant } = useTenantStoreHook()
 const { layoutMode } = storeToRefs(settingsStore)
 </script>
 
@@ -21,10 +23,12 @@ const { layoutMode } = storeToRefs(settingsStore)
   <div class="layout-logo-container" :class="{ collapse: props.collapse, 'layout-mode-top': layoutMode === 'top' }">
     <transition name="layout-logo-fade">
       <router-link v-if="props.collapse" key="collapse" to="/">
-        <img :src="logo" class="layout-logo" />
+        <img v-if="tenant" :src="tenant.logo" class="layout-logo" />
+        <img v-else :src="logo" class="layout-logo" />
       </router-link>
       <router-link v-else key="expand" to="/">
-        <img :src="layoutMode !== 'left' ? logoText2 : logoText1" class="layout-logo-text" />
+        <img v-if="tenant" :src="tenant.logo" class="layout-logo-text" />
+        <img v-else :src="layoutMode !== 'left' ? logoText2 : logoText1" class="layout-logo-text" />
       </router-link>
     </transition>
   </div>

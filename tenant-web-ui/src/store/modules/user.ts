@@ -113,6 +113,10 @@ export const useUserStore = defineStore("user", () => {
     resetRouter()
     // 关闭 WebSocket
     noticeStore.stopWebSocket()
+    noticeStore.broadcast = []
+    noticeStore.pushNotices = []
+    noticeStore.createTenantNotice = undefined
+
     buttons.value = []
     menus.value = []
     _resetTagsView()

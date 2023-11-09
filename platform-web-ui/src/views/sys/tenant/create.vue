@@ -8,6 +8,8 @@
   <br />
   <el-form ref="entityFormRef" :model="entityForm" :rules="entityFormRules" label-position="right" label-width="100px">
     <template v-if="active === 0">
+      <el-alert title="Logo建议上传, 长宽都是100px的png图片..." type="info" />
+      <br />
       <el-form-item prop="logo" label="Logo">
         <image-upload :key="entityForm.logo" :src="entityForm.logo" @change="getLogoSrc" />
       </el-form-item>

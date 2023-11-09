@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.domain.SimpPushMessage;
 import com.xaaef.molly.common.enums.StatusEnum;
@@ -32,6 +33,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -78,6 +81,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     private final ApiCmsProjectService projectService;
 
     private final SimpMessagingTemplate messagingTemplate;
+
+    private final LiquibaseProperties liquibaseProperties;
 
 
     /**
@@ -147,6 +152,17 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                             .setName(t.getName())
                     ).collect(Collectors.toSet());
         });
+    }
+
+
+    @Override
+    public SysTenant getSimpleById(String id) {
+        var wrapper = new LambdaQueryWrapper<SysTenant>()
+                .select(
+                        List.of(SysTenant::getTenantId, SysTenant::getLogo, SysTenant::getName, SysTenant::getLinkman)
+                )
+                .eq(SysTenant::getTenantId, id);
+        return baseMapper.selectOne(wrapper);
     }
 
 
@@ -270,8 +286,10 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         var initTenantDTO = new SysTenantDTO();
         BeanUtils.copyProperties(sysTenant, initTenantDTO);
 
+        var loginUser = getLoginUser();
+
         // 初始化租户数据
-        initData(initTenantDTO, initUserDTO);
+        initData(loginUser, initTenantDTO, initUserDTO);
 
         return TenantCreatedSuccessVO.builder()
                 .adminMobile(po.getAdminMobile())
@@ -285,7 +303,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void resetData(String tenantId) {
+    public boolean resetData(String tenantId) {
         if (!isMasterUser() && !isAdminUser()) {
             throw new RuntimeException("非系统管理员，无法重置租户数据！");
         }
@@ -308,20 +326,50 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                 .setAdminEmail(source.getEmail())
                 .setAdminPwd(password);
 
-        // 删库，
-        dataSourceManager.deleteTable(source.getTenantId());
+        // 获取当前数据库中，的所有表
+        var tableNames = baseMapper.selectListTableNames();
 
-        // 重新创建库，创建数据
-        initData(initTenantDTO, initUser);
+        // 移除 liquibase 版本控制，使用的数据库表格。默认是 DATABASECHANGELOGLOCK , DATABASECHANGELOG
+        var excludeTableNames = List.of(liquibaseProperties.getDatabaseChangeLogLockTable(),
+                liquibaseProperties.getDatabaseChangeLogLockTable().toLowerCase(),
+                liquibaseProperties.getDatabaseChangeLogLockTable().toUpperCase(),
+                liquibaseProperties.getDatabaseChangeLogTable(),
+                liquibaseProperties.getDatabaseChangeLogTable().toLowerCase(),
+                liquibaseProperties.getDatabaseChangeLogTable().toUpperCase());
+
+        tableNames.removeAll(new HashSet<>(excludeTableNames));
+
+        // 状态 设置为初始化中...
+        source.setStatus((byte) 9);
+        super.updateById(source);
+
+        var loginUser = getLoginUser();
+
+        delegate(tenantId,
+                // 异步 清空所有表的数据
+                () -> CompletableFuture.runAsync(() -> {
+                    baseMapper.truncateTableData(tableNames);
+                }).whenComplete((val, ex) -> {
+                    if (ex == null) {
+                        // 重新 更新表结构，初始化数据
+                        initData(loginUser, initTenantDTO, initUser);
+                    } else {
+                        log.error("truncateTableData error: {} ", ex.getMessage());
+                    }
+                })
+        );
+
+        return true;
     }
 
 
     // 初始化 数据库表结构 和 默认数据
-    private void initData(SysTenantDTO tenant, InitUserDTO initUser) {
-        // 获取 当前登录的用户
-        var loginUser = getLoginUser();
+    private void initData(JwtLoginUser loginUser, SysTenantDTO initTenant, InitUserDTO initUser) {
+        if (loginUser == null || initTenant == null || initUser == null) {
+            return;
+        }
         // 异步初始化  数据库表结构  和  基础数据
-        dataSourceManager.asyncUpdateTable(tenant.getTenantId(),
+        dataSourceManager.asyncUpdateTable(initTenant.getTenantId(),
                 (Exception ex) -> {
                     // 设置登录用户
                     JwtSecurityUtils.setLoginUser(loginUser);
@@ -332,25 +380,25 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                             .setCreateTime(LocalDateTime.now());
                     if (ex == null) {
                         // 将 新创建的 租户ID 保存到 redis 中
-                        tenantManager.addTenantId(tenant.getTenantId());
+                        tenantManager.addTenantId(initTenant.getTenantId());
 
                         // 初始化 用户 角色 部门
                         userService.initUserAndRoleAndDept(initUser);
 
                         // 初始化 项目
-                        projectService.initProject(tenant);
+                        projectService.initProject(initTenant);
 
                         // 将状态修改为 初始化成功
                         var t1 = new SysTenant()
-                                .setTenantId(tenant.getTenantId())
+                                .setTenantId(initTenant.getTenantId())
                                 .setStatus((byte) 1);
 
                         baseMapper.updateById(t1);
-                        msg.setContent(String.format("租户 %s 初始化数据完成！", tenant.getName()));
+                        msg.setContent(String.format("租户 %s 初始化数据完成！", initTenant.getName()));
                     } else {
-                        log.error("tenantId: {} async update table : \n{}", tenant.getTenantId(), ex.getMessage());
+                        log.error("tenantId: {} async update table : \n{}", initTenant.getTenantId(), ex.getMessage());
                         msg.setStatus((byte) 0);
-                        msg.setContent(String.format("租户 %s 初始化数据异常，原因 %s ！", tenant.getName(), ex.getMessage()));
+                        msg.setContent(String.format("租户 %s 初始化数据异常，原因 %s ！", initTenant.getName(), ex.getMessage()));
                     }
                     messagingTemplate.convertAndSendToUser(loginUser.getLoginId(), QUEUE_SINGLE_CREATE_TENANT, JsonUtils.toJson(msg));
                     // 清除登录的用户信息
