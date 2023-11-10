@@ -11,31 +11,11 @@
  Target Server Version : 80034 (8.0.34)
  File Encoding         : 65001
 
- Date: 09/11/2023 16:22:22
+ Date: 10/11/2023 11:55:27
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for china_area
--- ----------------------------
-DROP TABLE IF EXISTS `china_area`;
-CREATE TABLE `china_area`  (
-  `area_code` bigint UNSIGNED NOT NULL COMMENT '行政代码 [ 唯一 ]',
-  `level` tinyint UNSIGNED NOT NULL COMMENT '层级 1.省级  2.城市  3.区域',
-  `parent_code` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '父级行政代码',
-  `zip_code` mediumint UNSIGNED NOT NULL DEFAULT 0 COMMENT '邮政编码',
-  `city_code` char(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '区号',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '名称',
-  `short_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '简称',
-  `merger_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '组合名',
-  `pinyin` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '拼音',
-  `lng` decimal(10, 6) NOT NULL DEFAULT 0.000000 COMMENT '经度',
-  `lat` decimal(10, 6) NOT NULL DEFAULT 0.000000 COMMENT '纬度',
-  PRIMARY KEY (`area_code`) USING BTREE,
-  UNIQUE INDEX `area_code`(`area_code` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '[ 通用 ] 中国行政地区表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of china_area
