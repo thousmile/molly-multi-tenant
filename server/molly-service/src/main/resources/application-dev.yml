@@ -28,8 +28,8 @@ spring:
       time-to-live: 180s
 
 
-  #文件存储配置
-  file-storage:
+dromara:
+  x-file-storage: #文件存储配置
     default-platform: qiniu-kodo-1 #默认使用的存储平台
     thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
     qiniu-kodo: # 七牛云 kodo
@@ -81,3 +81,4 @@ knife4j:
   setting:
     language: zh_cn
     version: 1.0.1
+

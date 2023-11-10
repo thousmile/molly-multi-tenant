@@ -3,8 +3,6 @@ package com.xaaef.molly.system.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
-import cn.xuyanwu.spring.file.storage.FileInfo;
-import cn.xuyanwu.spring.file.storage.recorder.FileRecorder;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xaaef.molly.common.util.JsonUtils;
@@ -12,6 +10,8 @@ import com.xaaef.molly.system.entity.SysFileDetail;
 import com.xaaef.molly.system.mapper.SysFileDetailMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.x.file.storage.core.FileInfo;
+import org.dromara.x.file.storage.core.recorder.FileRecorder;
 import org.springframework.stereotype.Service;
 
 /**

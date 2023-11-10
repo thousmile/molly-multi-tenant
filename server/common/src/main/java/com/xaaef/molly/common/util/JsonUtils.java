@@ -1,6 +1,8 @@
 package com.xaaef.molly.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -98,7 +100,9 @@ public class JsonUtils {
      */
     public static String toFormatJson(Object data) {
         try {
-            return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(data);
+            var prettyPrinter = new DefaultPrettyPrinter();
+            prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
+            return MAPPER.writer().with(prettyPrinter).writeValueAsString(data);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
         }

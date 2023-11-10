@@ -1,6 +1,6 @@
 package com.xaaef.molly;
 
-import cn.xuyanwu.spring.file.storage.spring.EnableFileStorage;
+import org.dromara.x.file.storage.spring.EnableFileStorage;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

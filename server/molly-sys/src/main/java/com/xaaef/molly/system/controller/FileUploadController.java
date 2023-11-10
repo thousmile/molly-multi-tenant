@@ -1,20 +1,19 @@
 package com.xaaef.molly.system.controller;
 
 import cn.hutool.core.io.FileUtil;
-import cn.xuyanwu.spring.file.storage.FileStorageService;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.system.po.ImageSizePO;
 import com.xaaef.molly.system.vo.FileInfoVO;
+import com.xaaef.molly.system.vo.FileUploadTokenVO;
 import com.xaaef.molly.web.repeat.NoRepeatSubmit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.dromara.x.file.storage.core.FileStorageService;
+import org.dromara.x.file.storage.core.platform.QiniuKodoFileStorage;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -37,7 +36,6 @@ import java.time.LocalDate;
 public class FileUploadController {
 
     private final FileStorageService storageService;
-
 
     /**
      * 上传文件，成功返回文件 url
@@ -116,6 +114,25 @@ public class FileUploadController {
     public JsonResult<Boolean> delete(String fileUrl) {
         var ok = storageService.delete(fileUrl);
         return JsonResult.success(ok);
+    }
+
+
+    /**
+     * 获取文件上传使用的token
+     */
+    @NoRepeatSubmit
+    @Operation(summary = "获取上传Token", description = "获取文件上传Token")
+    @GetMapping("/token")
+    public JsonResult<FileUploadTokenVO> uploadToken() {
+        var fileStorage = (QiniuKodoFileStorage) storageService.getFileStorage();
+        var uploadToken = fileStorage.getClient().getAuth().uploadToken(fileStorage.getBucketName());
+        var result = new FileUploadTokenVO()
+                .setToken(uploadToken)
+                .setPlatform(fileStorage.getPlatform())
+                .setBucketName(fileStorage.getBucketName())
+                .setDomain(fileStorage.getDomain())
+                .setBasePath(fileStorage.getBasePath());
+        return JsonResult.success(result);
     }
 
 

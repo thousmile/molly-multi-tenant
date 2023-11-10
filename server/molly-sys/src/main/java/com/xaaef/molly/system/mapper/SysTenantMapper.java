@@ -5,10 +5,8 @@ import com.xaaef.molly.system.entity.SysTenant;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.scheduling.annotation.Async;
 
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 
 public interface SysTenantMapper extends BaseMapper<SysTenant> {

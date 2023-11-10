@@ -38,7 +38,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- spring-file-storage -->
-        <storage.version>1.0.3</storage.version>
+        <storage.version>2.0.0</storage.version>
         <qiniu.version>7.14.0</qiniu.version>
         <oshi.version>6.4.6</oshi.version>
 

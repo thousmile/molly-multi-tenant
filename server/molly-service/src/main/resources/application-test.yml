@@ -30,6 +30,21 @@ spring:
       time-to-live: 180s
 
 
+dromara:
+  x-file-storage: #文件存储配置
+    default-platform: qiniu-kodo-1 #默认使用的存储平台
+    thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
+    qiniu-kodo: # 七牛云 kodo
+      - platform: qiniu-kodo-1 # 存储平台标识
+        enable-storage: true  # 启用存储
+        access-key: 123456
+        secret-key: 123456
+        bucket-name: 123456
+        domain: https://oss.baidu.com/       # 访问域名，注意“/”结尾，例如：http://abc.hn-bkt.clouddn.com/
+        base-path: molly/                     # 基础路径
+
+
+
 # mybatis-plus 日志打印
 mybatis-plus:
   configuration:

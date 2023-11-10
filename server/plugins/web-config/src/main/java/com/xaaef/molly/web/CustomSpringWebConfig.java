@@ -29,8 +29,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.xaaef.molly.common.util.IpUtils.getLocalIPS;
 
@@ -72,8 +76,10 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 登录接口，也需要，添加租户ID
-        var whiteList = Arrays.stream(JwtConst.WHITE_LIST)
+        var whiteList = Stream.of(JwtConst.WHITE_LIST, JwtConst.TENANT_WHITE_LIST)
+                .flatMap(Stream::of)
                 .filter(s -> !JwtConst.LOGIN_URL.equals(s))
+                .distinct()
                 .collect(Collectors.toList());
 
         var multiTenantProperties = tenantService.getByMultiTenantProperties();

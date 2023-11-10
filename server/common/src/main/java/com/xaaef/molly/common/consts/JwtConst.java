@@ -25,7 +25,6 @@ public class JwtConst {
             String.format("%s/**", CAPTCHA_CODES_URL),
             String.format("%s/**", STOMP_ENDPOINT),
             "/actuator/**",
-            "/sys/tenant/simple/search",
             "/v2/api-docs",
             "/v3/api-docs/**",
             "/doc.html",
@@ -38,5 +37,12 @@ public class JwtConst {
             "/error",
             "/error/**"
     };
+
+
+    // 不需要添加租户的路径
+    public static final String[] TENANT_WHITE_LIST = {
+            "/upload/**",
+    };
+
 
 }

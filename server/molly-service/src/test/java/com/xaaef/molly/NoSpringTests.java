@@ -7,6 +7,7 @@ import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.IdUtil;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
+import com.xaaef.molly.common.consts.JwtConst;
 import com.xaaef.molly.common.util.JsonUtils;
 import liquibase.integration.spring.MultiTenantSpringLiquibase;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.xaaef.molly.common.util.IpUtils.getLocalIPS;
 
@@ -102,6 +106,22 @@ public class NoSpringTests {
         liquibase1.setChangeLog("C:\\Users\\demo\\code\\javaProjects\\molly-multi-tenant\\server\\molly-service\\src\\main\\resources\\db\\changelog-other.xml");
         liquibase1.setSchemas(List.of("hello1", "hello2"));
         liquibase1.afterPropertiesSet();
+    }
+
+
+    @Test
+    public void test11() throws Exception {
+        // 登录接口，也需要，添加租户ID
+        var whiteList = Stream.of(JwtConst.WHITE_LIST, JwtConst.TENANT_WHITE_LIST)
+                .flatMap(Stream::of)
+                .filter(s -> !JwtConst.LOGIN_URL.equals(s))
+                .distinct()
+                .collect(Collectors.toList());
+        String formatJson = JsonUtils.toFormatJson(Map.of(
+                "data", whiteList,
+                "time", LocalTime.now()
+        ));
+        System.out.println(formatJson);
     }
 
 
