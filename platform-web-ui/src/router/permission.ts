@@ -6,7 +6,7 @@ import { useNoticeStoreHook } from "@/store/modules/notice"
 
 import { ElMessage } from "element-plus"
 import { useTitle } from "@/hooks/useTitle"
-import { getToken } from "@/utils/cache/cookies"
+import { getToken } from "@/utils/cache/local-storage"
 import { fixBlankPage } from "@/utils/fix-blank-page"
 import { setRouteChange } from "@/hooks/useRouteListener"
 import { isWhiteList, loginUrl } from "@/config/white-list"

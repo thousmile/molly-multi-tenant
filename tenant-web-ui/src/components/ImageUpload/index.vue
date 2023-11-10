@@ -22,7 +22,7 @@ import { Plus } from "@element-plus/icons-vue"
 import type { UploadProps } from "element-plus"
 import { deleteFile } from "@/api/upload"
 import { getEnvBaseURLPrefix } from "@/utils"
-import { getToken } from "@/utils/cache/cookies"
+import { getToken } from "@/utils/cache/local-storage"
 import { useUserStoreHook } from "@/store/modules/user"
 
 const props = defineProps({

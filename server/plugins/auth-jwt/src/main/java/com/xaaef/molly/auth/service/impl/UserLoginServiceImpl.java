@@ -190,6 +190,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         // 获取 登录用户，拥有的角色
         var roles = roleService.listByUserId(target.getUserId());
         if (roles.isEmpty()) {
+            target.setRoles(new HashSet<>());
             return;
         }
         target.setRoles(roles);

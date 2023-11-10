@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { computed } from "vue"
 import { storeToRefs } from "pinia"
 import { useSettingsStore } from "@/store/modules/settings"
 import logo from "@/assets/layouts/logo.png?url"
@@ -15,7 +16,11 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const settingsStore = useSettingsStore()
-const { tenant } = useTenantStoreHook()
+
+const tenant = computed(() => {
+  return useTenantStoreHook().tenant
+})
+
 const { layoutMode } = storeToRefs(settingsStore)
 </script>
 
@@ -23,11 +28,11 @@ const { layoutMode } = storeToRefs(settingsStore)
   <div class="layout-logo-container" :class="{ collapse: props.collapse, 'layout-mode-top': layoutMode === 'top' }">
     <transition name="layout-logo-fade">
       <router-link v-if="props.collapse" key="collapse" to="/">
-        <img v-if="tenant" :src="tenant.logo" class="layout-logo" />
+        <img v-if="tenant" :key="tenant.tenantId" :src="tenant.logo" class="layout-logo" />
         <img v-else :src="logo" class="layout-logo" />
       </router-link>
       <router-link v-else key="expand" to="/">
-        <img v-if="tenant" :src="tenant.logo" class="layout-logo-text" />
+        <img v-if="tenant" :key="tenant.tenantId" :src="tenant.logo" class="layout-logo-text" />
         <img v-else :src="layoutMode !== 'left' ? logoText2 : logoText1" class="layout-logo-text" />
       </router-link>
     </transition>
@@ -43,9 +48,11 @@ const { layoutMode } = storeToRefs(settingsStore)
   background-color: transparent;
   text-align: center;
   overflow: hidden;
+
   .layout-logo {
     display: none;
   }
+
   .layout-logo-text {
     height: 100%;
     vertical-align: middle;
@@ -64,6 +71,7 @@ const { layoutMode } = storeToRefs(settingsStore)
     vertical-align: middle;
     display: inline-block;
   }
+
   .layout-logo-text {
     display: none;
   }

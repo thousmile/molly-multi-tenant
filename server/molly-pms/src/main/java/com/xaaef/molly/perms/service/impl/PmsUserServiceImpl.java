@@ -271,11 +271,12 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
                     userMenus.putAll(menuMap);
                 }
             } else {
-                // 获取当前用户，拥有的 角色ID
-                var roleIds = getLoginUser().getRoles().stream().map(PmsRoleDTO::getRoleId).collect(Collectors.toSet());
-                if (roleIds.isEmpty()) {
+                var loginUser = getLoginUser();
+                if (loginUser.getRoles() == null || loginUser.getRoles().isEmpty()) {
                     return new UserRightsVO().setButtons(new HashSet<>()).setMenus(new ArrayList<>());
                 }
+                // 获取当前用户，拥有的 角色ID
+                var roleIds = loginUser.getRoles().stream().map(PmsRoleDTO::getRoleId).collect(Collectors.toSet());
                 // 根据 角色ID , 获取全部菜单
                 var menuIds = roleMapper.selectMenuIdByRoleIds(roleIds);
                 if (menuIds.isEmpty()) {

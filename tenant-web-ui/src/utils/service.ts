@@ -2,7 +2,7 @@ import axios, { AxiosResponse, type AxiosInstance, type AxiosRequestConfig } fro
 import { useUserStoreHook } from "@/store/modules/user"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { get, merge } from "lodash-es"
-import { getToken } from "./cache/cookies"
+import { getToken } from "./cache/local-storage"
 import { useProjectStoreHook } from "@/store/modules/project"
 import { getEnvBaseURLPrefix } from "."
 import { ISimpleProject } from "@/types/base"

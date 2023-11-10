@@ -6,9 +6,24 @@ import { type ThemeName } from "@/hooks/useTheme"
 import { type TagView } from "@/store/modules/tags-view"
 import { type LayoutSettings } from "@/config/layouts"
 import { type ISimpleTenant } from "@/types/base"
-import { defaultTenant } from "@/utils"
+import { defaultTenant, hashCode } from "@/utils"
 import { ILoginData } from "@/types/pms"
 import { encode, decode } from "js-base64"
+import { isJSON } from "../validate"
+
+//#region token
+export const getToken = () => {
+  return localStorage.getItem(CacheKey.TOKEN)
+}
+
+export const setToken = (token: string) => {
+  localStorage.setItem(CacheKey.TOKEN, token)
+}
+
+export const removeToken = () => {
+  localStorage.removeItem(CacheKey.TOKEN)
+}
+//#endregion
 
 //#region 系统布局配置
 export const getConfigLayout = () => {
@@ -74,7 +89,7 @@ export const setCachedViews = (views: string[]) => {
 //#region 租户选择
 export const getCurrentTenant = () => {
   let jsonStr = localStorage.getItem(CacheKey.TENANT_ID)
-  if (jsonStr === null || jsonStr === undefined || jsonStr === "") {
+  if (!jsonStr || !isJSON(jsonStr)) {
     setCurrentTenant(defaultTenant)
     jsonStr = localStorage.getItem(CacheKey.TENANT_ID)
   }
@@ -102,16 +117,47 @@ export const setControlSize = (size: string) => {
 
 //#region 获取保存的 用户名和密码
 export const getUserAndPassword = () => {
-  const jsonStr = localStorage.getItem(CacheKey.USER_AND_PASSWORD)
-  if (jsonStr) {
-    return JSON.parse(decode(jsonStr)) as ILoginData
+  const base64Str = localStorage.getItem(CacheKey.USER_AND_PASSWORD)
+  if (base64Str) {
+    // 第一次 base64 解密
+    const desVal1 = decode(base64Str)
+    if (desVal1) {
+      // 根据 userAgent 生成 hashCode
+      const hc = hashCode(navigator.userAgent)
+      // hashCode 。base64 加密
+      const salt = encode(hc.toString())
+      // 祛除盐
+      const desVal2Str = desVal1.replaceAll(`${salt}=.`, "")
+      const desVal3Json = decode(desVal2Str)
+      if (isJSON(desVal3Json)) {
+        const data = JSON.parse(desVal3Json) as ILoginData
+        let saltPassword = decode(data.password)
+        saltPassword = saltPassword.replaceAll(`${hc}`, "")
+        const password = saltPassword.replaceAll(`${salt}`, "")
+        data.password = password
+        return data
+      }
+    }
+    removeUserAndPassword()
   }
   return null
 }
 
 // 保存 用户名和密码
 export function setUserAndPassword(data: ILoginData) {
-  return localStorage.setItem(CacheKey.USER_AND_PASSWORD, encode(JSON.stringify(data)))
+  // 根据 userAgent 生成 hashCode
+  const hc = hashCode(navigator.userAgent)
+  // hashCode 。base64 加密
+  const salt = encode(hc.toString())
+  // 将 用户密码加盐，再加密
+  data.password = encode(`${hc}${data.password}${salt}`)
+  // 将 用户名和密码转json 。base64 加密
+  const encodeVal = encode(JSON.stringify(data))
+  // 再 拼接上盐
+  const newVal = `${salt}=.${encodeVal}`
+  // 再次 base64 加密
+  const newVal2 = encode(newVal)
+  return localStorage.setItem(CacheKey.USER_AND_PASSWORD, newVal2)
 }
 
 // 删除 用户名和密码

@@ -462,7 +462,6 @@ const handleAdd = () => {
   dialogVisible.value = true
 }
 
-
 const handleCommand = (command: string, data: ISysTenant) => {
   switch (command) {
     case "ResetData":

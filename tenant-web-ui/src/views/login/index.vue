@@ -7,9 +7,16 @@ import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import { v4 as uuidv4 } from "uuid"
 import { getEnvBaseURL } from "@/utils"
-import { getUserAndPassword, setUserAndPassword, removeUserAndPassword } from "@/utils/cache/local-storage"
+import {
+  getUserAndPassword,
+  setUserAndPassword,
+  removeUserAndPassword,
+  setLastTenantId,
+  getLastTenantId
+} from "@/utils/cache/local-storage"
 import { type ILoginData } from "@/types/pms"
-import { merge } from "lodash-es"
+import { merge, clone } from "lodash-es"
+import { useProjectStoreHook } from "@/store/modules/project"
 
 const router = useRouter()
 
@@ -70,13 +77,23 @@ const handleLogin = () => {
       useUserStore()
         .userLogin(loginFormData)
         .then(() => {
+          // 获取 上一次登录的租户Id。如果和本次不同，清空项目缓存
+          if (getLastTenantId() !== loginFormData.tenantId) {
+            // 将项目，重置为 默认项目
+            useProjectStoreHook().resetCurrentProject()
+          }
           // 登录成功后，是否记住密码 ?
-          loginFormData.rememberMe ? setUserAndPassword(loginFormData) : removeUserAndPassword()
+          if (loginFormData.rememberMe) {
+            const saveUserInfo = clone(loginFormData)
+            setUserAndPassword(saveUserInfo)
+          } else {
+            removeUserAndPassword()
+          }
+          setLastTenantId(loginFormData.tenantId)
           router.push({ path: "/" })
         })
         .catch(() => {
           createCode()
-          loginFormData.password = ""
         })
         .finally(() => {
           loading.value = false

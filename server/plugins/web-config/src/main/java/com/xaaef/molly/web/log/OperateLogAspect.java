@@ -82,7 +82,7 @@ public class OperateLogAspect {
             timeCost = System.currentTimeMillis() - startTime;
         } catch (Throwable ew) {
             ex = ew;
-            log.error(ew.getCause().getClass().getName(), ew.getMessage());
+            log.error(ew.getMessage());
             result = JsonResult.fail(ew.getMessage());
         } finally {
             //方法执行完成后增加日志

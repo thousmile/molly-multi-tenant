@@ -118,3 +118,13 @@ export function isTelphone(value: string) {
   const reg = /^[1][0-9]{10}$|^0\d{2,3}-?\d{7,8}$/
   return reg.test(value)
 }
+
+/** 字符串是否为 Json  */
+export function isJSON(value: string) {
+  try {
+    JSON.parse(value)
+    return true
+  } catch (error) {
+    return false
+  }
+}

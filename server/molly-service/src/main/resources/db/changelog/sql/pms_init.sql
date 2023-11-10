@@ -54,6 +54,15 @@ VALUES
 -- Records of pms_user_role
 -- ----------------------------
 INSERT INTO `pms_user_role` (`user_id`, `role_id`) VALUES
+(19980817, 10001),
+(6569516164032, 10002),
+(6569516878992, 10003);
+
+
+-- ----------------------------
+-- Records of pms_role_menu
+-- ----------------------------
+INSERT INTO `pms_role_menu` (`role_id`, `menu_id`) VALUES
 (10001, 10001),
 (10001, 10002),
 (10001, 10003),
@@ -129,8 +138,6 @@ INSERT INTO `pms_user_role` (`user_id`, `role_id`) VALUES
 (10003, 10005),
 (10003, 10006),
 (10003, 10007);
-
-
 
 
 SET FOREIGN_KEY_CHECKS = 1;

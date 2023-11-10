@@ -105,6 +105,24 @@ export const resetConfigLayout = () => {
 }
 
 /**
+ * 将字符串，转为 hashCode
+ * @param {string} str
+ * @returns {number}
+ */
+export const hashCode = (str: string) => {
+  let hash = 0
+  if (str.length == 0) {
+    return hash
+  }
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash = hash & hash
+  }
+  return hash
+}
+
+/**
  * @param {string} url
  * @returns {Object}
  */

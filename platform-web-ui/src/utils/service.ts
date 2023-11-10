@@ -2,7 +2,7 @@ import axios, { AxiosResponse, type AxiosInstance, type AxiosRequestConfig } fro
 import { useUserStoreHook } from "@/store/modules/user"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { get, merge } from "lodash-es"
-import { getToken } from "./cache/cookies"
+import { getToken } from "./cache/local-storage"
 import { useTenantStoreHook } from "@/store/modules/tenant"
 import { useProjectStoreHook } from "@/store/modules/project"
 import { getEnvBaseURLPrefix } from "."
@@ -159,7 +159,7 @@ function createRequest(service: AxiosInstance) {
     const projectId = useProjectStoreHook().getCurrentProjectId()
     // 如果是登录接口，就使用默认的 租户ID 进行登录
     const tenantId = config.url === "/auth/login" ? defaultTenant.tenantId : useTenantStoreHook().getCurrentTenantId()
-    const defaultConfig = {
+    const defaultConfig: AxiosRequestConfig = {
       headers: {
         // 携带 Token
         Authorization: tokenValue ? tokenValue : "",
@@ -167,6 +167,7 @@ function createRequest(service: AxiosInstance) {
         "x-project-id": projectId,
         "Content-Type": "application/json"
       },
+      // 请求超时时间，10 秒
       timeout: 10000,
       baseURL: getEnvBaseURLPrefix()
     }

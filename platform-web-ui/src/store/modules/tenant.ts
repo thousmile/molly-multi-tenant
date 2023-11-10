@@ -32,8 +32,7 @@ export const useTenantStore = defineStore("tenant", () => {
 
   // 重置当前操作的租户
   const resetCurrentTenant = (): void => {
-    currentTenant.value = defaultTenant
-    setTenant(defaultTenant)
+    setCurrentTenant(defaultTenant)
   }
 
   // 获取当前租户

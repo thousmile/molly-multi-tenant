@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from "uuid"
 import { getEnvBaseURL } from "@/utils"
 import { getUserAndPassword, setUserAndPassword, removeUserAndPassword } from "@/utils/cache/local-storage"
 import { type ILoginData } from "@/types/pms"
-import { merge } from "lodash-es"
+import { merge, clone } from "lodash-es"
 
 const router = useRouter()
 
@@ -38,6 +38,7 @@ if (source) {
   source.codeText = ""
   merge(target, source)
 }
+
 /** 登录表单数据 */
 const loginFormData: ILoginData = reactive(target)
 
@@ -66,12 +67,16 @@ const handleLogin = () => {
         .userLogin(loginFormData)
         .then(() => {
           // 登录成功后，是否记住密码 ?
-          loginFormData.rememberMe ? setUserAndPassword(loginFormData) : removeUserAndPassword()
+          if (loginFormData.rememberMe) {
+            const saveUserInfo = clone(loginFormData)
+            setUserAndPassword(saveUserInfo)
+          } else {
+            removeUserAndPassword()
+          }
           router.push({ path: "/" })
         })
         .catch(() => {
           createCode()
-          loginFormData.password = ""
         })
         .finally(() => {
           loading.value = false
