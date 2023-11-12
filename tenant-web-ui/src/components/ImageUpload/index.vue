@@ -1,5 +1,5 @@
 <template>
-  <div class="avatar-wrapper">
+  <div id="imageUpload">
     <el-upload
       class="avatar-uploader"
       :action="getAction"
@@ -10,7 +10,9 @@
       accept=".jpg,.jpeg,.png,.gif"
     >
       <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-      <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+      <el-icon v-else class="avatar-uploader-icon">
+        <Plus />
+      </el-icon>
     </el-upload>
   </div>
 </template>
@@ -78,50 +80,53 @@ const regular = new RegExp("(image/jpg|image/jpeg|image/png|image/gif|)")
 
 const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
   if (!regular.test(rawFile.type)) {
-    ElMessage.error("头像只能是[ jpeg , png , jpg , gif ]的图片格式")
+    ElMessage.error("图片只能是[ jpeg , png , jpg , gif ]的图片格式")
     return false
   } else if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error("头像图片大小不能超过2MB")
+    ElMessage.error("图片大小不能超过2MB")
     return false
   }
   return true
 }
 </script>
 
+<style lang="scss">
+$size: 100px;
+
+#imageUpload {
+  .avatar-uploader {
+    .el-upload {
+      border: 1px dashed var(--el-border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: var(--el-transition-duration-fast);
+    }
+
+    .el-upload:hover {
+      border-color: var(--el-color-primary);
+    }
+  }
+
+  .el-icon.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: $size;
+    height: $size;
+    text-align: center;
+  }
+}
+</style>
+
 <style lang="scss" scoped>
 $size: 100px;
-.avatar-uploader .el-upload {
-  border: 1px solid #78f00e;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  width: $size;
-}
 
-.avatar-wrapper {
-  border: 2px solid #8c939d;
-  border-radius: 3px;
-  width: $size;
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: $size;
-  height: $size;
-  line-height: $size;
-  text-align: center;
-}
-
-.avatar {
-  width: $size;
-  height: $size;
-  display: block;
-  border-radius: 5px;
+.avatar-uploader {
+  .avatar {
+    width: $size;
+    height: $size;
+    display: block;
+  }
 }
 </style>
