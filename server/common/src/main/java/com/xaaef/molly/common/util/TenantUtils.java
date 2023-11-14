@@ -8,6 +8,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Objects;
+import java.util.Optional;
 
 
 /**
@@ -31,6 +32,8 @@ public class TenantUtils {
 
     private final static ThreadLocal<String> TENANT_ID_THREAD_LOCAL = new NamedInheritableThreadLocal<>("TENANT_ID_THREAD_LOCAL");
 
+    // 租户用户。使用 自定义的 租户ID。
+    private final static ThreadLocal<Boolean> USE_CUSTOM_TENANT_ID_THREAD_LOCAL = new NamedInheritableThreadLocal<>("USE_CUSTOM_TENANT_ID_THREAD_LOCAL");
 
     private final static ThreadLocal<Long> PROJECT_ID_THREAD_LOCAL = new NamedInheritableThreadLocal<>("PROJECT_ID_THREAD_LOCAL");
 
@@ -100,6 +103,27 @@ public class TenantUtils {
             PROJECT_ID_THREAD_LOCAL.set(projectId);
         } else {
             PROJECT_ID_THREAD_LOCAL.remove();
+        }
+    }
+
+
+    /**
+     * 租户用户。使用自定义的 租户ID
+     */
+    public static boolean getUseCustomTenantId() {
+        return Optional.ofNullable(USE_CUSTOM_TENANT_ID_THREAD_LOCAL.get())
+                .orElse(false);
+    }
+
+
+    /**
+     * 租户用户。使用自定义的 租户ID
+     */
+    public static void setUseCustomTenantId(Boolean flag) {
+        if (flag != null) {
+            USE_CUSTOM_TENANT_ID_THREAD_LOCAL.set(flag);
+        } else {
+            USE_CUSTOM_TENANT_ID_THREAD_LOCAL.remove();
         }
     }
 

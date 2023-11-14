@@ -62,8 +62,10 @@ public class SchemaInterceptor implements InnerInterceptor {
 
 
     private String getCurrentTenantId() {
-        // 判断当前此请求，是否已经登录。
-        if (JwtSecurityUtils.isAuthenticated()) {
+        // 默认租户
+        var defaultTenantId = multiTenantProperties.getDefaultTenantId();
+        // 1.判断当前此请求，是否已经登录。 2.判断 是否使用自定义 租户Id
+        if (JwtSecurityUtils.isAuthenticated() && !TenantUtils.getUseCustomTenantId()) {
             // 判断登录的用户类型。
             // 系统用户:  可以操作任何一个 租户 的数据库。
             // 租户用户:  只能操作 所在租户 的数据库
@@ -74,7 +76,7 @@ public class SchemaInterceptor implements InnerInterceptor {
             }
         }
         return Optional.ofNullable(TenantUtils.getTenantId())
-                .orElse(multiTenantProperties.getDefaultTenantId());
+                .orElse(defaultTenantId);
     }
 
 

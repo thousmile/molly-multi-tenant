@@ -18,11 +18,19 @@ public class DelegateUtils {
      * @author WangChenChen
      * @date 2022/12/14 16:33
      */
-    public static <S> S delegate(String targetTenant, Supplier<S> fun) {
+    public static <S> S delegate(String targetTenantId, Supplier<S> fun) {
+        // 获取 原始 租户ID
         var originalTenantId = TenantUtils.getTenantId();
-        TenantUtils.setTenantId(targetTenant);
+        // 使用 自定义的 租户ID
+        TenantUtils.setUseCustomTenantId(true);
+        // 设置 目标 租户ID
+        TenantUtils.setTenantId(targetTenantId);
+        // 调用目标方法
         var result = fun.get();
+        // 设置 原始 租户ID
         TenantUtils.setTenantId(originalTenantId);
+        // 清除 使用 自定义的 租户ID
+        TenantUtils.setUseCustomTenantId(null);
         return result;
     }
 
