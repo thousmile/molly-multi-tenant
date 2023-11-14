@@ -86,12 +86,14 @@ public class SchemaInterceptor implements InnerInterceptor {
         try {
             conn.createStatement().execute(sql);
         } catch (SQLException e) {
+            log.error("switchSchema: \n{}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
 
     private final static TablesNamesFinder TABLES_NAMES_FINDER = new TablesNamesFinder();
+
 
     /**
      * 解析 sql 获取全部的 表名称
@@ -101,7 +103,7 @@ public class SchemaInterceptor implements InnerInterceptor {
         try {
             statements = CCJSqlParserUtil.parseStatements(sql);
         } catch (JSQLParserException e) {
-            e.printStackTrace();
+            log.error("getTableListName: \n{}", e.getMessage());
             return Set.of();
         }
         return statements.getStatements()
