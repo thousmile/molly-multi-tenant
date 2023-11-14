@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { reactive, ref } from "vue"
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 import { useUserStore } from "@/store/modules/user"
 import { type FormInstance, type FormRules } from "element-plus"
 import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue"
@@ -17,6 +17,9 @@ import {
 import { type ILoginData } from "@/types/pms"
 import { merge, clone } from "lodash-es"
 import { useProjectStoreHook } from "@/store/modules/project"
+import { getSimpleTenantApi } from "@/api/tenant"
+import { ISimpleTenant } from "@/types/base"
+import logoPng from "@/assets/layouts/logo.png?url"
 
 const router = useRouter()
 
@@ -112,21 +115,73 @@ const createCode = () => {
   codeUrl.value = `${getEnvBaseURL()}/auth/captcha/codes?codeKey=${loginFormData.codeKey}&r=${Math.random()}`
 }
 
+/** 判断租户ID 是否存在 */
+const getSimpleTenant = async (tenantId: string) => {
+  const { data } = await getSimpleTenantApi(tenantId)
+  return data
+}
+
 /** 初始化验证码 */
 createCode()
+
+const route = useRoute()
+const tenantId = ref()
+
+if (route.query.tenantId) {
+  // 从 URL 参数中获取 租户ID http://molly.xaaef.com/tenant/#/login?tenantId=google
+  tenantId.value = route.query.tenantId as string
+} else {
+  // 如果 URL 参数中没有，那么就从 域名前缀截取
+  // 如 http://google.molly.xaaef.com/tenant/#/login 截取 google
+  const domain = location.hostname
+  const idx1 = domain.indexOf(".")
+  tenantId.value = domain.substring(0, idx1)
+}
+
+const simpleTenant = ref<ISimpleTenant>()
+
+if (tenantId.value) {
+  console.log("tenantId :>>", tenantId.value)
+  getSimpleTenant(tenantId.value).then((data) => {
+    if (data) {
+      target.tenantId = tenantId.value
+      simpleTenant.value = data
+    } else {
+      tenantId.value = null
+    }
+  })
+}
 </script>
 
 <template>
   <div class="login-container">
     <ThemeSwitch class="theme-switch" />
     <div class="login-card">
-      <div class="title">
-        <strong>{{ appTitle }}</strong>
+      <div class="head">
+        <div class="img">
+          <el-avatar v-if="simpleTenant" :size="80" :src="simpleTenant.logo" />
+          <el-avatar v-else :size="80" :src="logoPng" />
+        </div>
+        <div class="title">
+          <template v-if="simpleTenant">
+            {{ appTitle.replaceAll("Molly", `${simpleTenant.name} `) }}
+          </template>
+          <template v-else>
+            {{ appTitle }}
+          </template>
+        </div>
       </div>
       <div class="content">
         <el-form ref="loginFormRef" :model="loginFormData" :rules="loginFormRules" @keyup.enter="handleLogin">
-          <el-form-item prop="tenantId">
-            <el-input v-model.trim="loginFormData.tenantId" placeholder="租户Id" type="text" tabindex="1" size="large">
+          <el-form-item prop="tenantId" v-if="!tenantId">
+            <el-input
+              v-model.trim="loginFormData.tenantId"
+              placeholder="租户Id"
+              type="text"
+              tabindex="1"
+              size="large"
+              clearable
+            >
               <template #prefix>
                 <SvgIcon name="peoples" />
               </template>
@@ -140,6 +195,7 @@ createCode()
               tabindex="2"
               :prefix-icon="User"
               size="large"
+              clearable
             />
           </el-form-item>
           <el-form-item prop="password">
@@ -150,6 +206,7 @@ createCode()
               tabindex="3"
               :prefix-icon="Lock"
               size="large"
+              clearable
               show-password
             />
           </el-form-item>
@@ -160,8 +217,9 @@ createCode()
               type="text"
               tabindex="4"
               :prefix-icon="Key"
-              maxlength="7"
+              maxlength="4"
               size="large"
+              clearable
             >
               <template #append>
                 <el-image :src="codeUrl" @click="createCode" class="code-url" draggable="false">
@@ -212,14 +270,17 @@ createCode()
     background-color: #fff;
     overflow: hidden;
 
-    .title {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 60px;
+    .head {
+      text-align: center;
 
-      img {
-        height: 100%;
+      .img {
+        margin: 10px 0px;
+      }
+
+      .title {
+        font-weight: 600;
+        font-size: larger;
+        margin-bottom: 10px;
       }
     }
 

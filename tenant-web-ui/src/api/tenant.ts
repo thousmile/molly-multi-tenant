@@ -12,6 +12,11 @@ export const getTenantApi = (id: string) => {
   return httpGet<string, IJsonResult<ISysTenant>>(`/sys/tenant/${id}`)
 }
 
+/** 根据Id判断是否存在 */
+export const existTenantApi = (id: string) => {
+  return httpGet<string, IJsonResult<boolean>>(`/sys/tenant/exist/${id}`)
+}
+
 /** 根据Id简单查询 */
 export const getSimpleTenantApi = (id: string) => {
   return httpGet<string, IJsonResult<ISimpleTenant>>(`/sys/tenant/simple/${id}`)

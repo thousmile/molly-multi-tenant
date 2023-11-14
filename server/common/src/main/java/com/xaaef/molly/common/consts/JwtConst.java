@@ -25,6 +25,8 @@ public class JwtConst {
             String.format("%s/**", CAPTCHA_CODES_URL),
             String.format("%s/**", STOMP_ENDPOINT),
             "/actuator/**",
+            // 判断租户是否存在
+            "/sys/tenant/simple/*",
             "/v2/api-docs",
             "/v3/api-docs/**",
             "/doc.html",

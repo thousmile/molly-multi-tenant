@@ -116,6 +116,7 @@ createCode()
               tabindex="1"
               :prefix-icon="User"
               size="large"
+              clearable
             />
           </el-form-item>
           <el-form-item prop="password">
@@ -127,6 +128,7 @@ createCode()
               :prefix-icon="Lock"
               size="large"
               show-password
+              clearable
             />
           </el-form-item>
           <el-form-item prop="codeText">
@@ -136,8 +138,9 @@ createCode()
               type="text"
               tabindex="3"
               :prefix-icon="Key"
-              maxlength="7"
+              maxlength="4"
               size="large"
+              clearable
             >
               <template #append>
                 <el-image :src="codeUrl" @click="createCode" class="code-url" draggable="false">

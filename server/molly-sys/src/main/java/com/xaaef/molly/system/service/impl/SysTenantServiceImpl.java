@@ -159,7 +159,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     public SysTenant getSimpleById(String id) {
         var wrapper = new LambdaQueryWrapper<SysTenant>()
                 .select(
-                        List.of(SysTenant::getTenantId, SysTenant::getLogo, SysTenant::getName, SysTenant::getLinkman)
+                        List.of(SysTenant::getTenantId, SysTenant::getLogo, SysTenant::getName)
                 )
                 .eq(SysTenant::getTenantId, id);
         return baseMapper.selectOne(wrapper);
