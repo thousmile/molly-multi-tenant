@@ -36,3 +36,12 @@
 .el-date-editor.el-input__wrapper {
   width: 100%;
 }
+
+.el-dropdown {
+  line-height: 1.6;
+
+  .el-dropdown-link {
+    cursor: pointer;
+    outline: none;
+  }
+}

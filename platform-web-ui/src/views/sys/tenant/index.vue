@@ -82,7 +82,10 @@
               <el-link :icon="Edit" type="warning" @click="handleEdit(scope.row)">编辑</el-link>
               &nbsp;
               <!-- v-admin 只有管理员才可以 删除租户、重置数据 -->
-              <el-dropdown v-admin @command="(cmd: string) => handleCommand(cmd, scope.row)">
+              <el-dropdown
+                @command="(cmd: string) => handleCommand(cmd, scope.row)"
+                v-if="!isDefaultTenantId(scope.row.tenantId)"
+              >
                 <span class="el-dropdown-link">
                   更多
                   <el-icon class="el-icon--right">
@@ -95,12 +98,12 @@
                     <el-dropdown-item command="QRcode">
                       <template #default><SvgIcon name="qrcode" />&nbsp;生成二维码</template>
                     </el-dropdown-item>
-                    <el-dropdown-item v-if="!isDefaultTenantId(scope.row.tenantId)" :icon="Refresh" command="ResetData">
-                      重置数据
-                    </el-dropdown-item>
-                    <el-dropdown-item v-if="!isDefaultTenantId(scope.row.tenantId)" :icon="Delete" command="Delete">
-                      删除
-                    </el-dropdown-item>
+                    <div v-admin>
+                      <el-dropdown-item :icon="Refresh" command="ResetData">重置数据</el-dropdown-item>
+                    </div>
+                    <div v-admin>
+                      <el-dropdown-item :icon="Delete" command="Delete">删除</el-dropdown-item>
+                    </div>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -288,8 +291,7 @@ import { isEmail, isTelphone } from "@/utils/validate"
 import { futureShortcuts } from "@/utils"
 import { useNoticeStoreHook } from "@/store/modules/notice"
 import QRCodeVue3 from "qrcode-vue3"
-import logoPng from "@/assets/layouts/logo.png?url"
-import { downloadFile, getFileBlob } from "@/utils/service"
+import { getFileBlob } from "@/utils/service"
 
 const dictStore = useDictStoreHook()
 
