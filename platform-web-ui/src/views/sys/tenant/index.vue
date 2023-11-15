@@ -91,7 +91,11 @@
                 </span>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item v-if="!isDefaultTenantId(scope.row.tenantId)" :icon="Link" command="ResetData">
+                    <el-dropdown-item :icon="Link" command="Jump">跳转客户系统</el-dropdown-item>
+                    <el-dropdown-item command="QRcode">
+                      <template #default><SvgIcon name="qrcode" />&nbsp;生成二维码</template>
+                    </el-dropdown-item>
+                    <el-dropdown-item v-if="!isDefaultTenantId(scope.row.tenantId)" :icon="Refresh" command="ResetData">
                       重置数据
                     </el-dropdown-item>
                     <el-dropdown-item v-if="!isDefaultTenantId(scope.row.tenantId)" :icon="Delete" command="Delete">
@@ -117,6 +121,24 @@
         />
       </div>
     </el-card>
+
+    <!-- 生成二维码弹窗 -->
+    <el-dialog v-model="qrCodeDialog.visible" :title="qrCodeDialog.title" width="500px">
+      <div style="text-align: center">
+        <el-link type="primary" :href="qrCodeDialog.link" target="_blank">
+          {{ qrCodeDialog.link }}
+        </el-link>
+        <br />
+        <br />
+        <QRCodeVue3
+          :key="qrCodeDialog.tenantId"
+          :width="300"
+          :value="qrCodeDialog.link"
+          :imageOptions="{ hideBackgroundDots: true, imageSize: 0.4, margin: 0 }"
+          :image="qrCodeDialog.logo"
+        />
+      </div>
+    </el-dialog>
 
     <!-- 新增和修改的弹窗 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="50%" :close-on-click-modal="false">
@@ -251,7 +273,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed, watch } from "vue"
-import { Plus, Edit, Delete, Search, UserFilled, Loading, Link } from "@element-plus/icons-vue"
+import { Plus, Edit, Delete, Search, UserFilled, Loading, Link, Refresh } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { queryTenantApi, updateTenantApi, deleteTenantApi, resetDataTenantApi } from "@/api/tenant"
 import { listTemplateApi } from "@/api/template"
@@ -265,6 +287,9 @@ import { showExpiredDateAgo, showStringOverflow, showChinaArea, isDefaultTenantI
 import { isEmail, isTelphone } from "@/utils/validate"
 import { futureShortcuts } from "@/utils"
 import { useNoticeStoreHook } from "@/store/modules/notice"
+import QRCodeVue3 from "qrcode-vue3"
+import logoPng from "@/assets/layouts/logo.png?url"
+import { downloadFile, getFileBlob } from "@/utils/service"
 
 const dictStore = useDictStoreHook()
 
@@ -470,11 +495,47 @@ const handleCommand = (command: string, data: ISysTenant) => {
     case "Delete":
       handleDelete(data)
       break
+    case "Jump":
+      window.open(genTenantLink(data.tenantId), "_blank")
+      break
+    case "QRcode":
+      getFileBlob(data.logo)
+        .then((blob) => {
+          const reader = new FileReader()
+          reader.readAsDataURL(blob)
+          reader.onload = () => {
+            qrCodeDialog.value.title = `扫码进入 ${data.name} 客户管理系统`
+            qrCodeDialog.value.link = genTenantLink(data.tenantId)
+            qrCodeDialog.value.tenantId = data.tenantId
+            const base64 = reader.result as string
+            qrCodeDialog.value.logo = base64
+            qrCodeDialog.value.visible = true
+          }
+          reader.onerror = (err) => console.log("err :>> ", err)
+        })
+        .catch((err) => {
+          console.log("QRcode error :>> ", err)
+        })
+      break
     default:
       console.log("command :>> ", command)
       break
   }
 }
+
+const qrCodeDialog = ref({
+  visible: false,
+  title: "",
+  tenantId: "",
+  link: "",
+  logo: ""
+})
+
+// 生成租户二级域名跳转链接
+const genTenantLink = (tenantId: string) => {
+  return `http://${tenantId}.${import.meta.env.VITE_TENANT_LINK}`
+}
+
 // 删除
 const handleDelete = (data: ISysTenant) => {
   ElMessageBox.prompt(`请在下方的输入框中填写租户ID`, `确要删除 ${data.name} 吗?`, {

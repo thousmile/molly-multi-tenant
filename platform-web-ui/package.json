@@ -38,6 +38,7 @@
     "path-browserify": "1.0.1",
     "path-to-regexp": "6.2.1",
     "pinia": "2.1.7",
+    "qrcode-vue3": "^1.6.8",
     "screenfull": "6.0.2",
     "sockjs-client": "^1.6.1",
     "uuid": "^9.0.1",

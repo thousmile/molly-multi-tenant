@@ -8,6 +8,7 @@ import { useProjectStoreHook } from "@/store/modules/project"
 import { getEnvBaseURLPrefix } from "."
 import { ISimpleProject, ISimpleTenant } from "@/types/base"
 import { defaultTenant } from "@/utils"
+import { v4 as uuidv4 } from "uuid"
 
 /** 创建请求实例 */
 function createService() {
@@ -26,7 +27,7 @@ function createService() {
       const apiData = response.data
       // 二进制数据则直接返回
       const responseType = response.request?.responseType
-      if (responseType === "blob" || responseType === "arraybuffer") return apiData
+      if (responseType === "blob" || responseType === "arraybuffer") return response
       // 这个 code 是和后端约定的业务 code
       const code = apiData.status
       // 如果没有 code, 代表这不是项目后端开发的 api
@@ -217,4 +218,41 @@ function httpDelete<T, P>(url: string, params?: T): Promise<P> {
   return httpRequest<P>({ method: "delete", url, params })
 }
 
-export { httpRequest, httpGet, httpPost, httpPut, httpDelete, axiosRequest }
+/** 单独抽离的 文件下载 工具函数 */
+async function downloadFile(url: string, fileName?: string): Promise<void> {
+  const { data, headers } = await axios.get(url, { responseType: "blob" })
+  if (!fileName) {
+    const fn1 = headers["content-disposition"]
+    if (fn1) {
+      fileName = fn1.replace(/\w+;filename=(.*)/, "$1")
+    } else {
+      fileName = uuidv4().replace(/-/g, "")
+    }
+  }
+  const urlObject = window.URL || window.webkitURL
+  const downloadUrl = urlObject.createObjectURL(data)
+  const link = document.createElement("a")
+  link.href = downloadUrl
+  link.download = fileName!
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  urlObject.revokeObjectURL(downloadUrl)
+}
+
+/** 单独抽离的 文件下载 工具函数 */
+function getFileBlob(url: string): Promise<Blob> {
+  // 单独处理自定义请求/响应回掉
+  return new Promise((resolve, reject) => {
+    axios
+      .get(url, { responseType: "blob" })
+      .then((resp) => {
+        const { data, headers } = resp
+        const blob = new Blob([data], { type: headers["content-type"] })
+        resolve(blob)
+      })
+      .catch((error) => reject(error))
+  })
+}
+
+export { httpRequest, httpGet, httpPost, httpPut, httpDelete, axiosRequest, downloadFile, getFileBlob }

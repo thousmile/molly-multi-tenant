@@ -19,7 +19,8 @@ export const existTenantApi = (id: string) => {
 
 /** 根据Id简单查询 */
 export const getSimpleTenantApi = (id: string) => {
-  return httpGet<string, IJsonResult<ISimpleTenant>>(`/sys/tenant/simple/${id}`)
+  const params = { tenantId: id }
+  return httpGet<any, IJsonResult<ISimpleTenant>>("/sys/tenant/simple", params)
 }
 
 /** 分页查询所有 */

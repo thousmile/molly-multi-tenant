@@ -39,8 +39,8 @@ public class SysTenantController {
 
 
     @Operation(summary = "简单Id查询", description = "根据Id查询 最基础的字段")
-    @GetMapping("/simple/{id}")
-    public JsonResult<SysTenant> findSimpleById(@PathVariable("id") String id) {
+    @GetMapping("/simple")
+    public JsonResult<SysTenant> findSimpleById(@RequestParam("tenantId") String id) {
         return JsonResult.success(baseService.getSimpleById(id));
     }
 

@@ -2,6 +2,8 @@ import dayjs from "dayjs"
 import { removeConfigLayout } from "@/utils/cache/local-storage"
 import chinaAreaJson from "@/assets/ChinaArea.json"
 import { ISimpleProject, ISimpleTenant } from "@/types/base"
+import { getFileBlob, httpGet } from "./service"
+import { AxiosResponse } from "axios"
 
 //#region 格式化日期时间
 export const DEFAULT_DATE_TIME_PATTERN = "YYYY-MM-DD HH:mm:ss"
