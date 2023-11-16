@@ -21,7 +21,7 @@ public class ConfigName {
     /**
      * 用户默认密码
      */
-    public static final String USER_DEFAULT_PASSWORD = "user_default_password";
+    public static final String USER_DEFAULT_PASSWORD = "default_user_password";
 
 
     /**

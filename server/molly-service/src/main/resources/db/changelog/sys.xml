@@ -6,9 +6,9 @@
                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
 
-    <!-- [ 租户 ] 租户表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414015975-1">
-        <createTable remarks="[ 租户 ] 租户表" tableName="sys_tenant">
+    <!-- [ 系统 ] 租户表 -->
+    <changeSet context="platform" author="WangChenChen (generated)" id="1699414015975-1">
+        <createTable remarks="[ 系统 ] 租户表" tableName="sys_tenant">
             <column name="tenant_id" remarks="租户 ID" type="VARCHAR(20)">
                 <constraints nullable="false" primaryKey="true" unique="true"/>
             </column>
@@ -55,9 +55,9 @@
     </changeSet>
 
 
-    <!-- [ 租户 ] 租户和权限模板表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414015975-2">
-        <createTable remarks="[ 租户 ] 租户和权限模板表" tableName="sys_tenant_template">
+    <!-- [ 系统 ] 租户和权限模板表 -->
+    <changeSet context="platform" author="WangChenChen (generated)" id="1699414015975-2">
+        <createTable remarks="[ 系统 ] 租户和权限模板表" tableName="sys_tenant_template">
             <column name="tenant_id" remarks="租户ID" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
@@ -68,9 +68,9 @@
     </changeSet>
 
 
-    <!-- [ 租户 ] 用户和租户表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414015975-3">
-        <createTable remarks="[ 租户 ] 用户和租户表" tableName="sys_user_tenant">
+    <!-- [ 系统 ] 用户和租户表 -->
+    <changeSet context="platform" author="WangChenChen (generated)" id="1699414015975-3">
+        <createTable remarks="[ 系统 ] 用户和租户表" tableName="sys_user_tenant">
             <column name="user_id" remarks="用户 ID" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
@@ -81,9 +81,9 @@
     </changeSet>
 
 
-    <!-- [ 租户 ] 权限模板表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414015975-4">
-        <createTable remarks="[ 租户 ] 权限模板表" tableName="sys_template">
+    <!-- [ 系统 ] 权限模板表 -->
+    <changeSet context="platform" author="WangChenChen (generated)" id="1699414015975-4">
+        <createTable remarks="[ 系统 ] 权限模板表" tableName="sys_template">
             <column autoIncrement="true" name="id" remarks="模板ID" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -110,9 +110,9 @@
     </changeSet>
 
 
-    <!-- [ 租户 ] 模板和菜单权限表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414015975-5">
-        <createTable remarks="[ 租户 ] 模板和菜单权限表" tableName="sys_template_menu">
+    <!-- [ 系统 ] 模板和菜单权限表 -->
+    <changeSet context="platform" author="WangChenChen (generated)" id="1699414015975-5">
+        <createTable remarks="[ 系统 ] 模板和菜单权限表" tableName="sys_template_menu">
             <column name="template_id" remarks="模板 ID" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
@@ -124,7 +124,7 @@
 
 
     <!-- 中国行政区域 -->
-    <changeSet author="WangChenChen (generated)" id="1699414053280-1">
+    <changeSet context="platform" author="WangChenChen (generated)" id="1699414053280-1">
         <createTable remarks="[ 通用 ] 中国行政地区表" tableName="china_area">
             <column name="area_code" remarks="行政代码 [ 唯一 ]" type="BIGINT UNSIGNED">
                 <constraints nullable="false" primaryKey="true" unique="true"/>
@@ -164,7 +164,7 @@
 
 
     <!--[ 通用 ]全局配置-->
-    <changeSet author="WangChenChen (generated)" id="1699414059273-1">
+    <changeSet context="platform" author="WangChenChen (generated)" id="1699414059273-1">
         <createTable remarks="[ 通用 ] 参数配置表" tableName="sys_config">
             <column autoIncrement="true" name="config_id" remarks="参数主键" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -199,7 +199,7 @@
 
 
     <!--[ 通用 ] 字典类型表-->
-    <changeSet author="WangChenChen (generated)" id="1699412931547-1">
+    <changeSet context="platform" author="WangChenChen (generated)" id="1699412931547-1">
         <createTable remarks="[ 通用 ] 字典类型表" tableName="sys_dict_type">
             <column autoIncrement="true" name="type_id" remarks="字典类型 ID" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -231,7 +231,7 @@
 
 
     <!--[ 通用 ] 字典数据表-->
-    <changeSet author="WangChenChen (generated)" id="1699414089273-1">
+    <changeSet context="platform" author="WangChenChen (generated)" id="1699414089273-1">
         <createTable remarks="[ 通用 ] 字典数据表" tableName="sys_dict_data">
             <column autoIncrement="true" name="dict_code" remarks="字典编码" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -269,7 +269,7 @@
 
 
     <!--[ 通用 ] 菜单权限表-->
-    <changeSet author="WangChenChen (generated)" id="1699414100077-1">
+    <changeSet context="platform" author="WangChenChen (generated)" id="1699414100077-1">
         <createTable remarks="[ 通用 ] 菜单权限表" tableName="sys_menu">
             <column autoIncrement="true" name="menu_id" remarks="菜单ID" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -301,7 +301,8 @@
             <column defaultValueNumeric="1" name="visible" remarks="菜单状态（1.显示 0.隐藏）" type="TINYINT(4)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="2" name="target" remarks="0.租户用户   1. 系统用户   2.全部用户" type="TINYINT(4)">
+            <column defaultValueNumeric="2" name="target" remarks="0.租户用户   1. 系统用户   2.全部用户"
+                    type="TINYINT(4)">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="keep_alive" remarks="保持状态（1.保持 0.不保持）" type="TINYINT(4)">
@@ -325,7 +326,7 @@
 
 
     <!--[ 通用 ] 文件记录表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414106974-1">
+    <changeSet context="platform" author="WangChenChen (generated)" id="1699414106974-1">
         <createTable remarks="[ 通用 ] 文件记录表" tableName="sys_file_detail">
             <column name="id" remarks="文件id" type="VARCHAR(32)">
                 <constraints nullable="false" primaryKey="true"/>

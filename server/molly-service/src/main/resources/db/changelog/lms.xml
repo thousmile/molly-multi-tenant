@@ -7,7 +7,7 @@
 
 
     <!-- [ 日志 ] 操作日志 -->
-    <changeSet author="WangChenChen (generated)" id="1699414162182-1">
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414162182-1">
         <createTable remarks="[ 日志 ] 操作日志" tableName="lms_oper_log">
             <column name="id" remarks="ID" type="VARCHAR(50)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -47,7 +47,7 @@
 
 
     <!-- [ 日志 ] 登录日志 -->
-    <changeSet author="WangChenChen (generated)" id="1699414165075-1">
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414165075-1">
         <createTable remarks="[ 日志 ] 登录日志" tableName="lms_login_log">
             <column name="id" remarks="ID" type="VARCHAR(50)">
                 <constraints nullable="false" primaryKey="true"/>

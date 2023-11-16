@@ -7,7 +7,7 @@
 
 
     <!-- [ 核心 ] 项目表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414175082-1">
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414175082-1">
         <createTable remarks="[ 项目 ] 项目表" tableName="cms_project">
             <column autoIncrement="true" name="project_id" remarks="项目ID" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -57,7 +57,7 @@
 
 
     <!-- [ 项目 ] 设备表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414177577-1">
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414177577-1">
         <createTable remarks="[ 项目 ] 设备表" tableName="cms_device">
             <column name="device_id" remarks="设备ID" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>

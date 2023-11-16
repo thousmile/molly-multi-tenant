@@ -38,7 +38,8 @@ public class LiquibaseConfig {
         var liquibase1 = new MultiTenantSpringLiquibase();
         liquibase1.setDataSource(dataSource);
         liquibase1.setResourceLoader(new DefaultResourceLoader());
-        liquibase1.setChangeLog(multiTenantProperties.getOtherChangeLog());
+        liquibase1.setChangeLog(multiTenantProperties.getChangeLog());
+        liquibase1.setContexts(multiTenantProperties.getContexts());
         return liquibase1;
     }
 

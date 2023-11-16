@@ -7,7 +7,7 @@
 
 
     <!-- [ 权限 ] 角色表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414131175-1">
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414131175-1">
         <createTable remarks="[ 权限 ] 角色表" tableName="pms_role">
             <column autoIncrement="true" name="role_id" remarks="角色id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -39,7 +39,7 @@
 
 
     <!-- [ 权限 ] 角色和菜单权限表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414131175-2">
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414131175-2">
         <createTable remarks="[ 权限 ] 角色和菜单权限表" tableName="pms_role_menu">
             <column name="role_id" remarks="角色ID" type="BIGINT">
                 <constraints nullable="false"/>
@@ -52,7 +52,7 @@
 
 
     <!--[ 权限 ] 部门表-->
-    <changeSet author="WangChenChen (generated)" id="1699414139574-1">
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414139574-1">
         <createTable remarks="[ 权限 ] 部门表" tableName="pms_dept">
             <column autoIncrement="true" name="dept_id" remarks="部门 ID" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -96,7 +96,7 @@
 
 
     <!-- [ 权限 ] 部门和菜单权限表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414139574-2">
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414139574-2">
         <createTable remarks="[ 权限 ] 部门和菜单权限表" tableName="pms_dept_menu">
             <column name="dept_id" remarks="部门ID" type="BIGINT">
                 <constraints nullable="false"/>
@@ -108,9 +108,8 @@
     </changeSet>
 
 
-
     <!-- [ 权限 ] 用户表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414146178-1">
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414146178-1">
         <createTable remarks="[ 权限 ] 用户表" tableName="pms_user">
             <column name="user_id" remarks="用户ID" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -163,7 +162,7 @@
 
 
     <!-- [ 权限 ] 用户和角色表 -->
-    <changeSet author="WangChenChen (generated)" id="1699414146178-2">
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414146178-2">
         <createTable remarks="[ 权限 ] 用户和角色表" tableName="pms_user_role">
             <column name="user_id" remarks="用户ID" type="BIGINT">
                 <constraints nullable="false"/>
@@ -176,7 +175,7 @@
 
 
     <!-- [ 权限 ] 用户社交平台登录 -->
-    <changeSet author="WangChenChen (generated)" id="1699414146178-3">
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414146178-3">
         <createTable remarks="[ 权限 ] 用户社交平台登录" tableName="pms_user_social">
             <column autoIncrement="true" name="social_id" remarks="用户社交ID" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>

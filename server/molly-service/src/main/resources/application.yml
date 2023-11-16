@@ -20,14 +20,13 @@ spring:
 
   liquibase:
     enabled: true
-    change-log: ${multi.tenant.master-change-log}
+    change-log: classpath:db/changelog-master.xml
+    contexts: platform,tenant
 
 
 # 多租户配置
 multi:
   tenant:
-    master-change-log: classpath:db/changelog-master.xml
-    other-change-log: classpath:db/changelog-other.xml
     prefix: molly_
     default-tenant-id: master
     default-project-id: 10001
@@ -35,6 +34,8 @@ multi:
     enable: true
     enable-project: true
     create-table: true
+    contexts: tenant
+    change-log: ${spring.liquibase.change-log}
 
 
 # mybatis-plus 自动配置

@@ -27,9 +27,9 @@ public class MultiTenantProperties {
     private Boolean enable = true;
 
     /**
-     * 是否开启租户模式
+     * 是否开启项目模式
      */
-    private Boolean enableProject = false;
+    private Boolean enableProject = true;
 
     /**
      * 数据库名称前缀
@@ -54,16 +54,16 @@ public class MultiTenantProperties {
     /**
      * 创建表结构
      */
-    private Boolean createTable = Boolean.TRUE;
+    private Boolean createTable = true;
 
     /**
-     * 其他 数据库 创建表结构的 Liquibase 文件地址
+     * Liquibase contexts
      */
-    private String otherChangeLog = "classpath:db/changelog-other.xml";
+    private String contexts = "tenant";
 
     /**
-     * 主 数据库 创建表结构的 Liquibase 文件地址
+     * Liquibase 创建表结构的 Liquibase 文件地址
      */
-    private String masterChangeLog = "classpath:db/changelog-master.xml";
+    private String changeLog = "classpath:db/changelog-master.xml";
 
 }
