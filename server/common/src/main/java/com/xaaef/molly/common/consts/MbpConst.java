@@ -79,7 +79,8 @@ public class MbpConst {
      */
     public final static Set<String> PROJECT_IGNORE_TABLES = new HashSet<>(
             Set.of(
-                    "COLUMNS"
+                    "COLUMNS",
+                    "sys_tenant"
             )
     );
 

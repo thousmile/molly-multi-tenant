@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,6 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
     }
 
 
-    @Order(Integer.MIN_VALUE + 20)
     @Override
     public void run(ApplicationArguments args) throws Exception {
         var wrapper = new LambdaQueryWrapper<SysConfig>()
@@ -62,12 +60,14 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
                 .stream()
                 .collect(Collectors.toMap(SysConfig::getConfigKey, SysConfig::getConfigValue));
         hash().putAll(ConfigName.REDIS_CACHE_KEY, configMaps);
+        log.info("SysConfig init success....");
     }
 
 
     @PreDestroy
     public void destroy() {
         redisTemplate.delete(ConfigName.REDIS_CACHE_KEY);
+        log.info("SysConfig destroy success....");
     }
 
 

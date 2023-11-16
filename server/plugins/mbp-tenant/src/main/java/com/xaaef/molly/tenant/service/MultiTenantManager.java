@@ -77,4 +77,13 @@ public interface MultiTenantManager {
     void removeTenantId(String tenantId);
 
 
+    /**
+     * TODO 删除 所有租户 ID
+     *
+     * @author WangChenChen
+     * @date 2022/12/11 9:46
+     */
+    void removeAll();
+
+
 }

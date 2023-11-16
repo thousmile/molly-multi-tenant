@@ -6,10 +6,10 @@ import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.mapper.CmsProjectMapper;
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -30,16 +30,16 @@ import static com.xaaef.molly.common.consts.MbpConst.PROJECT_ID;
 @Component
 @Order(Integer.MIN_VALUE)
 @AllArgsConstructor
-public class ProjectTableRunner implements ApplicationRunner {
+public class ProjectTableRunner implements ServletContextListener {
 
     private final CmsProjectMapper projectMapper;
 
     private final MultiTenantProperties multiTenantProperties;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void contextInitialized(ServletContextEvent sce) {
+        log.info("ProjectTableRunner Initialized .....");
         if (multiTenantProperties.getEnableProject()) {
-            log.info("Execute ProjectTableRunner run() ...");
             // 查询 数据库 所有的 表名称
             var tableNames = projectMapper.selectListTableNames();
             // 查询 数据库 所有包含“project_id”字段的 表名称
@@ -54,6 +54,5 @@ public class ProjectTableRunner implements ApplicationRunner {
             log.info("ignore project_id intercept table name : \n{}", JsonUtils.toJson(MbpConst.PROJECT_IGNORE_TABLES));
         }
     }
-
 
 }

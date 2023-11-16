@@ -87,7 +87,7 @@ public class SchemaDataSourceManager implements DatabaseManager {
         if (tenantIds == null || tenantIds.isEmpty()) {
             return;
         }
-        log.info("update table tenantId: \n{}", JsonUtils.toFormatJson(tenantIds));
+        log.info("update table tenantId: \n{}", JsonUtils.toJson(tenantIds));
         // 拼接数据库前缀。如: molly_google
         var dbNames = tenantIds.stream()
                 .map(tenantId -> multiTenantProperties.getPrefix() + tenantId)
@@ -103,10 +103,10 @@ public class SchemaDataSourceManager implements DatabaseManager {
 
 
     @Override
-    public void deleteTable(String tenantId) {
+    public synchronized void deleteTable(String tenantId) {
         log.warn("tenantId: {} delete table ...", tenantId);
-        String tenantDbName = multiTenantProperties.getPrefix() + tenantId;
-        String sql = String.format("DROP DATABASE %s ;", tenantDbName);
+        var tenantDbName = multiTenantProperties.getPrefix() + tenantId;
+        var sql = String.format("DROP DATABASE %s ;", tenantDbName);
         jdbcTemplate.execute(sql);
     }
 

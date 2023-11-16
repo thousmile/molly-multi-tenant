@@ -2,8 +2,6 @@ package com.xaaef.molly.tenant.service.impl;
 
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -70,19 +68,9 @@ public class RedisMultiTenantManager implements MultiTenantManager {
         redisTemplate.opsForHash().delete(X_TENANT_ID, tenantId);
     }
 
-
-    @PostConstruct
-    public void init() {
-        // 添加默认租户
-        addTenantId(multiTenantProperties.getDefaultTenantId());
-    }
-
-
-    @PreDestroy
-    public void preDestroy() {
+    @Override
+    public void removeAll() {
         redisTemplate.delete(X_TENANT_ID);
-        log.info("delete the tenantId in redis ...");
     }
-
 
 }
