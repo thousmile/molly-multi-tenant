@@ -25,6 +25,12 @@ public class ConfigName {
 
 
     /**
+     * 项目默认密码
+     */
+    public static final String PROJECT_DEFAULT_PASSWORD = "default_project_password";
+
+
+    /**
      * 租户默认logo
      */
     public static final String TENANT_DEFAULT_LOGO = "default_tenant_logo";

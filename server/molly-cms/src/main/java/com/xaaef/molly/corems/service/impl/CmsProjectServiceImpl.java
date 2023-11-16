@@ -10,6 +10,7 @@ import com.xaaef.molly.corems.po.ProjectQueryPO;
 import com.xaaef.molly.corems.service.CmsProjectService;
 import com.xaaef.molly.corems.vo.ResetPasswordVO;
 import com.xaaef.molly.internal.api.ApiPmsDeptService;
+import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +18,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
+import static com.xaaef.molly.common.consts.ConfigName.PROJECT_DEFAULT_PASSWORD;
 
 
 /**
@@ -39,6 +42,7 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
 
     private final ApiPmsDeptService apiPmsDeptService;
 
+    private final ApiSysConfigService configService;
 
     @Override
     public IPage<CmsProject> pageKeywords(ProjectQueryPO params) {
@@ -78,8 +82,21 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
 
     @Override
     public boolean save(CmsProject entity) {
-        if (StrUtil.isNotEmpty(entity.getPassword())) {
-            entity.setPassword(encryptPassword(entity.getPassword()));
+        if (entity.getDeptId() == null) {
+            throw new RuntimeException("项目所属部门必须填写！");
+        }
+        if (StrUtil.isEmpty(entity.getPassword())) {
+            var password = Optional.ofNullable(configService.getValueByKey(PROJECT_DEFAULT_PASSWORD))
+                    .orElse("123456");
+            entity.setPassword(password);
+        }
+        entity.setPassword(encryptPassword(entity.getPassword()));
+        if (entity.getStatus() == null) {
+            entity.setStatus((byte) 1);
+        }
+        if (entity.getSort() == null) {
+            var sort = (super.count() + 1) * 10;
+            entity.setSort(sort);
         }
         return super.save(entity);
     }

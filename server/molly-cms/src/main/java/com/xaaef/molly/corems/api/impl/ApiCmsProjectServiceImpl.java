@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.encryptPassword;
-import static com.xaaef.molly.common.consts.ConfigName.USER_DEFAULT_PASSWORD;
+import static com.xaaef.molly.common.consts.ConfigName.PROJECT_DEFAULT_PASSWORD;
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 /**
@@ -78,7 +78,7 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void initProject(SysTenantDTO po) {
-        var password = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD))
+        var password = Optional.ofNullable(configService.getValueByKey(PROJECT_DEFAULT_PASSWORD))
                 .orElse("123456");
         // 委托，新的租户id。执行初始化数据
         delegate(po.getTenantId(), () -> {

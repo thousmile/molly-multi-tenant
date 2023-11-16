@@ -1,5 +1,6 @@
 package com.xaaef.molly.system.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.consts.ConfigName;
@@ -8,21 +9,26 @@ import com.xaaef.molly.system.entity.SysConfig;
 import com.xaaef.molly.system.mapper.SysConfigMapper;
 import com.xaaef.molly.system.service.SysConfigService;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
+import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -38,9 +44,31 @@ import java.util.Map;
 @Service
 @AllArgsConstructor
 public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysConfig>
-        implements SysConfigService {
+        implements SysConfigService, ApplicationRunner {
 
     private final StringRedisTemplate redisTemplate;
+
+    private HashOperations<String, Object, Object> hash() {
+        return redisTemplate.opsForHash();
+    }
+
+
+    @Order(Integer.MIN_VALUE + 20)
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        var wrapper = new LambdaQueryWrapper<SysConfig>()
+                .select(SysConfig::getConfigKey, SysConfig::getConfigValue);
+        var configMaps = baseMapper.selectList(wrapper)
+                .stream()
+                .collect(Collectors.toMap(SysConfig::getConfigKey, SysConfig::getConfigValue));
+        hash().putAll(ConfigName.REDIS_CACHE_KEY, configMaps);
+    }
+
+
+    @PreDestroy
+    public void destroy() {
+        redisTemplate.delete(ConfigName.REDIS_CACHE_KEY);
+    }
 
 
     @Override
@@ -67,8 +95,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
             throw new RuntimeException("参数键名，已经存在了！");
         }
         if (StringUtils.isNotBlank(entity.getConfigValue())) {
-            String key = String.format("%s:%s", ConfigName.REDIS_CACHE_KEY, entity.getConfigKey());
-            redisTemplate.opsForValue().set(key, entity.getConfigValue(), Duration.ofHours(1));
+            hash().put(ConfigName.REDIS_CACHE_KEY, entity.getConfigKey(), entity.getConfigValue());
         }
         return super.updateById(entity);
     }
@@ -84,27 +111,27 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
         if (entity == null) {
             throw new RuntimeException("配置不存在！");
         }
-        String key = String.format("%s:%s", ConfigName.REDIS_CACHE_KEY, entity.getConfigKey());
-        redisTemplate.delete(key);
+        hash().delete(ConfigName.REDIS_CACHE_KEY, entity.getConfigKey());
         return super.removeById(entity.getConfigId());
     }
 
 
     @Override
     public String getValueByKey(String configKey) {
-        String key = String.format("%s:%s", ConfigName.REDIS_CACHE_KEY, configKey);
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
-            return redisTemplate.opsForValue().get(key);
+        var flag = hash().hasKey(ConfigName.REDIS_CACHE_KEY, configKey);
+        if (Boolean.TRUE.equals(flag)) {
+            var obj = hash().get(ConfigName.REDIS_CACHE_KEY, configKey);
+            return (String) obj;
         }
         var wrapper = new LambdaQueryWrapper<SysConfig>()
                 .select(SysConfig::getConfigValue)
                 .eq(SysConfig::getConfigKey, configKey);
         var config = baseMapper.selectOne(wrapper);
         if (config != null && StringUtils.isNotBlank(config.getConfigValue())) {
-            redisTemplate.opsForValue().set(key, config.getConfigValue(), Duration.ofHours(1));
+            hash().put(ConfigName.REDIS_CACHE_KEY, configKey, config.getConfigValue());
             return config.getConfigValue();
         }
-        return null;
+        return StrUtil.EMPTY;
     }
 
 
@@ -162,6 +189,5 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
         String str = getValueByKey(configKey);
         return LocalDate.parse(str, DateTimeFormatter.ofPattern(JsonUtils.DEFAULT_DATE_PATTERN));
     }
-
 
 }

@@ -3,6 +3,7 @@ package com.xaaef.molly;
 import cn.hutool.core.util.RandomUtil;
 import com.xaaef.molly.auth.enums.GrantType;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
+import com.xaaef.molly.common.consts.ConfigName;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.GenderType;
 import com.xaaef.molly.common.enums.StatusEnum;
@@ -11,6 +12,7 @@ import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.po.CreateTenantPO;
+import com.xaaef.molly.system.service.SysConfigService;
 import com.xaaef.molly.system.service.SysTenantService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class MollyApplicationTests {
 
     @Autowired
     private SysTenantService tenantService;
+
+    @Autowired
+    private SysConfigService configService;
 
     static {
         var userDetails = new JwtLoginUser()
@@ -78,6 +83,20 @@ public class MollyApplicationTests {
             var end = System.currentTimeMillis() - start;
             System.out.printf("耗时: %d ms\n", end);
         }
+    }
+
+
+    /**
+     * 随机生成租户
+     *
+     * @author WangChenChen
+     * @version 2.0
+     * @date 2023/10/26 9:24
+     */
+    @Test
+    public void test2() throws Exception {
+        var valueByKey = configService.getValueByKey(ConfigName.USER_DEFAULT_PASSWORD);
+        System.out.println(valueByKey);
     }
 
 
