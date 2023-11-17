@@ -99,7 +99,7 @@ public class SysTemplateServiceImpl extends BaseServiceImpl<SysTemplateMapper, S
             throw new RuntimeException(String.format("模板ID %d 不存在！", templateId));
         }
         baseMapper.deleteHaveMenus(templateId);
-        if (menus != null && menus.size() > 0) {
+        if (menus != null && !menus.isEmpty()) {
             return baseMapper.insertByMenus(templateId, menus) > 0;
         }
         return true;

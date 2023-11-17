@@ -54,14 +54,14 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: "update:value", value: String): void
+  (e: "update:value", value: string): void
 }>()
 
 const result = computed({
-  get(): String {
+  get(): string {
     return props.value
   },
-  set(v: String) {
+  set(v: string) {
     emit("update:value", v)
   }
 })

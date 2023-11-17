@@ -101,3 +101,27 @@ export interface IPushMessage {
   /** 状态 0.失败  1.成功  */
   status: number
 }
+
+/** key value */
+export interface IStringEntry {
+  /**
+   * 租户ID
+   */
+  value: string
+  /**
+   * 租户名称
+   */
+  label: string
+}
+
+/** key value */
+export interface INumberEntry {
+  /**
+   * 租户ID
+   */
+  value: number
+  /**
+   * 租户名称
+   */
+  label: string
+}

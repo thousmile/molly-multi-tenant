@@ -148,27 +148,12 @@ import { treeDeptApi, saveDeptApi, updateDeptApi, deleteDeptApi } from "@/api/de
 import { IPmsDept } from "@/types/pms"
 import { ref, onMounted } from "vue"
 import { Plus, Edit, Delete, Sort } from "@element-plus/icons-vue"
-
+import type { CascaderOption, CascaderValue } from "element-plus"
 import { ElMessage, ElMessageBox, FormInstance, FormRules, TableInstance } from "element-plus"
 import { isPhone } from "@/utils/validate"
 import { cloneDeep } from "lodash-es"
 import { showStringOverflow } from "@/hooks/useIndex"
-
-// 部门
-export interface ISimplePmsDept {
-  /**
-   * 部门 ID
-   */
-  value: number
-  /**
-   * 部门 名称
-   */
-  label: string
-  /**
-   * 子部门
-   */
-  children?: ISimplePmsDept[]
-}
+import { flatTreeToCascaderOption } from "@/utils"
 
 /** 加载 */
 const loading = ref(false)
@@ -221,26 +206,11 @@ const entityFormRules: FormRules = {
 }
 
 // 上级权限
-const parentMenus = ref<ISimplePmsDept[]>()
+const parentMenus = ref<CascaderOption[]>()
 
-/** 将权限树形结构扁平化为一维数组，用于权限查询 */
-const flatTree = (arr: IPmsDept[]) => {
-  const result: ISimplePmsDept[] = []
-  const deep = (arr1: IPmsDept[], arr2: ISimplePmsDept[]) => {
-    arr1.forEach((item: IPmsDept) => {
-      const temp: ISimplePmsDept = {
-        value: item.deptId,
-        label: item.deptName
-      }
-      arr2.push(temp)
-      if (item.children && item.children.length > 0) {
-        temp.children = []
-        deep(item.children, temp.children)
-      }
-    })
-  }
-  deep(arr, result)
-  return result
+const cascaderChange = (data: CascaderValue) => {
+  const arr1 = data as number[]
+  entityForm.value.parentId = arr1[arr1.length - 1]
 }
 
 const expandAndCollapse = ref(true)
@@ -265,7 +235,7 @@ const getTableData = () => {
   treeDeptApi()
     .then((resp) => {
       tableData.value = resp.data
-      parentMenus.value = flatTree(resp.data)
+      parentMenus.value = flatTreeToCascaderOption(resp.data, { value: "deptId", label: "deptName" })
     })
     .catch((err) => {
       console.log("err :>> ", err)
@@ -288,10 +258,6 @@ const resetEntity = () => {
     ancestors: "",
     children: []
   }
-}
-
-const cascaderChange = (data: number[]) => {
-  entityForm.value.parentId = data[data.length - 1]
 }
 
 // 添加

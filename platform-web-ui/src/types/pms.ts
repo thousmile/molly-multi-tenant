@@ -1,4 +1,4 @@
-import { IBaseEntity, ISimpleTenant } from "./base"
+import { IBaseEntity, IStringEntry } from "./base"
 
 /** 用户登录 */
 export interface ILoginData {
@@ -268,5 +268,5 @@ export interface IUserListTenant {
   /**
    * 全部 租户信息
    */
-  all: ISimpleTenant[]
+  all: IStringEntry[]
 }

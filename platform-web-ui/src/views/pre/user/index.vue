@@ -301,7 +301,6 @@ import {
 } from "@/api/user"
 import { treeDeptApi } from "@/api/dept"
 import { listRoleApi } from "@/api/role"
-import { ISimpleTenant } from "@/types/base"
 import { IPmsUser, IPmsDept, IPmsRole } from "@/types/pms"
 import UserAvatar from "@/components/UserAvatar/index.vue"
 import UserLoginLog from "@/components/UserLoginLog/index.vue"
@@ -314,6 +313,7 @@ import { useTenantStoreHook } from "@/store/modules/tenant"
 import { futureShortcuts } from "@/utils"
 import { showExpiredDateAgo, showStringOverflow } from "@/hooks/useIndex"
 import { cloneDeep } from "lodash-es"
+import { IStringEntry } from "@/types/base"
 
 // 判读 当前选中的租户是否 默认租户
 const { isDefaultTenantId } = useTenantStoreHook()
@@ -679,7 +679,7 @@ interface LinkTenant {
   visible: boolean
   title: string
   userId: number
-  all: ISimpleTenant[]
+  all: IStringEntry[]
   have: string[]
 }
 

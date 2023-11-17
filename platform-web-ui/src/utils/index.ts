@@ -2,6 +2,7 @@ import dayjs from "dayjs"
 import { removeConfigLayout } from "@/utils/cache/local-storage"
 import chinaAreaJson from "@/assets/ChinaArea.json"
 import { ISimpleProject, ISimpleTenant } from "@/types/base"
+import { CascaderOption } from "element-plus"
 
 //#region 格式化日期时间
 export const DEFAULT_DATE_TIME_PATTERN = "YYYY-MM-DD HH:mm:ss"
@@ -169,6 +170,26 @@ export const chinaAreaDeepQuery = (areaCode: number) => {
   }
   deepSearch(chinaAreaJson, areaCode)
   return node
+}
+
+/** 将权限树形结构扁平化为一维数组，用于权限查询 */
+export const flatTreeToCascaderOption = (arr: any[], { value = "id", label = "label", children = "children" }) => {
+  const result: CascaderOption[] = []
+  const deep = (arr1: any[], arr2: CascaderOption[]) => {
+    arr1.forEach((item: any) => {
+      const temp: CascaderOption = {
+        value: item[value],
+        label: item[label]
+      }
+      arr2.push(temp)
+      if (item[children] && item[children].length > 0) {
+        temp.children = []
+        deep(item[children], temp.children)
+      }
+    })
+  }
+  deep(arr, result)
+  return result
 }
 
 // 未来的时间

@@ -213,24 +213,15 @@ import { ISysMenu } from "@/types/pms"
 import { ref, onMounted } from "vue"
 import { Plus, Edit, Delete, Sort } from "@element-plus/icons-vue"
 import SvgIconSelect from "@/components/SvgIconSelect/index.vue"
-
-import { ElMessage, ElMessageBox, FormInstance, FormRules, TableInstance } from "element-plus"
-
-// 系统权限
-export interface ISimpleSysMenu {
-  /**
-   * 权限 ID
-   */
-  value: number
-  /**
-   * 权限 名称
-   */
-  label: string
-  /**
-   * 子权限
-   */
-  children?: ISimpleSysMenu[]
-}
+import {
+  ElMessage,
+  ElMessageBox,
+  FormInstance,
+  FormRules,
+  TableInstance,
+  type CascaderOption,
+  type CascaderValue
+} from "element-plus"
 
 const dictStore = useDictStoreHook()
 
@@ -286,14 +277,14 @@ const entityFormRules: FormRules = {
 }
 
 // 上级权限
-const parentMenus = ref<ISimpleSysMenu[]>()
+const parentMenus = ref<CascaderOption[]>()
 
 /** 将权限树形结构扁平化为一维数组，用于权限查询 */
 const flatTree = (arr: ISysMenu[]) => {
-  const result: ISimpleSysMenu[] = []
-  const deep = (arr1: ISysMenu[], arr2: ISimpleSysMenu[]) => {
+  const result: CascaderOption[] = []
+  const deep = (arr1: ISysMenu[], arr2: CascaderOption[]) => {
     arr1.forEach((item: ISysMenu) => {
-      const temp: ISimpleSysMenu = {
+      const temp: CascaderOption = {
         value: item.menuId,
         label: item.menuName
       }
@@ -306,6 +297,11 @@ const flatTree = (arr: ISysMenu[]) => {
   }
   deep(arr, result)
   return result
+}
+
+const cascaderChange = (data: CascaderValue) => {
+  const arr1 = data as number[]
+  entityForm.value.parentId = arr1[arr1.length - 1]
 }
 
 const expandAndCollapse = ref(false)
@@ -331,7 +327,7 @@ const getTableData = () => {
     .then((resp) => {
       tableData.value = resp.data
       parentMenus.value = flatTree(resp.data)
-      const temp: ISimpleSysMenu = {
+      const temp: CascaderOption = {
         value: 0,
         label: "顶级权限"
       }
@@ -362,10 +358,6 @@ const resetEntity = () => {
     keepAlive: 0,
     children: []
   }
-}
-
-const cascaderChange = (data: number[]) => {
-  entityForm.value.parentId = data[data.length - 1]
 }
 
 // 添加
