@@ -3,6 +3,7 @@ package com.xaaef.molly.perms.api.impl;
 import cn.hutool.core.util.ReflectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.consts.MbpConst;
+import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiOperateUserService;
 import com.xaaef.molly.internal.api.ApiSysTenantService;
 import com.xaaef.molly.internal.dto.OperateUserDTO;
@@ -67,6 +68,7 @@ public class ApiOperateUserServiceImpl implements ApiOperateUserService {
         }
     }
 
+
     @Override
     public Map<Long, OperateUserDTO> mapOperateUser(Set<Long> userIds) {
         var operateUserMaps = new HashMap<Long, OperateUserDTO>();
@@ -76,13 +78,17 @@ public class ApiOperateUserServiceImpl implements ApiOperateUserService {
         if (!defaultTenantUser.isEmpty()) {
             operateUserMaps.putAll(defaultTenantUser);
         }
-        // 从 当前租户中，获取 用户信息
-        var currentTenantUser = listOperateUser(userIds);
-        if (!currentTenantUser.isEmpty()) {
-            operateUserMaps.putAll(currentTenantUser);
+        // 如果当前是 非默认租户，
+        if (!(defaultTenantId).equals(TenantUtils.getTenantId())) {
+            // 从 当前租户中，获取 用户信息
+            var currentTenantUser = listOperateUser(userIds);
+            if (!currentTenantUser.isEmpty()) {
+                operateUserMaps.putAll(currentTenantUser);
+            }
         }
         return operateUserMaps;
     }
+
 
     private Map<Long, OperateUserDTO> listOperateUser(Set<Long> userIds) {
         var wrapper = new LambdaQueryWrapper<PmsUser>()

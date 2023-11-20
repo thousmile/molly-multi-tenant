@@ -122,14 +122,17 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> exte
             }
         }
         if (StringUtils.isNotBlank(params.getKeywords()) && columns != null && !columns.isEmpty()) {
-            var index = 0;
-            for (SFunction<T, ?> column : columns) {
-                if (index == 0)
-                    wrapper.lambda().like(column, params.getKeywords());
-                else
-                    wrapper.lambda().or().like(column, params.getKeywords());
-                index++;
-            }
+            wrapper.and(childWrapper -> {
+                var index = 0;
+                for (SFunction<T, ?> column : columns) {
+                    if (index == 0) {
+                        childWrapper.lambda().like(column, params.getKeywords());
+                    } else {
+                        childWrapper.lambda().or().like(column, params.getKeywords());
+                    }
+                    index++;
+                }
+            });
         }
         return wrapper;
     }

@@ -18,7 +18,7 @@ const props = defineProps({
   }
 })
 
-const cascaderOptions = flatTreeToCascaderOption(props.options, { value: "deptId", label: "deptName" })
+const cascaderOptions = computed(() => flatTreeToCascaderOption(props.options, { value: "deptId", label: "deptName" }))
 
 const emit = defineEmits<{
   (e: "update:modelValue", value: Number): void

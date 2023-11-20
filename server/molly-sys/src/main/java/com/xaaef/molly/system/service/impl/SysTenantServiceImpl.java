@@ -116,7 +116,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     public IPage<SysTenant> simplePageKeywords(SearchPO params) {
         var wrapper = super.getKeywordsQueryWrapper(
                 params,
-                List.of(SysTenant::getName, SysTenant::getLinkman, SysTenant::getAddress)
+                List.of(SysTenant::getTenantId, SysTenant::getName, SysTenant::getLinkman)
         );
         wrapper.lambda().select(
                 List.of(SysTenant::getTenantId, SysTenant::getLogo, SysTenant::getName, SysTenant::getLinkman)
