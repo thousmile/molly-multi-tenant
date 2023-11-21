@@ -1,6 +1,7 @@
 package com.xaaef.molly.perms.api.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xaaef.molly.common.consts.DefConfigValue;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
@@ -118,7 +119,7 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
         delegate(po.getTenantId(), () -> {
 
             var pmsDept = new PmsDept()
-                    .setDeptId(10001L)
+                    .setDeptId(DefConfigValue.DEFAULT_DEPT_ID)
                     .setParentId(0L)
                     .setDeptName(po.getName())
                     .setLeader(po.getAdminNickname())
@@ -132,7 +133,7 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
 
             var newRoleName = String.format("%s %s", po.getName(), roleName);
             var pmsRole = new PmsRole()
-                    .setRoleId(10001L)
+                    .setRoleId(DefConfigValue.DEFAULT_ROLE_ID)
                     .setRoleName(newRoleName)
                     .setSort(1L)
                     .setDescription(newRoleName);

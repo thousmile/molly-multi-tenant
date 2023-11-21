@@ -66,6 +66,16 @@ public class ProjectIdInterceptor implements HandlerInterceptor {
             var defaultProjectId = tenantService.getByMultiTenantProperties().getDefaultProjectId();
             TenantUtils.setProjectId(defaultProjectId);
         }
+        // 判断当前租户，是否包含此项目ID
+        var flag = tenantService.existTenantIncludeProjectId(TenantUtils.getTenantId(), TenantUtils.getProjectId());
+        if (!flag) {
+            var st = tenantService.getSmallByTenantId(TenantUtils.getTenantId());
+            var err = JsonResult.error(NO_HAVE_PROJECT_PERMISSIONS.getStatus(),
+                    StrUtil.format("租户 {} 暂无，ID为 {} 的项目！", st.getName(), TenantUtils.getProjectId())
+            );
+            ServletUtils.renderError(response, err);
+            return false;
+        }
         // 校验 当前用户是否 有操作此项目的权限
         if (!haveProjectPermissions(response, TenantUtils.getProjectId())) {
             return false;

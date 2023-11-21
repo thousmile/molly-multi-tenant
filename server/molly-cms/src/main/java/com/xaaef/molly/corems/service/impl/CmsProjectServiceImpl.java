@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.common.po.SearchPO;
+import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.mapper.CmsProjectMapper;
 import com.xaaef.molly.corems.po.ProjectQueryPO;
@@ -11,6 +12,7 @@ import com.xaaef.molly.corems.service.CmsProjectService;
 import com.xaaef.molly.corems.vo.ResetPasswordVO;
 import com.xaaef.molly.internal.api.ApiPmsDeptService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
+import com.xaaef.molly.internal.api.ApiSysTenantService;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,9 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
     private final ApiPmsDeptService apiPmsDeptService;
 
     private final ApiSysConfigService configService;
+
+    private final ApiSysTenantService tenantService;
+
 
     @Override
     public IPage<CmsProject> pageKeywords(ProjectQueryPO params) {
@@ -98,7 +103,9 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
             var sort = (super.count() + 1) * 10;
             entity.setSort(sort);
         }
-        return super.save(entity);
+        var flag = super.save(entity);
+        tenantService.tenantAddProjectId(TenantUtils.getTenantId(), entity.getProjectId());
+        return flag;
     }
 
 
@@ -167,7 +174,9 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
         if (!flag) {
             throw new RuntimeException(StrUtil.format("项目 {} 密码输入错误！", dbProject.getProjectName()));
         }
-        return super.removeById(dbProject.getProjectId());
+        var flag2 = super.removeById(dbProject.getProjectId());
+        tenantService.tenantDelProjectId(TenantUtils.getTenantId(), dbProject.getProjectId());
+        return flag2;
     }
 
 

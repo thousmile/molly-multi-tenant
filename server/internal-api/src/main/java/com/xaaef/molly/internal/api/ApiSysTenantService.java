@@ -1,5 +1,6 @@
 package com.xaaef.molly.internal.api;
 
+import com.xaaef.molly.common.domain.SmallTenant;
 import com.xaaef.molly.internal.dto.MultiTenantPropertiesDTO;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
 
@@ -25,12 +26,31 @@ public interface ApiSysTenantService {
 
 
     /**
-     * 根据租户ID 获取租户信息
+     * 判断 租户，是否包含 项目ID 是否存在
      *
      * @author WangChenChen
      * @date 2023/2/14 10:53
      */
-    SysTenantDTO getByTenantId(String tenantId);
+    boolean existTenantIncludeProjectId(String tenantId, Long projectId);
+
+
+    /**
+     * 租户 添加项目ID
+     *
+     * @author WangChenChen
+     * @date 2023/2/14 10:53
+     */
+    void tenantAddProjectId(String tenantId, Long projectId);
+
+
+    /**
+     * 租户 删除项目ID
+     *
+     * @author WangChenChen
+     * @date 2023/2/14 10:53
+     */
+    void tenantDelProjectId(String tenantId, Long projectId);
+
 
     /**
      * 根据租户ID 获取租户信息
@@ -38,7 +58,16 @@ public interface ApiSysTenantService {
      * @author WangChenChen
      * @date 2023/2/14 10:53
      */
-    SysTenantDTO getSimpleByTenantId(String tenantId);
+    SysTenantDTO getByTenantId(String tenantId);
+
+
+    /**
+     * 根据 租户ID 获取租户信息
+     *
+     * @author WangChenChen
+     * @date 2023/2/14 10:53
+     */
+    SmallTenant getSmallByTenantId(String tenantId);
 
 
     /**

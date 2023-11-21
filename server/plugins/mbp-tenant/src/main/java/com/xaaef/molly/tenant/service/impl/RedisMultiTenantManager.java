@@ -1,13 +1,16 @@
 package com.xaaef.molly.tenant.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.xaaef.molly.common.domain.SmallTenant;
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,7 +22,7 @@ import static com.xaaef.molly.common.util.TenantUtils.X_TENANT_ID;
 @AllArgsConstructor
 public class RedisMultiTenantManager implements MultiTenantManager {
 
-    private final StringRedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     private final MultiTenantProperties multiTenantProperties;
@@ -28,14 +31,6 @@ public class RedisMultiTenantManager implements MultiTenantManager {
     @Override
     public String getDefaultTenantId() {
         return multiTenantProperties.getDefaultTenantId();
-    }
-
-
-    @Override
-    public Set<String> getListTenantId() {
-        return redisTemplate.opsForHash().keys(X_TENANT_ID)
-                .stream().map(Object::toString)
-                .collect(Collectors.toSet());
     }
 
 
@@ -52,14 +47,26 @@ public class RedisMultiTenantManager implements MultiTenantManager {
 
 
     @Override
-    public void addTenantId(String tenantId) {
-        redisTemplate.opsForHash().put(X_TENANT_ID, tenantId, tenantId);
+    public SmallTenant getById(String tenantId) {
+        var obj = redisTemplate.opsForHash().get(X_TENANT_ID, tenantId);
+        if (obj == null) {
+            return null;
+        }
+        return BeanUtil.copyProperties(obj, SmallTenant.class);
     }
 
 
     @Override
-    public void addTenantIdBatch(Set<String> tenantIds) {
-        tenantIds.forEach(this::addTenantId);
+    public void addTenantId(SmallTenant tenant) {
+        addTenantIdBatch(Set.of(tenant));
+    }
+
+
+    @Override
+    public void addTenantIdBatch(Set<SmallTenant> tenants) {
+        Map<String, SmallTenant> tenantMaps = tenants.stream()
+                .collect(Collectors.toMap(SmallTenant::getTenantId, t -> t));
+        redisTemplate.opsForHash().putAll(X_TENANT_ID, tenantMaps);
     }
 
 
@@ -68,9 +75,11 @@ public class RedisMultiTenantManager implements MultiTenantManager {
         redisTemplate.opsForHash().delete(X_TENANT_ID, tenantId);
     }
 
+
     @Override
     public void removeAll() {
         redisTemplate.delete(X_TENANT_ID);
     }
+
 
 }

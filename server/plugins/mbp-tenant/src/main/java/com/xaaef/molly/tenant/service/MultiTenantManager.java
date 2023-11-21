@@ -1,6 +1,8 @@
 package com.xaaef.molly.tenant.service;
 
 
+import com.xaaef.molly.common.domain.SmallTenant;
+
 import java.util.Set;
 
 /**
@@ -24,15 +26,6 @@ public interface MultiTenantManager {
 
 
     /**
-     * TODO 获取全部的租户
-     *
-     * @author WangChenChen
-     * @date 2022/12/11 9:46
-     */
-    Set<String> getListTenantId();
-
-
-    /**
      * TODO 判断当前租户是否默认租户ID
      *
      * @author WangChenChen
@@ -51,12 +44,12 @@ public interface MultiTenantManager {
 
 
     /**
-     * TODO 添加租户ID
+     * TODO 根据租户ID 获取信息
      *
      * @author WangChenChen
      * @date 2022/12/11 9:46
      */
-    void addTenantId(String tenantId);
+    SmallTenant getById(String tenantId);
 
 
     /**
@@ -65,7 +58,16 @@ public interface MultiTenantManager {
      * @author WangChenChen
      * @date 2022/12/11 9:46
      */
-    void addTenantIdBatch(Set<String> tenantIds);
+    void addTenantId(SmallTenant tenant);
+
+
+    /**
+     * TODO 添加租户ID
+     *
+     * @author WangChenChen
+     * @date 2022/12/11 9:46
+     */
+    void addTenantIdBatch(Set<SmallTenant> tenants);
 
 
     /**

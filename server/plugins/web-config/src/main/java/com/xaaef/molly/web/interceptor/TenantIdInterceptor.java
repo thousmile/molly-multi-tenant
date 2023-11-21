@@ -3,11 +3,11 @@ package com.xaaef.molly.web.interceptor;
 
 import cn.hutool.core.util.StrUtil;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
+import com.xaaef.molly.common.domain.SmallTenant;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiSysTenantService;
-import com.xaaef.molly.internal.dto.SysTenantDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -94,9 +94,9 @@ public class TenantIdInterceptor implements HandlerInterceptor {
             if (!haveTenantIds.isEmpty() && !haveTenantIds.contains(tenantId)) {
                 var err = StrUtil.format("您没有 租户ID {} 的操作权限！", tenantId);
                 var first = haveTenantIds.stream().findFirst();
-                var result = JsonResult.error(NO_HAVE_TENANT_PERMISSIONS.getStatus(), err, SysTenantDTO.class);
+                var result = JsonResult.error(NO_HAVE_TENANT_PERMISSIONS.getStatus(), err, SmallTenant.class);
                 if (first.isPresent()) {
-                    var firstTenant = tenantService.getSimpleByTenantId(first.get());
+                    var firstTenant = tenantService.getSmallByTenantId(first.get());
                     result.setData(firstTenant);
                 }
                 ServletUtils.renderError(response, result);

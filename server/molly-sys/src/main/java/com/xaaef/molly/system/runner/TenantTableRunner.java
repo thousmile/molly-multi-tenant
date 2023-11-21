@@ -1,9 +1,11 @@
 package com.xaaef.molly.system.runner;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.consts.MbpConst;
+import com.xaaef.molly.common.domain.SmallTenant;
 import com.xaaef.molly.common.util.JsonUtils;
+import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
 import com.xaaef.molly.tenant.DatabaseManager;
@@ -16,6 +18,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +50,9 @@ public class TenantTableRunner implements ServletContextListener {
 
     private final MultiTenantManager tenantManager;
 
+    private final ApiCmsProjectService projectService;
+
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         log.info("TenantTableRunner Initialized .....");
@@ -56,22 +62,39 @@ public class TenantTableRunner implements ServletContextListener {
             // 获取默认租户Id
             var defaultTenantId = props.getDefaultTenantId();
             var wrapper = new LambdaQueryWrapper<SysTenant>()
-                    .select(List.of(SysTenant::getTenantId));
-            var tenantIds = tenantMapper.selectList(wrapper)
+                    .select(List.of(SysTenant::getTenantId, SysTenant::getLogo,
+                            SysTenant::getName, SysTenant::getLinkman));
+            var smallTenantList = tenantMapper.selectList(wrapper)
                     .stream()
-                    .map(SysTenant::getTenantId)
-                    .filter(tenantId -> !StrUtil.equals(tenantId, defaultTenantId))
+                    .map(source -> BeanUtil.copyProperties(source, SmallTenant.class))
                     .collect(Collectors.toSet());
+
+            var tenantIds = smallTenantList.stream()
+                    .map(SmallTenant::getTenantId)
+                    .collect(Collectors.toSet());
+
             // 是否创建表结构
             if (props.getCreateTable()) {
+                var newTenantIds = new HashSet<>(tenantIds);
+                newTenantIds.remove(defaultTenantId);
                 try {
-                    databaseManager.updateTable(tenantIds);
+                    databaseManager.updateTable(newTenantIds);
                 } catch (Exception e) {
                     log.error("updateTable error: \n{}", e.getMessage());
                 }
             }
-            tenantManager.addTenantIdBatch(tenantIds);
-            tenantManager.addTenantId(defaultTenantId);
+
+            var tenantProjectMaps = projectService.mapByTenantDbName(props.getPrefix(), tenantIds);
+
+            smallTenantList.forEach(t -> {
+                t.setProjectIds(new HashSet<>());
+                if (tenantProjectMaps.containsKey(t.getTenantId())) {
+                    var projectIds = tenantProjectMaps.get(t.getTenantId());
+                    t.getProjectIds().addAll(projectIds);
+                }
+            });
+
+            tenantManager.addTenantIdBatch(smallTenantList);
         }
     }
 

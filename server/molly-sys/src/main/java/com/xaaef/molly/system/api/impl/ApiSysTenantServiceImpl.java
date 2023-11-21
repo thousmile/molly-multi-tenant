@@ -1,11 +1,10 @@
 package com.xaaef.molly.system.api.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xaaef.molly.common.domain.SmallTenant;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiSysTenantService;
 import com.xaaef.molly.internal.dto.MultiTenantPropertiesDTO;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
-import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
@@ -35,9 +34,42 @@ public class ApiSysTenantServiceImpl implements ApiSysTenantService {
 
     private final MultiTenantProperties multiTenantProperties;
 
+
     @Override
     public boolean existById(String tenantId) {
         return tenantManager.existById(tenantId);
+    }
+
+
+    @Override
+    public boolean existTenantIncludeProjectId(String tenantId, Long projectId) {
+        var st = getSmallByTenantId(tenantId);
+        if (st == null) {
+            return false;
+        }
+        return st.getProjectIds().contains(projectId);
+    }
+
+
+    @Override
+    public void tenantAddProjectId(String tenantId, Long projectId) {
+        var st = getSmallByTenantId(tenantId);
+        if (st == null) {
+            return;
+        }
+        st.getProjectIds().add(projectId);
+        tenantManager.addTenantId(st);
+    }
+
+
+    @Override
+    public void tenantDelProjectId(String tenantId, Long projectId) {
+        var st = getSmallByTenantId(tenantId);
+        if (st == null) {
+            return;
+        }
+        st.getProjectIds().remove(projectId);
+        tenantManager.addTenantId(st);
     }
 
 
@@ -54,21 +86,8 @@ public class ApiSysTenantServiceImpl implements ApiSysTenantService {
 
 
     @Override
-    public SysTenantDTO getSimpleByTenantId(String tenantId) {
-        var wrapper = new LambdaQueryWrapper<SysTenant>()
-                .select(
-                        SysTenant::getTenantId,
-                        SysTenant::getLogo,
-                        SysTenant::getName,
-                        SysTenant::getLinkman
-                ).eq(SysTenant::getTenantId, tenantId);
-        var source = tenantMapper.selectOne(wrapper);
-        if (source == null) {
-            return null;
-        }
-        var target = new SysTenantDTO();
-        BeanUtils.copyProperties(source, target);
-        return target;
+    public SmallTenant getSmallByTenantId(String tenantId) {
+        return tenantManager.getById(tenantId);
     }
 
 

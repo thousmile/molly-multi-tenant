@@ -1,8 +1,10 @@
 package com.xaaef.molly.corems.api.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xaaef.molly.common.consts.DefConfigValue;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.corems.entity.CmsProject;
+import com.xaaef.molly.corems.entity.TenantAndProject;
 import com.xaaef.molly.corems.mapper.CmsProjectMapper;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.internal.api.ApiPmsDeptService;
@@ -16,9 +18,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.encryptPassword;
@@ -46,6 +46,7 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
     private final CmsProjectMapper projectMapper;
 
     private final ApiSysConfigService configService;
+
 
     public ApiCmsProjectServiceImpl(CmsProjectMapper projectMapper,
                                     ApiSysConfigService configService) {
@@ -83,7 +84,7 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
         // 委托，新的租户id。执行初始化数据
         delegate(po.getTenantId(), () -> {
             var project = new CmsProject()
-                    .setProjectId(10001L)
+                    .setProjectId(DefConfigValue.DEFAULT_PROJECT_ID)
                     .setProjectName("默认项目")
                     .setLinkman(po.getLinkman())
                     .setContactNumber(po.getContactNumber())
@@ -92,8 +93,11 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
                     .setSort(1L)
                     .setPassword(encryptPassword(password))
                     .setStatus((byte) 1)
-                    .setDeptId(10001L);
-            return projectMapper.insert(project);
+                    .setDeptId(DefConfigValue.DEFAULT_DEPT_ID);
+            projectMapper.insert(project);
+            var result = new CmsProjectDTO();
+            BeanUtils.copyProperties(project, result);
+            return result;
         });
     }
 
@@ -116,6 +120,29 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
                 .stream()
                 .map(CmsProject::getProjectId)
                 .collect(Collectors.toSet());
+    }
+
+
+    @Override
+    public Map<String, Set<Long>> mapByTenantDbName(String dbNamePrefix, Collection<String> tenantIds) {
+        if (tenantIds.isEmpty()) {
+            return new HashMap<>();
+        }
+        var tenantDbNameList = tenantIds.stream()
+                .map(tenantId -> dbNamePrefix + tenantId)
+                .collect(Collectors.toSet());
+        return projectMapper.selectListByTenantDbName(new HashSet<>(tenantDbNameList))
+                .stream()
+                .peek(t -> {
+                    var newTenantId = t.getTenantId().replaceFirst(dbNamePrefix, "");
+                    t.setTenantId(newTenantId);
+                })
+                .collect(
+                        Collectors.groupingBy(
+                                TenantAndProject::getTenantId,
+                                Collectors.mapping(project -> project.getProjectId(), Collectors.toSet())
+                        )
+                );
     }
 
 

@@ -1,5 +1,6 @@
 package com.xaaef.molly.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -7,7 +8,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
+import com.xaaef.molly.common.consts.DefConfigValue;
 import com.xaaef.molly.common.domain.SimpPushMessage;
+import com.xaaef.molly.common.domain.SmallTenant;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.IdUtils;
@@ -379,14 +382,16 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                             .setStatus((byte) 1)
                             .setCreateTime(LocalDateTime.now());
                     if (ex == null) {
-                        // 将 新创建的 租户ID 保存到 redis 中
-                        tenantManager.addTenantId(initTenant.getTenantId());
-
                         // 初始化 用户 角色 部门
                         userService.initUserAndRoleAndDept(initUser);
 
                         // 初始化 项目
                         projectService.initProject(initTenant);
+
+                        var smallTenant = BeanUtil.copyProperties(initTenant, SmallTenant.class);
+                        smallTenant.setProjectIds(new HashSet<>(Set.of(DefConfigValue.DEFAULT_PROJECT_ID)));
+                        // 将 新创建的 租户信息 保存到 redis 中
+                        tenantManager.addTenantId(smallTenant);
 
                         // 将状态修改为 初始化成功
                         var t1 = new SysTenant()

@@ -3,6 +3,8 @@ package com.xaaef.molly.internal.api;
 import com.xaaef.molly.internal.dto.CmsProjectDTO;
 import com.xaaef.molly.internal.dto.SysTenantDTO;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -30,6 +32,7 @@ public interface ApiCmsProjectService {
     /**
      * 创建租户  初始化项目
      *
+     * @return
      * @author WangChenChen
      * @date 2023/2/14 10:53
      */
@@ -53,5 +56,12 @@ public interface ApiCmsProjectService {
      */
     Set<Long> listProjectByDeptId(Long deptId);
 
+
+    /**
+     * 根据 租户数据前缀 + 租户ID 获取项目列表
+     *
+     * @date 2023/11/21 15:33
+     */
+    Map<String, Set<Long>> mapByTenantDbName(String dbNamePrefix, Collection<String> tenantIds);
 
 }
