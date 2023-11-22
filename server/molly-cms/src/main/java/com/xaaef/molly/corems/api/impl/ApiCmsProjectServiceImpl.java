@@ -92,7 +92,7 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
                     .setAddress(po.getAddress())
                     .setSort(1L)
                     .setPassword(encryptPassword(password))
-                    .setStatus((byte) 1)
+                    .setStatus(StatusEnum.NORMAL.getCode())
                     .setDeptId(DefConfigValue.DEFAULT_DEPT_ID);
             projectMapper.insert(project);
             var result = new CmsProjectDTO();

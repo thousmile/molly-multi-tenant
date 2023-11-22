@@ -379,7 +379,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                     var msg = new SimpPushMessage()
                             .setId(IdUtils.getStandaloneId())
                             .setTitle("初始化租户数据结果")
-                            .setStatus((byte) 1)
+                            .setStatus(StatusEnum.NORMAL.getCode())
                             .setCreateTime(LocalDateTime.now());
                     if (ex == null) {
                         // 初始化 用户 角色 部门
@@ -396,13 +396,13 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                         // 将状态修改为 初始化成功
                         var t1 = new SysTenant()
                                 .setTenantId(initTenant.getTenantId())
-                                .setStatus((byte) 1);
+                                .setStatus(StatusEnum.NORMAL.getCode());
 
                         baseMapper.updateById(t1);
                         msg.setContent(String.format("租户 %s 初始化数据完成！", initTenant.getName()));
                     } else {
                         log.error("tenantId: {} async update table : \n{}", initTenant.getTenantId(), ex.getMessage());
-                        msg.setStatus((byte) 0);
+                        msg.setStatus(StatusEnum.DISABLE.getCode());
                         msg.setContent(String.format("租户 %s 初始化数据异常，原因 %s ！", initTenant.getName(), ex.getMessage()));
                     }
                     messagingTemplate.convertAndSendToUser(loginUser.getLoginId(), QUEUE_SINGLE_CREATE_TENANT, JsonUtils.toJson(msg));

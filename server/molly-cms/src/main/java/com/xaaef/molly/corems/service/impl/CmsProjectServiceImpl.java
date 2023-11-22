@@ -3,6 +3,7 @@ package com.xaaef.molly.corems.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.corems.entity.CmsProject;
@@ -97,7 +98,7 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
         }
         entity.setPassword(encryptPassword(entity.getPassword()));
         if (entity.getStatus() == null) {
-            entity.setStatus((byte) 1);
+            entity.setStatus(StatusEnum.NORMAL.getCode());
         }
         if (entity.getSort() == null) {
             var sort = (super.count() + 1) * 10;
