@@ -4,6 +4,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xaaef.molly.corems.mapper.CmsProjectMapper">
 
+    <select id="selectListTableNamesByNotIncludeColumn" resultType="java.lang.String">
+        SELECT *
+        FROM (SELECT DISTINCT TABLE_NAME
+              FROM information_schema.COLUMNS
+              WHERE TABLE_SCHEMA = (SELECT DATABASE())) AS allTableName
+        WHERE allTableName.TABLE_NAME NOT IN (SELECT DISTINCT TABLE_NAME
+                                              FROM information_schema.COLUMNS
+                                              WHERE TABLE_SCHEMA = (SELECT DATABASE())
+                                                AND COLUMN_NAME = #{column})
+    </select>
+
 
     <resultMap id="tenantAndProjectMap" type="com.xaaef.molly.corems.entity.TenantAndProject">
         <id property="projectId" column="project_id"/>
@@ -13,7 +24,7 @@
 
     <select id="selectListByTenantDbName" resultMap="tenantAndProjectMap">
         <foreach collection="tenantDbNameList" item="item" separator="union">
-            select project_id, #{item} AS tenant_id from ${item}.cms_project
+            SELECT project_id, #{item} AS tenant_id FROM ${item}.cms_project
         </foreach>
     </select>
 

@@ -40,17 +40,13 @@ public class ProjectTableRunner implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         log.info("ProjectTableRunner Initialized .....");
         if (multiTenantProperties.getEnableProject()) {
-            // 查询 数据库 所有的 表名称
-            var tableNames = projectMapper.selectListTableNames();
-            // 查询 数据库 所有包含“project_id”字段的 表名称
-            Set<String> includeColumnProjectId = projectMapper.selectListTableNamesByIncludeColumn(PROJECT_ID);
-            // 排除 包含 所有包含“project_id”字段的 表名称
-            tableNames.removeAll(includeColumnProjectId);
-            MbpConst.PROJECT_IGNORE_TABLES.addAll(tableNames);
+            // 查询 所有的 不包含 project_id 的表
+            Set<String> tableNames = projectMapper.selectListTableNamesByNotIncludeColumn(PROJECT_ID);
             // 从 CmsProject 实体类中。获取 CmsProject 在 mysql 中的表名称。
             String projectTableName = CmsProject.class.getAnnotation(TableName.class).value();
-            // 添加 CmsProject 的表名称
-            MbpConst.PROJECT_IGNORE_TABLES.add(projectTableName);
+            // 删除 CmsProject 的表名称
+            tableNames.add(projectTableName);
+            MbpConst.PROJECT_IGNORE_TABLES.addAll(tableNames);
             log.info("ignore project_id intercept table name : \n{}", JsonUtils.toJson(MbpConst.PROJECT_IGNORE_TABLES));
         }
     }

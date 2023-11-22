@@ -140,7 +140,7 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
                 .collect(
                         Collectors.groupingBy(
                                 TenantAndProject::getTenantId,
-                                Collectors.mapping(project -> project.getProjectId(), Collectors.toSet())
+                                Collectors.mapping(TenantAndProject::getProjectId, Collectors.toSet())
                         )
                 );
     }
