@@ -73,8 +73,12 @@
                 </span>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item :icon="Link" command="ResetPassword">重置密码</el-dropdown-item>
-                    <el-dropdown-item :icon="Delete" command="Delete">删除</el-dropdown-item>
+                    <div v-has="['cms_project:reset:password']">
+                      <el-dropdown-item :icon="Link" command="ResetPassword">重置密码</el-dropdown-item>
+                    </div>
+					<div v-if="scope.row.projectId !== 10001" v-has="['cms_project:delete']">
+                      <el-dropdown-item :icon="Delete" command="Delete">删除</el-dropdown-item>
+                    </div>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>

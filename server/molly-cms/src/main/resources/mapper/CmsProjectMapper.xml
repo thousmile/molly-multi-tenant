@@ -16,6 +16,18 @@
     </select>
 
 
+    <select id="selectListTableNamesByIncludeColumn" resultType="java.lang.String">
+        SELECT DISTINCT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = (SELECT DATABASE()) AND COLUMN_NAME = #{column}
+    </select>
+
+
+    <delete id="deleteByProjectId">
+        <foreach collection='tableName' item='item' index='index'>
+            DELETE FROM ${item} WHERE `project_id` = #{projectId};
+        </foreach>
+    </delete>
+
+
     <resultMap id="tenantAndProjectMap" type="com.xaaef.molly.corems.entity.TenantAndProject">
         <id property="projectId" column="project_id"/>
         <result property="tenantId" column="tenant_id"/>

@@ -22,10 +22,12 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
 import static com.xaaef.molly.common.consts.ConfigName.PROJECT_DEFAULT_PASSWORD;
+import static com.xaaef.molly.common.consts.MbpConst.PROJECT_ID;
 
 
 /**
@@ -171,11 +173,18 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
         if (dbProject == null) {
             throw new RuntimeException(StrUtil.format("项目Id {} 不存在！", entity.getProjectId()));
         }
-        var flag = matchesPassword(entity.getPassword(), dbProject.getPassword());
-        if (!flag) {
+        var flag1 = matchesPassword(entity.getPassword(), dbProject.getPassword());
+        if (!flag1) {
             throw new RuntimeException(StrUtil.format("项目 {} 密码输入错误！", dbProject.getProjectName()));
         }
         var flag2 = super.removeById(dbProject.getProjectId());
+        // 查询 所有的 包含 project_id 的表
+        Set<String> tableNames = baseMapper.selectListTableNamesByIncludeColumn(PROJECT_ID);
+        // 删除 此项目 在所有表中的数据
+        if (!tableNames.isEmpty()) {
+            baseMapper.deleteByProjectId(tableNames, dbProject.getProjectId());
+        }
+        // 租户 删除 此项目
         tenantService.tenantDelProjectId(TenantUtils.getTenantId(), dbProject.getProjectId());
         return flag2;
     }

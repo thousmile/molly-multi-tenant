@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.entity.TenantAndProject;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
 import java.util.Set;
@@ -28,8 +29,17 @@ public interface CmsProjectMapper extends BaseMapper<CmsProject> {
     Set<String> selectListTableNamesByNotIncludeColumn(String column);
 
 
+    // 查询 所有的包含 project_id 的表
+    @InterceptorIgnore(tenantLine = "true")
+    Set<String> selectListTableNamesByIncludeColumn(String column);
+
+
+    // 删除项目
+    @InterceptorIgnore(tenantLine = "true")
+    int deleteByProjectId(@Param("tableName") Set<String> tableName, @Param("projectId") Long projectId);
+
+
     // 根据 租户的数据名称  查询 项目列表。如: molly_master 、molly_google
     Set<TenantAndProject> selectListByTenantDbName(Collection<String> tenantDbNameList);
-
 
 }
