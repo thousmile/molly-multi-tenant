@@ -92,11 +92,11 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
         // 判断租户状态
         if (!Objects.equals(currentTenant.getStatus(), StatusEnum.NORMAL.getCode())) {
-            throw new JwtAuthException(StrUtil.format("租户 {} 被禁用！", currentTenant.getName()));
+            throw new JwtAuthException(StrUtil.format("租户 {} 被停用！", currentTenant.getName()));
         }
         // 判断租户是否过期
         if (LocalDateTime.now().isAfter(currentTenant.getExpired())) {
-            var format = LocalDateTimeUtil.formatNormal(currentTenant.getExpired());
+            var format = LocalDateTimeUtil.formatNormal(currentTenant.getExpired().toLocalDate());
             throw new JwtAuthException(StrUtil.format("租户 {} 已经在 {} 过期了！", currentTenant.getName(), format));
         }
         // 把表单提交的 username  password 封装到 UsernamePasswordAuthenticationToken中
