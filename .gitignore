@@ -1,6 +1,13 @@
 HELP.md
 target/
 
+server/molly-service/src/main/resources/application-dev.yml
+/server/molly-service/src/main/resources/application-dev.yml
+./server/molly-service/src/main/resources/application-dev.yml
+server/molly-service/src/main/resources/application-*.yml
+/server/molly-service/src/main/resources/application-*.yml
+./server/molly-service/src/main/resources/application-*.yml
+
 ### STS ###
 .apt_generated
 .classpath
@@ -28,4 +35,3 @@ build/
 
 ### VS Code ###
 .vscode/
-server/molly-service/src/main/resources/application-dev.yml

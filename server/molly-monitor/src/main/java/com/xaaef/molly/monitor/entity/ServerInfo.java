@@ -1,8 +1,8 @@
 package com.xaaef.molly.monitor.entity;
 
+import cn.hutool.core.date.DatePattern;
 import com.xaaef.molly.common.util.ArithUtils;
 import com.xaaef.molly.common.util.IpUtils;
-import com.xaaef.molly.common.util.JsonUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -19,8 +19,6 @@ import oshi.util.Util;
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -100,18 +98,18 @@ public class ServerInfo implements java.io.Serializable {
         long[] ticks = processor.getSystemCpuLoadTicks();
         long nice = ticks[TickType.NICE.getIndex()] - prevTicks[TickType.NICE.getIndex()];
         long irq = ticks[TickType.IRQ.getIndex()] - prevTicks[TickType.IRQ.getIndex()];
-        long softirq = ticks[TickType.SOFTIRQ.getIndex()] - prevTicks[TickType.SOFTIRQ.getIndex()];
+        long softline = ticks[TickType.SOFTIRQ.getIndex()] - prevTicks[TickType.SOFTIRQ.getIndex()];
         long steal = ticks[TickType.STEAL.getIndex()] - prevTicks[TickType.STEAL.getIndex()];
         long cSys = ticks[TickType.SYSTEM.getIndex()] - prevTicks[TickType.SYSTEM.getIndex()];
         long user = ticks[TickType.USER.getIndex()] - prevTicks[TickType.USER.getIndex()];
-        long iowait = ticks[TickType.IOWAIT.getIndex()] - prevTicks[TickType.IOWAIT.getIndex()];
+        long ioWait = ticks[TickType.IOWAIT.getIndex()] - prevTicks[TickType.IOWAIT.getIndex()];
         long idle = ticks[TickType.IDLE.getIndex()] - prevTicks[TickType.IDLE.getIndex()];
-        long totalCpu = user + nice + cSys + idle + iowait + irq + softirq + steal;
+        long totalCpu = user + nice + cSys + idle + ioWait + irq + softline + steal;
         cpu.setCpuNum(processor.getLogicalProcessorCount());
         cpu.setTotal(totalCpu);
         cpu.setSys(cSys);
         cpu.setUsed(user);
-        cpu.setWait(iowait);
+        cpu.setWait(ioWait);
         cpu.setFree(idle);
     }
 
@@ -316,6 +314,7 @@ public class ServerInfo implements java.io.Serializable {
         /**
          * JDK版本
          */
+        @Getter
         @Schema(description = "JDK版本")
         private String version;
 
@@ -364,10 +363,6 @@ public class ServerInfo implements java.io.Serializable {
             return ManagementFactory.getRuntimeMXBean().getVmName();
         }
 
-        public String getVersion() {
-            return version;
-        }
-
         public void setVersion(String version) {
             this.version = version;
         }
@@ -380,14 +375,12 @@ public class ServerInfo implements java.io.Serializable {
             this.home = home;
         }
 
-        final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(JsonUtils.DEFAULT_DATE_TIME_PATTERN).withZone(ZoneId.systemDefault());
-
         /**
          * JDK启动时间
          */
         public String getStartTime() {
             long time = ManagementFactory.getRuntimeMXBean().getStartTime();
-            return formatter.format(Instant.ofEpochMilli(time));
+            return DatePattern.NORM_DATETIME_FORMATTER.format(Instant.ofEpochMilli(time));
         }
 
         /**

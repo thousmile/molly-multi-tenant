@@ -118,16 +118,17 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     @Override
     public IPage<SysTenant> simplePageKeywords(SearchPO params) {
         var wrapper = super.getKeywordsQueryWrapper(
-                params,
-                List.of(SysTenant::getTenantId, SysTenant::getName, SysTenant::getLinkman)
-        );
-        wrapper.lambda().select(
-                List.of(SysTenant::getTenantId, SysTenant::getLogo, SysTenant::getName, SysTenant::getLinkman)
-        );
+                        params,
+                        List.of(SysTenant::getTenantId, SysTenant::getName, SysTenant::getLinkman)
+                )
+                .lambda()
+                .select(List.of(SysTenant::getTenantId, SysTenant::getLogo, SysTenant::getName, SysTenant::getLinkman))
+                .eq(SysTenant::getStatus, StatusEnum.NORMAL.getCode())
+                .orderByAsc(SysTenant::getCreateTime);
         // 如果当前登录的用户，关联的有租户，
         var tenantIds = sysUserService.listHaveTenantIds(getUserId());
         if (!tenantIds.isEmpty()) {
-            wrapper.lambda().in(SysTenant::getTenantId, tenantIds);
+            wrapper.in(SysTenant::getTenantId, tenantIds);
         }
         Page<SysTenant> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
         return super.page(pageRequest, wrapper);

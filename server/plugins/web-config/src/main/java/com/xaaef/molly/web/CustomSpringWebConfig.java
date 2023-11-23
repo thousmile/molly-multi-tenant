@@ -1,5 +1,6 @@
 package com.xaaef.molly.web;
 
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.net.Ipv4Util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xaaef.molly.common.consts.JwtConst;
@@ -28,7 +29,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
@@ -82,9 +82,9 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
                 .distinct()
                 .collect(Collectors.toList());
 
-        var multiTenantProperties = tenantService.getByMultiTenantProperties();
+        var mtp = tenantService.getByMultiTenantProperties();
         // 启用 租户ID 拦截器
-        if (multiTenantProperties.getEnable()) {
+        if (mtp.getEnable()) {
             registry.addInterceptor(tenantIdInterceptor)
                     .addPathPatterns("/**")
                     .excludePathPatterns(whiteList);
@@ -92,7 +92,7 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
         }
 
         // 启用 项目ID 拦截器
-        if (multiTenantProperties.getEnableProject()) {
+        if (mtp.getEnableProject()) {
             registry.addInterceptor(projectIdInterceptor)
                     .addPathPatterns("/**")
                     .excludePathPatterns(whiteList);
@@ -146,12 +146,11 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
     @Bean
     public Formatter<Date> dateFormatter() {
         return new Formatter<>() {
-
             @Override
             public Date parse(String text, Locale locale) {
                 Date date = null;
                 try {
-                    date = DateUtils.parseDate(text, locale, JsonUtils.DEFAULT_DATE_TIME_PATTERN);
+                    date = DateUtils.parseDate(text, locale, DatePattern.NORM_DATETIME_PATTERN);
                 } catch (Exception e) {
                     log.error(e.getMessage());
                 }
@@ -160,7 +159,7 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
 
             @Override
             public String print(Date date, Locale locale) {
-                return DateFormatUtils.format(date, JsonUtils.DEFAULT_DATE_TIME_PATTERN, TimeZone.getDefault(), locale);
+                return DateFormatUtils.format(date, DatePattern.NORM_DATETIME_PATTERN, TimeZone.getDefault(), locale);
             }
         };
     }
@@ -170,12 +169,12 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
         return new Formatter<>() {
             @Override
             public LocalDate parse(String text, Locale locale) {
-                return LocalDate.parse(text, DateTimeFormatter.ofPattern(JsonUtils.DEFAULT_DATE_PATTERN, locale));
+                return LocalDate.parse(text, DatePattern.NORM_DATE_FORMATTER.withLocale(locale));
             }
 
             @Override
             public String print(LocalDate object, Locale locale) {
-                return DateTimeFormatter.ofPattern(JsonUtils.DEFAULT_DATE_PATTERN, locale).format(object);
+                return DatePattern.NORM_DATE_FORMATTER.withLocale(locale).format(object);
             }
         };
     }
@@ -185,12 +184,12 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
         return new Formatter<>() {
             @Override
             public LocalTime parse(String text, Locale locale) {
-                return LocalTime.parse(text, DateTimeFormatter.ofPattern(JsonUtils.DEFAULT_TIME_PATTERN, locale));
+                return LocalTime.parse(text, DatePattern.NORM_TIME_FORMATTER.withLocale(locale));
             }
 
             @Override
             public String print(LocalTime object, Locale locale) {
-                return DateTimeFormatter.ofPattern(JsonUtils.DEFAULT_TIME_PATTERN, locale).format(object);
+                return DatePattern.NORM_TIME_FORMATTER.withLocale(locale).format(object);
             }
         };
     }
@@ -198,15 +197,14 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
     @Bean
     public Formatter<LocalDateTime> localDateTimeFormatter() {
         return new Formatter<>() {
-
             @Override
-            public String print(LocalDateTime localDateTime, Locale locale) {
-                return DateTimeFormatter.ofPattern(JsonUtils.DEFAULT_DATE_TIME_PATTERN, locale).format(localDateTime);
+            public LocalDateTime parse(String text, Locale locale) {
+                return LocalDateTime.parse(text, DatePattern.NORM_DATETIME_FORMATTER.withLocale(locale));
             }
 
             @Override
-            public LocalDateTime parse(String text, Locale locale) {
-                return LocalDateTime.parse(text, DateTimeFormatter.ofPattern(JsonUtils.DEFAULT_DATE_TIME_PATTERN, locale));
+            public String print(LocalDateTime localDateTime, Locale locale) {
+                return DatePattern.NORM_DATETIME_FORMATTER.withLocale(locale).format(localDateTime);
             }
         };
     }

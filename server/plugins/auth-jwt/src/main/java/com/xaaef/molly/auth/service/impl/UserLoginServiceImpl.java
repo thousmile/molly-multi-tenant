@@ -37,8 +37,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.xaaef.molly.common.util.JsonUtils.DEFAULT_DATE_TIME_PATTERN;
-
 
 /**
  * <p>
@@ -98,7 +96,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
         // 判断租户是否过期
         if (LocalDateTime.now().isAfter(currentTenant.getExpired())) {
-            var format = LocalDateTimeUtil.format(currentTenant.getExpired(), DEFAULT_DATE_TIME_PATTERN);
+            var format = LocalDateTimeUtil.formatNormal(currentTenant.getExpired());
             throw new JwtAuthException(StrUtil.format("租户 {} 已经在 {} 过期了！", currentTenant.getName(), format));
         }
         // 把表单提交的 username  password 封装到 UsernamePasswordAuthenticationToken中

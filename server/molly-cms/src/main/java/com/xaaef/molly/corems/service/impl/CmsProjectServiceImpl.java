@@ -147,8 +147,8 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
                                 CmsProject::getLinkman, CmsProject::getAreaCode, CmsProject::getAddress
                         )
                 )
-                .eq(CmsProject::getStatus, 1)
-                .orderByAsc(CmsProject::getCreateTime);
+                .eq(CmsProject::getStatus, StatusEnum.NORMAL.getCode())
+                .orderByAsc(CmsProject::getSort, CmsProject::getCreateTime);
         // 非系统用户和管理员用户。根据所在部门，查询项目列表
         if (!isMasterUser() && !isAdminUser()) {
             var childDeptIds = apiPmsDeptService.listChildIdByDeptId(getLoginUser().getDeptId());

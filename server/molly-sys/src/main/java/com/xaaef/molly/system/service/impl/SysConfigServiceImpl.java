@@ -1,5 +1,6 @@
 package com.xaaef.molly.system.service.impl;
 
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
@@ -24,7 +25,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -173,21 +173,21 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
     @Override
     public LocalDateTime getValueDateTimeByKey(String configKey) {
         String str = getValueByKey(configKey);
-        return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(JsonUtils.DEFAULT_DATE_TIME_PATTERN));
+        return LocalDateTime.parse(str, DatePattern.NORM_DATETIME_FORMATTER);
     }
 
 
     @Override
     public LocalTime getValueTimeByKey(String configKey) {
         String str = getValueByKey(configKey);
-        return LocalTime.parse(str, DateTimeFormatter.ofPattern(JsonUtils.DEFAULT_TIME_PATTERN));
+        return LocalTime.parse(str, DatePattern.NORM_TIME_FORMATTER);
     }
 
 
     @Override
     public LocalDate getValueDateByKey(String configKey) {
         String str = getValueByKey(configKey);
-        return LocalDate.parse(str, DateTimeFormatter.ofPattern(JsonUtils.DEFAULT_DATE_PATTERN));
+        return LocalDate.parse(str, DatePattern.NORM_DATE_FORMATTER);
     }
 
 }

@@ -8,11 +8,16 @@ import cn.hutool.core.util.IdUtil;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.consts.JwtConst;
+import com.xaaef.molly.common.util.ExcelUtils;
 import com.xaaef.molly.common.util.JsonUtils;
+import com.xaaef.molly.perms.entity.PmsRole;
 import liquibase.integration.spring.MultiTenantSpringLiquibase;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.FileSystemResourceLoader;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,7 +25,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.xaaef.molly.common.util.IpUtils.getLocalIPS;
@@ -116,12 +120,27 @@ public class NoSpringTests {
                 .flatMap(Stream::of)
                 .filter(s -> !JwtConst.LOGIN_URL.equals(s))
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
         String formatJson = JsonUtils.toFormatJson(Map.of(
                 "data", whiteList,
                 "time", LocalTime.now()
         ));
         System.out.println(formatJson);
+    }
+
+
+    @Test
+    public void test12() throws IOException {
+        var treeNodes = List.of(
+                new PmsRole(1001L, "角色1", 1L, "角色1问问去"),
+                new PmsRole(1002L, "角色2", 2L, "角色2QBGRBR"),
+                new PmsRole(1003L, "角色3", 3L, "角色3GRNRY"),
+                new PmsRole(1004L, "角色4", 4L, "角色4fwef"),
+                new PmsRole(1005L, "角色5", 5L, "角色5这个人")
+        );
+        var entity = ExcelUtils.deviceExport("aa.xlsx", treeNodes);
+        var file = Files.createFile(Path.of("aa.xlsx")).toFile();
+        FileUtil.writeFromStream(entity.getBody().getInputStream(), file, true);
     }
 
 

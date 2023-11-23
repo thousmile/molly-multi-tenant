@@ -36,16 +36,23 @@
         <maven-compiler.version>3.11.0</maven-compiler.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <!-- spring-file-storage -->
+        <!-- x-file-storage文件上传 文档地址 https://x-file-storage.xuyanwu.cn -->
         <storage.version>2.0.0</storage.version>
-        <qiniu.version>7.14.0</qiniu.version>
+        <!-- 七牛云文件上传 -->
+        <qiniu-storage.version>7.14.0</qiniu-storage.version>
+        <!-- 阿里云文件上传 -->
+        <aliyun-storage.version>3.17.2</aliyun-storage.version>
+        <!-- 服务器运行状态查询， 如: CPU、磁盘、内存 -->
         <oshi.version>6.4.6</oshi.version>
-
-        <hutool.version>5.8.22</hutool.version>
+        <!-- Excel文件操作 -->
+        <apache-poi.version>5.2.4</apache-poi.version>
+        <!-- 小而美的工具库 -->
+        <hutool.version>5.8.23</hutool.version>
+        <!-- 简单、方便的OpenAPI接口文档 -->
         <knife4j.version>4.3.0</knife4j.version>
+        <!-- MyBatis 的增强工具，基友搭配，效率翻倍 -->
         <mybatis-plus.version>3.5.4.1</mybatis-plus.version>
-
+        <!-- JavaEE颠覆者 -->
         <spring-boot.version>3.1.5</spring-boot.version>
     </properties>
 
@@ -73,14 +80,14 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-<!--
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
--->
+        <!--
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-devtools</artifactId>
+                    <scope>runtime</scope>
+                    <optional>true</optional>
+                </dependency>
+        -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

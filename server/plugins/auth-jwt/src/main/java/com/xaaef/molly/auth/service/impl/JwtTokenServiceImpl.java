@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.enums.OAuth2Error.TOKEN_FORMAT_ERROR;
 import static com.xaaef.molly.common.consts.LoginConst.*;
-import static com.xaaef.molly.common.util.JsonUtils.DEFAULT_DATE_TIME_PATTERN;
 
 
 /**
@@ -111,7 +110,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 removeLoginUser(onlineUserKey);
 
                 // 获取当前时间
-                var milli = LocalDateTimeUtil.format(LocalDateTime.now(), DEFAULT_DATE_TIME_PATTERN);
+                var milli = LocalDateTimeUtil.formatNormal(LocalDateTime.now());
 
                 // 将 被强制挤下线的用户，以及时间，保存到 redis中，提示给前端用户！
                 strRedisTemplate.opsForValue().set(

@@ -63,7 +63,7 @@
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
-            <version>${qiniu.version}</version>
+            <version>${qiniu-storage.version}</version>
         </dependency>
 
     </dependencies>
