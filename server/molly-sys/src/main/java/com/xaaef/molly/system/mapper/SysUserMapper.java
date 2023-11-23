@@ -20,6 +20,11 @@ public interface SysUserMapper {
     int deleteHaveTenants(Long userId);
 
 
+    // 租户 删除关联的 系统用户
+    @Delete("delete from sys_user_tenant WHERE tenant_id = #{tenantId}")
+    int deleteHaveSysUser(String tenantId);
+
+
     // 系统用户 关联租户
     int insertByTenants(@Param("userId") Long userId,
                         @Param("tenantIds") Set<String> tenantIds);

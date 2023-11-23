@@ -103,4 +103,11 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean deleteHaveSysUser(String tenantId) {
+        return baseMapper.deleteHaveSysUser(tenantId) > 0;
+    }
+
+
 }

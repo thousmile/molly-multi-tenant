@@ -466,6 +466,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         dataSourceManager.deleteTable(tenantId);
         // 删除 redis中租户
         tenantManager.removeTenantId(tenantId);
+        // 删除 关联此租户的 系统用户
+        sysUserService.deleteHaveSysUser(tenantId);
         return flag;
     }
 

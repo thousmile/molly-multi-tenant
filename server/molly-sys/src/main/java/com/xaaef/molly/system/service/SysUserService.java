@@ -50,4 +50,14 @@ public interface SysUserService {
      */
     boolean updateTenant(Long userId, Set<String> tenantIds);
 
+
+    /**
+     * 租户 删除关联的 系统用户
+     *
+     * @param tenantId
+     * @author Wang Chen Chen
+     * @date 2023/11/23 17:31
+     */
+    boolean deleteHaveSysUser(String tenantId);
+
 }

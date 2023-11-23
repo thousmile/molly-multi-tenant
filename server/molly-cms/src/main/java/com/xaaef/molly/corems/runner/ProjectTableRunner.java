@@ -6,10 +6,10 @@ import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.mapper.CmsProjectMapper;
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -30,14 +30,14 @@ import static com.xaaef.molly.common.consts.MbpConst.PROJECT_ID;
 @Component
 @Order(Integer.MIN_VALUE)
 @AllArgsConstructor
-public class ProjectTableRunner implements ServletContextListener {
+public class ProjectTableRunner implements ApplicationRunner {
 
     private final CmsProjectMapper projectMapper;
 
     private final MultiTenantProperties multiTenantProperties;
 
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
+    public void run(ApplicationArguments args) throws Exception {
         log.info("ProjectTableRunner Initialized .....");
         if (multiTenantProperties.getEnableProject()) {
             // 查询 所有的 不包含 project_id 的表

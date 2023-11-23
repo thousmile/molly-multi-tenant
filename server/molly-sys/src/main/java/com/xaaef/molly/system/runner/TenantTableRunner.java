@@ -10,10 +10,11 @@ import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
 import com.xaaef.molly.tenant.DatabaseManager;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
+import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
 @DependsOn(value = "projectTableRunner")
 @Order(Integer.MIN_VALUE + 1)
 @AllArgsConstructor
-public class TenantTableRunner implements ServletContextListener {
+public class TenantTableRunner implements ApplicationRunner {
 
     private final SysTenantMapper tenantMapper;
 
@@ -52,9 +53,8 @@ public class TenantTableRunner implements ServletContextListener {
 
     private final ApiCmsProjectService projectService;
 
-
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
+    public void run(ApplicationArguments args) throws Exception {
         log.info("TenantTableRunner Initialized .....");
         var props = databaseManager.getMultiTenantProperties();
         if (props.getEnable()) {
@@ -98,9 +98,8 @@ public class TenantTableRunner implements ServletContextListener {
         }
     }
 
-
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
+    @PreDestroy
+    public void destroy() {
         tenantManager.removeAll();
         log.info("delete the tenantId in redis ...");
     }
