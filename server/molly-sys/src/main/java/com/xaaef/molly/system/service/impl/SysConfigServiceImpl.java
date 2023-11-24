@@ -10,12 +10,11 @@ import com.xaaef.molly.system.entity.SysConfig;
 import com.xaaef.molly.system.mapper.SysConfigMapper;
 import com.xaaef.molly.system.service.SysConfigService;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -42,8 +41,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysConfig>
-        implements SysConfigService, ApplicationRunner {
+public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysConfig> implements SysConfigService {
 
     private final StringRedisTemplate redisTemplate;
 
@@ -52,8 +50,8 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
     }
 
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
+    @PostConstruct
+    public void init() {
         var wrapper = new LambdaQueryWrapper<SysConfig>()
                 .select(SysConfig::getConfigKey, SysConfig::getConfigValue);
         var configMaps = baseMapper.selectList(wrapper)

@@ -1,7 +1,10 @@
 package com.xaaef.molly.common.consts;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -78,10 +81,9 @@ public class MbpConst {
      * <p>
      */
     public final static Set<String> PROJECT_IGNORE_TABLES = new HashSet<>(
-            Set.of(
-                    "COLUMNS",
-                    "sys_tenant"
-            )
+            Stream.of(TENANT_IGNORE_TABLES, Set.of("COLUMNS"))
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toSet())
     );
 
 

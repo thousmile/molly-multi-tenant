@@ -10,11 +10,10 @@ import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
 import com.xaaef.molly.tenant.DatabaseManager;
 import com.xaaef.molly.tenant.service.MultiTenantManager;
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -43,7 +42,7 @@ import java.util.stream.Collectors;
 @DependsOn(value = "projectTableRunner")
 @Order(Integer.MIN_VALUE + 1)
 @AllArgsConstructor
-public class TenantTableRunner implements ApplicationRunner {
+public class TenantTableRunner {
 
     private final SysTenantMapper tenantMapper;
 
@@ -53,8 +52,8 @@ public class TenantTableRunner implements ApplicationRunner {
 
     private final ApiCmsProjectService projectService;
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
+    @PostConstruct
+    public void init() {
         log.info("TenantTableRunner Initialized .....");
         var props = databaseManager.getMultiTenantProperties();
         if (props.getEnable()) {
