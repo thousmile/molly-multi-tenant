@@ -52,8 +52,8 @@
         <knife4j.version>4.3.0</knife4j.version>
         <!-- MyBatis 的增强工具，基友搭配，效率翻倍 -->
         <mybatis-plus.version>3.5.4.1</mybatis-plus.version>
-        <!-- JavaEE颠覆者 -->
-        <spring-boot.version>3.1.5</spring-boot.version>
+        <!-- JavaEE 颠覆者 -->
+        <spring-boot.version>3.1.6</spring-boot.version>
     </properties>
 
 

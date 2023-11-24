@@ -10,6 +10,7 @@ import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.enums.UserType;
 import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.common.util.TenantUtils;
+import com.xaaef.molly.corems.service.CmsProjectService;
 import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.po.CreateTenantPO;
 import com.xaaef.molly.system.service.SysConfigService;
@@ -36,6 +37,9 @@ public class MollyApplicationTests {
 
     @Autowired
     private SysConfigService configService;
+
+    @Autowired
+    private CmsProjectService projectService;
 
     static {
         var userDetails = new JwtLoginUser()
@@ -102,8 +106,27 @@ public class MollyApplicationTests {
      */
     @Test
     public void test2() throws Exception {
+        TenantUtils.setTenantId("master");
         var valueByKey = configService.getValueByKey(ConfigName.USER_DEFAULT_PASSWORD);
         System.out.println(valueByKey);
+    }
+
+
+    /**
+     * 获取项目
+     *
+     * @author WangChenChen
+     * @version 2.0
+     * @date 2023/10/26 9:24
+     */
+    @Test
+    public void test3() throws Exception {
+        TenantUtils.setTenantId("master");
+        projectService.list()
+                .forEach(System.out::println);
+        TenantUtils.setTenantId("google");
+        projectService.list()
+                .forEach(System.out::println);
     }
 
 
