@@ -28,7 +28,7 @@ public class OperateUserDTO implements java.io.Serializable {
     /**
      * 用户唯一id
      */
-    @Schema(description = "用户唯一id")
+    @Schema(description = "用户Id")
     private Long userId;
 
     /**
@@ -42,5 +42,10 @@ public class OperateUserDTO implements java.io.Serializable {
      */
     @Schema(description = "昵称")
     private String nickname;
+
+    @Override
+    public String toString() {
+        return String.format("用户Id : %s\n头像 : %s\n昵称 : %s", this.userId, this.avatar, this.nickname);
+    }
 
 }

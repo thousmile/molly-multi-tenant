@@ -5,6 +5,7 @@ import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.consts.JwtConst;
@@ -25,6 +26,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -148,6 +150,9 @@ public class NoSpringTests {
         @Schema(description = "爱好")
         protected List<String> hobby;
 
+        @Schema(description = "长辈")
+        protected Map<String, Long> elder;
+
         @Schema(description = "创建日期")
         protected LocalDate createDate;
 
@@ -165,16 +170,33 @@ public class NoSpringTests {
 
     @Test
     public void test12() throws IOException {
-        var treeNodes = List.of(
-                new TestExportEntity(1001L, "角色1", List.of("A1", "B1"), LocalDate.now(), LocalTime.now(), LocalDateTime.now(), new OperateUserDTO(1L, "a", "张三")),
-                new TestExportEntity(1002L, "角色2", List.of("A2", "B2"), LocalDate.now(), LocalTime.now(), LocalDateTime.now(), new OperateUserDTO(2L, "b", "李四")),
-                new TestExportEntity(1003L, "角色3", List.of("A3", "B3"), LocalDate.now(), LocalTime.now(), LocalDateTime.now(), new OperateUserDTO(3L, "c", "王五")),
-                new TestExportEntity(1004L, "角色4", List.of("A4", "B4"), LocalDate.now(), LocalTime.now(), LocalDateTime.now(), new OperateUserDTO(4L, "d", "陈六")),
-                new TestExportEntity(1005L, "角色5", List.of("A5", "B5"), LocalDate.now(), LocalTime.now(), LocalDateTime.now(), new OperateUserDTO(5L, "e", "赵七"))
-        );
-        var entity = ExcelUtils.deviceExport("aa.xlsx", treeNodes);
-        var file = Files.createFile(Path.of("aa.xlsx")).toFile();
+        List<String> source = List.of("A1", "B1", "C3", "D4", "E5", "F6", "S7");
+        var dataList = new ArrayList<TestExportEntity>();
+        for (int i = 0; i < 10000; i++) {
+            dataList.add(
+                    new TestExportEntity(
+                            RandomUtil.randomLong(1999999999L, 9999999999L),
+                            RandomUtil.randomString(20),
+                            RandomUtil.randomEleList(source, 3),
+                            Map.of(String.valueOf(new char[]{RandomUtil.randomChinese(), RandomUtil.randomChinese(), RandomUtil.randomChinese()}), RandomUtil.randomLong(40, 88)),
+                            LocalDate.now(),
+                            LocalTime.now(),
+                            LocalDateTime.now(),
+                            new OperateUserDTO(
+                                    RandomUtil.randomLong(),
+                                    "a",
+                                    String.valueOf(new char[]{RandomUtil.randomChinese(), RandomUtil.randomChinese(), RandomUtil.randomChinese()}
+                                    )
+                            )
+                    )
+            );
+        }
+        var start = System.currentTimeMillis();
+        var entity = ExcelUtils.deviceExport("aa.xlsx", dataList);
+        var file = Files.createFile(Path.of(String.format("%s.xlsx", RandomUtil.randomString(10)))).toFile();
         FileUtil.writeFromStream(entity.getBody().getInputStream(), file, true);
+        var ms = System.currentTimeMillis() - start;
+        System.out.printf("%s => 耗时: %d ms \n", file.getName(), ms);
     }
 
 
