@@ -1,5 +1,7 @@
 package com.xaaef.molly.common.util;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -86,12 +89,7 @@ public class ExcelUtils {
      */
     private static <T> void pageExport(HSSFWorkbook workbook, String sheetName, List<T> rangeData) {
         // 反射获取对象属性，和描述名称
-        var fieldNames = Arrays.stream(ReflectUtil.getFields(rangeData.getFirst().getClass()))
-                .map(field -> {
-                    var ann = field.getAnnotation(Schema.class);
-                    return ann == null ? StrUtil.EMPTY : ann.description();
-                })
-                .collect(Collectors.toCollection(LinkedList::new));
+        var fieldNames = getFieldSchemaNames(CollectionUtil.getFirst(rangeData));
         //创建工作表，指定工作表名称
         var sheet1 = workbook.createSheet(sheetName);
         sheet1.setDefaultColumnWidth(20);
@@ -112,9 +110,11 @@ public class ExcelUtils {
                     cell0.setCellValue(StrUtil.EMPTY);
                     break;
                 }
-                if (obj instanceof Long o1) {
-                    cell0.setCellValue(o1);
-                } else if (obj instanceof Integer o1) {
+                if (obj instanceof Number o1) {
+                    cell0.setCellValue(o1.toString());
+                }
+                /*
+                else if (obj instanceof Integer o1) {
                     cell0.setCellValue(o1);
                 } else if (obj instanceof Short o1) {
                     cell0.setCellValue(o1);
@@ -122,9 +122,11 @@ public class ExcelUtils {
                     cell0.setCellValue(o1);
                 } else if (obj instanceof Double o1) {
                     cell0.setCellValue(o1);
-                } else if (obj instanceof String o1) {
-                    cell0.setCellValue(o1);
                 } else if (obj instanceof Byte o1) {
+                    cell0.setCellValue(o1);
+                }
+                */
+                else if (obj instanceof String o1) {
                     cell0.setCellValue(o1);
                 } else if (obj instanceof Boolean o1) {
                     cell0.setCellValue(o1);
@@ -138,13 +140,55 @@ public class ExcelUtils {
                     cell0.setCellValue(o1.format(DatePattern.NORM_DATETIME_FORMATTER));
                 } else if (obj instanceof ZonedDateTime o1) {
                     cell0.setCellValue(o1.format(DatePattern.NORM_DATETIME_FORMATTER));
-                } else if (obj instanceof Iterable<?> || obj instanceof Map<?, ?> || obj instanceof Enum<?> || obj.getClass().isArray()) {
+                } else if (obj instanceof Iterable<?> || obj.getClass().isArray()) {
+                    cell0.setCellValue(JsonUtils.toFormatJson(obj));
+                } else if (obj instanceof Map<?, ?> || obj instanceof Enum<?>) {
                     cell0.setCellValue(JsonUtils.toFormatJson(obj));
                 } else {
-                    cell0.setCellValue(obj.toString());
+                    var fieldMaps = getFieldNameAndSchema(obj);
+                    var valMaps = BeanUtil.beanToMap(obj);
+                    var sb = new StringBuilder();
+                    valMaps.forEach((key, val) -> sb.append(StrUtil.format("{} = {} \r\n", fieldMaps.get(key), val)));
+                    cell0.setCellValue(sb.toString());
                 }
             }
         }
+    }
+
+
+    /**
+     * 反射获取对象属性，和描述名称
+     *
+     * @author WangChenChen
+     * @version 2.0
+     * @date 2023/11/29 18:04
+     */
+    private static List<String> getFieldSchemaNames(Object obj) {
+        return Arrays.stream(ReflectUtil.getFields(obj.getClass()))
+                .map(field -> {
+                    var ann = field.getAnnotation(Schema.class);
+                    return ann == null ? field.getName() : ann.description();
+                })
+                .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+
+    /**
+     * 反射获取对象属性，和描述名称
+     *
+     * @author WangChenChen
+     * @version 2.0
+     * @date 2023/11/29 18:04
+     */
+    private static Map<String, String> getFieldNameAndSchema(Object obj) {
+        return Arrays.stream(ReflectUtil.getFields(obj.getClass()))
+                .collect(
+                        Collectors.toMap(Field::getName, field -> {
+                                    var ann = field.getAnnotation(Schema.class);
+                                    return ann == null ? field.getName() : ann.description();
+                                }
+                        )
+                );
     }
 
 

@@ -10,8 +10,11 @@ import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.consts.JwtConst;
 import com.xaaef.molly.common.util.ExcelUtils;
 import com.xaaef.molly.common.util.JsonUtils;
-import com.xaaef.molly.perms.entity.PmsRole;
+import com.xaaef.molly.internal.dto.OperateUserDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import liquibase.integration.spring.MultiTenantSpringLiquibase;
+import lombok.*;
+import lombok.experimental.Accessors;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.FileSystemResourceLoader;
 
@@ -128,15 +131,46 @@ public class NoSpringTests {
         System.out.println(formatJson);
     }
 
+    @Getter
+    @Setter
+    @Builder
+    @Accessors(chain = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TestExportEntity implements java.io.Serializable {
+
+        @Schema(description = "ID")
+        private Long id;
+
+        @Schema(description = "名称")
+        private String name;
+
+        @Schema(description = "爱好")
+        protected List<String> hobby;
+
+        @Schema(description = "创建日期")
+        protected LocalDate createDate;
+
+        @Schema(description = "创建时间")
+        protected LocalTime createTime;
+
+        @Schema(description = "创建日期时间")
+        protected LocalDateTime createDateTime;
+
+        @Schema(description = "创建人信息")
+        protected OperateUserDTO createUserEntity;
+
+    }
+
 
     @Test
     public void test12() throws IOException {
         var treeNodes = List.of(
-                new PmsRole(1001L, "角色1", 1L, "角色1问问去"),
-                new PmsRole(1002L, "角色2", 2L, "角色2QBGRBR"),
-                new PmsRole(1003L, "角色3", 3L, "角色3GRNRY"),
-                new PmsRole(1004L, "角色4", 4L, "角色4fwef"),
-                new PmsRole(1005L, "角色5", 5L, "角色5这个人")
+                new TestExportEntity(1001L, "角色1", List.of("A1", "B1"), LocalDate.now(), LocalTime.now(), LocalDateTime.now(), new OperateUserDTO(1L, "a", "张三")),
+                new TestExportEntity(1002L, "角色2", List.of("A2", "B2"), LocalDate.now(), LocalTime.now(), LocalDateTime.now(), new OperateUserDTO(2L, "b", "李四")),
+                new TestExportEntity(1003L, "角色3", List.of("A3", "B3"), LocalDate.now(), LocalTime.now(), LocalDateTime.now(), new OperateUserDTO(3L, "c", "王五")),
+                new TestExportEntity(1004L, "角色4", List.of("A4", "B4"), LocalDate.now(), LocalTime.now(), LocalDateTime.now(), new OperateUserDTO(4L, "d", "陈六")),
+                new TestExportEntity(1005L, "角色5", List.of("A5", "B5"), LocalDate.now(), LocalTime.now(), LocalDateTime.now(), new OperateUserDTO(5L, "e", "赵七"))
         );
         var entity = ExcelUtils.deviceExport("aa.xlsx", treeNodes);
         var file = Files.createFile(Path.of("aa.xlsx")).toFile();

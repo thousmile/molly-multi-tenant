@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-@DependsOn(value = "projectTableRunner")
+@DependsOn({"projectTableRunner"})
 @Order(Integer.MIN_VALUE + 1)
 @AllArgsConstructor
 public class TenantTableRunner {

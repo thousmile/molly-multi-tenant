@@ -40,6 +40,7 @@ public class LiquibaseConfig {
         liquibase1.setResourceLoader(new DefaultResourceLoader());
         liquibase1.setChangeLog(multiTenantProperties.getChangeLog());
         liquibase1.setContexts(multiTenantProperties.getContexts());
+        liquibase1.setClearCheckSums(false);
         return liquibase1;
     }
 
