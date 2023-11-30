@@ -5,6 +5,7 @@ import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.PageUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
@@ -172,10 +173,10 @@ public class NoSpringTests {
     public void test12() throws IOException {
         List<String> source = List.of("A1", "B1", "C3", "D4", "E5", "F6", "S7");
         var dataList = new ArrayList<TestExportEntity>();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 200000; i++) {
             dataList.add(
                     new TestExportEntity(
-                            RandomUtil.randomLong(1999999999L, 9999999999L),
+                            (long) (i + 1),
                             RandomUtil.randomString(20),
                             RandomUtil.randomEleList(source, 3),
                             Map.of(String.valueOf(new char[]{RandomUtil.randomChinese(), RandomUtil.randomChinese(), RandomUtil.randomChinese()}), RandomUtil.randomLong(40, 88)),
@@ -192,12 +193,18 @@ public class NoSpringTests {
             );
         }
         var start = System.currentTimeMillis();
-        var entity = ExcelUtils.deviceExport("aa.xlsx", dataList);
+        var entity = ExcelUtils.genPageExport(60000, dataList);
         var file = Files.createFile(Path.of(String.format("%s.xlsx", RandomUtil.randomString(10)))).toFile();
-        FileUtil.writeFromStream(entity.getBody().getInputStream(), file, true);
+        FileUtil.writeBytes(entity.toByteArray(), file);
         var ms = System.currentTimeMillis() - start;
         System.out.printf("%s => 耗时: %d ms \n", file.getName(), ms);
     }
 
+
+    @Test
+    public void test13() {
+        int i = PageUtil.totalPage(112, 10);
+        System.out.println(i);
+    }
 
 }

@@ -3,7 +3,10 @@ package com.xaaef.molly.common.util;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.PageUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -12,6 +15,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -25,6 +29,7 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -42,36 +47,47 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ExcelUtils {
 
+    /**
+     * 默认分页数据
+     */
+    private static final int PAGE_SIZE = 10000;
 
     /**
-     * 设备导出的 Excel
-     *
-     * @author WangChenChen
-     * @date 2023/9/21 14:51
+     * 最大分页数据
      */
-    public static <T> ResponseEntity<ByteArrayResource> deviceExport(String fileName, List<T> dataList) {
+    private static final int MAX_PAGE_SIZE = 60000;
+
+
+    /**
+     * 泛型 分页导出 为 Excel
+     *
+     * @param fileName 文件名称
+     * @param pageSize 每页多少条数据，Excel每个Sheet最大极限6w条数据
+     * @param dataList 数据列表
+     * @return ByteArrayOutputStream
+     */
+    public static <T> ByteArrayOutputStream genPageExport(Integer pageSize, List<T> dataList) {
+        if (pageSize == null || pageSize < 1) {
+            pageSize = PAGE_SIZE;
+        }
+        if (pageSize > MAX_PAGE_SIZE) {
+            pageSize = MAX_PAGE_SIZE;
+        }
+        int finalPageSize = pageSize;
         //创建一个Excel文件
-        return getWorkbook(fileName, (workbook) -> {
+        return getWorkbook((workbook) -> {
             if (!dataList.isEmpty()) {
                 // 获取设备的总数量
                 int total = dataList.size();
-                int pageSize = 1000;
-                if (total > pageSize) {
-                    int pages = (total / pageSize) + 1;
-                    var startIndex = new AtomicInteger(0);
-                    for (int i = 0; i < pages; i++) {
-                        int fromIndex = startIndex.get();
-                        var toIndex = (fromIndex + pageSize);
-                        startIndex.set(toIndex);
-                        if (toIndex >= total) {
-                            toIndex = total;
-                        }
+                if (total > finalPageSize) {
+                    var pageNum = new AtomicInteger(1);
+                    toPageIndexRange(total, finalPageSize, (fromIndex, toIndex) -> {
                         var rangeData = dataList.subList(fromIndex, toIndex);
-                        var pageNum = i + 1;
-                        pageExport(workbook, String.format("第 %d 页", pageNum), rangeData);
-                    }
+                        genPageExport(workbook, String.format("第 %d 页", pageNum.get()), rangeData);
+                        pageNum.getAndIncrement();
+                    });
                 } else {
-                    pageExport(workbook, String.format("第 %d 页", 1), dataList);
+                    genPageExport(workbook, String.format("第 %d 页", 1), dataList);
                 }
             }
         });
@@ -79,13 +95,81 @@ public class ExcelUtils {
 
 
     /**
-     * 分页导出
+     * 泛型 分页导出 为 Excel 。每页默认 1w 条数据
      *
-     * @author WangChenChen
-     * @version 2.0
-     * @date 2023/11/23 12:32
+     * @param fileName 文件名称
+     * @param dataList 数据列表
+     * @return ByteArrayOutputStream
      */
-    private static <T> void pageExport(HSSFWorkbook workbook, String sheetName, List<T> rangeData) {
+    public static <T> ByteArrayOutputStream genPageExport(List<T> dataList) {
+        return genPageExport(PAGE_SIZE, dataList);
+    }
+
+
+    /**
+     * 泛型 分页导出 为 Excel 。每页默认 1w 条数据
+     *
+     * @param fileName 文件名称
+     * @param dataList 数据列表
+     * @return ResponseEntity<ByteArrayResource>
+     */
+    public static <T> ResponseEntity<ByteArrayResource> genPageExport(String fileName, List<T> dataList) {
+        return genPageExport(fileName, PAGE_SIZE, dataList);
+    }
+
+
+    /**
+     * 泛型 分页导出 为 Excel
+     *
+     * @param fileName 文件名称
+     * @param pageSize 每页多少条数据，Excel每个Sheet最大极限6w条数据
+     * @param dataList 数据列表
+     * @return ResponseEntity<ByteArrayResource>
+     */
+    public static <T> ResponseEntity<ByteArrayResource> genPageExport(String fileName, Integer pageSize, List<T> dataList) {
+        if (StrUtil.isEmpty(fileName)) {
+            fileName = RandomUtil.randomString(12);
+        } else {
+            if (fileName.endsWith(".xlsx")) {
+                fileName = fileName.replaceFirst(".xlsx", "");
+            }
+        }
+        var os = genPageExport(pageSize, dataList);
+        var headerValue = String.format("attachment;filename=%s.xlsx", fileNameEncode(fileName));
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
+                .body(new ByteArrayResource(os.toByteArray()));
+    }
+
+
+    /**
+     * 计算分页范围
+     * 根据总数和分页数量，计算每个分页的 开始索引 和 结束索引
+     * 假设：总共300条数据。每页100条。
+     * 列如：第一页：0~99 、第二页：100~199 、第三页：200~299 以此类推
+     */
+    private static void toPageIndexRange(int total, int pageSize, BiConsumer<Integer, Integer> consumer) {
+        // 总页数
+        int totalPage = PageUtil.totalPage(total, pageSize);
+        // 起始索引
+        var startIndex = new AtomicInteger(0);
+        for (int i = 0; i < totalPage; i++) {
+            int fromIndex = startIndex.get();
+            var toIndex = (fromIndex + pageSize);
+            startIndex.set(toIndex);
+            if (toIndex >= total) {
+                toIndex = total;
+            }
+            consumer.accept(fromIndex, toIndex);
+        }
+    }
+
+
+    /**
+     * 泛型 分页导出
+     */
+    private static <T> void genPageExport(HSSFWorkbook workbook, String sheetName, List<T> rangeData) {
         if (rangeData.isEmpty()) {
             return;
         }
@@ -98,9 +182,9 @@ public class ExcelUtils {
         // 设置标题
         setTitleStyle(titleRow, createTitleStyle(workbook), schemaDescriptions);
         var cellNum = schemaDescriptions.size();
-        for (int ind = 0; ind < rangeData.size(); ind++) {
-            var data = rangeData.get(ind);
-            var row = sheet1.createRow((ind + 1));
+        for (int i = 0; i < rangeData.size(); i++) {
+            var data = rangeData.get(i);
+            var row = sheet1.createRow((i + 1));
             var fieldsValue = ReflectUtil.getFieldsValue(data);
             for (int v = 0; v < cellNum; v++) {
                 var cell = row.createCell(v);
@@ -162,6 +246,8 @@ public class ExcelUtils {
 
     /**
      * 反射获取 对象属性 @Schema注解上的description
+     *
+     * @return List<String>
      */
     private static List<String> getFieldSchemaDescription(Object obj) {
         return Arrays.stream(ReflectUtil.getFields(obj.getClass()))
@@ -176,9 +262,9 @@ public class ExcelUtils {
     /**
      * 获取一个 Workbook
      *
-     * @date 2023/11/23 11:20
+     * @return ResponseEntity<ByteArrayResource>
      */
-    public static ResponseEntity<ByteArrayResource> getWorkbook(String fileName, Consumer<HSSFWorkbook> workbookConsumer) {
+    public static ByteArrayOutputStream getWorkbook(Consumer<HSSFWorkbook> workbookConsumer) {
         //在内存中创建一个Excel文件
         var workbook = new HSSFWorkbook();
         // 创建一个 消费者
@@ -195,20 +281,12 @@ public class ExcelUtils {
                 log.error(e.getMessage());
             }
         }
-        if (fileName.endsWith(".xlsx")) {
-            fileName = fileName.replaceFirst(".xlsx", "");
-        }
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header("Content-Disposition", String.format("attachment;filename=%s.xlsx", fileNameEncode(fileName)))
-                .body(new ByteArrayResource(os.toByteArray()));
+        return os;
     }
 
 
     /**
      * 文件名编码
-     *
-     * @date 2023/11/23 11:20
      */
     private static String fileNameEncode(String fileName) {
         return URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
@@ -217,8 +295,6 @@ public class ExcelUtils {
 
     /**
      * 创建 标题 样式
-     *
-     * @date 2023/11/23 11:20
      */
     private static HSSFCellStyle createTitleStyle(HSSFWorkbook workbook) {
         // 标题，颜色
@@ -237,8 +313,6 @@ public class ExcelUtils {
 
     /**
      * 设置 标题 样式
-     *
-     * @date 2023/11/23 11:20
      */
     private static void setTitleStyle(HSSFRow titleRow, HSSFCellStyle titleStyle, List<String> titleName) {
         for (int index = 0; index < titleName.size(); index++) {

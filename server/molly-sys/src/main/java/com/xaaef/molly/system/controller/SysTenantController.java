@@ -2,6 +2,7 @@ package com.xaaef.molly.system.controller;
 
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
+import com.xaaef.molly.common.util.ExcelUtils;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.po.CreateTenantPO;
@@ -14,6 +15,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -82,6 +85,14 @@ public class SysTenantController {
     }
 
 
+    @Operation(summary = "导出", description = "租户数据导出为Excel")
+    @GetMapping("/list/export")
+    public ResponseEntity<ByteArrayResource> listExport() {
+        var result = baseService.list();
+        return ExcelUtils.genPageExport("租户数据", result);
+    }
+
+
     @NoRepeatSubmit
     @Operation(summary = "新增租户", description = "新增租户")
     @PostMapping
@@ -92,7 +103,6 @@ public class SysTenantController {
             return JsonResult.fail(e.getMessage(), TenantCreatedSuccessVO.class);
         }
     }
-
 
 
     @NoRepeatSubmit

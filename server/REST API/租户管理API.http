@@ -115,3 +115,8 @@ Authorization: Bearer {{tokenValue}}
 GET {{baseUrl}}/sys/tenant/simple/search?keywords=google
 Content-Type: application/json
 
+
+### 搜索租户列表
+GET {{baseUrl}}/sys/tenant/list/export
+Content-Type: application/json
+
