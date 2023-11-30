@@ -10,7 +10,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.consts.JwtConst;
-import com.xaaef.molly.common.util.ExcelUtils;
+import com.xaaef.molly.common.util.WrapExcelUtils;
 import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.internal.dto.OperateUserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -134,6 +134,7 @@ public class NoSpringTests {
         System.out.println(formatJson);
     }
 
+
     @Getter
     @Setter
     @Builder
@@ -173,7 +174,7 @@ public class NoSpringTests {
     public void test12() throws IOException {
         List<String> source = List.of("A1", "B1", "C3", "D4", "E5", "F6", "S7");
         var dataList = new ArrayList<TestExportEntity>();
-        for (int i = 0; i < 200000; i++) {
+        for (int i = 0; i < 20000; i++) {
             dataList.add(
                     new TestExportEntity(
                             (long) (i + 1),
@@ -193,7 +194,7 @@ public class NoSpringTests {
             );
         }
         var start = System.currentTimeMillis();
-        var entity = ExcelUtils.genPageExport(60000, dataList);
+        var entity = WrapExcelUtils.genPageWrite(5000, dataList);
         var file = Files.createFile(Path.of(String.format("%s.xlsx", RandomUtil.randomString(10)))).toFile();
         FileUtil.writeBytes(entity.toByteArray(), file);
         var ms = System.currentTimeMillis() - start;
@@ -206,5 +207,6 @@ public class NoSpringTests {
         int i = PageUtil.totalPage(112, 10);
         System.out.println(i);
     }
+
 
 }

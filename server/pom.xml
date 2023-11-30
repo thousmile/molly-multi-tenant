@@ -45,7 +45,7 @@
         <!-- 服务器运行状态查询， 如: CPU、磁盘、内存 -->
         <oshi.version>6.4.6</oshi.version>
         <!-- Excel文件操作 -->
-        <apache-poi.version>5.2.4</apache-poi.version>
+        <apache-poi.version>5.2.5</apache-poi.version>
         <!-- 小而美的工具库 -->
         <hutool.version>5.8.23</hutool.version>
         <!-- 简单、方便的OpenAPI接口文档 -->

@@ -2,7 +2,7 @@ package com.xaaef.molly.system.controller;
 
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
-import com.xaaef.molly.common.util.ExcelUtils;
+import com.xaaef.molly.common.util.WrapExcelUtils;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.po.CreateTenantPO;
@@ -89,7 +89,7 @@ public class SysTenantController {
     @GetMapping("/list/export")
     public ResponseEntity<ByteArrayResource> listExport() {
         var result = baseService.list();
-        return ExcelUtils.genPageExport("租户数据", result);
+        return WrapExcelUtils.genPageWrite("租户数据", result);
     }
 
 
