@@ -1,6 +1,7 @@
 package com.xaaef.molly.monitor.api.impl;
 
-import com.xaaef.molly.common.util.BatchQueueUtils;
+import com.xaaef.molly.common.fqueue.FQueue;
+import com.xaaef.molly.common.fqueue.FQueueRegistry;
 import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.internal.api.ApiLogStorageService;
 import com.xaaef.molly.internal.dto.LoginLogDTO;
@@ -14,8 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -33,16 +33,21 @@ import java.util.stream.Collectors;
 @Service
 public class ApiLogStorageServiceImpl implements ApiLogStorageService {
 
-    private final BatchQueueUtils<LoginLogDTO> loginLogQueueHandler;
+    private final FQueue<LoginLogDTO> loginLogQueueHandler;
 
-    private final BatchQueueUtils<OperLogDTO> operLogQueueHandler;
+    private final FQueue<OperLogDTO> operLogQueueHandler;
 
 
     public ApiLogStorageServiceImpl(LmsLoginLogService loginLogService, LmsOperLogService operLogService) {
-        var executorService = Executors.newFixedThreadPool(1);
-        loginLogQueueHandler = BatchQueueUtils.bufferRate(
-                100, Duration.ofSeconds(10), executorService,
-                list -> {
+        // 批量操作队列。100条数据，或者10秒钟提交一次
+        loginLogQueueHandler = FQueueRegistry.buildFQueue(LoginLogDTO.class)
+                .fanOut(2)
+                .batch()
+                .withChunkSize(100)
+                .withFlushTimeout(10)
+                .withFlushTimeUnit(TimeUnit.SECONDS)
+                .done()
+                .consume(list -> {
                     var start = System.currentTimeMillis();
                     // 根据 索引名称 分组
                     list.stream()
@@ -62,21 +67,27 @@ public class ApiLogStorageServiceImpl implements ApiLogStorageService {
                     log.info("批量保存登录日志 数量: {} , 耗时: {} ms", list.size(), end);
                 });
 
-        operLogQueueHandler = BatchQueueUtils.bufferRate(
-                100, Duration.ofSeconds(10), executorService,
-                list -> {
+        operLogQueueHandler = FQueueRegistry.buildFQueue(OperLogDTO.class)
+                .fanOut(2)
+                .batch()
+                .withChunkSize(100)
+                .withFlushTimeout(10)
+                .withFlushTimeUnit(TimeUnit.SECONDS)
+                .done()
+                .consume(list -> {
                     var start = System.currentTimeMillis();
                     // 根据 索引名称 分组
                     list.stream()
                             .collect(Collectors.groupingBy(OperLogDTO::getTenantId))
                             .forEach((tenantId, values) -> {
-                                var collect = values.stream().map(source -> {
-                                    var target = new LmsOperLog();
-                                    BeanUtils.copyProperties(source, target);
-                                    target.setMethodArgs(JsonUtils.toJson(source.getMethodArgs()));
-                                    target.setResponseResult(JsonUtils.toJson(source.getResponseResult()));
-                                    return target;
-                                }).collect(Collectors.toSet());
+                                var collect = values.stream()
+                                        .map(source -> {
+                                            var target = new LmsOperLog();
+                                            BeanUtils.copyProperties(source, target);
+                                            target.setMethodArgs(JsonUtils.toJson(source.getMethodArgs()));
+                                            target.setResponseResult(JsonUtils.toJson(source.getResponseResult()));
+                                            return target;
+                                        }).collect(Collectors.toSet());
                                 if (!collect.isEmpty()) {
                                     DelegateUtils.delegate(tenantId, () -> operLogService.saveBatch(collect));
                                 }

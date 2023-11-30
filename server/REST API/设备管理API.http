@@ -22,7 +22,7 @@ x-project-id: {{projectId}}
 Authorization: Bearer {{tokenValue}}
 
 {
-  "deviceName": "牛逼网关",
+  "deviceName": "牛逼网关213",
   "status": "0"
 }
 
