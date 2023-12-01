@@ -1,6 +1,6 @@
 package com.xaaef.molly.system.controller;
 
-import com.xaaef.molly.common.consts.WebSocketKey;
+import com.xaaef.molly.common.consts.WebSocketConst;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -41,7 +41,7 @@ public class WsTestController {
     public void sendAll(@RequestParam String msg) {
         log.info("[发送消息]>>>> msg: {}", msg);
         // 发送消息给客户端
-        messagingTemplate.convertAndSend(WebSocketKey.TOPIC, msg);
+        messagingTemplate.convertAndSend(WebSocketConst.TOPIC, msg);
     }
 
 

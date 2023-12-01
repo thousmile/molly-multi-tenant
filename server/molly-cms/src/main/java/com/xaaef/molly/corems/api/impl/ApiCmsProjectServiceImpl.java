@@ -1,7 +1,7 @@
 package com.xaaef.molly.corems.api.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xaaef.molly.common.consts.DefConfigValue;
+import com.xaaef.molly.common.consts.DefConfigValueConst;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.entity.TenantAndProject;
@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.encryptPassword;
-import static com.xaaef.molly.common.consts.ConfigName.PROJECT_DEFAULT_PASSWORD;
+import static com.xaaef.molly.common.consts.ConfigNameConst.PROJECT_DEFAULT_PASSWORD;
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 /**
@@ -84,7 +84,7 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
         // 委托，新的租户id。执行初始化数据
         delegate(po.getTenantId(), () -> {
             var project = new CmsProject()
-                    .setProjectId(DefConfigValue.DEFAULT_PROJECT_ID)
+                    .setProjectId(DefConfigValueConst.DEFAULT_PROJECT_ID)
                     .setProjectName("默认项目")
                     .setLinkman(po.getLinkman())
                     .setContactNumber(po.getContactNumber())
@@ -93,7 +93,7 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
                     .setSort(1L)
                     .setPassword(encryptPassword(password))
                     .setStatus(StatusEnum.NORMAL.getCode())
-                    .setDeptId(DefConfigValue.DEFAULT_DEPT_ID);
+                    .setDeptId(DefConfigValueConst.DEFAULT_DEPT_ID);
             projectMapper.insert(project);
             var result = new CmsProjectDTO();
             BeanUtils.copyProperties(project, result);

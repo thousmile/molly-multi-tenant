@@ -1,20 +1,13 @@
 package com.xaaef.molly.redis;
 
 import cn.hutool.core.text.StrPool;
-import com.xaaef.molly.common.consts.ConfigName;
-import com.xaaef.molly.common.util.TenantUtils;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.util.Assert;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import static com.xaaef.molly.common.consts.LoginConst.*;
+import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * <p>
@@ -29,118 +22,87 @@ import static com.xaaef.molly.common.consts.LoginConst.*;
 @Slf4j
 public class TenantStringRedisSerializer implements RedisSerializer<String> {
 
-    /**
-     * 不隔离的多租户的 redis == equals
-     */
-    private static final List<String> IGNORE_EQUALS_KEYS = List.of(
-            CAPTCHA_CODE_KEY,
-            LOGIN_TOKEN_KEY,
-            FORCED_OFFLINE_KEY,
-            TenantUtils.X_TENANT_ID,
-            ConfigName.REDIS_CACHE_KEY,
-            ConfigName.USER_DEFAULT_PASSWORD,
-            ConfigName.TENANT_DEFAULT_LOGO,
-            ConfigName.TENANT_DEFAULT_ROLE_NAME,
-            ConfigName.GET_HOLIDAY_URL
-    );
-
+    private final Supplier<String> getTenantId;
 
     /**
-     * 不隔离的多租户的 redis == contains
+     * 不隔离的多租户的key。 equals
+     * 如果集合中包含 "captcha_codes" 那么
+     * 除了 captcha_codes 其他的 任何key 都需要拼接 租户ID
      */
-    private static final List<String> IGNORE_CONTAINS_KEYS = List.of(
-            "aaa",
-            "bbb"
-    );
+    private final Set<String> ignoreEqualsKeys;
+
+    /**
+     * 不隔离的多租户的key。 startsWith
+     * 如果集合中包含 "captcha_codes:" 那么
+     * <p>
+     * 以下的redis key 不拼接 租户ID：
+     * key1 :  captcha_codes:123456
+     * key2 :  captcha_codes:user:123456
+     * <p>
+     * 以下的 redis key 会在添加前缀 租户ID：
+     * key1 :  hello:123456
+     * key2 :  app:webui:123456
+     */
+    private final Set<String> ignoreStartsWithKeys;
 
 
-    public static final StringRedisSerializer US_ASCII;
-    public static final StringRedisSerializer ISO_8859_1;
-    public static final StringRedisSerializer UTF_8;
-
-    static {
-        US_ASCII = new StringRedisSerializer(StandardCharsets.US_ASCII);
-        ISO_8859_1 = new StringRedisSerializer(StandardCharsets.ISO_8859_1);
-        UTF_8 = new StringRedisSerializer(StandardCharsets.UTF_8);
-    }
-
-    private static final String TENANT_PREFIX = "tid";
-
-    private static final Boolean IS_LOG = false;
-
-    private final Charset charset;
-
-    public TenantStringRedisSerializer() {
-        this(StandardCharsets.UTF_8);
-    }
-
-
-    public TenantStringRedisSerializer(Charset charset) {
-        Assert.notNull(charset, "Charset must not be null!");
-        this.charset = charset;
+    public TenantStringRedisSerializer(Set<String> ignoreEqualsKeys,
+                                       Set<String> ignoreStartsWithKeys,
+                                       Supplier<String> getTenantId) {
+        this.ignoreEqualsKeys = ignoreEqualsKeys;
+        this.ignoreStartsWithKeys = ignoreStartsWithKeys;
+        this.getTenantId = getTenantId;
     }
 
 
     @Override
-    public byte[] serialize(String string) throws SerializationException {
-        if (StringUtils.isBlank(string)) {
-            echoLog(string);
-            return null;
+    public byte[] serialize(String str) throws SerializationException {
+        if (StrUtil.isBlank(str)) {
+            return new byte[0];
         }
-        if (StringUtils.isBlank(TenantUtils.getTenantId())) {
-            echoLog(string);
-            return string.getBytes(charset);
-        }
-        // 本身带有多租户ID的不拼接
-        if (string.indexOf(StrPool.COLON) > 0 && string.startsWith(TENANT_PREFIX)) {
-            echoLog(string);
-            return string.getBytes(charset);
-        }
-        // true：拼接多租户ID
-        boolean flag = true;
-        if (!IGNORE_EQUALS_KEYS.isEmpty()) {
-            for (String key : IGNORE_EQUALS_KEYS) {
-                if (key.equals(string)) {
-                    flag = false;
-                    break;
+        var tenantId = this.getTenantId.get();
+        // 租户ID 为空，不拼接
+        if (StrUtil.isNotBlank(tenantId)) {
+            var prefix = tenantId + StrPool.COLON;
+            // 如果不包含。就需要拼接租户Id
+            if (!str.startsWith(prefix)) {
+                // true：拼接多租户ID
+                var flag = true;
+                // 判断 ignoreEqualsKeys 是否包含 此key
+                if (!ignoreEqualsKeys.isEmpty()) {
+                    flag = ignoreEqualsKeys.stream().noneMatch(str::equals);
+                }
+                if (flag && !ignoreStartsWithKeys.isEmpty()) {
+                    // 判断 ignoreStartsWithKeys 中 此key
+                    flag = ignoreStartsWithKeys.stream().noneMatch(str::startsWith);
+                }
+                if (flag) {
+                    return (prefix + str).getBytes();
                 }
             }
         }
-        if (flag) {
-            if (!IGNORE_EQUALS_KEYS.isEmpty()) {
-                for (String key : IGNORE_EQUALS_KEYS) {
-                    if (string.startsWith(key)) {
-                        flag = false;
-                        break;
-                    }
-                }
-            }
-        }
-        if (flag) {
-            echoLog(TenantUtils.getTenantId() + StrPool.COLON + string);
-            return (TenantUtils.getTenantId() + StrPool.COLON + string).getBytes(charset);
-        }
-        echoLog(string);
-        return string.getBytes(charset);
-    }
-
-
-    private void echoLog(String key) {
-        if (IS_LOG) {
-            log.info("echoLog redis key:  {} ", key);
-        }
+        return str.getBytes();
     }
 
 
     @Override
     public String deserialize(byte[] bytes) throws SerializationException {
-        return (bytes == null ? null : new String(bytes, charset)
-                .replaceFirst(TenantUtils.getTenantId() + ":", ""));
+        if (bytes == null) {
+            return null;
+        }
+        var str = new String(bytes);
+        var tenantId = this.getTenantId.get();
+        if (StrUtil.isNotBlank(str) && StrUtil.isNotBlank(tenantId)) {
+            str = StrUtil.removePrefix(str, tenantId + StrPool.COLON);
+        }
+        return str;
     }
+
 
     @Override
     public Class<?> getTargetType() {
         return String.class;
     }
+
 
 }

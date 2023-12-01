@@ -1,7 +1,7 @@
 package com.xaaef.molly.common.consts;
 
 
-import static com.xaaef.molly.common.consts.WebSocketKey.STOMP_ENDPOINT;
+import static com.xaaef.molly.common.consts.WebSocketConst.STOMP_ENDPOINT;
 
 public class JwtConst {
 

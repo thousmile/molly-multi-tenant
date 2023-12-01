@@ -1,7 +1,7 @@
 package com.xaaef.molly.web.ws;
 
 
-import com.xaaef.molly.common.consts.WebSocketKey;
+import com.xaaef.molly.common.consts.WebSocketConst;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -49,7 +49,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
          * 5. setHandshakeHandler 添加拦截处理，这里MyPrincipalHandshakeHandler 封装的认证用户信息
          */
         //配置客户端连接地址
-        registry.addEndpoint(WebSocketKey.STOMP_ENDPOINT)
+        registry.addEndpoint(WebSocketConst.STOMP_ENDPOINT)
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
@@ -66,13 +66,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // 初始化
         taskScheduler.initialize();
         // 设置广播节点
-        registry.enableSimpleBroker(WebSocketKey.TOPIC, WebSocketKey.QUEUE)
+        registry.enableSimpleBroker(WebSocketConst.TOPIC, WebSocketConst.QUEUE)
                 .setHeartbeatValue(new long[]{10000, 10000})
                 .setTaskScheduler(taskScheduler);
         // 客户端向服务端发送消息需有/app 前缀
-        registry.setApplicationDestinationPrefixes(WebSocketKey.PREFIXES);
+        registry.setApplicationDestinationPrefixes(WebSocketConst.PREFIXES);
         // 指定用户发送（一对一）的前缀 /user/
-        registry.setUserDestinationPrefix(WebSocketKey.USER);
+        registry.setUserDestinationPrefix(WebSocketConst.USER);
     }
 
 

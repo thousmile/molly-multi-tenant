@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
-import com.xaaef.molly.common.consts.DefConfigValue;
+import com.xaaef.molly.common.consts.DefConfigValueConst;
 import com.xaaef.molly.common.domain.SimpPushMessage;
 import com.xaaef.molly.common.domain.SmallTenant;
 import com.xaaef.molly.common.enums.StatusEnum;
@@ -49,8 +49,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
-import static com.xaaef.molly.common.consts.ConfigName.TENANT_DEFAULT_LOGO;
-import static com.xaaef.molly.common.consts.ConfigName.USER_DEFAULT_PASSWORD;
+import static com.xaaef.molly.common.consts.ConfigNameConst.TENANT_DEFAULT_LOGO;
+import static com.xaaef.molly.common.consts.ConfigNameConst.USER_DEFAULT_PASSWORD;
 import static com.xaaef.molly.common.consts.SimpMessageConst.QUEUE_SINGLE_CREATE_TENANT;
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
@@ -390,7 +390,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                         projectService.initProject(initTenant);
 
                         var smallTenant = BeanUtil.copyProperties(initTenant, SmallTenant.class);
-                        smallTenant.setProjectIds(new HashSet<>(Set.of(DefConfigValue.DEFAULT_PROJECT_ID)));
+                        smallTenant.setProjectIds(new HashSet<>(Set.of(DefConfigValueConst.DEFAULT_PROJECT_ID)));
                         // 将 新创建的 租户信息 保存到 redis 中
                         tenantManager.addTenantId(smallTenant);
 

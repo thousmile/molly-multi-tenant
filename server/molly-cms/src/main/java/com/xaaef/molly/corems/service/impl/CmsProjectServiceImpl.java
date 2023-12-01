@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
-import static com.xaaef.molly.common.consts.ConfigName.PROJECT_DEFAULT_PASSWORD;
+import static com.xaaef.molly.common.consts.ConfigNameConst.PROJECT_DEFAULT_PASSWORD;
 import static com.xaaef.molly.common.consts.MbpConst.PROJECT_ID;
 
 

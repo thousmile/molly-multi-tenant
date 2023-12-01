@@ -3,7 +3,7 @@ package com.xaaef.molly;
 import cn.hutool.core.util.RandomUtil;
 import com.xaaef.molly.auth.enums.GrantType;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
-import com.xaaef.molly.common.consts.ConfigName;
+import com.xaaef.molly.common.consts.ConfigNameConst;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.GenderType;
 import com.xaaef.molly.common.enums.StatusEnum;
@@ -107,7 +107,7 @@ public class MollyApplicationTests {
     @Test
     public void test2() throws Exception {
         TenantUtils.setTenantId("master");
-        var valueByKey = configService.getValueByKey(ConfigName.USER_DEFAULT_PASSWORD);
+        var valueByKey = configService.getValueByKey(ConfigNameConst.USER_DEFAULT_PASSWORD);
         System.out.println(valueByKey);
     }
 

@@ -40,6 +40,8 @@ public class JsonUtils {
 
     private static final ObjectMapper MAPPER;
 
+    private static final JavaTimeModule JAVA_8_TIME_MODULE;
+
     static {
         MAPPER = new ObjectMapper();
         JavaTimeModule javaTimeModule = new JavaTimeModule();
@@ -50,7 +52,7 @@ public class JsonUtils {
         javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DatePattern.NORM_TIME_FORMATTER));
         javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DatePattern.NORM_TIME_FORMATTER));
         MAPPER.registerModule(javaTimeModule);
-
+        JAVA_8_TIME_MODULE = javaTimeModule;
 /*
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
@@ -60,6 +62,10 @@ public class JsonUtils {
 */
 
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
+    public static JavaTimeModule getJavaTimeModule() {
+        return JAVA_8_TIME_MODULE;
     }
 
     public static ObjectMapper getMapper() {

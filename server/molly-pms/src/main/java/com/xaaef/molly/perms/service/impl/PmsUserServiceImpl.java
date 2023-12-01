@@ -44,7 +44,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
-import static com.xaaef.molly.common.consts.ConfigName.USER_DEFAULT_PASSWORD;
+import static com.xaaef.molly.common.consts.ConfigNameConst.USER_DEFAULT_PASSWORD;
 import static com.xaaef.molly.common.enums.AdminFlag.NO;
 import static com.xaaef.molly.common.enums.MenuTypeEnum.BUTTON;
 import static com.xaaef.molly.common.enums.MenuTypeEnum.MENU;

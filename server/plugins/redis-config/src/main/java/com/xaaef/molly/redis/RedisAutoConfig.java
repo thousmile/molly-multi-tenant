@@ -1,6 +1,8 @@
 package com.xaaef.molly.redis;
 
+import com.xaaef.molly.common.consts.RedisKeyConst;
 import com.xaaef.molly.common.util.JsonUtils;
+import com.xaaef.molly.common.util.TenantUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
@@ -21,7 +23,6 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
-
 
 /**
  * <p>
@@ -50,36 +51,31 @@ public class RedisAutoConfig {
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         var redisTemplate = new RedisTemplate<String, Object>();
         redisTemplate.setConnectionFactory(factory);
-
         var valueSerializer = valueSerializer();
         var keySerializer = keySerializer();
-        var tenantKeySerializer = new TenantStringRedisSerializer();
-
-        redisTemplate.setKeySerializer(tenantKeySerializer);
+        redisTemplate.setKeySerializer(tenantKeySerializer());
         redisTemplate.setHashKeySerializer(keySerializer);
         redisTemplate.setValueSerializer(valueSerializer);
         redisTemplate.setHashValueSerializer(valueSerializer);
         redisTemplate.afterPropertiesSet();
-        log.debug("自定义 RedisTemplate 加载完成");
         return redisTemplate;
     }
 
 
     @Bean
     @ConditionalOnMissingBean(StringRedisTemplate.class)
-    public StringRedisTemplate StringRedisTemplate(RedisConnectionFactory factory) {
+    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory factory) {
         var redisTemplate = new StringRedisTemplate();
-        redisTemplate.setKeySerializer(new TenantStringRedisSerializer());
+        redisTemplate.setKeySerializer(tenantKeySerializer());
         redisTemplate.setConnectionFactory(factory);
         redisTemplate.afterPropertiesSet();
-        log.debug("自定义 StringRedisTemplate 加载完成");
         return redisTemplate;
     }
 
 
     @Bean
     public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
-        var tenantKeySerializer = new TenantStringRedisSerializer();
+        var tenantKeySerializer = tenantKeySerializer();
         var valueSerializer = valueSerializer();
         var redisProps = cacheProps.getRedis();
         var entryTtl = redisProps.getTimeToLive() == null ? Duration.ofSeconds(180) : redisProps.getTimeToLive();
@@ -96,6 +92,15 @@ public class RedisAutoConfig {
 
     private static RedisSerializer<String> keySerializer() {
         return new StringRedisSerializer();
+    }
+
+
+    private static RedisSerializer<String> tenantKeySerializer() {
+        return new TenantStringRedisSerializer(
+                RedisKeyConst.IGNORE_EQUALS_KEYS,
+                RedisKeyConst.IGNORE_STARTS_WITH_KEYS,
+                TenantUtils::getTenantId
+        );
     }
 
 

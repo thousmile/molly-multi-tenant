@@ -10,7 +10,7 @@ package com.xaaef.molly.common.consts;
  * @date 2021/7/16 15:15
  */
 
-public class DefConfigValue {
+public class DefConfigValueConst {
 
     /**
      * 每个租户的 默认项目ID

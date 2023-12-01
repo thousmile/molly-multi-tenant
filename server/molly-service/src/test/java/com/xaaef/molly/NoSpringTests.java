@@ -7,11 +7,14 @@ import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.PageUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
+import com.xaaef.molly.common.consts.ConfigNameConst;
 import com.xaaef.molly.common.consts.JwtConst;
-import com.xaaef.molly.common.util.WrapExcelUtils;
 import com.xaaef.molly.common.util.JsonUtils;
+import com.xaaef.molly.common.util.TenantUtils;
+import com.xaaef.molly.common.util.WrapExcelUtils;
 import com.xaaef.molly.internal.dto.OperateUserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import liquibase.integration.spring.MultiTenantSpringLiquibase;
@@ -33,6 +36,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static com.xaaef.molly.common.consts.LoginConst.*;
 import static com.xaaef.molly.common.util.IpUtils.getLocalIPS;
 
 
@@ -206,6 +210,29 @@ public class NoSpringTests {
     public void test13() {
         int i = PageUtil.totalPage(112, 10);
         System.out.println(i);
+    }
+
+
+    @Test
+    public void test14() {
+        var ignoreContainsKeys = List.of(
+                CAPTCHA_CODE_KEY,
+                LOGIN_TOKEN_KEY,
+                FORCED_OFFLINE_KEY,
+                TenantUtils.X_TENANT_ID,
+                ConfigNameConst.REDIS_CACHE_KEY,
+                ConfigNameConst.USER_DEFAULT_PASSWORD,
+                ConfigNameConst.TENANT_DEFAULT_LOGO,
+                ConfigNameConst.TENANT_DEFAULT_ROLE_NAME,
+                ConfigNameConst.GET_HOLIDAY_URL
+        );
+        var str = "waeq" + IdUtil.nanoId();
+        boolean b1 = ignoreContainsKeys.stream().noneMatch(s -> StrUtil.contains(str, s));
+        boolean b2 = ignoreContainsKeys.stream().noneMatch(str::startsWith);
+        boolean b3 = ignoreContainsKeys.stream().noneMatch(str::equals);
+        System.out.printf("%s contains: %s\n", str, b1);
+        System.out.printf("%s startsWith: %s\n", str, b2);
+        System.out.printf("%s equals: %s\n", str, b3);
     }
 
 

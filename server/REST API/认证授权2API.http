@@ -12,10 +12,10 @@ x-tenant-id: google
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0
 
 {
-  "username": "cb44dedf9846",
-  "password": "123456",
+  "username": "test123",
+  "password": "test123",
   "codeKey": "sNHnDNSliZe7ynOLem",
-  "codeText": "8mp8"
+  "codeText": "uwgn"
 }
 
 > {%
@@ -43,7 +43,7 @@ Authorization: Bearer {{tokenValue}}
 GET {{baseUrl}}/auth/login/user
 Content-Type: application/json
 x-tenant-id: google
-x-project-id: 10001
+x-project-id: 10003
 Authorization: Bearer {{tokenValue}}
 
 

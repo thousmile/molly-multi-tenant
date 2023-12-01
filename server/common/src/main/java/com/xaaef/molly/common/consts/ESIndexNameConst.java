@@ -13,7 +13,7 @@ import com.xaaef.molly.common.util.TenantUtils;
  * @date 2021/8/10 18:25
  */
 
-public class ESIndexName {
+public class ESIndexNameConst {
 
     /**
      * 操作日志 索引名称
