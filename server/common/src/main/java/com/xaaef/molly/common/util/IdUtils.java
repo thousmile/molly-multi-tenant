@@ -3,6 +3,7 @@ package com.xaaef.molly.common.util;
 import cn.hutool.core.util.RandomUtil;
 import com.github.yitter.contract.IdGeneratorOptions;
 import com.github.yitter.idgen.YitIdHelper;
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -16,11 +17,13 @@ import com.github.yitter.idgen.YitIdHelper;
  */
 
 
+@Slf4j
 public class IdUtils {
 
     static {
         // workerId 范围 1~63。
         var workerId = (short) RandomUtil.randomInt(1, 63);
+        log.info("IdUtils random workerId: {}", workerId);
         var options = new IdGeneratorOptions(workerId);
         YitIdHelper.setIdGenerator(options);
     }
