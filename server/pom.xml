@@ -36,6 +36,8 @@
         <maven-compiler.version>3.11.0</maven-compiler.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- 优化的雪花算法（雪花漂移），它生成的ID更短、速度更快 -->
+        <idgenerator.version>1.0.6</idgenerator.version>
         <!-- x-file-storage文件上传 文档地址 https://x-file-storage.xuyanwu.cn -->
         <storage.version>2.0.0</storage.version>
         <!-- 七牛云文件上传 -->

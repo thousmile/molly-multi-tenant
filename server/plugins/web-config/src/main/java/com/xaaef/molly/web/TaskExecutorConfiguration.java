@@ -26,8 +26,8 @@ public class TaskExecutorConfiguration {
     @Primary
     public ThreadPoolTaskExecutor taskExecutor() {
         var executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);
-        executor.setMaxPoolSize(8);
+        executor.setCorePoolSize(8);
+        executor.setMaxPoolSize(16);
         executor.setKeepAliveSeconds(60);
         executor.setQueueCapacity(10000);
         executor.setThreadNamePrefix("task-");

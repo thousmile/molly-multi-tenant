@@ -137,22 +137,22 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
         }
         // 如果用户密码为空
         if (StringUtils.isBlank(entity.getPassword())) {
-            var userDefaultPassword = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD)).orElse("123456");
+            var userDefaultPassword = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD))
+                    .orElse("123456");
             entity.setPassword(userDefaultPassword);
         }
 
         // 密码加密
         entity.setPassword(encryptPassword(entity.getPassword()));
 
-        if (entity.getAdminFlag() == null) {
+        if (entity.getAdminFlag() == null || !isAdminUser()) {
             entity.setAdminFlag(NO.getCode());
-        } else {
-            if (!isAdminUser()) {
-                entity.setAdminFlag(NO.getCode());
-            }
         }
 
-        entity.setStatus(StatusEnum.NORMAL.getCode());
+        if (entity.getStatus() == null) {
+            entity.setStatus(StatusEnum.NORMAL.getCode());
+        }
+
         entity.setUserId(IdUtils.getStandaloneId());
         var ok = super.save(entity);
 

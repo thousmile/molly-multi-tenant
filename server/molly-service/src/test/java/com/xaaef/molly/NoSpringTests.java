@@ -8,6 +8,8 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.PageUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.github.yitter.contract.IdGeneratorOptions;
+import com.github.yitter.idgen.YitIdHelper;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.consts.ConfigNameConst;
@@ -233,6 +235,16 @@ public class NoSpringTests {
         System.out.printf("%s contains: %s\n", str, b1);
         System.out.printf("%s startsWith: %s\n", str, b2);
         System.out.printf("%s equals: %s\n", str, b3);
+    }
+
+
+    @Test
+    public void test15() {
+        var options = new IdGeneratorOptions((short) 63);
+        YitIdHelper.setIdGenerator(options);
+        for (int i = 0; i < 100; i++) {
+            System.out.println(YitIdHelper.nextId());
+        }
     }
 
 
