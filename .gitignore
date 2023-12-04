@@ -8,6 +8,10 @@ server/molly-service/src/main/resources/application-*.yml
 /server/molly-service/src/main/resources/application-*.yml
 ./server/molly-service/src/main/resources/application-*.yml
 
+/platform-web-ui/pnpm-lock.yaml
+/tenant-web-ui/pnpm-lock.yaml
+
+
 ### STS ###
 .apt_generated
 .classpath

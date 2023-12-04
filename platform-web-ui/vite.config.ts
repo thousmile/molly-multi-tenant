@@ -22,8 +22,6 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
       }
     },
     server: {
-      /** 是否开启 HTTPS */
-      https: false,
       /** 设置 host: true 才可以使用 Network 的形式，以 IP 访问项目 */
       host: true, // host: "0.0.0.0"
       /** 端口号 */
@@ -41,10 +39,15 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
           ws: true,
           /** 是否允许跨域 */
           changeOrigin: true,
-          rewrite: (path) => path.replace("/api/v1", "")
+          rewrite: (path: string) => path.replace("/api/v1", "")
         }
+      },
+      /** 预热常用文件，提高初始页面加载速度 */
+      warmup: {
+        clientFiles: ["./src/{views,components}/*.vue"]
       }
     },
+
     build: {
       /** 单个 chunk 文件的大小超过 2048KB 时发出警告 */
       chunkSizeWarningLimit: 2048,
