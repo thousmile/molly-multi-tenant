@@ -1,5 +1,6 @@
 package com.xaaef.molly.common.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -19,11 +20,13 @@ public class RectPoint<T> {
     /**
      * x 坐标
      */
+    @Schema(description = "x坐标")
     private Double x;
 
     /**
      * y 坐标
      */
+    @Schema(description = "y坐标")
     private Double y;
 
     /**

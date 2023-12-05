@@ -1,5 +1,6 @@
 package com.xaaef.molly.common.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,11 +27,13 @@ public class Pagination<T> {
     /**
      * 总共，有多少条
      */
+    @Schema(description = "总数")
     private Long total;
 
     /**
      * 数据
      */
+    @Schema(description = "数据列表")
     private List<T> list;
 
 }
