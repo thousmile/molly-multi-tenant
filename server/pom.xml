@@ -33,7 +33,7 @@
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <maven-compiler.version>3.12.0</maven-compiler.version>
+        <maven-compiler.version>3.12.1</maven-compiler.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- 优化的雪花算法（雪花漂移），它生成的ID更短、速度更快 -->
@@ -43,19 +43,19 @@
         <!-- 七牛云文件上传 -->
         <qiniu-storage.version>7.14.0</qiniu-storage.version>
         <!-- 阿里云文件上传 -->
-        <aliyun-storage.version>3.17.2</aliyun-storage.version>
+        <aliyun-storage.version>3.17.3</aliyun-storage.version>
         <!-- 服务器运行状态查询， 如: CPU、磁盘、内存 -->
-        <oshi.version>6.4.6</oshi.version>
+        <oshi.version>6.4.10</oshi.version>
         <!-- Excel文件操作 -->
         <apache-poi.version>5.2.5</apache-poi.version>
         <!-- 小而美的工具库 -->
-        <hutool.version>5.8.23</hutool.version>
+        <hutool.version>5.8.24</hutool.version>
         <!-- 简单、方便的OpenAPI接口文档 -->
         <knife4j.version>4.4.0</knife4j.version>
         <!-- MyBatis 的增强工具，基友搭配，效率翻倍 -->
-        <mybatis-plus.version>3.5.4.1</mybatis-plus.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <!-- JavaEE 颠覆者 -->
-        <spring-boot.version>3.1.6</spring-boot.version>
+        <spring-boot.version>3.1.7</spring-boot.version>
     </properties>
 
 
