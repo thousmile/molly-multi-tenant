@@ -1,7 +1,6 @@
 package com.xaaef.molly.corems.api.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xaaef.molly.common.consts.DefConfigValueConst;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.entity.TenantAndProject;
@@ -22,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.encryptPassword;
-import static com.xaaef.molly.common.consts.ConfigNameConst.PROJECT_DEFAULT_PASSWORD;
+import static com.xaaef.molly.common.consts.ConfigDataConst.*;
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 /**
@@ -79,12 +78,12 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void initProject(SysTenantDTO po) {
-        var password = Optional.ofNullable(configService.getValueByKey(PROJECT_DEFAULT_PASSWORD.getKey()))
-                .orElse(PROJECT_DEFAULT_PASSWORD.getValue());
+        var password = Optional.ofNullable(configService.getValueByKey(DEFAULT_PROJECT_PASSWORD.getKey()))
+                .orElse(DEFAULT_PROJECT_PASSWORD.getValue());
         // 委托，新的租户id。执行初始化数据
         delegate(po.getTenantId(), () -> {
             var project = new CmsProject()
-                    .setProjectId(DefConfigValueConst.DEFAULT_PROJECT_ID)
+                    .setProjectId(DEFAULT_PROJECT_ID.getValue())
                     .setProjectName("默认项目")
                     .setLinkman(po.getLinkman())
                     .setContactNumber(po.getContactNumber())
@@ -93,7 +92,7 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
                     .setSort(1L)
                     .setPassword(encryptPassword(password))
                     .setStatus(StatusEnum.NORMAL.getCode())
-                    .setDeptId(DefConfigValueConst.DEFAULT_DEPT_ID);
+                    .setDeptId(DEFAULT_DEPT_ID.getValue());
             projectMapper.insert(project);
             var result = new CmsProjectDTO();
             BeanUtils.copyProperties(project, result);

@@ -24,7 +24,7 @@ public class RedisKeyConst {
      */
     public final static Set<String> IGNORE_EQUALS_KEYS = Set.of(
             TenantUtils.X_TENANT_ID,
-            ConfigNameConst.REDIS_CACHE_KEY
+            ConfigDataConst.REDIS_CACHE_KEY
     );
 
 

@@ -12,7 +12,7 @@ import com.github.yitter.contract.IdGeneratorOptions;
 import com.github.yitter.idgen.YitIdHelper;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
-import com.xaaef.molly.common.consts.ConfigNameConst;
+import com.xaaef.molly.common.consts.ConfigDataConst;
 import com.xaaef.molly.common.consts.JwtConst;
 import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.common.util.TenantUtils;
@@ -222,11 +222,11 @@ public class NoSpringTests {
                 LOGIN_TOKEN_KEY,
                 FORCED_OFFLINE_KEY,
                 TenantUtils.X_TENANT_ID,
-                ConfigNameConst.REDIS_CACHE_KEY,
-                ConfigNameConst.USER_DEFAULT_PASSWORD.getKey(),
-                ConfigNameConst.TENANT_DEFAULT_LOGO.getKey(),
-                ConfigNameConst.TENANT_DEFAULT_ROLE_NAME.getKey(),
-                ConfigNameConst.GET_HOLIDAY_URL.getKey()
+                ConfigDataConst.REDIS_CACHE_KEY,
+                ConfigDataConst.DEFAULT_USER_PASSWORD.getKey(),
+                ConfigDataConst.DEFAULT_TENANT_LOGO.getKey(),
+                ConfigDataConst.DEFAULT_ROLE_NAME.getKey(),
+                ConfigDataConst.GET_HOLIDAY_URL.getKey()
         );
         var str = "waeq" + IdUtil.nanoId();
         boolean b1 = ignoreContainsKeys.stream().noneMatch(s -> StrUtil.contains(str, s));

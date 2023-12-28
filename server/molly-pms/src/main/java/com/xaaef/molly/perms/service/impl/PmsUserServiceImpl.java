@@ -44,7 +44,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
-import static com.xaaef.molly.common.consts.ConfigNameConst.USER_DEFAULT_PASSWORD;
+import static com.xaaef.molly.common.consts.ConfigDataConst.DEFAULT_USER_PASSWORD;
 import static com.xaaef.molly.common.enums.AdminFlag.NO;
 import static com.xaaef.molly.common.enums.MenuTypeEnum.BUTTON;
 import static com.xaaef.molly.common.enums.MenuTypeEnum.MENU;
@@ -137,8 +137,8 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
         }
         // 如果用户密码为空
         if (StringUtils.isBlank(entity.getPassword())) {
-            var userDefaultPassword = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD.getKey()))
-                    .orElse(USER_DEFAULT_PASSWORD.getValue());
+            var userDefaultPassword = Optional.ofNullable(configService.getValueByKey(DEFAULT_USER_PASSWORD.getKey()))
+                    .orElse(DEFAULT_USER_PASSWORD.getValue());
             entity.setPassword(userDefaultPassword);
         }
 

@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
-import com.xaaef.molly.common.consts.DefConfigValueConst;
 import com.xaaef.molly.common.domain.SimpPushMessage;
 import com.xaaef.molly.common.domain.SmallTenant;
 import com.xaaef.molly.common.enums.StatusEnum;
@@ -49,8 +48,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
-import static com.xaaef.molly.common.consts.ConfigNameConst.TENANT_DEFAULT_LOGO;
-import static com.xaaef.molly.common.consts.ConfigNameConst.USER_DEFAULT_PASSWORD;
+import static com.xaaef.molly.common.consts.ConfigDataConst.*;
 import static com.xaaef.molly.common.consts.SimpMessageConst.QUEUE_SINGLE_CREATE_TENANT;
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
@@ -197,8 +195,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
             entity.setStatus(StatusEnum.NORMAL.getCode());
         }
         if (entity.getLogo() == null) {
-            var defaultLogoPath = Optional.ofNullable(configService.getValueByKey(TENANT_DEFAULT_LOGO.getKey()))
-                    .orElse(TENANT_DEFAULT_LOGO.getValue());
+            var defaultLogoPath = Optional.ofNullable(configService.getValueByKey(DEFAULT_TENANT_LOGO.getKey()))
+                    .orElse(DEFAULT_TENANT_LOGO.getValue());
             entity.setLogo(defaultLogoPath);
         }
         if (entity.getTemplates() != null && !entity.getTemplates().isEmpty()) {
@@ -246,8 +244,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
 
         // 默认密码
         if (StringUtils.isBlank(po.getAdminPwd())) {
-            var password = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD.getKey()))
-                    .orElse(USER_DEFAULT_PASSWORD.getValue());
+            var password = Optional.ofNullable(configService.getValueByKey(DEFAULT_USER_PASSWORD.getKey()))
+                    .orElse(DEFAULT_USER_PASSWORD.getValue());
             po.setAdminPwd(password);
         }
 
@@ -318,8 +316,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         var initTenantDTO = new SysTenantDTO();
         BeanUtils.copyProperties(source, initTenantDTO);
 
-        var password = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD.getKey()))
-                .orElse(USER_DEFAULT_PASSWORD.getValue());
+        var password = Optional.ofNullable(configService.getValueByKey(DEFAULT_USER_PASSWORD.getKey()))
+                .orElse(DEFAULT_USER_PASSWORD.getValue());
         var initUser = new InitUserDTO()
                 .setTenantId(source.getTenantId())
                 .setName(source.getName())
@@ -390,7 +388,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                         projectService.initProject(initTenant);
 
                         var smallTenant = BeanUtil.copyProperties(initTenant, SmallTenant.class);
-                        smallTenant.setProjectIds(new HashSet<>(Set.of(DefConfigValueConst.DEFAULT_PROJECT_ID)));
+                        smallTenant.setProjectIds(new HashSet<>(Set.of(DEFAULT_PROJECT_ID.getValue())));
                         // 将 新创建的 租户信息 保存到 redis 中
                         tenantManager.addTenantId(smallTenant);
 

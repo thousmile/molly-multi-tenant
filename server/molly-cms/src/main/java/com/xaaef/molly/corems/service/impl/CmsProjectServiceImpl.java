@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
-import static com.xaaef.molly.common.consts.ConfigNameConst.PROJECT_DEFAULT_PASSWORD;
+import static com.xaaef.molly.common.consts.ConfigDataConst.DEFAULT_PROJECT_PASSWORD;
 import static com.xaaef.molly.common.consts.MbpConst.PROJECT_ID;
 
 
@@ -94,8 +94,8 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
             throw new RuntimeException("项目所属部门必须填写！");
         }
         if (StrUtil.isEmpty(entity.getPassword())) {
-            var password = Optional.ofNullable(configService.getValueByKey(PROJECT_DEFAULT_PASSWORD.getKey()))
-                    .orElse(PROJECT_DEFAULT_PASSWORD.getValue());
+            var password = Optional.ofNullable(configService.getValueByKey(DEFAULT_PROJECT_PASSWORD.getKey()))
+                    .orElse(DEFAULT_PROJECT_PASSWORD.getValue());
             entity.setPassword(password);
         }
         entity.setPassword(encryptPassword(entity.getPassword()));

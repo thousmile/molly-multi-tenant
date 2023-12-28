@@ -1,7 +1,6 @@
 package com.xaaef.molly.perms.api.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xaaef.molly.common.consts.DefConfigValueConst;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
@@ -26,7 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.encryptPassword;
-import static com.xaaef.molly.common.consts.ConfigNameConst.TENANT_DEFAULT_ROLE_NAME;
+import static com.xaaef.molly.common.consts.ConfigDataConst.*;
 import static com.xaaef.molly.common.enums.AdminFlag.YES;
 import static com.xaaef.molly.common.enums.GenderType.MALE;
 import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
@@ -113,13 +112,13 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
     @Override
     public void initUserAndRoleAndDept(InitUserDTO po) {
         // 租户默认角色名称
-        var roleName = Optional.ofNullable(configService.getValueByKey(TENANT_DEFAULT_ROLE_NAME.getKey()))
-                .orElse(TENANT_DEFAULT_ROLE_NAME.getValue());
+        var roleName = Optional.ofNullable(configService.getValueByKey(DEFAULT_ROLE_NAME.getKey()))
+                .orElse(DEFAULT_ROLE_NAME.getValue());
         // 委托，新的租户id。执行初始化数据
         delegate(po.getTenantId(), () -> {
 
             var pmsDept = new PmsDept()
-                    .setDeptId(DefConfigValueConst.DEFAULT_DEPT_ID)
+                    .setDeptId(DEFAULT_DEPT_ID.getValue())
                     .setParentId(0L)
                     .setDeptName(po.getName())
                     .setLeader(po.getAdminNickname())
@@ -133,7 +132,7 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
 
             var newRoleName = String.format("%s %s", po.getName(), roleName);
             var pmsRole = new PmsRole()
-                    .setRoleId(DefConfigValueConst.DEFAULT_ROLE_ID)
+                    .setRoleId(DEFAULT_ROLE_ID.getValue())
                     .setRoleName(newRoleName)
                     .setSort(1L)
                     .setDescription(newRoleName);
