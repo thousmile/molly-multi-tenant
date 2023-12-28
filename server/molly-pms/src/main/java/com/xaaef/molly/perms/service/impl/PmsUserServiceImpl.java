@@ -137,8 +137,8 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
         }
         // 如果用户密码为空
         if (StringUtils.isBlank(entity.getPassword())) {
-            var userDefaultPassword = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD))
-                    .orElse("123456");
+            var userDefaultPassword = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD.getKey()))
+                    .orElse(USER_DEFAULT_PASSWORD.getValue());
             entity.setPassword(userDefaultPassword);
         }
 

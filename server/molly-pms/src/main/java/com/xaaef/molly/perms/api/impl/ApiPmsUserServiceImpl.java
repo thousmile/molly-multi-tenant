@@ -113,8 +113,8 @@ public class ApiPmsUserServiceImpl implements ApiPmsUserService {
     @Override
     public void initUserAndRoleAndDept(InitUserDTO po) {
         // 租户默认角色名称
-        var roleName = Optional.ofNullable(configService.getValueByKey(TENANT_DEFAULT_ROLE_NAME))
-                .orElse("操作员");
+        var roleName = Optional.ofNullable(configService.getValueByKey(TENANT_DEFAULT_ROLE_NAME.getKey()))
+                .orElse(TENANT_DEFAULT_ROLE_NAME.getValue());
         // 委托，新的租户id。执行初始化数据
         delegate(po.getTenantId(), () -> {
 

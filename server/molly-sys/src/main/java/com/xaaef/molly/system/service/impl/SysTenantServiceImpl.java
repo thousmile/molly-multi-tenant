@@ -197,8 +197,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
             entity.setStatus(StatusEnum.NORMAL.getCode());
         }
         if (entity.getLogo() == null) {
-            var defaultLogoPath = Optional.ofNullable(configService.getValueByKey(TENANT_DEFAULT_LOGO))
-                    .orElse("https://images.xaaef.com/molly_master_logo.png");
+            var defaultLogoPath = Optional.ofNullable(configService.getValueByKey(TENANT_DEFAULT_LOGO.getKey()))
+                    .orElse(TENANT_DEFAULT_LOGO.getValue());
             entity.setLogo(defaultLogoPath);
         }
         if (entity.getTemplates() != null && !entity.getTemplates().isEmpty()) {
@@ -246,8 +246,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
 
         // 默认密码
         if (StringUtils.isBlank(po.getAdminPwd())) {
-            var password = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD))
-                    .orElse("123456");
+            var password = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD.getKey()))
+                    .orElse(USER_DEFAULT_PASSWORD.getValue());
             po.setAdminPwd(password);
         }
 
@@ -318,8 +318,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         var initTenantDTO = new SysTenantDTO();
         BeanUtils.copyProperties(source, initTenantDTO);
 
-        var password = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD))
-                .orElse("123456");
+        var password = Optional.ofNullable(configService.getValueByKey(USER_DEFAULT_PASSWORD.getKey()))
+                .orElse(USER_DEFAULT_PASSWORD.getValue());
         var initUser = new InitUserDTO()
                 .setTenantId(source.getTenantId())
                 .setName(source.getName())

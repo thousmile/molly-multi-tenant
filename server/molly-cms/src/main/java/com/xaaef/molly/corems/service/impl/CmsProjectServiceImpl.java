@@ -94,8 +94,8 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
             throw new RuntimeException("项目所属部门必须填写！");
         }
         if (StrUtil.isEmpty(entity.getPassword())) {
-            var password = Optional.ofNullable(configService.getValueByKey(PROJECT_DEFAULT_PASSWORD))
-                    .orElse("123456");
+            var password = Optional.ofNullable(configService.getValueByKey(PROJECT_DEFAULT_PASSWORD.getKey()))
+                    .orElse(PROJECT_DEFAULT_PASSWORD.getValue());
             entity.setPassword(password);
         }
         entity.setPassword(encryptPassword(entity.getPassword()));

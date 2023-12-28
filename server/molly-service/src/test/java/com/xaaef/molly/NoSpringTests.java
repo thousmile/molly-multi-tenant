@@ -223,10 +223,10 @@ public class NoSpringTests {
                 FORCED_OFFLINE_KEY,
                 TenantUtils.X_TENANT_ID,
                 ConfigNameConst.REDIS_CACHE_KEY,
-                ConfigNameConst.USER_DEFAULT_PASSWORD,
-                ConfigNameConst.TENANT_DEFAULT_LOGO,
-                ConfigNameConst.TENANT_DEFAULT_ROLE_NAME,
-                ConfigNameConst.GET_HOLIDAY_URL
+                ConfigNameConst.USER_DEFAULT_PASSWORD.getKey(),
+                ConfigNameConst.TENANT_DEFAULT_LOGO.getKey(),
+                ConfigNameConst.TENANT_DEFAULT_ROLE_NAME.getKey(),
+                ConfigNameConst.GET_HOLIDAY_URL.getKey()
         );
         var str = "waeq" + IdUtil.nanoId();
         boolean b1 = ignoreContainsKeys.stream().noneMatch(s -> StrUtil.contains(str, s));

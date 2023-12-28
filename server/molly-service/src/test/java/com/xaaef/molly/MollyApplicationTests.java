@@ -107,7 +107,7 @@ public class MollyApplicationTests {
     @Test
     public void test2() throws Exception {
         TenantUtils.setTenantId("master");
-        var valueByKey = configService.getValueByKey(ConfigNameConst.USER_DEFAULT_PASSWORD);
+        var valueByKey = configService.getValueByKey(ConfigNameConst.USER_DEFAULT_PASSWORD.getKey());
         System.out.println(valueByKey);
     }
 

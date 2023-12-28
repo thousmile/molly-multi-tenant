@@ -79,8 +79,8 @@ public class ApiCmsProjectServiceImpl implements ApiCmsProjectService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void initProject(SysTenantDTO po) {
-        var password = Optional.ofNullable(configService.getValueByKey(PROJECT_DEFAULT_PASSWORD))
-                .orElse("123456");
+        var password = Optional.ofNullable(configService.getValueByKey(PROJECT_DEFAULT_PASSWORD.getKey()))
+                .orElse(PROJECT_DEFAULT_PASSWORD.getValue());
         // 委托，新的租户id。执行初始化数据
         delegate(po.getTenantId(), () -> {
             var project = new CmsProject()

@@ -1,5 +1,8 @@
 package com.xaaef.molly.common.consts;
 
+import org.apache.commons.collections4.KeyValue;
+import org.apache.commons.collections4.keyvalue.DefaultKeyValue;
+
 /**
  * <p>
  * 全局配置文件 key
@@ -21,32 +24,31 @@ public class ConfigNameConst {
     /**
      * 用户默认密码
      */
-    public static final String USER_DEFAULT_PASSWORD = "default_user_password";
+    public static final KeyValue<String, String> USER_DEFAULT_PASSWORD = new DefaultKeyValue<>("default_user_password", "1234546");
 
 
     /**
      * 项目默认密码
      */
-    public static final String PROJECT_DEFAULT_PASSWORD = "default_project_password";
+    public static final KeyValue<String, String> PROJECT_DEFAULT_PASSWORD = new DefaultKeyValue<>("default_project_password", "1234546");
 
 
     /**
      * 租户默认logo
      */
-    public static final String TENANT_DEFAULT_LOGO = "default_tenant_logo";
+    public static final KeyValue<String, String> TENANT_DEFAULT_LOGO = new DefaultKeyValue<>("default_tenant_logo", "https://images.xaaef.com/molly_master_logo.png");
 
 
     /**
      * 租户默认角色名称
      */
-    public static final String TENANT_DEFAULT_ROLE_NAME = "default_role_name";
+    public static final KeyValue<String, String> TENANT_DEFAULT_ROLE_NAME = new DefaultKeyValue<>("default_role_name", "操作员");
 
 
     /**
      * 获取法定节假日的接口
      */
-    public static final String GET_HOLIDAY_URL = "get_holiday_url";
-
+    public static final KeyValue<String, String> GET_HOLIDAY_URL = new DefaultKeyValue<>("get_holiday_url", "https://timor.tech/api/holiday/year/%s?type=N&week=Y");
 
 
 }
