@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.tenant.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -37,18 +39,21 @@ public class SysTemplate extends BaseEntity {
      */
     @Schema(description = "模板 ID")
     @TableId(type = IdType.AUTO)
+    @NotNull(message = "模板ID,必须填写", groups = {ValidUpdate.class})
     private Long id;
 
     /**
      * 模板名称
      */
     @Schema(description = "模板名称")
+    @NotEmpty(message = "模板名称,必须填写", groups = {ValidCreate.class})
     private String name;
 
     /**
      * 模板描述
      */
     @Schema(description = "模板描述")
+    @NotEmpty(message = "模板描述,必须填写", groups = {ValidCreate.class})
     private String description;
 
     /**
@@ -57,5 +62,17 @@ public class SysTemplate extends BaseEntity {
     @TableField(exist = false)
     @Schema(description = "菜单Id")
     private Set<Long> menuIds;
+
+    /**
+     * 配置 保存分组
+     */
+    public interface ValidCreate {
+    }
+
+    /**
+     * 配置 修改分组
+     */
+    public interface ValidUpdate {
+    }
 
 }

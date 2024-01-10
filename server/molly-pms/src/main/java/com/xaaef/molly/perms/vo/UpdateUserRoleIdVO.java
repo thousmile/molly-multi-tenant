@@ -32,9 +32,9 @@ public class UpdateUserRoleIdVO {
     private Long userId;
 
 
-    @Schema(description = "角色最少是一个！", requiredMode = REQUIRED)
-    @NotNull(message = "角色不能为空!")
-    @Size(min = 1, message = "角色最少是一个!")
+    @Schema(description = "角色Id列表！", requiredMode = REQUIRED)
+    @NotNull(message = "角色Id列表!")
+    @Size(min = 1, message = "角色列表,最少选择1个!")
     private Set<Long> roles;
 
 }

@@ -346,21 +346,20 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         super.updateById(source);
 
         var loginUser = getLoginUser();
-
-        delegate(tenantId,
-                // 异步 清空所有表的数据
-                () -> CompletableFuture.runAsync(() -> {
-                    baseMapper.truncateTableData(tableNames);
-                }).whenComplete((val, ex) -> {
-                    if (ex == null) {
-                        // 重新 更新表结构，初始化数据
-                        initData(loginUser, initTenantDTO, initUser);
-                    } else {
-                        log.error("truncateTableData error: {} ", ex.getMessage());
-                    }
-                })
-        );
-
+        CompletableFuture.runAsync(() -> {
+            // 异步 清空所有表的数据
+            delegate(tenantId, () -> baseMapper.truncateTableData(tableNames));
+        }).whenComplete((val, ex) -> {
+            if (ex == null) {
+                // 重新 更新表结构，初始化数据
+                delegate(tenantId, () -> {
+                    initData(loginUser, initTenantDTO, initUser);
+                    return true;
+                });
+            } else {
+                log.error("truncateTableData error: {} ", ex.getMessage());
+            }
+        });
         return true;
     }
 

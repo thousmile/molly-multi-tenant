@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.tenant.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -33,24 +35,40 @@ public class SysDictType extends BaseEntity {
      */
     @Schema(description = "字典类型 ID")
     @TableId(type = IdType.AUTO)
+    @NotNull(message = "字典类型ID,必须填写", groups = {ValidUpdate.class})
     private Long typeId;
 
     /**
      * 字典类型名
      */
     @Schema(description = "类型名")
+    @NotEmpty(message = "类型名,必须填写", groups = {ValidCreate.class})
     private String typeName;
 
     /**
      * 字典类型关键字
      */
     @Schema(description = "关键字")
+    @NotEmpty(message = "关键字,必须填写", groups = {ValidCreate.class})
     private String typeKey;
 
     /**
      * 字典描述
      */
     @Schema(description = "描述")
+    @NotEmpty(message = "描述,必须填写", groups = {ValidCreate.class})
     private String description;
+
+    /**
+     * 配置 保存分组
+     */
+    public interface ValidCreate {
+    }
+
+    /**
+     * 配置 修改分组
+     */
+    public interface ValidUpdate {
+    }
 
 }

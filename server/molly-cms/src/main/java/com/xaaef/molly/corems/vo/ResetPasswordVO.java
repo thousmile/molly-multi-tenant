@@ -29,8 +29,6 @@ public class ResetPasswordVO {
 
     /**
      * 项目ID
-     *
-     * @date 2021/5/21 15:43
      */
     @Schema(description = "项目ID不能为空！", requiredMode = REQUIRED)
     @NotNull(message = "项目ID不能为空!")
@@ -38,8 +36,6 @@ public class ResetPasswordVO {
 
     /**
      * 新密码
-     *
-     * @date 2021/5/21 15:43
      */
     @Schema(description = "新密码长度要大于5位！", requiredMode = REQUIRED)
     @NotNull(message = "新密码不能为空!")

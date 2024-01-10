@@ -1,5 +1,6 @@
 package com.xaaef.molly.system.po;
 
+import com.xaaef.molly.common.consts.RegexConst;
 import com.xaaef.molly.system.entity.SysTemplate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
@@ -8,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -48,10 +50,11 @@ public class CreateTenantPO implements java.io.Serializable {
     private String linkman;
 
     @Schema(description = "联系方式必须填写！支持手机和座机", requiredMode = REQUIRED)
-    @Pattern(regexp = "^[1][3,4,5,6,7,8,9][0-9]{9}$|^0\\d{2,3}-?\\d{7,8}$", message = "联系方式格式错误,支持手机和座机！")
+    @Pattern(regexp = RegexConst.TEL_PHONE, message = "联系方式格式错误,支持手机和座机！")
     private String contactNumber;
 
     @Schema(description = "租户logo, 如果不填写会使用默认logo", requiredMode = REQUIRED)
+    @URL(message = "租户logo,格式错误")
     private String logo;
 
     @Schema(description = "租户所在地编号！", requiredMode = REQUIRED)
@@ -70,8 +73,6 @@ public class CreateTenantPO implements java.io.Serializable {
     @Schema(description = "过期时间,如果不填写，默认是 10 年！")
     private LocalDateTime expired;
 
-
-
     @Schema(description = "管理员名称！如果不填写，默认是商户名称！")
     private String adminNickname;
 
@@ -86,6 +87,5 @@ public class CreateTenantPO implements java.io.Serializable {
 
     @Schema(description = "管理员密码,如果不填写，默认使用默认密码！")
     private String adminPwd;
-
 
 }

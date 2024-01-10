@@ -77,6 +77,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
         if (super.exist(SysConfig::getConfigKey, entity.getConfigKey())) {
             throw new RuntimeException("参数键名，已经存在了！");
         }
+        hash().put(ConfigDataConst.REDIS_CACHE_KEY, entity.getConfigKey(), entity.getConfigValue());
         return super.save(entity);
     }
 

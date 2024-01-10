@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.tenant.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -33,24 +35,40 @@ public class PmsRole extends BaseEntity {
      */
     @Schema(description = "角色ID")
     @TableId(type = IdType.AUTO)
+    @NotNull(message = "角色ID,必须填写", groups = {ValidUpdate.class})
     private Long roleId;
 
     /**
      * 角色 名称
      */
     @Schema(description = "角色名称")
+    @NotBlank(message = "角色名称,必须填写", groups = {ValidCreate.class})
     private String roleName;
 
     /**
      * 排序
      */
     @Schema(description = "排序")
+    @NotNull(message = "排序,必须填写", groups = {ValidCreate.class})
     private Long sort;
 
     /**
      * 角色描述
      */
     @Schema(description = "角色描述")
+    @NotBlank(message = "角色描述,必须填写", groups = {ValidCreate.class})
     private String description;
+
+    /**
+     * 角色创建分组
+     */
+    public interface ValidCreate {
+    }
+
+    /**
+     * 角色修改分组
+     */
+    public interface ValidUpdate {
+    }
 
 }

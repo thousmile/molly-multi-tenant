@@ -42,7 +42,7 @@ public class SysTemplateController {
 
     @Operation(summary = "单个查询", description = "根据Id查询")
     @GetMapping("/{id}")
-    public JsonResult<SysTemplate> findById(@PathVariable("id") Long id) {
+    public JsonResult<SysTemplate> getById(@PathVariable("id") Long id) {
         return JsonResult.success(baseService.getById(id));
     }
 
@@ -67,59 +67,43 @@ public class SysTemplateController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<Boolean> create(@RequestBody SysTemplate entity) {
-        try {
-            var save = baseService.save(entity);
-            return JsonResult.success(save);
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> save(@RequestBody @Validated(SysTemplate.ValidCreate.class) SysTemplate entity) {
+        var save = baseService.save(entity);
+        return JsonResult.success(save);
     }
 
 
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> update(@RequestBody SysTemplate entity) {
-        try {
-            var flag = baseService.updateById(entity);
-            return JsonResult.success(flag);
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> updateById(@RequestBody @Validated(SysTemplate.ValidUpdate.class) SysTemplate entity) {
+        var flag = baseService.updateById(entity);
+        return JsonResult.success(flag);
     }
 
 
     @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
-    public JsonResult<Boolean> delete(@PathVariable("id") Integer id) {
-        try {
-            var flag = baseService.removeById(id);
-            return JsonResult.success(flag);
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> removeById(@PathVariable Long id) {
+        var flag = baseService.removeById(id);
+        return JsonResult.success(flag);
     }
 
 
     @Operation(summary = "查询拥有的权限", description = "查询模板拥有的权限！")
-    @GetMapping("/menus/{templateId}")
-    public JsonResult<UpdateMenusVO> selectHaveMenus(@PathVariable Long templateId) {
-        return JsonResult.success(baseService.listHaveMenus(templateId));
+    @GetMapping("/menus/{id}")
+    public JsonResult<UpdateMenusVO> listHaveMenus(@PathVariable Long id) {
+        return JsonResult.success(baseService.listHaveMenus(id));
     }
 
 
     @NoRepeatSubmit
     @Operation(summary = "修改菜单列表", description = "修改权限模板的菜单列表")
     @PostMapping("/menus")
-    public JsonResult<Boolean> updateMenusId(@RequestBody @Validated BindingMenusVO params, BindingResult br) {
-        try {
-            var flag = baseService.updateMenus(params.getId(), params.getMenus());
-            return JsonResult.success(flag);
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> updateMenus(@RequestBody @Validated BindingMenusVO params, BindingResult br) {
+        var flag = baseService.updateMenus(params.getId(), params.getMenus());
+        return JsonResult.success(flag);
     }
 
 

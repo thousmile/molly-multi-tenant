@@ -68,6 +68,7 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
         if (params.isIncludeDept()) {
             setDept(result.getRecords());
         }
+        result.getRecords().forEach(p -> p.setPassword(null));
         return result;
     }
 
@@ -81,7 +82,6 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
             var mapDept = apiPmsDeptService.mapByDeptIds(deptIds);
             list.forEach(p -> {
                 var dept = mapDept.getOrDefault(p.getDeptId(), null);
-                p.setPassword(null);
                 p.setDept(dept);
             });
         }

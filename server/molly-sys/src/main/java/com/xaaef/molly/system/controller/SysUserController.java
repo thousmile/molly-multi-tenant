@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,29 +25,20 @@ public class SysUserController {
 
     @Operation(summary = "查询关联租户", description = "查询系统用户关联的租户")
     @GetMapping("/list/tenant")
-    public JsonResult<UserListTenantVO> listTenant(@RequestParam Long userId) {
-        try {
-            return JsonResult.success(
-                    baseService.listHaveTenants(userId)
-            );
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), null);
-        }
+    public JsonResult<UserListTenantVO> listHaveTenants(@RequestParam Long userId) {
+        return JsonResult.success(
+                baseService.listHaveTenants(userId)
+        );
     }
 
 
     @NoRepeatSubmit
     @Operation(summary = "修改关联租户", description = "修改系统用户关联的租户")
     @PostMapping("/update/tenant")
-    public JsonResult<Boolean> updateTemplateId(@RequestBody @Validated UpdateUserTenantVO params,
-                                                BindingResult br) {
-        try {
-            return JsonResult.success(
-                    baseService.updateTenant(params.getUserId(), params.getTenantIds())
-            );
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> updateTenant(@RequestBody @Validated UpdateUserTenantVO params) {
+        return JsonResult.success(
+                baseService.updateTenant(params.getUserId(), params.getTenantIds())
+        );
     }
 
 

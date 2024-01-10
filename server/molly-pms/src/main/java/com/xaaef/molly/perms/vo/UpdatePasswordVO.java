@@ -1,6 +1,7 @@
 package com.xaaef.molly.perms.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -36,24 +37,24 @@ public class UpdatePasswordVO {
      * 旧密码
      */
     @Schema(description = "旧密码长度要大于5位！", requiredMode = REQUIRED)
-    @NotNull(message = "旧密码不能为空!")
-    @Length(min = 5, message = "旧密码长度要大于5位!")
+    @NotBlank(message = "旧密码不能为空!")
+    @Length(min = 5, max = 32, message = "旧密码,长度5~32位字符")
     private String oldPwd;
 
     /**
      * 新密码
      */
     @Schema(description = "新密码长度要大于5位！", requiredMode = REQUIRED)
-    @NotNull(message = "新密码不能为空!")
-    @Length(min = 5, message = "新密码长度要大于5位!")
+    @NotBlank(message = "新密码不能为空!")
+    @Length(min = 5, max = 32, message = "新密码,长度5~32位字符")
     private String newPwd;
 
     /**
      * 确认密码
      */
     @Schema(description = "确认密码长度要大于5位！", requiredMode = REQUIRED)
-    @NotNull(message = "确认密码不能为空!")
-    @Length(min = 5, message = "确认密码长度要大于5位!")
+    @NotBlank(message = "确认密码不能为空!")
+    @Length(min = 5, max = 32, message = "确认密码,长度5~32位字符")
     private String confirmPwd;
 
 }

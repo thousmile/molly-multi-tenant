@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +39,7 @@ public class PmsRoleController {
 
     @Operation(summary = "单个查询", description = "根据Id查询")
     @GetMapping("/{id}")
-    public JsonResult<PmsRole> findById(@PathVariable("id") Long id) {
+    public JsonResult<PmsRole> getById(@PathVariable("id") Long id) {
         return JsonResult.success(baseService.getById(id));
     }
 
@@ -65,7 +64,7 @@ public class PmsRoleController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<Boolean> create(@RequestBody PmsRole entity) {
+    public JsonResult<Boolean> save(@RequestBody @Validated({PmsRole.ValidCreate.class}) PmsRole entity) {
         var flag = baseService.save(entity);
         return JsonResult.success(flag);
     }
@@ -74,7 +73,7 @@ public class PmsRoleController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> update(@RequestBody PmsRole entity) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated({PmsRole.ValidUpdate.class}) PmsRole entity) {
         var flag = baseService.updateById(entity);
         return JsonResult.success(flag);
     }
@@ -83,7 +82,7 @@ public class PmsRoleController {
     @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
-    public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
+    public JsonResult<Boolean> removeById(@PathVariable("id") Long id) {
         var flag = baseService.removeById(id);
         return JsonResult.success(flag);
     }
@@ -91,7 +90,7 @@ public class PmsRoleController {
 
     @Operation(summary = "拥有的菜单", description = "查询角色拥有的菜单！")
     @GetMapping("/menus/{roleId}")
-    public JsonResult<UpdateMenusVO> selectHaveMenus(@PathVariable Long roleId) {
+    public JsonResult<UpdateMenusVO> listHaveMenus(@PathVariable Long roleId) {
         var data = baseService.listHaveMenus(roleId);
         return JsonResult.success(data);
     }
@@ -100,8 +99,7 @@ public class PmsRoleController {
     @NoRepeatSubmit
     @Operation(summary = "关联菜单", description = "会删除原有的菜单！")
     @PostMapping("/menus")
-    public JsonResult<Boolean> bindingMenus(@RequestBody @Validated BindingMenusVO entity,
-                                            BindingResult br) {
+    public JsonResult<Boolean> bindingMenus(@RequestBody @Validated BindingMenusVO entity) {
         var flag = baseService.updateMenus(entity.getId(), entity.getMenus());
         return JsonResult.success(flag);
     }

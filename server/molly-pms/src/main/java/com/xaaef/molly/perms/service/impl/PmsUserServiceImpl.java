@@ -100,6 +100,14 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
         if (params.isIncludeRad()) {
             setRoleAndDept(result.getRecords());
         }
+        // 包含 用户在线状态
+        var loginUserMap = jwtTokenService.mapLoginUser();
+        result.getRecords().forEach(r -> {
+            r.setPassword(null);
+            // 如果 LoginId 为空。表示未在线！
+            var loginUser = loginUserMap.getOrDefault(r.getUserId(), new JwtLoginUser().setLoginId(StrUtil.EMPTY));
+            r.setLoginId(loginUser.getLoginId());
+        });
         return result;
     }
 
@@ -109,15 +117,11 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
             var userIds = list.stream().map(PmsUser::getUserId).collect(Collectors.toSet());
             var deptIds = list.stream().map(PmsUser::getDeptId).collect(Collectors.toSet());
             var roleMaps = roleService.listByUserIds(userIds);
-            var deptMaps = deptService.listByIds(deptIds).stream().collect(Collectors.toMap(PmsDept::getDeptId, d -> d));
-            var loginUserMap = jwtTokenService.mapLoginUser();
+            var deptMaps = deptService.listByIds(deptIds).stream().collect(
+                    Collectors.toMap(PmsDept::getDeptId, d -> d, (o1, o2) -> o2));
             list.forEach(r -> {
-                r.setPassword(null);
                 r.setRoles(roleMaps.get(r.getUserId()));
                 r.setDept(deptMaps.get(r.getDeptId()));
-                // 如果 LoginId 为空。表示未在线！
-                var loginUser = loginUserMap.getOrDefault(r.getUserId(), new JwtLoginUser().setLoginId(StrUtil.EMPTY));
-                r.setLoginId(loginUser.getLoginId());
             });
         }
     }

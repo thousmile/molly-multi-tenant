@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -37,7 +38,7 @@ public class SysMenuController {
 
     @Operation(summary = "单个查询", description = "根据Id查询")
     @GetMapping("/{id}")
-    public JsonResult<SysMenu> findById(@PathVariable("id") Long id) {
+    public JsonResult<SysMenu> getById(@PathVariable("id") Long id) {
         log.debug("get ID : {}", id);
         return JsonResult.success(baseService.getById(id));
     }
@@ -97,39 +98,27 @@ public class SysMenuController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<SysMenu> create(@RequestBody SysMenu entity) {
-        try {
-            baseService.save(entity);
-            return JsonResult.success(entity);
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), SysMenu.class);
-        }
+    public JsonResult<SysMenu> save(@RequestBody @Validated(SysMenu.ValidCreate.class) SysMenu entity) {
+        baseService.save(entity);
+        return JsonResult.success(entity);
     }
 
 
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> update(@RequestBody SysMenu entity) {
-        try {
-            boolean byId = baseService.updateById(entity);
-            return JsonResult.success(byId);
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> updateById(@RequestBody @Validated(SysMenu.ValidUpdate.class) SysMenu entity) {
+        boolean byId = baseService.updateById(entity);
+        return JsonResult.success(byId);
     }
 
 
     @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
-    public JsonResult<Boolean> delete(@PathVariable("id") Long id) {
-        try {
-            boolean byId = baseService.removeById(id);
-            return JsonResult.success(byId);
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> removeById(@PathVariable("id") Long id) {
+        boolean byId = baseService.removeById(id);
+        return JsonResult.success(byId);
     }
 
 

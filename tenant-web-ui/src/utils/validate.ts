@@ -97,13 +97,13 @@ export function isCompress(value: string) {
 
 /** 用户密码 */
 export function isPassword(value: string) {
-  const reg = /^(?=.*[a-zA-Z])(?=.*[0-9])[A-Za-z0-9]{5,24}$/
+  const reg = /^(?=.*[a-zA-Z])(?=.*[0-9])[A-Za-z0-9]{5,32}$/
   return reg.test(value)
 }
 
 /**  用户名称 */
 export function isUsername(value: string) {
-  const reg = /^[a-zA-Z0-9_-]{5,24}$/
+  const reg = /^[a-zA-Z0-9_-]{5,32}$/
   return reg.test(value)
 }
 

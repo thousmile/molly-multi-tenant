@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,52 +74,36 @@ public class CmsProjectController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<Boolean> create(@RequestBody CmsProject entity) {
-        try {
-            var flag = baseService.save(entity);
-            return JsonResult.success(flag);
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> save(@RequestBody @Validated(CmsProject.ValidCreate.class) CmsProject entity) {
+        var flag = baseService.save(entity);
+        return JsonResult.success(flag);
     }
 
 
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> update(@RequestBody CmsProject entity) {
-        try {
-            return JsonResult.success(baseService.updateById(entity));
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> updateById(@RequestBody @Validated(CmsProject.ValidUpdate.class) CmsProject entity) {
+        return JsonResult.success(baseService.updateById(entity));
     }
 
 
     @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping()
-    public JsonResult<Boolean> delete(CmsProject entity) {
-        try {
-            return JsonResult.success(baseService.removeById(entity));
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> removeById(@Validated(CmsProject.ValidDelete.class) CmsProject entity) {
+        return JsonResult.success(baseService.removeById(entity));
     }
 
 
     @NoRepeatSubmit
     @Operation(summary = "重置项目密码", description = "重置项目密码")
     @PostMapping("/reset/password")
-    public JsonResult<Boolean> resetPassword(@RequestBody @Validated ResetPasswordVO data,
-                                             BindingResult br) {
-        try {
-            return JsonResult.success(
-                    baseService.resetPassword(data)
-            );
-        } catch (RuntimeException e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> resetPassword(@RequestBody @Validated ResetPasswordVO data) {
+        return JsonResult.success(
+                baseService.resetPassword(data)
+        );
     }
+
 
 }

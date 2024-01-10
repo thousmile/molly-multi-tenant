@@ -6,9 +6,9 @@ import com.xaaef.molly.common.util.JsonResult;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,7 +31,6 @@ public class GlobalExceptionHandler {
      * 处理自定义的业务异常
      *
      * @param e
-     * @return
      */
     @ExceptionHandler(value = JwtAuthException.class)
     public JsonResult<String> bizExceptionHandler(JwtAuthException e) {
@@ -45,9 +44,11 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public JsonResult<String> handleBindException(MethodArgumentNotValidException e) {
-        FieldError fieldError = e.getBindingResult().getFieldError();
-        log.warn("参数校验异常: {} --> {}", fieldError.getField(), fieldError.getDefaultMessage());
-        return JsonResult.fail(fieldError.getDefaultMessage());
+        var fieldError = e.getBindingResult().getFieldError();
+        if (fieldError != null) {
+            return JsonResult.fail(fieldError.getDefaultMessage());
+        }
+        return JsonResult.fail("");
     }
 
 
@@ -55,7 +56,6 @@ public class GlobalExceptionHandler {
      * 处理空指针的异常
      *
      * @param e
-     * @return
      */
     @ExceptionHandler(value = NullPointerException.class)
     public JsonResult<String> exceptionHandler(NullPointerException e) {
@@ -87,15 +87,23 @@ public class GlobalExceptionHandler {
 
 
     /**
+     * 数据转换异常
+     *
+     * @param e
+     */
+    @ExceptionHandler(value = HttpMessageConversionException.class)
+    public JsonResult<String> exceptionHandler(HttpMessageConversionException e) {
+        return JsonResult.fail(e.getMessage());
+    }
+
+
+    /**
      * 处理运行时的异常
      *
      * @param e
-     * @return
      */
     @ExceptionHandler(value = RuntimeException.class)
     public JsonResult<String> exceptionHandler(RuntimeException e) {
-        e.printStackTrace();
-        log.error("发生运行时异常！原因是: {} ", e.getMessage());
         return JsonResult.fail(e.getMessage());
     }
 
@@ -104,7 +112,6 @@ public class GlobalExceptionHandler {
      * 处理其他异常
      *
      * @param e
-     * @return
      */
     @ExceptionHandler(value = Exception.class)
     public JsonResult<String> exceptionHandler(Exception e) {

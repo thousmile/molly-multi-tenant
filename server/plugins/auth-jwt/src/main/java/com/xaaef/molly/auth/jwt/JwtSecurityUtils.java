@@ -58,7 +58,7 @@ public class JwtSecurityUtils {
 
 
     /**
-     * 获取用户 租户ID
+     * 获取当前登录的用户 租户ID
      **/
     public static String getTenantId() {
         return getLoginUser().getTenantId();
@@ -99,7 +99,6 @@ public class JwtSecurityUtils {
             throw new JwtNoLoginException("用户暂无登录！", new RuntimeException());
         }
     }
-
 
 
     /**

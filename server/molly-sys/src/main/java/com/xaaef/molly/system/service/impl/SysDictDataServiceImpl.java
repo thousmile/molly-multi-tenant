@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -74,18 +75,10 @@ public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictDataMapper, S
                     return target;
                 })
                 .collect(Collectors.groupingBy(DictDataVO::getTypeKey));
-        collect.values().forEach(v -> {
-                    v.sort((o1, o2) -> {
-                        long temp = o1.getDictSort() - o2.getDictSort();
-                        if (temp > 0)
-                            return 1;
-                        else if (temp < 0)
-                            return -1;
-                        else
-                            return 0;
-                    });
-                }
-        );
+        collect.values()
+                .forEach(v ->
+                        v.sort(Comparator.comparingLong(DictDataVO::getDictSort))
+                );
         return collect;
     }
 

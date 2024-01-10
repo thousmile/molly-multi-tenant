@@ -39,14 +39,14 @@ public class ChinaAreaController {
 
     @Operation(summary = "单个查询", description = "根据Id查询")
     @GetMapping("/{id}")
-    public JsonResult<ChinaArea> findById(@PathVariable("id") Long id) {
+    public JsonResult<ChinaArea> getById(@PathVariable("id") Long id) {
         return JsonResult.success(baseService.getById(id));
     }
 
 
     @Operation(summary = "查询子节点", description = "查询所有，0.查询所有一级节点。")
     @GetMapping("/child/{parentCode}")
-    public JsonResult<List<ChinaArea>> findAll(@PathVariable Long parentCode) {
+    public JsonResult<List<ChinaArea>> childList(@PathVariable Long parentCode) {
         if (parentCode == null || parentCode < 1) {
             parentCode = 0L;
         }

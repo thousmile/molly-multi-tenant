@@ -591,7 +591,7 @@ const handleResetData = (data: ISysTenant) => {
           .then((resp) => {
             if (resp.data) {
               ElMessage({
-                message: `删除 ${data.name} 成功！`,
+                message: `重置租户 ${data.name} 数据成功！`,
                 type: "success"
               })
             }

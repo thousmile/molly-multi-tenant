@@ -36,14 +36,14 @@ public class SysTenantController {
 
     @Operation(summary = "Id查询", description = "根据Id查询")
     @GetMapping("/{id}")
-    public JsonResult<SysTenant> findById(@PathVariable("id") String id) {
+    public JsonResult<SysTenant> getById(@PathVariable("id") String id) {
         return JsonResult.success(baseService.getById(id));
     }
 
 
     @Operation(summary = "简单Id查询", description = "根据Id查询 最基础的字段")
     @GetMapping("/simple")
-    public JsonResult<SysTenant> findSimpleById(@RequestParam("tenantId") String id) {
+    public JsonResult<SysTenant> getSimpleById(@RequestParam("id") String id) {
         return JsonResult.success(baseService.getSimpleById(id));
     }
 
@@ -96,7 +96,7 @@ public class SysTenantController {
     @NoRepeatSubmit
     @Operation(summary = "新增租户", description = "新增租户")
     @PostMapping
-    public JsonResult<TenantCreatedSuccessVO> save(@Validated @RequestBody CreateTenantPO po, BindingResult br) {
+    public JsonResult<TenantCreatedSuccessVO> save(@RequestBody @Validated CreateTenantPO po, BindingResult br) {
         try {
             return JsonResult.success(baseService.create(po));
         } catch (Exception e) {
@@ -109,19 +109,15 @@ public class SysTenantController {
     @Operation(summary = "重置租户数据", description = "重置租户数据")
     @PostMapping("/reset/data/{id}")
     public JsonResult<Boolean> resetData(@PathVariable("id") String id) {
-        try {
-            baseService.resetData(id);
-            return JsonResult.success(Boolean.TRUE);
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+        baseService.resetData(id);
+        return JsonResult.success(Boolean.TRUE);
     }
 
 
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping
-    public JsonResult<Boolean> updateById(@RequestBody SysTenant tenant) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated(SysTenant.ValidUpdate.class) SysTenant tenant) {
         var flag = baseService.updateById(tenant);
         return JsonResult.success(flag);
     }
@@ -130,7 +126,7 @@ public class SysTenantController {
     @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping("/{id}")
-    public JsonResult<Boolean> deleteById(@PathVariable("id") String id) {
+    public JsonResult<Boolean> removeById(@PathVariable("id") String id) {
         var flag = baseService.removeById(id);
         return JsonResult.success(flag);
     }
@@ -139,14 +135,9 @@ public class SysTenantController {
     @NoRepeatSubmit
     @Operation(summary = "修改权限模板", description = "修改租户权限")
     @PostMapping("/update/templates")
-    public JsonResult<Boolean> updateTemplateId(@RequestBody @Validated UpdateTenantTemplateIdVO params,
-                                                BindingResult br) {
-        try {
-            var flag = baseService.updateTemplate(params.getTenantId(), params.getTemplateIds());
-            return JsonResult.success(flag);
-        } catch (Exception e) {
-            return JsonResult.fail(e.getMessage(), Boolean.FALSE);
-        }
+    public JsonResult<Boolean> updateTemplate(@RequestBody @Validated UpdateTenantTemplateIdVO params) {
+        var flag = baseService.updateTemplate(params.getTenantId(), params.getTemplateIds());
+        return JsonResult.success(flag);
     }
 
 

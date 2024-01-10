@@ -46,7 +46,6 @@ public class ServerInfoController {
     }
 
 
-
     @PreAuthorize("hasAuthority('pre_user:view')")
     @GetMapping("hello3")
     public JsonResult<String> hello3() throws Exception {
