@@ -328,8 +328,10 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                 .setAdminEmail(source.getEmail())
                 .setAdminPwd(password);
 
-        // 获取当前数据库中，的所有表
-        var tableNames = baseMapper.selectListTableNames();
+        var dbName = tenantManager.getDbName(tenantId);
+
+        // 获取 当前租户 数据库中，的所有表
+        var tableNames = delegate(tenantId, () -> baseMapper.selectListTableNames());
 
         // 移除 liquibase 版本控制，使用的数据库表格。默认是 DATABASECHANGELOGLOCK , DATABASECHANGELOG
         var excludeTableNames = List.of(liquibaseProperties.getDatabaseChangeLogLockTable(),
@@ -348,7 +350,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         var loginUser = getLoginUser();
         CompletableFuture.runAsync(() -> {
             // 异步 清空所有表的数据
-            delegate(tenantId, () -> baseMapper.truncateTableData(tableNames));
+            delegate(tenantId, () -> baseMapper.truncateTableData(dbName, tableNames));
         }).whenComplete((val, ex) -> {
             if (ex == null) {
                 // 重新 更新表结构，初始化数据

@@ -87,5 +87,10 @@ public interface MultiTenantManager {
      */
     void removeAll();
 
+    /**
+     * TODO 根据 租户ID 获取 数据库 名称
+     */
+    String getDbName(String tenantId);
+
 
 }

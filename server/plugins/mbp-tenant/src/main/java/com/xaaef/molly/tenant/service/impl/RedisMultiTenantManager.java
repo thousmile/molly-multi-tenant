@@ -82,4 +82,10 @@ public class RedisMultiTenantManager implements MultiTenantManager {
     }
 
 
+    @Override
+    public String getDbName(String tenantId) {
+        return multiTenantProperties.getPrefix() + tenantId;
+    }
+
+
 }

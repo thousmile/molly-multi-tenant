@@ -38,7 +38,7 @@ INSERT INTO `sys_tenant` (`tenant_id`, `create_time`, `create_user`, `last_updat
                           `last_update_user`, `logo`, `name`, `email`, `linkman`,
                           `contact_number`, `area_code`, `address`, `status`, `expired`)
 VALUES ('master', '2022-12-12 10:07:26', 19980817, '2022-12-12 10:07:32', 19980817,
-        'https://images.xaaef.com/molly_master_logo.png', '默认租户', 'master@qq.com', 'master',
+        'http://oss.xaaef.com/molly_master_logo.png', '默认租户', 'master@qq.com', 'master',
         '0755-1234567', 440307000000, '南湾街道 左右云创谷A栋1座', 1, '6666-12-12 00:00:00');
 
 

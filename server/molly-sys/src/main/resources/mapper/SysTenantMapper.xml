@@ -31,7 +31,7 @@
 
     <update id="truncateTableData">
         <foreach collection='tableNames' item='item' index='index'>
-            truncate table ${item};
+            truncate table ${dbName}.${item};
         </foreach>
     </update>
 

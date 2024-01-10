@@ -45,9 +45,9 @@ INSERT INTO `pms_user` (`user_id`, `avatar`, `username`, `mobile`, `email`, `nic
                         `gender`, `dept_id`, `status`, `admin_flag`, `expired`, `create_time`,
                         `create_user`, `last_update_time`, `last_update_user`)
 VALUES
-(19980817, 'https://images.xaaef.com/08afb399498d4fecb6211c7c26175e8e.jpg', 'admin', '15666666666', 'admin@qq.com', '超级管理员', '$2a$10$jU7Bg8YLLeF.eoGOzSuZE./ns.lctGOQBX0RTXvhy3HXv8RikUaka', 1, 10001, 1, 1, NULL, '2021-05-14 11:17:33', 19980817, '2021-12-17 10:12:24', 19980817),
-(6569516164032, 'https://oss.xaaef.com/molly/2023/11/8/654b3d6f4d522e95c87025c4.jpg', 'test456', '15984798797', 'test456@qq.com', '测试用户456', '$2a$10$9DLAUHW.SlgTYnbnNtZ5g.x6qLHuuDISDfCdD8gieaKQsuRvfiknW', 1, 10002, 1, 0, NULL, '2023-11-08 15:48:55', 19980817, '2023-11-09 11:47:15', 19980817),
-(6569516878992, 'https://oss.xaaef.com/molly/2023/11/8/654b3d774d522e95c87025c5.jpg', 'test123', '15649849498', 'test123@qq.com', '测试用户123', '$2a$10$EPhFJOZzm7Nth50sBfFHhOTod3M7JGJybAkELequvyIYBmZWDLcAG', 0, 10003, 1, 0, '2024-11-08 15:33:19', '2023-11-08 15:49:40', 19980817, '2023-11-09 10:13:33', 6569516878992);
+(19980817, 'http://oss.xaaef.com/molly_master_logo.png', 'admin', '15666666666', 'admin@qq.com', '超级管理员', '$2a$10$jU7Bg8YLLeF.eoGOzSuZE./ns.lctGOQBX0RTXvhy3HXv8RikUaka', 1, 10001, 1, 1, NULL, '2021-05-14 11:17:33', 19980817, '2021-12-17 10:12:24', 19980817),
+(6569516164032, 'http://oss.xaaef.com/molly/2023/11/8/654b3d6f4d522e95c87025c4.jpg', 'test456', '15984798797', 'test456@qq.com', '测试用户456', '$2a$10$9DLAUHW.SlgTYnbnNtZ5g.x6qLHuuDISDfCdD8gieaKQsuRvfiknW', 1, 10002, 1, 0, NULL, '2023-11-08 15:48:55', 19980817, '2023-11-09 11:47:15', 19980817),
+(6569516878992, 'http://oss.xaaef.com/molly/2023/11/8/654b3d774d522e95c87025c5.jpg', 'test123', '15649849498', 'test123@qq.com', '测试用户123', '$2a$10$EPhFJOZzm7Nth50sBfFHhOTod3M7JGJybAkELequvyIYBmZWDLcAG', 0, 10003, 1, 0, '2024-11-08 15:33:19', '2023-11-08 15:49:40', 19980817, '2023-11-09 10:13:33', 6569516878992);
 
 
 -- ----------------------------

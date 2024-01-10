@@ -17,7 +17,7 @@ public interface SysTenantMapper extends BaseMapper<SysTenant> {
 
 
     // 清空指定表格的数据
-    int truncateTableData(@Param("tableNames") Set<String> tableNames);
+    int truncateTableData(@Param("dbName") String dbName, @Param("tableNames") Set<String> tableNames);
 
 
     // 删除 租户 的所有权限模板
