@@ -15,6 +15,7 @@ import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.consts.ConfigDataConst;
 import com.xaaef.molly.common.consts.JwtConst;
 import com.xaaef.molly.common.consts.RegexConst;
+import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.common.util.WrapExcelUtils;
@@ -254,6 +255,14 @@ public class NoSpringTests {
         var pattern = Pattern.compile(RegexConst.MOBILE);
         var matcher = pattern.matcher("15071525211");
         System.out.println(matcher.find());
+    }
+
+
+    @Test
+    public void test17() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println(IdUtils.getStandaloneId());
+        }
     }
 
 

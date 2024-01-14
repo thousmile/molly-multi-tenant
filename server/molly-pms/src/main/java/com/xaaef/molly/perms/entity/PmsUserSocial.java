@@ -36,7 +36,7 @@ public class PmsUserSocial extends BaseEntity {
      * id
      */
     @Schema(description = "社交账号ID")
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)
     @NotNull(message = "社交账号ID,必须填写", groups = {ValidUpdate.class})
     private Long socialId;
 

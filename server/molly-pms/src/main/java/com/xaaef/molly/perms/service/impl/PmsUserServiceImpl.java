@@ -15,7 +15,6 @@ import com.xaaef.molly.auth.service.UserLoginService;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.enums.UserType;
-import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
 import com.xaaef.molly.internal.api.ApiSysMenuService;
@@ -157,7 +156,6 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
             entity.setStatus(StatusEnum.NORMAL.getCode());
         }
 
-        entity.setUserId(IdUtils.getStandaloneId());
         var ok = super.save(entity);
 
         if (entity.getRoles() != null) {

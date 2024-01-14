@@ -1,8 +1,8 @@
 package com.xaaef.molly.web.log;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.IdUtil;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
+import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.common.util.TenantUtils;
@@ -150,7 +150,7 @@ public class OperateLogAspect {
             operLog.setTenantId(userInfo.getTenantId());
         }
         operLog.setCreateTime(LocalDateTime.now());
-        operLog.setId(IdUtil.getSnowflakeNextIdStr());
+        operLog.setId(IdUtils.getStandaloneStrId());
         logStorage.asyncOperateSave(operLog);
     }
 

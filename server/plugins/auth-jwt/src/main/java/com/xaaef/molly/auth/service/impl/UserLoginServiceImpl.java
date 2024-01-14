@@ -1,7 +1,6 @@
 package com.xaaef.molly.auth.service.impl;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.xaaef.molly.auth.enums.GrantType;
 import com.xaaef.molly.auth.exception.JwtAuthException;
@@ -17,6 +16,7 @@ import com.xaaef.molly.common.domain.CustomRequestInfo;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.enums.UserType;
+import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.common.util.ServletUtils;
 import com.xaaef.molly.internal.api.*;
 import com.xaaef.molly.internal.dto.LoginLogDTO;
@@ -113,7 +113,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         target.setLoginTime(LocalDateTime.now());
         target.setTenantId(currentTenant.getTenantId());
         // 生成一个随机ID 跟当前用户关联
-        target.setLoginId(IdUtil.getSnowflakeNextIdStr());
+        target.setLoginId(IdUtils.getStandaloneStrId());
 
         // 判断当前登录的用户类型。系统用户 还是 租户用户
         String defaultTenantId = tenantService.getByDefaultTenantId();
@@ -149,6 +149,9 @@ public class UserLoginServiceImpl implements UserLoginService {
         captchaService.delete(po.getCodeKey());
 
         var props = tokenService.getProps();
+
+        // 将当前用户设置为登录
+        JwtSecurityUtils.setLoginUser(target);
 
         return JwtTokenValue.builder()
                 .header(props.getTokenHeader())

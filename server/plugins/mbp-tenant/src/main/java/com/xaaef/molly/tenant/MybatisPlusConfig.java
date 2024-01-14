@@ -1,12 +1,14 @@
 package com.xaaef.molly.tenant;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
+import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.common.util.JsonUtils;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.tenant.props.MultiTenantProperties;
@@ -88,6 +90,26 @@ public class MybatisPlusConfig {
     }
 
 
+    /**
+     * 自定义 ID 生成器
+     *
+     * @author WangChenChen
+     * @version 1.0.1
+     * @date 2024/1/14 14:32
+     */
+    @Bean
+    public IdentifierGenerator idGenerator() {
+        return entity -> IdUtils.getStandaloneId();
+    }
+
+
+    /**
+     * 参数 自动 填充
+     *
+     * @author WangChenChen
+     * @version 1.0.1
+     * @date 2024/1/14 14:32
+     */
     @Slf4j
     @Component
     @AllArgsConstructor
@@ -110,7 +132,6 @@ public class MybatisPlusConfig {
                 this.strictInsertFill(metaObject, ATTR_PROJECT_ID, () -> projectId, Long.class);
             }
         }
-
 
         @Override
         public void updateFill(MetaObject metaObject) {

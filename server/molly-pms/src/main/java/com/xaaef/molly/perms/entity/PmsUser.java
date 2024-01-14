@@ -41,7 +41,7 @@ public class PmsUser extends BaseEntity {
      * 用户ID
      */
     @Schema(description = "用户ID")
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)
     @NotNull(message = "用户ID,必须填写", groups = {ValidUpdate.class})
     private Long userId;
 
