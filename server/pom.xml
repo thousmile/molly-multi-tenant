@@ -39,23 +39,23 @@
         <!-- 优化的雪花算法（雪花漂移），它生成的ID更短、速度更快 -->
         <idgenerator.version>1.0.6</idgenerator.version>
         <!-- x-file-storage文件上传 文档地址 https://x-file-storage.xuyanwu.cn -->
-        <storage.version>2.0.0</storage.version>
+        <storage.version>2.1.0</storage.version>
         <!-- 七牛云文件上传 -->
         <qiniu-storage.version>7.15.0</qiniu-storage.version>
         <!-- 阿里云文件上传 -->
         <aliyun-storage.version>3.17.4</aliyun-storage.version>
         <!-- 服务器运行状态查询， 如: CPU、磁盘、内存 -->
-        <oshi.version>6.4.11</oshi.version>
+        <oshi.version>6.4.13</oshi.version>
         <!-- Excel文件操作 -->
         <apache-poi.version>5.2.5</apache-poi.version>
         <!-- 小而美的工具库 -->
-        <hutool.version>5.8.25</hutool.version>
+        <hutool.version>5.8.26</hutool.version>
         <!-- 简单、方便的OpenAPI接口文档 -->
         <knife4j.version>4.5.0</knife4j.version>
         <!-- MyBatis 的增强工具，基友搭配，效率翻倍 -->
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <!-- JavaEE 颠覆者 -->
-        <spring-boot.version>3.1.7</spring-boot.version>
+        <spring-boot.version>3.2.3</spring-boot.version>
     </properties>
 
 

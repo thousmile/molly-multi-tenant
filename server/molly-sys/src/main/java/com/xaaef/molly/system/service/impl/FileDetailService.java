@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.dromara.x.file.storage.core.recorder.FileRecorder;
+import org.dromara.x.file.storage.core.upload.FilePartInfo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,7 +30,6 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class FileDetailService extends ServiceImpl<SysFileDetailMapper, SysFileDetail> implements FileRecorder {
 
-
     @Override
     public boolean save(FileInfo info) {
         var detail = BeanUtil.copyProperties(info, SysFileDetail.class, "attr");
@@ -44,6 +44,15 @@ public class FileDetailService extends ServiceImpl<SysFileDetailMapper, SysFileD
         return b;
     }
 
+    @Override
+    public void update(FileInfo info) {
+        var detail = BeanUtil.copyProperties(info, SysFileDetail.class, "attr");
+        //这是手动获 取附加属性字典 并转成 json 字符串，方便存储在数据库中
+        if (info.getAttr() != null) {
+            detail.setAttr(JsonUtils.toJson(info.getAttr()));
+        }
+        super.updateById(detail);
+    }
 
     @Override
     public FileInfo getByUrl(String url) {
@@ -71,5 +80,12 @@ public class FileDetailService extends ServiceImpl<SysFileDetailMapper, SysFileD
         );
     }
 
+    @Override
+    public void saveFilePart(FilePartInfo filePartInfo) {
+    }
+
+    @Override
+    public void deleteFilePartByUploadId(String uploadId) {
+    }
 
 }
