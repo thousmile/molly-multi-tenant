@@ -10,14 +10,13 @@ networks:
 services:
 
   mysql8:
-    image: mysql:8.2.0
+    image: mysql:8.3.0
     container_name: mysql8
     # 映射端口
     ports:
       - "3306:3306"
     # 容器环境变量
     environment:
-      - TZ="Asia/Shanghai"
       # root 密码
       - MYSQL_ROOT_PASSWORD=mht123456
       # 初始化数据库(后续的初始化sql会在这个库执行)
@@ -37,11 +36,11 @@ services:
       --explicit_defaults_for_timestamp=true
       --lower_case_table_names=1
       --log-bin=mysql-bin
-      --binlog-format=ROW
       --server_id=1
     restart: always
     networks:
       app-net1:
+        ipv4_address: 172.19.0.11
     deploy:
       resources:
         limits:
@@ -49,7 +48,7 @@ services:
 
 
   redis7:
-    image: redis:7.2.3
+    image: redis:7.2.4
     container_name: redis7
     ports:
       - "6379:6379"
@@ -64,6 +63,7 @@ services:
     restart: always
     networks:
       app-net1:
+        ipv4_address: 172.19.0.21
     deploy:
       resources:
         limits:
@@ -71,7 +71,7 @@ services:
 
 
   nginx:
-    image: nginx:1.25.3
+    image: nginx:1.25.4
     container_name: nginx
     ports:
       - "80:80"
@@ -88,6 +88,7 @@ services:
     privileged: true
     networks:
       app-net1:
+        ipv4_address: 172.19.0.31
     deploy:
       resources:
         limits:
@@ -111,6 +112,7 @@ services:
     restart: always
     networks:
       app-net1:
+        ipv4_address: 172.19.0.41
     deploy:
       resources:
         limits:
