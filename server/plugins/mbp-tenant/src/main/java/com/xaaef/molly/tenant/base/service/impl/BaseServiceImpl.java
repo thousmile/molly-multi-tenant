@@ -116,9 +116,9 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> exte
         if (ObjectUtils.isNotEmpty(params.getStartDate())) {
             // 如果结束时间是否为空
             if (ObjectUtils.isNotEmpty(params.getEndDate())) {
-                wrapper.between(CREATE_TIME, params.getStartDate(), params.getEndDate());
+                wrapper.between(String.format("DATE(%s)", CREATE_TIME), params.getStartDate(), params.getEndDate());
             } else {
-                wrapper.between(CREATE_TIME, params.getStartDate(), LocalDate.now());
+                wrapper.between(String.format("DATE(%s)", CREATE_TIME), params.getStartDate(), LocalDate.now());
             }
         }
         if (StringUtils.isNotBlank(params.getKeywords()) && columns != null && !columns.isEmpty()) {

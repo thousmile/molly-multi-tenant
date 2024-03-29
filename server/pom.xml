@@ -55,7 +55,7 @@
         <!-- MyBatis 的增强工具，基友搭配，效率翻倍 -->
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <!-- JavaEE 颠覆者 -->
-        <spring-boot.version>3.2.3</spring-boot.version>
+        <spring-boot.version>3.2.4</spring-boot.version>
     </properties>
 
 
