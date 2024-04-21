@@ -58,7 +58,7 @@ services:
       - /data/redis7/data:/data
       - /data/redis7/conf/redis.conf:/etc/redis/redis.conf
       - /etc/localtime:/etc/localtime:ro
-    command: [ "redis-server","/etc/redis/redis.conf" ]
+    command: redis-server --requirepass redis123456 --appendonly yes
     privileged: true
     restart: always
     networks:
