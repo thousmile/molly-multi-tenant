@@ -1,8 +1,8 @@
 package com.xaaef.molly.system.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.auth.service.JwtTokenService;
+import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.internal.api.ApiPmsUserService;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.mapper.SysTenantMapper;
@@ -80,7 +80,7 @@ public class SysUserServiceImpl implements SysUserService {
                 var sysUser = pmsUserService.getByUserId(userId);
                 // 判断 系统用户 是否存在
                 if (sysUser == null) {
-                    throw new RuntimeException(StrUtil.format("系统用户 {} 不存在！", userId));
+                    throw new BizException(String.format("系统用户 %s 不存在！", userId));
                 }
                 // 删除 系统用户 之前关联的租户
                 baseMapper.deleteHaveTenants(userId);
@@ -99,7 +99,7 @@ public class SysUserServiceImpl implements SysUserService {
                 return true;
             });
         }
-        throw new RuntimeException("只有系统管理员，才能给系统用户分配租户！");
+        throw new BizException("只有系统管理员，才能给系统用户分配租户！");
     }
 
 

@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -36,7 +37,9 @@ public class NoRepeatSubmitInterceptor implements HandlerInterceptor {
     private final StringRedisTemplate stringRedisTemplate;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(@NonNull HttpServletRequest request,
+                             @NonNull HttpServletResponse response,
+                             @NonNull Object handler) throws Exception {
         if (JwtSecurityUtils.isAuthenticated() && handler instanceof HandlerMethod method) {
             // 标注在方法上的 @NoRepeatSubmit
             var repeatSubmitByMethod = AnnotationUtils.findAnnotation(method.getMethod(), NoRepeatSubmit.class);

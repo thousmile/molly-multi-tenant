@@ -2,7 +2,6 @@ package com.xaaef.molly.common.util;
 
 import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.net.NetUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +55,7 @@ public class IpUtils {
         if (StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (StringUtils.isEmpty(ip) || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
+        if (StringUtils.isEmpty(ip) || ip.isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
         if (StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
@@ -88,7 +87,7 @@ public class IpUtils {
     public static String getRealAddressByIP(String ip) {
         try {
             if (Ipv4Util.isInnerIP(ip)) {
-                return StrUtil.format("内网 {} IP", ip);
+                return String.format("内网 %s IP", ip);
             }
             var jsonStr = HttpUtil.get(String.format(IP_URL, ip), 1500);
             if (!JsonUtils.isJsonValid(jsonStr)) {
@@ -114,7 +113,7 @@ public class IpUtils {
     public static String getHostIp() {
         try {
             return InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException ignored) {
         }
         return "127.0.0.1";
     }
@@ -128,7 +127,7 @@ public class IpUtils {
     public static String getHostName() {
         try {
             return InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException ignored) {
         }
         return "未知";
     }

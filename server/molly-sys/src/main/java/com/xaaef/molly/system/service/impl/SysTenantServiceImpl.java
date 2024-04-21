@@ -11,6 +11,7 @@ import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.domain.SimpPushMessage;
 import com.xaaef.molly.common.domain.SmallTenant;
 import com.xaaef.molly.common.enums.StatusEnum;
+import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.common.util.JsonUtils;
@@ -172,7 +173,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     @Override
     public boolean save(SysTenant entity) {
         if (!isMasterUser()) {
-            throw new RuntimeException("只有系统用户，才能创建租户！");
+            throw new BizException("只有系统用户，才能创建租户！");
         }
         if (StringUtils.isBlank(entity.getTenantId())) {
             do {
@@ -182,10 +183,10 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         } else {
             var isMatch = Pattern.matches("\\w{4,12}$", entity.getTenantId());
             if (!isMatch) {
-                throw new RuntimeException("租户ID 只能是字母和数字，长度4~12位!！");
+                throw new BizException("租户ID 只能是字母和数字，长度4~12位!！");
             }
             if (tenantManager.existById(entity.getTenantId())) {
-                throw new RuntimeException(String.format("租户ID %s 已经存在了！", entity.getTenantId()));
+                throw new BizException(String.format("租户ID %s 已经存在了！", entity.getTenantId()));
             }
         }
         if (entity.getExpired() == null) {
@@ -214,7 +215,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     @Override
     public TenantCreatedSuccessVO create(CreateTenantPO po) throws Exception {
         if (!isMasterUser()) {
-            throw new RuntimeException("只有系统用户，才能创建租户！");
+            throw new BizException("只有系统用户，才能创建租户！");
         }
 
         // 如果 租户ID 为空，就随机给一个
@@ -307,11 +308,11 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     @Override
     public boolean resetData(String tenantId) {
         if (!isMasterUser() && !isAdminUser()) {
-            throw new RuntimeException("非系统管理员，无法重置租户数据！");
+            throw new BizException("非系统管理员，无法重置租户数据！");
         }
         var source = super.getById(tenantId);
         if (source == null) {
-            throw new RuntimeException(String.format("租户ID %s 不存在！", tenantId));
+            throw new BizException(String.format("租户ID %s 不存在！", tenantId));
         }
         var initTenantDTO = new SysTenantDTO();
         BeanUtils.copyProperties(source, initTenantDTO);
@@ -417,7 +418,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     @Override
     public boolean updateById(SysTenant entity) {
         if (!isMasterUser()) {
-            throw new RuntimeException("只有系统用户，才能修改租户！");
+            throw new BizException("只有系统用户，才能修改租户！");
         }
         var templateIds = entity.getTemplates()
                 .stream()
@@ -432,7 +433,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     @Override
     public boolean updateTemplate(String tenantId, Set<Long> templateIds) {
         if (!isMasterUser()) {
-            throw new RuntimeException("只有系统用户，才能修改租户权限！");
+            throw new BizException("只有系统用户，才能修改租户权限！");
         }
         // 先删除拥有的，模板ID
         baseMapper.deleteHaveTemplates(tenantId);
@@ -448,14 +449,14 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     @Override
     public boolean removeById(Serializable id) {
         if (!isMasterUser() && !isAdminUser()) {
-            throw new RuntimeException("非系统管理员，无法删除租户！");
+            throw new BizException("非系统管理员，无法删除租户！");
         }
         var tenantId = String.valueOf(id);
         if (!this.exist(SysTenant::getTenantId, tenantId)) {
             return false;
         }
         if (StringUtils.equals(tenantId, tenantManager.getDefaultTenantId())) {
-            throw new RuntimeException(StrUtil.format("无法删除 {} 默认租户！", tenantId));
+            throw new BizException(String.format("无法删除 %s 默认租户！", tenantId));
         }
         // 删除 租户信息
         var flag = super.removeById(tenantId);

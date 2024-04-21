@@ -5,8 +5,8 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.system.entity.SysMenu;
 import com.xaaef.molly.system.mapper.SysMenuMapper;
 import com.xaaef.molly.system.service.SysMenuService;
@@ -46,7 +46,7 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu>
     @Override
     public boolean save(SysMenu entity) {
         if (this.exist(SysMenu::getPerms, entity.getPerms())) {
-            throw new RuntimeException(StrUtil.format("权限标识: {} 已经存在了", entity.getPerms()));
+            throw new BizException(String.format("权限标识: %s 已经存在了", entity.getPerms()));
         }
         return super.save(entity);
     }
@@ -58,7 +58,7 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu>
                 .eq(SysMenu::getPerms, entity.getPerms())
                 .ne(SysMenu::getMenuId, entity.getMenuId());
         if (this.exist(wrapper)) {
-            throw new RuntimeException(StrUtil.format("权限标识: {} 已经存在了", entity.getPerms()));
+            throw new BizException(String.format("权限标识: %s 已经存在了", entity.getPerms()));
         }
         return super.updateById(entity);
     }
@@ -69,10 +69,10 @@ public class SysMenuServiceImpl extends BaseServiceImpl<SysMenuMapper, SysMenu>
     public boolean removeById(Serializable id) {
         Long mid = Long.valueOf(id.toString());
         if (baseMapper.haveChildren(mid) > 0) {
-            throw new RuntimeException("当前菜单有子菜单引用！无法删除！");
+            throw new BizException("当前菜单有子菜单引用！无法删除！");
         }
         if (baseMapper.templateReference(mid) > 0) {
-            throw new RuntimeException("当前菜单有权限模板引用！无法删除！");
+            throw new BizException("当前菜单有权限模板引用！无法删除！");
         }
         return super.removeById(id);
     }

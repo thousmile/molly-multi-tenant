@@ -1,3 +1,11 @@
+### 查询指定设备
+GET {{baseUrl}}/cms/device/aa
+Content-Type: application/json
+x-tenant-id: {{tenantId}}
+x-project-id: {{projectId}}
+Authorization: Bearer {{tokenValue}}
+
+
 ### 分页查询设备
 GET {{baseUrl}}/cms/device/query?includeCauu=true
 Content-Type: application/json

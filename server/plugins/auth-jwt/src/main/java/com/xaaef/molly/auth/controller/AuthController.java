@@ -1,6 +1,5 @@
 package com.xaaef.molly.auth.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.auth.jwt.JwtTokenValue;
@@ -103,17 +102,17 @@ public class AuthController {
         } catch (RuntimeException failed) {
             String msg = null;
             if (failed instanceof UsernameNotFoundException) {
-                msg = StrUtil.format("用户名 {} 不存在", user.getUsername());
+                msg = String.format("用户名 %s 不存在", user.getUsername());
             } else if (failed instanceof BadCredentialsException) {
-                msg = StrUtil.format("用户名 {} 密码输入错误", user.getUsername());
+                msg = String.format("用户名 %s 密码输入错误", user.getUsername());
             } else if (failed instanceof DisabledException) {
-                msg = StrUtil.format("用户名 {} 已被禁用", user.getUsername());
+                msg = String.format("用户名 %s 已被禁用", user.getUsername());
             } else if (failed instanceof LockedException) {
                 msg = "抱歉您的账户已被锁定";
             } else if (failed instanceof AccountExpiredException) {
-                msg = StrUtil.format("用户名 {} 已过期", user.getUsername());
+                msg = String.format("用户名 %s 已过期", user.getUsername());
             } else {
-                msg = StrUtil.format(failed.getMessage());
+                msg = String.format(failed.getMessage());
             }
             return JsonResult.fail(msg, JwtTokenValue.class);
         }

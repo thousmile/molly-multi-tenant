@@ -2,6 +2,7 @@ package com.xaaef.molly.web;
 
 import com.xaaef.molly.auth.enums.OAuth2Error;
 import com.xaaef.molly.auth.exception.JwtAuthException;
+import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.common.util.JsonResult;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -9,9 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * <p>
@@ -28,39 +31,54 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     /**
-     * 处理自定义的业务异常
+     * 数据转换异常
+     *
+     * @param e
+     */
+    @ExceptionHandler(value = HttpMessageConversionException.class)
+    public JsonResult<String> exceptionHandler(HttpMessageConversionException e) {
+        return JsonResult.fail(e.getMessage());
+    }
+
+
+    /**
+     * 参数校验异常
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public JsonResult<String> exceptionHandler(MethodArgumentNotValidException e) {
+        var fieldError = e.getBindingResult().getFieldError();
+        var errorMessage = fieldError != null ? fieldError.getDefaultMessage() : e.getMessage();
+        return JsonResult.error(e.getStatusCode().value(), errorMessage);
+    }
+
+
+    /**
+     * 参数缺失异常
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public JsonResult<String> exceptionHandler(MethodArgumentTypeMismatchException e) {
+        return JsonResult.fail(e.getMessage());
+    }
+
+
+    /**
+     * jwt认证异常
      *
      * @param e
      */
     @ExceptionHandler(value = JwtAuthException.class)
-    public JsonResult<String> bizExceptionHandler(JwtAuthException e) {
-        log.error("发生业务异常！原因是： {}  {} ", e.getStatus(), e.getMessage());
+    public JsonResult<String> exceptionHandler(JwtAuthException e) {
         return JsonResult.error(e.getStatus(), e.getMessage());
     }
 
 
     /**
-     * 参数校验统一异常处理
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public JsonResult<String> handleBindException(MethodArgumentNotValidException e) {
-        var fieldError = e.getBindingResult().getFieldError();
-        if (fieldError != null) {
-            return JsonResult.fail(fieldError.getDefaultMessage());
-        }
-        return JsonResult.fail("");
-    }
-
-
-    /**
-     * 处理空指针的异常
+     * 空指针异常
      *
      * @param e
      */
     @ExceptionHandler(value = NullPointerException.class)
     public JsonResult<String> exceptionHandler(NullPointerException e) {
-        e.printStackTrace();
-        log.error("发生空指针异常！原因是: {} ", e.getMessage());
         int status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         return JsonResult.error(status, e.getMessage());
     }
@@ -87,18 +105,18 @@ public class GlobalExceptionHandler {
 
 
     /**
-     * 数据转换异常
+     * 业务 异常
      *
      * @param e
      */
-    @ExceptionHandler(value = HttpMessageConversionException.class)
-    public JsonResult<String> exceptionHandler(HttpMessageConversionException e) {
+    @ExceptionHandler(value = BizException.class)
+    public JsonResult<String> exceptionHandler(BizException e) {
         return JsonResult.fail(e.getMessage());
     }
 
 
     /**
-     * 处理运行时的异常
+     * 运行时异常
      *
      * @param e
      */
@@ -117,8 +135,12 @@ public class GlobalExceptionHandler {
     public JsonResult<String> exceptionHandler(Exception e) {
         e.printStackTrace();
         log.error("未知异常！原因是: {} ", e.getMessage());
+        if (e instanceof ErrorResponse er) {
+            return JsonResult.error(er.getStatusCode().value(), e.getMessage());
+        }
         int status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         return JsonResult.error(status, e.getMessage());
     }
+
 
 }

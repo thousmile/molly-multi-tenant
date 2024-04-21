@@ -15,6 +15,7 @@ import com.xaaef.molly.auth.service.UserLoginService;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.StatusEnum;
 import com.xaaef.molly.common.enums.UserType;
+import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.common.util.IdUtils;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.internal.api.ApiSysConfigService;
@@ -131,13 +132,13 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
     @Override
     public boolean save(PmsUser entity) {
         if (exist(PmsUser::getUsername, entity.getUsername())) {
-            throw new RuntimeException(String.format("用户名 %s 已经存在了！", entity.getUsername()));
+            throw new BizException(String.format("用户名 %s 已经存在了！", entity.getUsername()));
         }
         if (exist(PmsUser::getMobile, entity.getMobile())) {
-            throw new RuntimeException(String.format("手机号码 %s 已经存在了！", entity.getMobile()));
+            throw new BizException(String.format("手机号码 %s 已经存在了！", entity.getMobile()));
         }
         if (exist(PmsUser::getEmail, entity.getEmail())) {
-            throw new RuntimeException(String.format("邮箱账号 %s 已经存在了！", entity.getEmail()));
+            throw new BizException(String.format("邮箱账号 %s 已经存在了！", entity.getEmail()));
         }
         // 如果用户密码为空
         if (StringUtils.isBlank(entity.getPassword())) {
@@ -175,11 +176,11 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
     public boolean removeById(Serializable id) {
         var user = this.getById(id);
         if (user == null) {
-            throw new RuntimeException(String.format("用户id为 [ %s ] 的用户不存在！", id));
+            throw new BizException(String.format("用户id: %s 的用户不存在！", id));
         }
         // 管理员用户，是无法删除的！
         if (Objects.equals(user.getAdminFlag(), AdminFlag.YES.getCode())) {
-            throw new RuntimeException(String.format("用户[ %s ] 是管理员，无法删除！", user.getNickname()));
+            throw new BizException(String.format("用户: %s 是管理员，无法删除！", user.getNickname()));
         }
         // 删除用户的角色
         baseMapper.deleteHaveRoles(user.getUserId());
@@ -194,19 +195,19 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
                 .eq(PmsUser::getUsername, entity.getUsername())
                 .ne(PmsUser::getUserId, entity.getUserId());
         if (this.count(wrapper1) > 0) {
-            throw new RuntimeException(String.format("用户名 %s 已经存在了！", entity.getUsername()));
+            throw new BizException(String.format("用户名: %s 已经存在了！", entity.getUsername()));
         }
         var wrapper2 = new LambdaQueryWrapper<PmsUser>()
                 .eq(PmsUser::getMobile, entity.getMobile())
                 .ne(PmsUser::getUserId, entity.getUserId());
         if (this.count(wrapper2) > 0) {
-            throw new RuntimeException(String.format("手机号码 %s 已经存在了！", entity.getMobile()));
+            throw new BizException(String.format("手机号码: %s 已经存在了！", entity.getMobile()));
         }
         var wrapper3 = new LambdaQueryWrapper<PmsUser>()
                 .eq(PmsUser::getEmail, entity.getEmail())
                 .ne(PmsUser::getUserId, entity.getUserId());
         if (this.count(wrapper3) > 0) {
-            throw new RuntimeException(String.format("邮箱账号 %s 已经存在了！", entity.getEmail()));
+            throw new BizException(String.format("邮箱账号: %s 已经存在了！", entity.getEmail()));
         }
         if (entity.getRoles() != null) {
             // 角色列表
@@ -239,7 +240,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
     public Boolean updateUserRoles(Long userId, Set<Long> roleIds) {
         var dbUser = this.getById(userId);
         if (dbUser == null) {
-            throw new RuntimeException(String.format("用户 %d 不存在！", userId));
+            throw new BizException(String.format("用户: %d 不存在！", userId));
         }
         // 先删除当前用户拥有的所有角色
         baseMapper.deleteHaveRoles(userId);
@@ -334,13 +335,13 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
         return delegate(getTenantId(), () -> {
             var sysUser = baseMapper.selectById(pwd.getUserId());
             if (!StringUtils.equals(pwd.getNewPwd(), pwd.getConfirmPwd())) {
-                throw new RuntimeException("新密码与确认密码不一致，请重新输入！");
+                throw new BizException("新密码与确认密码不一致，请重新输入！");
             }
             // 判断 旧的密码是否正确。
             if (matchesPassword(pwd.getOldPwd(), sysUser.getPassword())) {
                 // 判断 新密码 和 老密码是否相同
                 if (matchesPassword(pwd.getNewPwd(), sysUser.getPassword())) {
-                    throw new RuntimeException("新密码与旧密码相同，请重新输入！");
+                    throw new BizException("新密码与旧密码相同，请重新输入！");
                 } else {
                     // 新密码 加密
                     var newPassword = encryptPassword(pwd.getNewPwd());
@@ -349,7 +350,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
                     return super.updateById(pmsUser);
                 }
             } else {
-                throw new RuntimeException("旧密码错误，请重新输入！");
+                throw new BizException("旧密码错误，请重新输入！");
             }
         });
     }
@@ -366,7 +367,7 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
             var pmsUser = new PmsUser().setUserId(pwd.getUserId()).setPassword(newPassword);
             return super.updateById(pmsUser);
         }
-        throw new RuntimeException("用户不存在，无法重置密码！");
+        throw new BizException("用户不存在，无法重置密码！");
     }
 
 

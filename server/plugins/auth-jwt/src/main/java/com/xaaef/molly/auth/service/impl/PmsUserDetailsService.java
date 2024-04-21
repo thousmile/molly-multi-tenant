@@ -1,6 +1,5 @@
 package com.xaaef.molly.auth.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.StatusEnum;
@@ -30,9 +29,7 @@ public class PmsUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var dbUser = userService.getByUsername(username);
         if (dbUser == null) {
-            throw new UsernameNotFoundException(
-                    StrUtil.format("用户名 {} 不存在！", username)
-            );
+            throw new UsernameNotFoundException(String.format("用户名 %s 不存在！", username));
         }
         var result = new JwtLoginUser();
         BeanUtils.copyProperties(dbUser, result);

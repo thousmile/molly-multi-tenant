@@ -1,6 +1,7 @@
 package com.xaaef.molly.system.controller;
 
 import cn.hutool.core.io.FileUtil;
+import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.system.po.ImageSizePO;
 import com.xaaef.molly.system.vo.FileInfoVO;
@@ -146,10 +147,10 @@ public class FileUploadController {
      */
     public static void isImage(String imageName) {
         if (StringUtils.isBlank(imageName)) {
-            throw new RuntimeException("图片名称必须填写！");
+            throw new BizException("图片名称必须填写！");
         }
         if (!imageName.matches(IMAGE_REG)) {
-            throw new RuntimeException("只可以上传[ jpg , jpeg , png , bmp , webp ]其中的一种");
+            throw new BizException("只可以上传[ jpg , jpeg , png , bmp , webp ]其中的一种");
         }
     }
 

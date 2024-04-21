@@ -1,7 +1,6 @@
 package com.xaaef.molly.web.interceptor;
 
 
-import cn.hutool.core.util.StrUtil;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.domain.SmallTenant;
 import com.xaaef.molly.common.util.JsonResult;
@@ -71,7 +70,7 @@ public class TenantIdInterceptor implements HandlerInterceptor {
         }
         // 校验租户，是否存在系统中
         if (!tenantService.existById(tenantId)) {
-            var err = StrUtil.format("租户ID {} 不存在！", tenantId);
+            var err = String.format("租户ID %s 不存在！", tenantId);
             ServletUtils.renderError(response, JsonResult.result(TENANT_ID_DOES_NOT_EXIST.getStatus(), err));
             return false;
         }
@@ -92,13 +91,11 @@ public class TenantIdInterceptor implements HandlerInterceptor {
         if (JwtSecurityUtils.isMasterUser()) {
             var haveTenantIds = JwtSecurityUtils.getLoginUser().getHaveTenantIds();
             if (!haveTenantIds.isEmpty() && !haveTenantIds.contains(tenantId)) {
-                var err = StrUtil.format("您没有 租户ID {} 的操作权限！", tenantId);
+                var err = String.format("您没有 租户ID %s 的操作权限！", tenantId);
                 var first = haveTenantIds.stream().findFirst();
                 var result = JsonResult.error(NO_HAVE_TENANT_PERMISSIONS.getStatus(), err, SmallTenant.class);
-                if (first.isPresent()) {
-                    var firstTenant = tenantService.getSmallByTenantId(first.get());
-                    result.setData(firstTenant);
-                }
+                var firstTenant = tenantService.getSmallByTenantId(first.get());
+                result.setData(firstTenant);
                 ServletUtils.renderError(response, result);
                 return false;
             }
@@ -108,7 +105,7 @@ public class TenantIdInterceptor implements HandlerInterceptor {
 
 
     private static boolean writeError(HttpServletResponse response) {
-        var err = StrUtil.format("请求头或者URL参数中必须添加 {}", X_TENANT_ID);
+        var err = String.format("请求头或者URL参数中必须添加 %s ", X_TENANT_ID);
         ServletUtils.renderError(response, JsonResult.result(REQUEST_MUST_ADD_TENANT_ID.getStatus(), err));
         return false;
     }

@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.common.enums.StatusEnum;
+import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.corems.entity.CmsProject;
@@ -91,7 +92,7 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
     @Override
     public boolean save(CmsProject entity) {
         if (entity.getDeptId() == null) {
-            throw new RuntimeException("项目所属部门必须填写！");
+            throw new BizException("项目所属部门必须填写！");
         }
         if (StrUtil.isEmpty(entity.getPassword())) {
             var password = Optional.ofNullable(configService.getValueByKey(DEFAULT_PROJECT_PASSWORD.getKey()))
@@ -131,7 +132,7 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
                     .setPassword(newPassword);
             return super.updateById(pmsUser);
         }
-        throw new RuntimeException("项目不存在，无法重置密码！");
+        throw new BizException("项目不存在，无法重置密码！");
     }
 
 
@@ -164,18 +165,18 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
     @Override
     public boolean removeById(CmsProject entity) {
         if (entity.getProjectId() == null) {
-            throw new RuntimeException("请输入项目Id！");
+            throw new BizException("请输入项目Id！");
         }
         if (StrUtil.isEmpty(entity.getPassword())) {
-            throw new RuntimeException("请输入项目密码！");
+            throw new BizException("请输入项目密码！");
         }
         var dbProject = super.getById(entity.getProjectId());
         if (dbProject == null) {
-            throw new RuntimeException(StrUtil.format("项目Id {} 不存在！", entity.getProjectId()));
+            throw new BizException(String.format("项目Id %d 不存在！", entity.getProjectId()));
         }
         var flag1 = matchesPassword(entity.getPassword(), dbProject.getPassword());
         if (!flag1) {
-            throw new RuntimeException(StrUtil.format("项目 {} 密码输入错误！", dbProject.getProjectName()));
+            throw new BizException(String.format("项目 %s 密码输入错误！", dbProject.getProjectName()));
         }
         var flag2 = super.removeById(dbProject.getProjectId());
         // 查询 所有的 包含 project_id 的表

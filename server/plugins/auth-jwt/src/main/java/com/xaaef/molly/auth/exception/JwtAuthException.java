@@ -27,11 +27,6 @@ public class JwtAuthException extends AuthenticationException {
     private Integer status;
 
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-
     public JwtAuthException(int status, String message) {
         super(message);
         this.status = status;

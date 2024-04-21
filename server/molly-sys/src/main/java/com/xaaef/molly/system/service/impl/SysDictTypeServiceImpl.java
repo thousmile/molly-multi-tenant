@@ -1,6 +1,7 @@
 package com.xaaef.molly.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.system.entity.SysDictData;
 import com.xaaef.molly.system.entity.SysDictType;
 import com.xaaef.molly.system.mapper.SysDictTypeMapper;
@@ -36,9 +37,7 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeMapper, S
     @Override
     public boolean save(SysDictType entity) {
         if (exist(SysDictType::getTypeKey, entity.getTypeKey())) {
-            throw new RuntimeException(
-                    String.format("字典关键字 %s 已经存在了", entity.getTypeKey())
-            );
+            throw new BizException(String.format("字典关键字 %s 已经存在了", entity.getTypeKey()));
         }
         return super.save(entity);
     }
@@ -50,9 +49,7 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeMapper, S
                 .eq(SysDictType::getTypeKey, entity.getTypeKey())
                 .notIn(SysDictType::getTypeId, entity.getTypeId());
         if (super.count(wrapper) > 0) {
-            throw new RuntimeException(
-                    String.format("字典关键字 %s 已经存在了", entity.getTypeKey())
-            );
+            throw new BizException(String.format("字典关键字 %s 已经存在了", entity.getTypeKey()));
         }
         return super.updateById(entity);
     }
@@ -63,9 +60,7 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeMapper, S
     public boolean removeById(Serializable id) {
         SysDictType dictType = getById(id);
         if (dictType == null) {
-            throw new RuntimeException(
-                    String.format("字典类型Id %s 不存在", id)
-            );
+            throw new BizException(String.format("字典类型Id %s 不存在", id));
         }
         dictDataService.remove(new LambdaQueryWrapper<SysDictData>()
                 .eq(SysDictData::getTypeKey, dictType.getTypeKey()));

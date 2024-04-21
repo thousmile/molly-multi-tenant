@@ -1,6 +1,5 @@
 package com.xaaef.molly.common.util;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.xaaef.molly.common.domain.CustomRequestInfo;
@@ -124,8 +123,8 @@ public class ServletUtils {
     public static CustomRequestInfo getRequestInfo(HttpServletRequest request) {
         var fullPath = getFullPath(request);
         var userAgent = getUserAgent(request);
-        var browser = StrUtil.format("{} {}", userAgent.getBrowser(), userAgent.getVersion());
-        var os = StrUtil.format("{} {}", userAgent.getPlatform(), Objects.requireNonNullElse(userAgent.getOsVersion(), ""));
+        var browser = String.format("%s %s", userAgent.getBrowser(), userAgent.getVersion());
+        var os = String.format("%s %s", userAgent.getPlatform(), Objects.requireNonNullElse(userAgent.getOsVersion(), ""));
         var ipAddr = IpUtils.getIpAddr(request);
         var realAddress = IpUtils.getRealAddressByIP(ipAddr);
         return CustomRequestInfo.builder()
@@ -154,7 +153,6 @@ public class ServletUtils {
             response.getWriter().println(string);
             response.getWriter().flush();
         } catch (IOException e) {
-            e.printStackTrace();
             log.error("renderString: {}", e.getMessage());
         }
     }

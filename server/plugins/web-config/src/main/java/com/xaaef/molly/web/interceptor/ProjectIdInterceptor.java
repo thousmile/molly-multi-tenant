@@ -71,7 +71,7 @@ public class ProjectIdInterceptor implements HandlerInterceptor {
         if (!flag) {
             var st = tenantService.getSmallByTenantId(TenantUtils.getTenantId());
             var err = JsonResult.error(NO_HAVE_PROJECT_PERMISSIONS.getStatus(),
-                    StrUtil.format("租户 {} 暂无，ID为 {} 的项目！", st.getName(), TenantUtils.getProjectId())
+                    String.format("租户 %s 暂无，ID为 %d 的项目！", st.getName(), TenantUtils.getProjectId())
             );
             ServletUtils.renderError(response, err);
             return false;
@@ -92,13 +92,11 @@ public class ProjectIdInterceptor implements HandlerInterceptor {
         if (JwtSecurityUtils.isAuthenticated() && (!JwtSecurityUtils.isMasterUser() && !JwtSecurityUtils.isAdminUser())) {
             var haveProjectIds = JwtSecurityUtils.getLoginUser().getHaveProjectIds();
             if (!haveProjectIds.isEmpty() && !haveProjectIds.contains(projectId)) {
-                var err = StrUtil.format("您没有 项目ID {} 的操作权限！", projectId);
+                var err = String.format("您没有 项目ID %d 的操作权限！", projectId);
                 var first = haveProjectIds.stream().findFirst();
                 var result = JsonResult.error(NO_HAVE_PROJECT_PERMISSIONS.getStatus(), err, CmsProjectDTO.class);
-                if (first.isPresent()) {
-                    var firstProject = projectService.getSimpleById(first.get());
-                    result.setData(firstProject);
-                }
+                var firstProject = projectService.getSimpleById(first.get());
+                result.setData(firstProject);
                 ServletUtils.renderError(response, result);
                 return false;
             }

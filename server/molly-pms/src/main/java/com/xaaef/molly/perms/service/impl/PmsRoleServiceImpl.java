@@ -3,6 +3,7 @@ package com.xaaef.molly.perms.service.impl;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
+import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiSysMenuService;
 import com.xaaef.molly.internal.dto.SysMenuDTO;
@@ -47,7 +48,7 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
     public UpdateMenusVO listHaveMenus(Long roleId) {
         PmsRole dbRole = getById(roleId);
         if (dbRole == null) {
-            throw new RuntimeException(String.format("角色ID %s 不存在！", roleId));
+            throw new BizException(String.format("角色ID %d 不存在！", roleId));
         }
         // 当前角色，已经拥有的菜单ID
         var haveHashSet = baseMapper.selectMenuIdByRoleId(roleId);
@@ -85,10 +86,10 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
     public boolean updateMenus(Long roleId, Set<Long> menus) {
         var dbRole = getById(roleId);
         if (dbRole == null) {
-            throw new RuntimeException("角色不存在！");
+            throw new BizException("角色不存在！");
         }
         baseMapper.deleteHaveMenus(roleId);
-        if (menus != null && menus.size() > 0) {
+        if (menus != null && !menus.isEmpty()) {
             return baseMapper.insertByMenus(roleId, menus) > 0;
         }
         return true;
@@ -117,7 +118,7 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
     public boolean removeById(Serializable id) {
         Long roleId = Long.valueOf(id.toString());
         if (baseMapper.userReference(roleId) > 0) {
-            throw new RuntimeException(String.format("角色Id [ %d ] 还有其他用户关联！无法删除！", roleId));
+            throw new BizException(String.format("角色Id [ %d ] 还有其他用户关联！无法删除！", roleId));
         }
         // 删除当前角色，关联的权限
         baseMapper.deleteHaveMenus(roleId);

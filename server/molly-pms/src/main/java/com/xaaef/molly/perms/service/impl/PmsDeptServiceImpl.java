@@ -9,6 +9,7 @@ import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.common.po.SearchParentPO;
 import com.xaaef.molly.internal.api.ApiCmsProjectService;
 import com.xaaef.molly.perms.entity.PmsDept;
@@ -114,7 +115,7 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
         } else {
             var parentDept = super.getById(entity.getParentId());
             if (parentDept == null) {
-                throw new RuntimeException(String.format("上级部门 %d 不存在!", entity.getParentId()));
+                throw new BizException(String.format("上级部门 %d 不存在!", entity.getParentId()));
             }
             entity.setAncestors(parentDept.getAncestors() + "," + entity.getParentId());
         }
@@ -128,18 +129,18 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
     public boolean removeById(Serializable id) {
         var dept = getById(id);
         if (dept == null) {
-            throw new RuntimeException(String.format("部门 %s 不存在!", id));
+            throw new BizException(String.format("部门 %s 不存在!", id));
         }
         if (super.exist(PmsDept::getParentId, dept.getDeptId())) {
-            throw new RuntimeException(String.format("请先删除 %s 的下级部门!", dept.getDeptName()));
+            throw new BizException(String.format("请先删除 %s 的下级部门!", dept.getDeptName()));
         }
         if (projectService.countProjectByDeptId(dept.getDeptId()) > 0) {
-            throw new RuntimeException(String.format("部门 %s 还有项目关联!", dept.getDeptName()));
+            throw new BizException(String.format("部门 %s 还有项目关联!", dept.getDeptName()));
         }
         var wrapper = new LambdaQueryWrapper<PmsUser>()
                 .eq(PmsUser::getDeptId, dept.getDeptId());
         if (userMapper.selectCount(wrapper) > 0) {
-            throw new RuntimeException(String.format("部门 %s 还有用户关联!", dept.getDeptName()));
+            throw new BizException(String.format("部门 %s 还有用户关联!", dept.getDeptName()));
         }
         return super.removeById(id);
     }
@@ -149,7 +150,7 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
     @Override
     public boolean updateById(PmsDept entity) {
         if (NumberUtil.equals(entity.getDeptId(), entity.getParentId())) {
-            throw new RuntimeException("上级部门不能是自己!");
+            throw new BizException("上级部门不能是自己!");
         }
         var newParentDept = getById(entity.getParentId());
         var oldDept = getById(entity.getDeptId());

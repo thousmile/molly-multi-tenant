@@ -4,6 +4,7 @@ import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xaaef.molly.common.enums.MenuTargetEnum;
+import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.system.entity.SysMenu;
 import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.entity.SysTemplateProxy;
@@ -47,7 +48,7 @@ public class SysTemplateServiceImpl extends BaseServiceImpl<SysTemplateMapper, S
     public boolean removeById(Serializable id) {
         Long tid = Long.valueOf(id.toString());
         if (baseMapper.userReference(tid) > 0) {
-            throw new RuntimeException("此模板，还有租户在使用，无法删除！");
+            throw new BizException("此模板，还有租户在使用，无法删除！");
         }
         // 先删除拥有的菜单
         baseMapper.deleteHaveMenus(tid);
@@ -96,7 +97,7 @@ public class SysTemplateServiceImpl extends BaseServiceImpl<SysTemplateMapper, S
     @Override
     public boolean updateMenus(Long templateId, Set<Long> menus) {
         if (!exist(SysTemplate::getId, templateId)) {
-            throw new RuntimeException(String.format("模板ID %d 不存在！", templateId));
+            throw new BizException(String.format("模板ID %d 不存在！", templateId));
         }
         baseMapper.deleteHaveMenus(templateId);
         if (menus != null && !menus.isEmpty()) {
