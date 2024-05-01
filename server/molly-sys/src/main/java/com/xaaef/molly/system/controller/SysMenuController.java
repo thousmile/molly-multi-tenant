@@ -4,6 +4,8 @@ import cn.hutool.core.lang.tree.Tree;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.system.entity.SysMenu;
 import com.xaaef.molly.system.service.SysMenuService;
 import com.xaaef.molly.web.repeat.NoRepeatSubmit;
@@ -98,7 +100,7 @@ public class SysMenuController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<SysMenu> save(@RequestBody @Validated(SysMenu.ValidCreate.class) SysMenu entity) {
+    public JsonResult<SysMenu> save(@RequestBody @Validated(ValidCreate.class) SysMenu entity) {
         baseService.save(entity);
         return JsonResult.success(entity);
     }
@@ -107,7 +109,7 @@ public class SysMenuController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> updateById(@RequestBody @Validated(SysMenu.ValidUpdate.class) SysMenu entity) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated(ValidUpdate.class) SysMenu entity) {
         boolean byId = baseService.updateById(entity);
         return JsonResult.success(byId);
     }

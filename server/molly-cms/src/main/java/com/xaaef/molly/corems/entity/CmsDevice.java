@@ -3,6 +3,8 @@ package com.xaaef.molly.corems.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.tenant.base.ProjectBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -52,15 +54,4 @@ public class CmsDevice extends ProjectBaseEntity {
     @NotNull(message = "状态,必须填写", groups = {ValidCreate.class})
     private Byte status;
 
-    /**
-     * 设备 创建分组
-     */
-    public interface ValidCreate {
-    }
-
-    /**
-     * 设备 修改分组
-     */
-    public interface ValidUpdate {
-    }
 }

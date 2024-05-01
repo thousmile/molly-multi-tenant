@@ -37,13 +37,15 @@ public class JwtConst {
             "/swagger-resources/configuration/ui",
             "/swagger-ui.html",
             "/error",
-            "/error/**"
+            "/error/**",
+            "/files/**",
     };
 
 
     // 不需要添加租户的路径
     public static final String[] TENANT_WHITE_LIST = {
             "/upload/**",
+            "/files/**",
     };
 
 

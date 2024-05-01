@@ -24,6 +24,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.LocalDate;
@@ -46,7 +47,6 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
 
     private final ServerProperties sp;
 
-
     /**
      * TODO 输出文档地址
      *
@@ -60,6 +60,7 @@ public class CustomSpringWebConfig implements WebMvcConfigurer {
         localIPS.add(Ipv4Util.LOCAL_IP);
         localIPS.forEach(ip -> log.info("http://{}:{}/doc.html", ip, sp.getPort()));
     }
+
 
     // 防止重复提交 拦截器
     private final NoRepeatSubmitInterceptor noRepeatSubmitInterceptor;

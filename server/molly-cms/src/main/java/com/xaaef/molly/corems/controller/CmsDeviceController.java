@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchParentPO;
 import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.corems.entity.CmsDevice;
 import com.xaaef.molly.corems.service.CmsDeviceService;
 import com.xaaef.molly.web.repeat.NoRepeatSubmit;
@@ -62,7 +64,7 @@ public class CmsDeviceController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<Boolean> create(@RequestBody @Validated(CmsDevice.ValidCreate.class) CmsDevice entity) {
+    public JsonResult<Boolean> create(@RequestBody @Validated(ValidCreate.class) CmsDevice entity) {
         var flag = baseService.save(entity);
         return JsonResult.success(flag);
     }
@@ -71,7 +73,7 @@ public class CmsDeviceController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> updateById(@RequestBody @Validated(CmsDevice.ValidUpdate.class) CmsDevice entity) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated(ValidUpdate.class) CmsDevice entity) {
         return JsonResult.success(baseService.updateById(entity));
     }
 

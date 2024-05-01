@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.system.entity.SysTemplate;
 import com.xaaef.molly.system.service.SysTemplateService;
 import com.xaaef.molly.system.vo.BindingMenusVO;
@@ -67,7 +69,7 @@ public class SysTemplateController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<Boolean> save(@RequestBody @Validated(SysTemplate.ValidCreate.class) SysTemplate entity) {
+    public JsonResult<Boolean> save(@RequestBody @Validated(ValidCreate.class) SysTemplate entity) {
         var save = baseService.save(entity);
         return JsonResult.success(save);
     }
@@ -76,7 +78,7 @@ public class SysTemplateController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> updateById(@RequestBody @Validated(SysTemplate.ValidUpdate.class) SysTemplate entity) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated(ValidUpdate.class) SysTemplate entity) {
         var flag = baseService.updateById(entity);
         return JsonResult.success(flag);
     }

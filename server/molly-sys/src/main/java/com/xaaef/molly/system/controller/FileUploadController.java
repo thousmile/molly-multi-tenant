@@ -13,9 +13,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.dromara.x.file.storage.core.FileStorageService;
+import org.dromara.x.file.storage.core.platform.LocalPlusFileStorage;
 import org.dromara.x.file.storage.core.platform.QiniuKodoFileStorage;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.LocalDate;
 
@@ -37,6 +43,25 @@ import java.time.LocalDate;
 public class FileUploadController {
 
     private final FileStorageService storageService;
+
+    /**
+     * 仅在 本地开发时 情况下使用
+     * 生产环境请使用 nginx 或者 公有云的 OSS。
+     *
+     * @link <a href="https://x-file-storage.xuyanwu.cn/#/">文档</a>
+     */
+    @Bean
+    @Profile("dev")
+    public WebMvcConfigurer myFileStorageWebMvcConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
+                final var localPlus = (LocalPlusFileStorage) storageService.getFileStorage();
+                registry.addResourceHandler("/files/**")
+                        .addResourceLocations("file:" + localPlus.getStoragePath());
+            }
+        };
+    }
 
     /**
      * 上传文件，成功返回文件 url

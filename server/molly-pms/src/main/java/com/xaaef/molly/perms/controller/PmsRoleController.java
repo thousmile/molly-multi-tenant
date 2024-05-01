@@ -3,6 +3,8 @@ package com.xaaef.molly.perms.controller;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.po.BindingMenusVO;
 import com.xaaef.molly.perms.service.PmsRoleService;
@@ -64,7 +66,7 @@ public class PmsRoleController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<Boolean> save(@RequestBody @Validated({PmsRole.ValidCreate.class}) PmsRole entity) {
+    public JsonResult<Boolean> save(@RequestBody @Validated({ValidCreate.class}) PmsRole entity) {
         var flag = baseService.save(entity);
         return JsonResult.success(flag);
     }
@@ -73,7 +75,7 @@ public class PmsRoleController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> updateById(@RequestBody @Validated({PmsRole.ValidUpdate.class}) PmsRole entity) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated({ValidUpdate.class}) PmsRole entity) {
         var flag = baseService.updateById(entity);
         return JsonResult.success(flag);
     }

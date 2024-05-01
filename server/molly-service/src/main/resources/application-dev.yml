@@ -29,18 +29,18 @@ spring:
       time-to-live: 180s
 
 
+# 配置教程 https://x-file-storage.xuyanwu.cn/#/%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8
 dromara:
   x-file-storage: #文件存储配置
-    default-platform: qiniu-kodo-1 #默认使用的存储平台
+    default-platform: local-plus-1 #默认使用的存储平台
     thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
-    qiniu-kodo: # 七牛云 kodo
-      - platform: qiniu-kodo-1 # 存储平台标识
-        enable-storage: true  # 启用存储
-        access-key: 123456
-        secret-key: 123456
-        bucket-name: 123456
-        domain: https://oss.baidu.com/       # 访问域名，注意“/”结尾，例如：http://abc.hn-bkt.clouddn.com/
-        base-path: molly/                     # 基础路径
+    local-plus:
+      - platform: local-plus-1    # 存储平台标识
+        enable-storage: true      #启用存储
+        enable-access: true       #启用访问（线上请使用 Nginx 配置，效率更高）
+        domain: http://127.0.0.1:${server.port:8080}/files/ # 访问域名，例如：“http://127.0.0.1:8080/files/”，注意后面要和 path-patterns 保持一致，“/”结尾，本地存储建议使用相对路径，方便后期更换域名
+        path-patterns: /files/**   # 访问路径
+        storage-path: d:/files/    # 存储路径
 
 
 # mybatis-plus 日志打印

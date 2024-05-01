@@ -3,6 +3,8 @@ package com.xaaef.molly.perms.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.tenant.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -60,17 +62,5 @@ public class PmsUserSocial extends BaseEntity {
     @Schema(description = "we_chat: 微信  tencent_qq: 腾讯QQ")
     @NotBlank(message = "社交登录类型,必须填写", groups = {ValidCreate.class})
     private String socialType;
-
-    /**
-     * 用户社交登录 创建分组
-     */
-    public interface ValidCreate {
-    }
-
-    /**
-     * 用户社交登录 修改分组
-     */
-    public interface ValidUpdate {
-    }
 
 }

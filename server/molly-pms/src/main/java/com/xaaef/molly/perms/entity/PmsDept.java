@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xaaef.molly.common.consts.RegexConst;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.tenant.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -91,18 +93,5 @@ public class PmsDept extends BaseEntity {
     @Schema(description = "祖级列表")
     @JsonIgnore
     private String ancestors;
-
-
-    /**
-     * 部门保存分组
-     */
-    public interface ValidCreate {
-    }
-
-    /**
-     * 部门修改分组
-     */
-    public interface ValidUpdate {
-    }
 
 }

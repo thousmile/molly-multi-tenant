@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.common.consts.RegexConst;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidDelete;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.internal.dto.PmsDeptDTO;
 import com.xaaef.molly.tenant.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -111,23 +114,5 @@ public class CmsProject extends BaseEntity {
     @Schema(description = "所属部门")
     @TableField(exist = false)
     private PmsDeptDTO dept;
-
-    /**
-     * 项目 创建分组
-     */
-    public interface ValidCreate {
-    }
-
-    /**
-     * 项目 修改分组
-     */
-    public interface ValidUpdate {
-    }
-
-    /**
-     * 项目 删除分组
-     */
-    public interface ValidDelete {
-    }
 
 }

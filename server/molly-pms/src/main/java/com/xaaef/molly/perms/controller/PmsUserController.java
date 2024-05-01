@@ -6,7 +6,8 @@ import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.util.JsonResult;
-import com.xaaef.molly.perms.entity.PmsDept;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.perms.entity.PmsUser;
 import com.xaaef.molly.perms.po.UserQueryPO;
 import com.xaaef.molly.perms.service.PmsUserService;
@@ -74,7 +75,7 @@ public class PmsUserController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<PmsUser> save(@RequestBody @Validated({PmsUser.ValidCreate.class}) PmsUser entity) {
+    public JsonResult<PmsUser> save(@RequestBody @Validated({ValidCreate.class}) PmsUser entity) {
         baseService.save(entity);
         return JsonResult.success(entity);
     }
@@ -83,7 +84,7 @@ public class PmsUserController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> updateById(@RequestBody @Validated({PmsUser.ValidUpdate.class}) PmsUser entity) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated({ValidUpdate.class}) PmsUser entity) {
         var flag = baseService.updateById(entity);
         return JsonResult.success(flag);
     }
@@ -92,7 +93,7 @@ public class PmsUserController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping("/info")
-    public JsonResult<Boolean> updateInfo(@RequestBody @Validated({PmsDept.ValidUpdate.class}) PmsUser entity) {
+    public JsonResult<Boolean> updateInfo(@RequestBody @Validated({ValidUpdate.class}) PmsUser entity) {
         // 使用 当前登录的用户 所在的租户ID。修改
         var flag = delegate(JwtSecurityUtils.getTenantId(),
                 () -> baseService.updateById(entity));

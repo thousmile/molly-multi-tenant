@@ -4,6 +4,8 @@ package com.xaaef.molly.system.controller;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.system.entity.SysConfig;
 import com.xaaef.molly.system.service.SysConfigService;
 import com.xaaef.molly.web.repeat.NoRepeatSubmit;
@@ -55,7 +57,7 @@ public class SysConfigController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<Boolean> save(@RequestBody @Validated(SysConfig.ValidCreate.class) SysConfig entity) {
+    public JsonResult<Boolean> save(@RequestBody @Validated(ValidCreate.class) SysConfig entity) {
         var flag = baseService.save(entity);
         return JsonResult.success(flag);
     }
@@ -64,7 +66,7 @@ public class SysConfigController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> updateById(@RequestBody @Validated(SysConfig.ValidUpdate.class) SysConfig entity) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated(ValidUpdate.class) SysConfig entity) {
         var flag = baseService.updateById(entity);
         return JsonResult.success(flag);
     }

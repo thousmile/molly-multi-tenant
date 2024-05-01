@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchParentPO;
 import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.perms.entity.PmsDept;
 import com.xaaef.molly.perms.service.PmsDeptService;
 import com.xaaef.molly.web.repeat.NoRepeatSubmit;
@@ -69,7 +71,7 @@ public class PmsDeptController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<Boolean> save(@RequestBody @Validated({PmsDept.ValidCreate.class}) PmsDept entity) {
+    public JsonResult<Boolean> save(@RequestBody @Validated({ValidCreate.class}) PmsDept entity) {
         var flag = baseService.save(entity);
         return JsonResult.success(flag);
     }
@@ -78,7 +80,7 @@ public class PmsDeptController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> updateById(@RequestBody @Validated({PmsDept.ValidUpdate.class}) PmsDept entity) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated({ValidUpdate.class}) PmsDept entity) {
         return JsonResult.success(baseService.updateById(entity));
     }
 

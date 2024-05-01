@@ -3,6 +3,8 @@ package com.xaaef.molly.system.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.tenant.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
@@ -72,17 +74,5 @@ public class SysDictData extends BaseEntity {
     @Schema(description = "是否默认（1.是 0.否）")
     @NotNull(message = "类型关键字,必须填写", groups = {ValidCreate.class})
     private Byte isDefault;
-
-    /**
-     * 配置 保存分组
-     */
-    public interface ValidCreate {
-    }
-
-    /**
-     * 配置 修改分组
-     */
-    public interface ValidUpdate {
-    }
 
 }

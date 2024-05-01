@@ -3,6 +3,8 @@ package com.xaaef.molly.system.controller;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.system.entity.SysDictType;
 import com.xaaef.molly.system.service.SysDictTypeService;
 import com.xaaef.molly.web.repeat.NoRepeatSubmit;
@@ -64,7 +66,7 @@ public class SysDictTypeController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<SysDictType> save(@RequestBody @Validated(SysDictType.ValidCreate.class) SysDictType entity) {
+    public JsonResult<SysDictType> save(@RequestBody @Validated(ValidCreate.class) SysDictType entity) {
         baseService.save(entity);
         return JsonResult.success(entity);
     }
@@ -73,7 +75,7 @@ public class SysDictTypeController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> updateById(@RequestBody @Validated(SysDictType.ValidUpdate.class) SysDictType entity) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated(ValidUpdate.class) SysDictType entity) {
         var flag = baseService.updateById(entity);
         return JsonResult.success(flag);
     }

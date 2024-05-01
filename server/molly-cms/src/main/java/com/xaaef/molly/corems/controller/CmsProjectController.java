@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
+import com.xaaef.molly.common.valid.ValidCreate;
+import com.xaaef.molly.common.valid.ValidDelete;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.po.ProjectQueryPO;
 import com.xaaef.molly.corems.service.CmsProjectService;
@@ -74,7 +77,7 @@ public class CmsProjectController {
     @NoRepeatSubmit
     @Operation(summary = "新增", description = "不需要添加id")
     @PostMapping()
-    public JsonResult<Boolean> save(@RequestBody @Validated(CmsProject.ValidCreate.class) CmsProject entity) {
+    public JsonResult<Boolean> save(@RequestBody @Validated(ValidCreate.class) CmsProject entity) {
         var flag = baseService.save(entity);
         return JsonResult.success(flag);
     }
@@ -83,7 +86,7 @@ public class CmsProjectController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping()
-    public JsonResult<Boolean> updateById(@RequestBody @Validated(CmsProject.ValidUpdate.class) CmsProject entity) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated(ValidUpdate.class) CmsProject entity) {
         return JsonResult.success(baseService.updateById(entity));
     }
 
@@ -91,7 +94,7 @@ public class CmsProjectController {
     @NoRepeatSubmit
     @Operation(summary = "删除", description = "只需要id即可")
     @DeleteMapping()
-    public JsonResult<Boolean> removeById(@Validated(CmsProject.ValidDelete.class) CmsProject entity) {
+    public JsonResult<Boolean> removeById(@Validated(ValidDelete.class) CmsProject entity) {
         return JsonResult.success(baseService.removeById(entity));
     }
 

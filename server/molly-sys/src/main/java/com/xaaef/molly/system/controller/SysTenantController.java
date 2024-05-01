@@ -4,6 +4,7 @@ import com.xaaef.molly.common.domain.Pagination;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.common.util.WrapExcelUtils;
+import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.system.entity.SysTenant;
 import com.xaaef.molly.system.po.CreateTenantPO;
 import com.xaaef.molly.system.po.TenantCreatedSuccessVO;
@@ -117,7 +118,7 @@ public class SysTenantController {
     @NoRepeatSubmit
     @Operation(summary = "修改", description = "修改必须要id")
     @PutMapping
-    public JsonResult<Boolean> updateById(@RequestBody @Validated(SysTenant.ValidUpdate.class) SysTenant tenant) {
+    public JsonResult<Boolean> updateById(@RequestBody @Validated(ValidUpdate.class) SysTenant tenant) {
         var flag = baseService.updateById(tenant);
         return JsonResult.success(flag);
     }
