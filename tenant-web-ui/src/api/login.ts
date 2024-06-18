@@ -1,6 +1,11 @@
 import { ILoginData, ILoginUserInfo, IOAuth2Token, IUserPerms } from "@/types/pms"
 import { httpGet, httpPost } from "@/utils/service"
 
+/** 获取公钥 */
+export const getPublicKeyApi = () => {
+  return httpGet<string, IJsonResult<string>>("/auth/public/key")
+}
+
 /** 登录 */
 export const loginApi = (data?: ILoginData) => {
   return httpPost<ILoginData, IJsonResult<IOAuth2Token>>("/auth/login", data)

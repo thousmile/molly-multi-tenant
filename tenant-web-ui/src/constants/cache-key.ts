@@ -1,4 +1,4 @@
-const SYSTEM_NAME = "molly"
+const SYSTEM_NAME = "molly-tenant"
 
 /** 缓存数据时用到的 Key */
 class CacheKey {

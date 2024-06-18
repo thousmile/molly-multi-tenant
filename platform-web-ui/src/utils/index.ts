@@ -1,8 +1,8 @@
 import dayjs from "dayjs"
-import { removeConfigLayout } from "@/utils/cache/local-storage"
+import {removeConfigLayout} from "@/utils/cache/local-storage"
 import chinaAreaJson from "@/assets/ChinaArea.json"
-import { ISimpleProject, ISimpleTenant } from "@/types/base"
-import { CascaderOption } from "element-plus"
+import {ISimpleProject, ISimpleTenant} from "@/types/base"
+import {CascaderOption} from "element-plus"
 
 //#region 格式化日期时间
 export const DEFAULT_DATE_TIME_PATTERN = "YYYY-MM-DD HH:mm:ss"
@@ -154,7 +154,7 @@ export const getEnvBaseURL = () => {
 /** 获取 区域名称 */
 export const chinaAreaDeepQuery = (areaCode: number) => {
   let isGet = false
-  let node = { areaCode: 0, mergerName: "" }
+  let node = {areaCode: 0, mergerName: ""}
   const deepSearch = (tree: any, id: any) => {
     for (let i = 0; i < tree.length; i++) {
       const temp = tree[i]
@@ -162,7 +162,7 @@ export const chinaAreaDeepQuery = (areaCode: number) => {
         deepSearch(temp.children, id)
       }
       if (id === temp.areaCode || isGet) {
-        isGet || (node = { areaCode: temp.areaCode, mergerName: temp.mergerName })
+        isGet || (node = {areaCode: temp.areaCode, mergerName: temp.mergerName})
         isGet = true
         break
       }
@@ -173,7 +173,7 @@ export const chinaAreaDeepQuery = (areaCode: number) => {
 }
 
 /** 将权限树形结构扁平化为一维数组，用于权限查询 */
-export const flatTreeToCascaderOption = (arr: any[], { value = "id", label = "label", children = "children" }) => {
+export const flatTreeToCascaderOption = (arr: any[], {value = "id", label = "label", children = "children"}) => {
   const result: CascaderOption[] = []
   const deep = (arr1: any[], arr2: CascaderOption[]) => {
     arr1.forEach((item: any) => {

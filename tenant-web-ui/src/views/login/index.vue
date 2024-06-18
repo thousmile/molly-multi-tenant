@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from "vue"
 import { useRouter, useRoute } from "vue-router"
-import { useUserStore } from "@/store/modules/user"
+import { useUserStoreHook } from "@/store/modules/user"
 import { type FormInstance, type FormRules } from "element-plus"
 import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
@@ -20,6 +20,9 @@ import { useProjectStoreHook } from "@/store/modules/project"
 import { getSimpleTenantApi } from "@/api/tenant"
 import { ISimpleTenant } from "@/types/base"
 import logoPng from "@/assets/layouts/logo.png?url"
+import { onMounted } from "vue"
+
+const useUserStore = useUserStoreHook()
 
 const router = useRouter()
 
@@ -77,8 +80,7 @@ const handleLogin = () => {
   loginFormRef.value?.validate((valid: boolean, fields) => {
     if (valid) {
       loading.value = true
-      useUserStore()
-        .userLogin(loginFormData)
+      useUserStore.userLogin(loginFormData)
         .then(() => {
           // 获取 上一次登录的租户Id。如果和本次不同，清空项目缓存
           if (getLastTenantId() !== loginFormData.tenantId) {
@@ -124,6 +126,11 @@ const getSimpleTenant = async (tenantId: string) => {
 /** 初始化验证码 */
 createCode()
 
+onMounted(() => {
+  // 初始化，获取公钥key
+  useUserStore.getPublicKey()
+})
+
 const route = useRoute()
 const tenantId = ref()
 
@@ -141,7 +148,6 @@ if (route.query.tenantId) {
 const simpleTenant = ref<ISimpleTenant>()
 
 if (tenantId.value) {
-  console.log("tenantId :>>", tenantId.value)
   getSimpleTenant(tenantId.value).then((data) => {
     if (data) {
       target.tenantId = tenantId.value

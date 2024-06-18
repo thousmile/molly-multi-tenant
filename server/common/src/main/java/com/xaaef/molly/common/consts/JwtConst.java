@@ -19,9 +19,13 @@ public class JwtConst {
     // 验证码
     public static final String CAPTCHA_CODES_URL = "/auth/captcha/codes";
 
+    // 获取公钥
+    public static final String PUBLIC_KEY_URL = "/auth/public/key";
+
     // 不需要认证的路径
     public static final String[] WHITE_LIST = {
             LOGIN_URL,
+            PUBLIC_KEY_URL,
             String.format("%s/**", CAPTCHA_CODES_URL),
             String.format("%s/**", STOMP_ENDPOINT),
             "/actuator/**",

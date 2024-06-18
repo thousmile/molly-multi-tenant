@@ -10,6 +10,7 @@ import com.xaaef.molly.auth.jwt.StringGrantedAuthority;
 import com.xaaef.molly.auth.po.LoginFormPO;
 import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.auth.service.LineCaptchaService;
+import com.xaaef.molly.auth.service.RsaAsymmetricCryptoService;
 import com.xaaef.molly.auth.service.UserLoginService;
 import com.xaaef.molly.common.domain.CustomRequestInfo;
 import com.xaaef.molly.common.enums.AdminFlag;
@@ -70,6 +71,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     private final ApiCmsProjectService cmsProjectService;
 
+    private final RsaAsymmetricCryptoService cryptoService;
 
     /**
      * 登录表单获取 Token
@@ -98,12 +100,13 @@ public class UserLoginServiceImpl implements UserLoginService {
             var format = LocalDateTimeUtil.formatNormal(currentTenant.getExpired().toLocalDate());
             throw new JwtAuthException(String.format("租户 %s 已经在 %s 过期了！", currentTenant.getName(), format));
         }
+        // 解密
+        final var username = cryptoService.decrypt(po.getUsername()).trim();
+        po.setUsername(username);
+        final var password = cryptoService.decrypt(po.getPassword()).trim();
         // 把表单提交的 username  password 封装到 UsernamePasswordAuthenticationToken中
         var authResult = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        po.getUsername(),
-                        po.getPassword()
-                )
+                new UsernamePasswordAuthenticationToken(username, password)
         );
 
         var target = new JwtLoginUser();

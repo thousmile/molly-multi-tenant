@@ -1,11 +1,13 @@
 package com.xaaef.molly.auth.controller;
 
+import cn.hutool.crypto.CryptoException;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.auth.jwt.JwtTokenValue;
 import com.xaaef.molly.auth.po.LoginFormPO;
 import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.auth.service.LineCaptchaService;
+import com.xaaef.molly.auth.service.RsaAsymmetricCryptoService;
 import com.xaaef.molly.auth.service.UserLoginService;
 import com.xaaef.molly.common.util.JsonResult;
 import com.xaaef.molly.common.util.ServletUtils;
@@ -59,6 +61,8 @@ public class AuthController {
 
     private final LineCaptchaService captchaService;
 
+    private final RsaAsymmetricCryptoService cryptoService;
+
     /**
      * TODO [json] 用户登录
      *
@@ -100,20 +104,15 @@ public class AuthController {
             var tokenValue = loginService.login(user, request);
             return JsonResult.success("登录成功", tokenValue);
         } catch (RuntimeException failed) {
-            String msg = null;
-            if (failed instanceof UsernameNotFoundException) {
-                msg = String.format("用户名 %s 不存在", user.getUsername());
-            } else if (failed instanceof BadCredentialsException) {
-                msg = String.format("用户名 %s 密码输入错误", user.getUsername());
-            } else if (failed instanceof DisabledException) {
-                msg = String.format("用户名 %s 已被禁用", user.getUsername());
-            } else if (failed instanceof LockedException) {
-                msg = "抱歉您的账户已被锁定";
-            } else if (failed instanceof AccountExpiredException) {
-                msg = String.format("用户名 %s 已过期", user.getUsername());
-            } else {
-                msg = String.format(failed.getMessage());
-            }
+            String msg = switch (failed) {
+                case UsernameNotFoundException ignored1 -> String.format("用户名 %s 不存在", user.getUsername());
+                case BadCredentialsException ignored2 -> String.format("用户名 %s 密码输入错误", user.getUsername());
+                case DisabledException ignored3 -> String.format("用户名 %s 已被禁用", user.getUsername());
+                case LockedException ignored4 -> String.format("用户名 %s 已被锁定", user.getUsername());
+                case AccountExpiredException ignored5 -> String.format("用户名 %s 已过期", user.getUsername());
+                case CryptoException ignored6 -> "用户名和密码必须使用公钥加密";
+                default -> String.format(failed.getMessage());
+            };
             return JsonResult.fail(msg, JwtTokenValue.class);
         }
     }
@@ -184,11 +183,20 @@ public class AuthController {
         response.setDateHeader("Expires", 0);
         var image = captchaService.random(codeKey);
         // 获取 图片 验证码
-        ImageIO.write(
-                image,
-                "PNG",
-                response.getOutputStream()
-        );
+        ImageIO.write(image, "PNG", response.getOutputStream());
+    }
+
+
+    /**
+     * TODO 获取公钥
+     *
+     * @author WangChenChen
+     * @date 2024/06/18 15:39
+     */
+    @Operation(summary = "获取公钥", description = "获取公钥")
+    @GetMapping(PUBLIC_KEY_URL)
+    public JsonResult<String> publicKey() {
+        return JsonResult.success("ok", cryptoService.getRSA().getPublicKeyBase64());
     }
 
 

@@ -13,10 +13,10 @@ x-tenant-id: {{tenantId}}
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0
 
 {
-  "username": "admin",
-  "password": "123456",
+  "username": "eRiiBycWxMc8F0f3RIaaSuwVW+WsgDZcYUe+xqQEJklBjIzhRVhzjlRYDjyV6si93PN8fzgqt0olvbfUOnxtHauWGNoFQndqm5Ak71eau6IIKe0Z7VeV7IntNjO18JpogmkNrjAeAIXkCWNW09gmWeBkK2oAnaVSdK0E+tdPLnJNWmioXuApPVdF6yOWXDqF/UmNtBUz/Ytm/Mg76QRUvnudb6fVrfzJ2Fd6NBN4u07pr53VrZO9mb+a9dewURVWni4p++FrQoWcM6Kc6swfGgFWGQ7+oBOgs5nURsNwpGX3A1uwcaPRUS9ILzwOyxjAfNNxIl1XkFfNnSHpBQ54Ag==",
+  "password": "eRiiBycWxMc8F0f3RIaaSuwVW+WsgDZcYUe+xqQEJklBjIzhRVhzjlRYDjyV6si93PN8fzgqt0olvbfUOnxtHauWGNoFQndqm5Ak71eau6IIKe0Z7VeV7IntNjO18JpogmkNrjAeAIXkCWNW09gmWeBkK2oAnaVSdK0E+tdPLnJNWmioXuApPVdF6yOWXDqF/UmNtBUz/Ytm/Mg76QRUvnudb6fVrfzJ2Fd6NBN4u07pr53VrZO9mb+a9dewURVWni4p++FrQoWcM6Kc6swfGgFWGQ7+oBOgs5nURsNwpGX3A1uwcaPRUS9ILzwOyxjAfNNxIl1XkFfNnSHpBQ54Ag==",
   "codeKey": "5jXzuwcoUzbtnHNh",
-  "codeText": "kstt"
+  "codeText": "55g9"
 }
 
 > {%

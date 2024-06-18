@@ -46,5 +46,4 @@ public class LoginFormPO {
     @Length(min = 5, message = "验证码 KEY长度不能少于16位")
     private String codeKey;
 
-
 }

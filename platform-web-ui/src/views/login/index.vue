@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { reactive, ref } from "vue"
+import { onMounted, reactive, ref } from "vue"
 import { useRouter } from "vue-router"
-import { useUserStore } from "@/store/modules/user"
+import { useUserStoreHook } from "@/store/modules/user"
 import { type FormInstance, type FormRules } from "element-plus"
 import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
@@ -10,6 +10,8 @@ import { getEnvBaseURL } from "@/utils"
 import { getUserAndPassword, setUserAndPassword, removeUserAndPassword } from "@/utils/cache/local-storage"
 import { type ILoginData } from "@/types/pms"
 import { merge, clone } from "lodash-es"
+
+const useUserStore = useUserStoreHook()
 
 const router = useRouter()
 
@@ -63,8 +65,7 @@ const handleLogin = () => {
   loginFormRef.value?.validate((valid: boolean, fields) => {
     if (valid) {
       loading.value = true
-      useUserStore()
-        .userLogin(loginFormData)
+      useUserStore.userLogin(loginFormData)
         .then(() => {
           // 登录成功后，是否记住密码 ?
           if (loginFormData.rememberMe) {
@@ -97,6 +98,12 @@ const createCode = () => {
 
 /** 初始化验证码 */
 createCode()
+
+onMounted(() => {
+  // 初始化，获取公钥key
+  useUserStore.getPublicKey()
+})
+
 </script>
 
 <template>
@@ -109,39 +116,16 @@ createCode()
       <div class="content">
         <el-form ref="loginFormRef" :model="loginFormData" :rules="loginFormRules" @keyup.enter="handleLogin">
           <el-form-item prop="username">
-            <el-input
-              v-model.trim="loginFormData.username"
-              placeholder="用户名"
-              type="text"
-              tabindex="1"
-              :prefix-icon="User"
-              size="large"
-              clearable
-            />
+            <el-input v-model.trim="loginFormData.username" placeholder="用户名" type="text" tabindex="1"
+              :prefix-icon="User" size="large" clearable />
           </el-form-item>
           <el-form-item prop="password">
-            <el-input
-              v-model.trim="loginFormData.password"
-              placeholder="密码"
-              type="password"
-              tabindex="2"
-              :prefix-icon="Lock"
-              size="large"
-              show-password
-              clearable
-            />
+            <el-input v-model.trim="loginFormData.password" placeholder="密码" type="password" tabindex="2"
+              :prefix-icon="Lock" size="large" show-password clearable />
           </el-form-item>
           <el-form-item prop="codeText">
-            <el-input
-              v-model.trim="loginFormData.codeText"
-              placeholder="验证码"
-              type="text"
-              tabindex="3"
-              :prefix-icon="Key"
-              maxlength="4"
-              size="large"
-              clearable
-            >
+            <el-input v-model.trim="loginFormData.codeText" placeholder="验证码" type="text" tabindex="3"
+              :prefix-icon="Key" maxlength="4" size="large" clearable>
               <template #append>
                 <el-image :src="codeUrl" @click="createCode" class="code-url" draggable="false">
                   <template #placeholder>

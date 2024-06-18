@@ -6,11 +6,16 @@ import { useNoticeStoreHook } from "./notice"
 import { useSettingsStore } from "./settings"
 import { useTagsViewStore } from "./tags-view"
 import { getToken, removeToken, setToken } from "@/utils/cache/local-storage"
-import { loginApi, getUserInfoApi, getUserPermsApi, logoutApi } from "@/api/login"
+import { loginApi, getUserInfoApi, getUserPermsApi, logoutApi, getPublicKeyApi } from "@/api/login"
 import { type IPermsButton, ILoginData, IPermsMenus, ILoginUserInfo } from "@/types/pms"
 import { resetRouter } from "@/router"
+import JSEncrypt from "jsencrypt"
 
 export const useUserStore = defineStore("user", () => {
+
+  // RSA加密
+  const encryptor = ref<JSEncrypt>(new JSEncrypt())
+
   // token信息
   const accessToken = ref<string>(getToken() || "")
 
@@ -32,7 +37,15 @@ export const useUserStore = defineStore("user", () => {
   /** 登录 */
   const userLogin = async (loginData: ILoginData) => {
     return new Promise((resolve, reject) => {
-      loginApi(loginData)
+      let encryptLoginData: ILoginData = {
+        username: encryptor.value.encrypt(loginData.username).toString(),
+        password: encryptor.value.encrypt(loginData.password).toString(),
+        codeText: loginData.codeText,
+        tenantId: loginData.tenantId,
+        codeKey: loginData.codeKey,
+        rememberMe: loginData.rememberMe
+      }
+      loginApi(encryptLoginData)
         .then((resp) => {
           const token = resp.data.token_type + resp.data.access_token
           setToken(token)
@@ -130,6 +143,24 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
+  /** 获取公钥 */
+  const getPublicKey = () => {
+    return new Promise((resolve, reject) => {
+      getPublicKeyApi()
+        .then((resp) => {
+          if (resp.data) {
+            encryptor.value.setPublicKey(resp.data)
+            resolve(resp)
+          } else {
+            reject(resp.message)
+          }
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
   return {
     accessToken,
     userInfo,
@@ -139,6 +170,7 @@ export const useUserStore = defineStore("user", () => {
     getUserPerms,
     getUserInfo,
     userLogout,
+    getPublicKey,
     fedLogout
   }
 })

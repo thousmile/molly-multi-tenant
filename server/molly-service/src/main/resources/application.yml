@@ -38,6 +38,12 @@ multi:
     change-log: ${spring.liquibase.change-log}
 
 
+jwt:
+  token:
+    rsa-private-key: classpath:pem/rsa_private_key.pem
+    rsa-public-key: classpath:pem/rsa_public_key.pem
+
+
 # mybatis-plus 自动配置
 mybatis-plus:
   type-aliases-package: com.xaaef.molly.*.entity

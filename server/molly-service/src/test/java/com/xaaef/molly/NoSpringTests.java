@@ -266,4 +266,9 @@ public class NoSpringTests {
     }
 
 
+    @Test
+    public void test18() throws IOException {
+    }
+
+
 }

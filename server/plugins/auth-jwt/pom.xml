@@ -27,6 +27,11 @@
         </dependency>
 
         <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-crypto</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.xaaef.molly</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>

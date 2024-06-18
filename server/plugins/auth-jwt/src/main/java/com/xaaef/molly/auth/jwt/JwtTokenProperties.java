@@ -58,6 +58,19 @@ public class JwtTokenProperties {
     private String secret = "2N321lIkh$*!IfNt4&5!YZykD$7@ApaM8r@b@r@&4CZ7eqKe!s";
 
     /**
+     * 私钥
+     * openssl genrsa -out rsa_private_key.pem 1024
+     * openssl genrsa -out rsa_private_key.pem 2048
+     */
+    private String rsaPrivateKey = "classpath:pem/rsa_private_key.pem";
+
+    /**
+     * 公钥
+     * openssl rsa -in rsa_private_key.pem -pubout -out rsa_public_key.pem
+     */
+    private String rsaPublicKey = "classpath:pem/rsa_public_key.pem";
+
+    /**
      * 单点登录，是否启用
      */
     private Boolean sso = Boolean.TRUE;

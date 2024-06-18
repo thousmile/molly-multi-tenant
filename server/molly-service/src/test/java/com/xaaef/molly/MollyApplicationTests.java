@@ -3,6 +3,7 @@ package com.xaaef.molly;
 import cn.hutool.core.util.RandomUtil;
 import com.xaaef.molly.auth.enums.GrantType;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
+import com.xaaef.molly.auth.service.RsaAsymmetricCryptoService;
 import com.xaaef.molly.common.consts.ConfigDataConst;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.GenderType;
@@ -40,6 +41,9 @@ public class MollyApplicationTests {
 
     @Autowired
     private CmsProjectService projectService;
+
+    @Autowired
+    private RsaAsymmetricCryptoService rsaAsymmetricCryptoService;
 
     static {
         var userDetails = new JwtLoginUser()
@@ -127,6 +131,20 @@ public class MollyApplicationTests {
         TenantUtils.setTenantId("google");
         projectService.list()
                 .forEach(System.out::println);
+    }
+
+
+
+    /**
+     * 加密解密
+     */
+    @Test
+    public void test4() throws Exception {
+        final var encrypt = rsaAsymmetricCryptoService.encrypt("cl3~'O91Txtw~++ErxcZ.*t)k?;`W>~$UzcEUIfhw>4/]hNL;S(np/ibj?*D2Hd1");
+        System.out.println(encrypt);
+        System.out.println();
+        final var decrypt = rsaAsymmetricCryptoService.decrypt(encrypt);
+        System.out.println(decrypt);
     }
 
 
