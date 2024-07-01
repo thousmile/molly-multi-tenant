@@ -3,6 +3,8 @@
   <h2>基于多数据库，多租户，多项目的SaaS系统</h2>
 </div>
 
+[感谢 @JetBrains 提供 IntelliJ IDEA 的支持  ![](./docs/idea.svg)](https://www.jetbrains.com/?from=spring-admin-vue)
+
 ## ⚡ 简介
 
 一个免费开源的 多租户SaaS管理系统基础解决方案，
