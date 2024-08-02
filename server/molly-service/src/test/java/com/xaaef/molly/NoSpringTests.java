@@ -15,10 +15,7 @@ import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
 import com.xaaef.molly.common.consts.ConfigDataConst;
 import com.xaaef.molly.common.consts.JwtConst;
 import com.xaaef.molly.common.consts.RegexConst;
-import com.xaaef.molly.common.util.IdUtils;
-import com.xaaef.molly.common.util.JsonUtils;
-import com.xaaef.molly.common.util.TenantUtils;
-import com.xaaef.molly.common.util.WrapExcelUtils;
+import com.xaaef.molly.common.util.*;
 import com.xaaef.molly.internal.dto.OperateUserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import liquibase.integration.spring.MultiTenantSpringLiquibase;
@@ -268,6 +265,9 @@ public class NoSpringTests {
 
     @Test
     public void test18() throws IOException {
+        System.out.println(IpUtils.getRealAddressByIP("14.154.120.216"));
+        System.out.println(IpUtils.getRealAddressByIP("115.151.120.216"));
+        System.out.println(IpUtils.getRealAddressByIP("195.151.120.216"));
     }
 
 

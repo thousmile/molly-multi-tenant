@@ -1,17 +1,18 @@
 package com.xaaef.molly.common.util;
 
-import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.net.NetUtil;
-import cn.hutool.http.HttpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.lionsoul.ip2region.xdb.Searcher;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.FileCopyUtils;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import static cn.hutool.core.net.NetUtil.LOCAL_IP;
@@ -34,6 +35,31 @@ public class IpUtils {
 
     private static final String LOCALHOST_IP = "0:0:0:0:0:0:0:1";
 
+    private static Searcher SEARCHER = null;
+
+    static {
+        final var cpr = new ClassPathResource("ip2region.xdb");
+        try {
+            byte[] dbBinStr = FileCopyUtils.copyToByteArray(cpr.getInputStream());
+            SEARCHER = Searcher.newWithBuffer(dbBinStr);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 获取 IP真实地址
+     */
+    public static String getRealAddressByIP(String ip) {
+        if (NetUtil.isInnerIP(ip)) {
+            return "内网IP";
+        }
+        try {
+            return SEARCHER.search(ip);
+        } catch (Exception e) {
+            return "未知";
+        }
+    }
 
     /**
      * 获取IP地址
@@ -80,33 +106,8 @@ public class IpUtils {
     }
 
 
-    // IP地址查询
-    public static final String IP_URL = "http://whois.pconline.com.cn/ipJson.jsp?ip=%s&json=true";
-
-
-    public static String getRealAddressByIP(String ip) {
-        try {
-            if (Ipv4Util.isInnerIP(ip)) {
-                return String.format("内网 %s IP", ip);
-            }
-            var jsonStr = HttpUtil.get(String.format(IP_URL, ip), 1500);
-            if (!JsonUtils.isJsonValid(jsonStr)) {
-                return "未知";
-            }
-            Map<String, String> stringMap = JsonUtils.toMap(jsonStr, String.class, String.class);
-            if (stringMap == null || stringMap.isEmpty()) {
-                return "未知";
-            }
-            return stringMap.getOrDefault("addr", "未知");
-        } catch (Exception e) {
-            log.error("getRealAddressByIP : {}", e.getMessage());
-            return e.getMessage();
-        }
-    }
-
-
     /**
-     * 获取IP地址
+     * 获取 本地IP地址
      *
      * @return 本地IP地址
      */
@@ -120,7 +121,7 @@ public class IpUtils {
 
 
     /**
-     * 获取主机名
+     * 获取 主机名
      *
      * @return 本地主机名
      */

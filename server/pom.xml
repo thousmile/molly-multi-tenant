@@ -43,6 +43,8 @@
         <idgenerator.version>1.0.6</idgenerator.version>
         <!-- x-file-storage文件上传 文档地址 https://x-file-storage.xuyanwu.cn -->
         <storage.version>2.1.0</storage.version>
+        <!-- 离线 ip 转 真实地址 -->
+        <ip2region.version>2.6.6</ip2region.version>
         <!-- 七牛云文件上传 -->
         <qiniu-storage.version>7.15.1</qiniu-storage.version>
         <!-- 阿里云文件上传 -->
@@ -50,7 +52,7 @@
         <!-- 服务器运行状态查询， 如: CPU、磁盘、内存 -->
         <oshi.version>6.4.13</oshi.version>
         <!-- Excel文件操作 -->
-        <apache-poi.version>5.2.5</apache-poi.version>
+        <apache-poi.version>5.3.0</apache-poi.version>
         <!-- 小而美的工具库 -->
         <hutool.version>5.8.28</hutool.version>
         <!-- 简单、方便的OpenAPI接口文档 -->
@@ -58,7 +60,7 @@
         <!-- MyBatis 的增强工具，基友搭配，效率翻倍 -->
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
         <!-- JavaEE 颠覆者 -->
-        <spring-boot.version>3.2.6</spring-boot.version>
+        <spring-boot.version>3.2.8</spring-boot.version>
     </properties>
 
 

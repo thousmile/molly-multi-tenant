@@ -127,14 +127,13 @@ public class ServletUtils {
         var os = String.format("%s %s", userAgent.getPlatform(), Objects.requireNonNullElse(userAgent.getOsVersion(), ""));
         var ipAddr = IpUtils.getIpAddr(request);
         var realAddress = IpUtils.getRealAddressByIP(ipAddr);
-        return CustomRequestInfo.builder()
-                .method(request.getMethod())
-                .requestUrl(fullPath)
-                .osName(os)
-                .browser(browser)
-                .ip(ipAddr)
-                .address(realAddress)
-                .build();
+        return new CustomRequestInfo()
+                .setMethod(request.getMethod())
+                .setRequestUrl(fullPath)
+                .setOsName(os)
+                .setBrowser(browser)
+                .setIp(ipAddr)
+                .setAddress(realAddress);
     }
 
 

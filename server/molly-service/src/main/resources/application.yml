@@ -23,6 +23,9 @@ spring:
     change-log: classpath:db/changelog-master.xml
     contexts: platform,tenant
 
+ip2region:
+  external: false
+  location: classpath*:ip2region.xdb
 
 # 多租户配置
 multi:
