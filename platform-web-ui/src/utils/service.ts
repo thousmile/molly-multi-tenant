@@ -45,7 +45,7 @@ function createService() {
         case 400010:
         case 400011:
         case 400012:
-          logout(apiData.message, "登录过期")
+          logout("登录过期", apiData.message)
           return Promise.reject(new Error(apiData.message))
         case 400444:
         case 400445:

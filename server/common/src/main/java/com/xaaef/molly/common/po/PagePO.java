@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
@@ -52,5 +54,17 @@ public class PagePO implements java.io.Serializable {
      */
     @Schema(description = "结束日期")
     private LocalDate endDate;
+
+    /**
+     * 排序的方向 "desc" 或者 "asc".
+     */
+    @Schema(description = "排序的方向, true: 顺序、false: 倒序")
+    private boolean asc;
+
+    /**
+     * 排序的字段,如: createUser,lastUpdateTime
+     */
+    @Schema(description = "排序的字段,如: createUser,lastUpdateTime")
+    private Set<String> orderByColumns;
 
 }

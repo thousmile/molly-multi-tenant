@@ -1,5 +1,6 @@
 package com.xaaef.molly.tenant.base.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -19,9 +20,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Lazy;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.xaaef.molly.common.consts.MbpConst.CREATE_TIME;
 
@@ -121,6 +124,19 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> exte
                 wrapper.between(String.format("DATE(%s)", CREATE_TIME), params.getStartDate(), LocalDate.now());
             }
         }
+        // 排序
+        if (CollectionUtil.isNotEmpty(params.getOrderByColumns())) {
+            var orderByColumns = params.getOrderByColumns()
+                    .stream()
+                    .map(column -> column.replaceAll("([A-Z])", "_$1").toLowerCase())
+                    .collect(Collectors.toList());
+            if (params.isAsc()) {
+                wrapper.orderByAsc(orderByColumns);
+            } else {
+                wrapper.orderByDesc(orderByColumns);
+            }
+        }
+        // 搜索
         if (StringUtils.isNotBlank(params.getKeywords()) && columns != null && !columns.isEmpty()) {
             wrapper.and(childWrapper -> {
                 var index = 0;

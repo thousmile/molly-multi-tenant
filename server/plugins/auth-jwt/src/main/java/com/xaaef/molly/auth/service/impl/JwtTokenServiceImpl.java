@@ -162,7 +162,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                     // 删除 被挤下线 的消息提示
                     removeLoginUser(forcedOfflineKey);
                     var errMsg = String.format("您的账号在[ %s ]被其他用户拥下线了！", offlineTime);
-                    log.info("errMsg {}", errMsg);
+                    log.warn("errMsg {}", errMsg);
                     throw new JwtAuthException(errMsg);
                 }
             }

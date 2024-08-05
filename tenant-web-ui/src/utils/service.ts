@@ -1,11 +1,11 @@
-import axios, { AxiosResponse, type AxiosInstance, type AxiosRequestConfig } from "axios"
-import { useUserStoreHook } from "@/store/modules/user"
-import { ElMessage, ElMessageBox } from "element-plus"
-import { get, merge } from "lodash-es"
-import { getToken } from "./cache/local-storage"
-import { useProjectStoreHook } from "@/store/modules/project"
-import { getEnvBaseURLPrefix } from "."
-import { ISimpleProject } from "@/types/base"
+import axios, {AxiosResponse, type AxiosInstance, type AxiosRequestConfig} from "axios"
+import {useUserStoreHook} from "@/store/modules/user"
+import {ElMessage, ElMessageBox} from "element-plus"
+import {get, merge} from "lodash-es"
+import {getToken} from "./cache/local-storage"
+import {useProjectStoreHook} from "@/store/modules/project"
+import {getEnvBaseURLPrefix} from "."
+import {ISimpleProject} from "@/types/base"
 
 /** 创建请求实例 */
 function createService() {
@@ -41,7 +41,7 @@ function createService() {
         case 400010:
         case 400011:
         case 400012:
-          logout(apiData.message, "登录过期")
+          logout("登录过期", apiData.message)
           return Promise.reject(new Error(apiData.message))
         case 400444:
           ElMessage.error(apiData.message)
@@ -180,22 +180,22 @@ function httpRequest<T>(config: AxiosRequestConfig): Promise<T> {
 
 /** 单独抽离的get工具函数 */
 function httpGet<T, P>(url: string, params?: T): Promise<P> {
-  return httpRequest<P>({ method: "get", url, params })
+  return httpRequest<P>({method: "get", url, params})
 }
 
 /** 单独抽离的post工具函数 */
 function httpPost<T, P>(url: string, data?: T): Promise<P> {
-  return httpRequest<P>({ method: "post", url, data })
+  return httpRequest<P>({method: "post", url, data})
 }
 
 /** 单独抽离的put工具函数 */
 function httpPut<T, P>(url: string, data?: T): Promise<P> {
-  return httpRequest<P>({ method: "put", url, data })
+  return httpRequest<P>({method: "put", url, data})
 }
 
 /** 单独抽离的delete工具函数 */
 function httpDelete<T, P>(url: string, params?: T): Promise<P> {
-  return httpRequest<P>({ method: "delete", url, params })
+  return httpRequest<P>({method: "delete", url, params})
 }
 
-export { httpRequest, httpGet, httpPost, httpPut, httpDelete, axiosRequest }
+export {httpRequest, httpGet, httpPost, httpPut, httpDelete, axiosRequest}

@@ -7,7 +7,7 @@ Authorization: Bearer {{tokenValue}}
 
 
 ### 分页查询设备
-GET {{baseUrl}}/cms/device/query?includeCauu=true
+GET {{baseUrl}}/cms/device/query?includeCauu=false&orderByColumns=createUser,lastUpdateTime,deviceId
 Content-Type: application/json
 x-tenant-id: {{tenantId}}
 x-project-id: {{projectId}}
