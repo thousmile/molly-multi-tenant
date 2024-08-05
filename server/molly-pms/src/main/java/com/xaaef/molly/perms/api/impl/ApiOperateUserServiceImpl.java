@@ -1,22 +1,17 @@
 package com.xaaef.molly.perms.api.impl;
 
-import cn.hutool.core.util.ReflectUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xaaef.molly.common.consts.MbpConst;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiOperateUserService;
 import com.xaaef.molly.internal.api.ApiSysTenantService;
 import com.xaaef.molly.internal.dto.OperateUserDTO;
-import com.xaaef.molly.perms.entity.PmsUser;
 import com.xaaef.molly.perms.mapper.PmsUserMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.xaaef.molly.tenant.util.DelegateUtils.delegate;
 
 /**
  * <p>
@@ -39,65 +34,20 @@ public class ApiOperateUserServiceImpl implements ApiOperateUserService {
     private final PmsUserMapper userMapper;
 
     @Override
-    public void reflectionFill(Object objList) {
-        if (objList instanceof Collection<?> list) {
-            var userIds = new HashSet<Long>();
-            list.forEach(obj -> {
-                if (ReflectUtil.getFieldValue(obj, MbpConst.ATTR_CREATE_USER) instanceof Long createUserId) {
-                    userIds.add(createUserId);
-                }
-                if (ReflectUtil.getFieldValue(obj, MbpConst.ATTR_LAST_UPDATE_USER) instanceof Long lastUpdateUserId) {
-                    userIds.add(lastUpdateUserId);
-                }
-            });
-            if (!userIds.isEmpty()) {
-                Map<Long, OperateUserDTO> operateUserMaps = mapOperateUser(userIds);
-                if (!operateUserMaps.isEmpty()) {
-                    list.forEach(obj -> {
-                        if (ReflectUtil.getFieldValue(obj, MbpConst.ATTR_CREATE_USER) instanceof Long createUserId) {
-                            var operateUser = operateUserMaps.get(createUserId);
-                            ReflectUtil.setFieldValue(obj, MbpConst.ATTR_CREATE_USER + "Entity", operateUser);
-                        }
-                        if (ReflectUtil.getFieldValue(obj, MbpConst.ATTR_LAST_UPDATE_USER) instanceof Long lastUpdateUserId) {
-                            var operateUser = operateUserMaps.get(lastUpdateUserId);
-                            ReflectUtil.setFieldValue(obj, MbpConst.ATTR_LAST_UPDATE_USER + "Entity", operateUser);
-                        }
-                    });
-                }
-            }
-        }
-    }
-
-
-    @Override
     public Map<Long, OperateUserDTO> mapOperateUser(Set<Long> userIds) {
-        var operateUserMaps = new HashMap<Long, OperateUserDTO>();
-        // 从 默认租户中，获取 用户信息
-        var defaultTenantId = apiSysTenantService.getByDefaultTenantId();
-        var defaultTenantUser = delegate(defaultTenantId, () -> listOperateUser(userIds));
-        if (!defaultTenantUser.isEmpty()) {
-            operateUserMaps.putAll(defaultTenantUser);
-        }
-        // 如果当前是 非默认租户，
-        if (!(defaultTenantId).equals(TenantUtils.getTenantId())) {
-            // 从 当前租户中，获取 用户信息
-            var currentTenantUser = listOperateUser(userIds);
-            if (!currentTenantUser.isEmpty()) {
-                operateUserMaps.putAll(currentTenantUser);
-            }
-        }
-        return operateUserMaps;
-    }
-
-
-    private Map<Long, OperateUserDTO> listOperateUser(Set<Long> userIds) {
-        var wrapper = new LambdaQueryWrapper<PmsUser>()
-                .select(List.of(PmsUser::getUserId, PmsUser::getAvatar, PmsUser::getNickname))
-                .in(PmsUser::getUserId, userIds);
-        return userMapper.selectList(wrapper)
+        final var props = apiSysTenantService.getByMultiTenantProperties();
+        final var dbNameList = Set.of(
+                props.getPrefix() + props.getDefaultTenantId(),
+                props.getPrefix() + TenantUtils.getTenantId()
+        );
+        return userMapper.selectSimpleListByUserIds(dbNameList, userIds)
                 .stream()
-                .map(p -> new OperateUserDTO(p.getUserId(), p.getAvatar(), p.getNickname()))
-                .collect(Collectors.toMap(OperateUserDTO::getUserId, p -> p));
+                .map(a -> new OperateUserDTO()
+                        .setUserId(a.getUserId())
+                        .setAvatar(a.getAvatar())
+                        .setNickname(a.getNickname())
+                )
+                .collect(Collectors.toMap(OperateUserDTO::getUserId, o -> o));
     }
 
 }

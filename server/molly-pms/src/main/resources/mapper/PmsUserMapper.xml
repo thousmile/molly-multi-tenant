@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xaaef.molly.perms.mapper.PmsUserMapper">
 
-    <resultMap id="SysUserResultMap" type="PmsUser">
+    <resultMap id="baseResultMap" type="PmsUser">
         <id property="userId" column="user_id"/>
         <result property="avatar" column="avatar"/>
         <result property="username" column="username"/>
@@ -28,5 +28,16 @@
             (#{userId},#{item})
         </foreach>
     </insert>
+
+
+    <select id="selectSimpleListByUserIds" resultMap="baseResultMap">
+        <foreach collection='dbNameList' item='item' index='index1' separator='UNION'>
+            SELECT user_id,avatar,nickname FROM ${item}.pms_user WHERE user_id IN
+            <foreach collection='userIdList' item='userId' index='index2' open='(' separator=',' close=')'>
+                #{userId}
+            </foreach>
+        </foreach>
+    </select>
+
 
 </mapper>

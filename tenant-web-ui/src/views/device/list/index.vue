@@ -26,12 +26,12 @@
           </el-table-column>
           <el-table-column prop="createTime" label="创建时间">
             <template #default="scope">
-              <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
+              <operateUser :key="`createTime_${scope.row.deviceId}`" :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
             </template>
           </el-table-column>
           <el-table-column prop="lastUpdateTime" label="修改时间">
             <template #default="scope">
-              <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
+              <operateUser :key="`lastUpdateTime_${scope.row.deviceId}`" :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
             </template>
           </el-table-column>
           <el-table-column label="操作" width="130">
@@ -90,7 +90,6 @@ import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { queryDeviceApi, saveDeviceApi, updateDeviceApi, deleteDeviceApi } from "@/api/device"
 import { cloneDeep } from "lodash-es"
 import { ICmsDevice } from "@/types/cms"
-import { showTimeAgo } from "@/hooks/useIndex"
 
 import { useDictStoreHook } from "@/store/modules/dict"
 const dictStore = useDictStoreHook()

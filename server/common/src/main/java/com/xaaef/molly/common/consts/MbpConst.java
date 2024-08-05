@@ -50,7 +50,6 @@ public class MbpConst {
      * 基础属性字段
      */
     public final static Set<String> ATTR_BASE_FIELDS = Set.of(
-            ATTR_PROJECT_ID,
             ATTR_CREATE_TIME,
             ATTR_CREATE_USER,
             ATTR_LAST_UPDATE_TIME,

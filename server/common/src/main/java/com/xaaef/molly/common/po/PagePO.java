@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;

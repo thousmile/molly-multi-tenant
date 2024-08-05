@@ -1,5 +1,5 @@
 <template>
-  <el-popover placement="top-start" :width="160" trigger="hover">
+  <el-popover v-if="dateTime && entity" placement="top-start" :width="160" trigger="hover">
     <template #reference>
       <el-link>{{ showTimeAgo(dateTime) }}</el-link>
     </template>
@@ -20,6 +20,7 @@
       </div>
     </template>
   </el-popover>
+  <div v-else></div>
 </template>
 
 <script setup lang="ts" name="OperateUser">
@@ -30,7 +31,7 @@ import { IOperateUserEntity } from "@/types/base"
 // 操作用户信息
 interface IPropsEntity {
   /** 操作时间 */
-  dateTime: string
+  dateTime?: string
   /** 操作的用户信息 */
   entity?: IOperateUserEntity
 }

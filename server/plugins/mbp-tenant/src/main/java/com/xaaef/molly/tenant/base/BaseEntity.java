@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Accessors(chain = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseEntity implements java.io.Serializable {
 
     /**
@@ -31,7 +32,6 @@ public class BaseEntity implements java.io.Serializable {
      */
     @Schema(description = "创建时间")
     @TableField(fill = FieldFill.INSERT)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     protected LocalDateTime createTime;
 
     /**
@@ -39,7 +39,6 @@ public class BaseEntity implements java.io.Serializable {
      */
     @Schema(description = "创建人 id")
     @TableField(fill = FieldFill.INSERT)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     protected Long createUser;
 
     /**
@@ -47,7 +46,6 @@ public class BaseEntity implements java.io.Serializable {
      */
     @Schema(description = "创建人信息")
     @TableField(exist = false)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     protected OperateUserDTO createUserEntity;
 
     /**
@@ -55,7 +53,6 @@ public class BaseEntity implements java.io.Serializable {
      */
     @Schema(description = "最后一次修改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     protected LocalDateTime lastUpdateTime;
 
     /**
@@ -63,7 +60,6 @@ public class BaseEntity implements java.io.Serializable {
      */
     @Schema(description = "最后一次修改人 id")
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     protected Long lastUpdateUser;
 
     /**
@@ -71,7 +67,6 @@ public class BaseEntity implements java.io.Serializable {
      */
     @Schema(description = "最后一次修改人信息")
     @TableField(exist = false)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     protected OperateUserDTO lastUpdateUserEntity;
 
 }

@@ -20,12 +20,6 @@ public interface ApiOperateUserService {
     /**
      * 根据 用户ID 获取 操作用户
      */
-    void reflectionFill(Object objList);
-
-
-    /**
-     * 根据 用户ID 获取 操作用户
-     */
     Map<Long, OperateUserDTO> mapOperateUser(Set<Long> userIds);
 
 }

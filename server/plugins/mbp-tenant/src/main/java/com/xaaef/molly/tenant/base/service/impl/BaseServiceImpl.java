@@ -1,6 +1,7 @@
 package com.xaaef.molly.tenant.base.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -10,8 +11,10 @@ import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xaaef.molly.common.consts.MbpConst;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.internal.api.ApiOperateUserService;
+import com.xaaef.molly.internal.dto.OperateUserDTO;
 import com.xaaef.molly.tenant.base.BaseEntity;
 import com.xaaef.molly.tenant.base.service.BaseService;
 import jakarta.annotation.Resource;
@@ -20,8 +23,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Lazy;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,7 +52,32 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> exte
 
     @Override
     public void reflectionFill(Object objList) {
-        apiOperateUserService.reflectionFill(objList);
+        if (objList instanceof Collection<?> list) {
+            var userIds = new HashSet<Long>();
+            list.forEach(obj -> {
+                if (ReflectUtil.getFieldValue(obj, MbpConst.ATTR_CREATE_USER) instanceof Long createUserId) {
+                    userIds.add(createUserId);
+                }
+                if (ReflectUtil.getFieldValue(obj, MbpConst.ATTR_LAST_UPDATE_USER) instanceof Long lastUpdateUserId) {
+                    userIds.add(lastUpdateUserId);
+                }
+            });
+            if (!userIds.isEmpty()) {
+                Map<Long, OperateUserDTO> operateUserMaps = apiOperateUserService.mapOperateUser(userIds);
+                if (!operateUserMaps.isEmpty()) {
+                    list.forEach(obj -> {
+                        if (ReflectUtil.getFieldValue(obj, MbpConst.ATTR_CREATE_USER) instanceof Long createUserId) {
+                            var operateUser = operateUserMaps.get(createUserId);
+                            ReflectUtil.setFieldValue(obj, MbpConst.ATTR_CREATE_USER + "Entity", operateUser);
+                        }
+                        if (ReflectUtil.getFieldValue(obj, MbpConst.ATTR_LAST_UPDATE_USER) instanceof Long lastUpdateUserId) {
+                            var operateUser = operateUserMaps.get(lastUpdateUserId);
+                            ReflectUtil.setFieldValue(obj, MbpConst.ATTR_LAST_UPDATE_USER + "Entity", operateUser);
+                        }
+                    });
+                }
+            }
+        }
     }
 
 
