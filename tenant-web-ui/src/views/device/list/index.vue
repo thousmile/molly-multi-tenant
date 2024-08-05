@@ -24,11 +24,14 @@
               {{ dictStore.getNormalDisable(scope.row.status) }}
             </template>
           </el-table-column>
+          <el-table-column prop="createTime" label="创建时间">
+            <template #default="scope">
+              <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
+            </template>
+          </el-table-column>
           <el-table-column prop="lastUpdateTime" label="修改时间">
             <template #default="scope">
-              <el-tooltip v-if="scope.row.lastUpdateTime" :content="scope.row.lastUpdateTime" placement="top">
-                <el-link> {{ showTimeAgo(scope.row.lastUpdateTime) }}</el-link>
-              </el-tooltip>
+              <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
             </template>
           </el-table-column>
           <el-table-column label="操作" width="130">
@@ -108,7 +111,9 @@ const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
-  keywords: ""
+  keywords: "",
+  includeCauu: true,
+  orderByColumns: ["createTime", "lastUpdateTime"]
 })
 
 /// 表单数据

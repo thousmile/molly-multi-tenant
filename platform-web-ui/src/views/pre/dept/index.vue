@@ -5,7 +5,7 @@
         <el-button type="primary" :icon="Plus" v-has="['pre_dept:create']" @click="handleAdd(null)">新增</el-button>
         <el-button type="success" :icon="Sort" @click="switchExpandAndCollapse">{{
           expandAndCollapse ? "折叠" : "展开"
-        }}</el-button>
+          }}</el-button>
       </div>
     </el-card>
     <el-card shadow="never">
@@ -17,13 +17,8 @@
           <el-table-column prop="leaderMobile" label="领导联系方式" />
           <el-table-column prop="description" label="描述">
             <template #default="scope">
-              <el-popover
-                placement="top-start"
-                :width="300"
-                trigger="hover"
-                v-if="scope.row.description"
-                :content="scope.row.description"
-              >
+              <el-popover placement="top-start" :width="300" trigger="hover" v-if="scope.row.description"
+                :content="scope.row.description">
                 <template #reference>
                   <el-link> {{ showStringOverflow(scope.row.description) }}</el-link>
                 </template>
@@ -43,22 +38,14 @@
           </el-table-column>
           <el-table-column label="操作" width="200">
             <template #default="scope">
-              <el-link :icon="Plus" type="primary" v-has="['pre_dept:create']" @click="handleAdd(scope.row)"
-                >新增</el-link
-              >
+              <el-link :icon="Plus" type="primary" v-has="['pre_dept:create']"
+                @click="handleAdd(scope.row)">新增</el-link>
               &nbsp;
-              <el-link :icon="Edit" type="warning" v-has="['pre_dept:update']" @click="handleEdit(scope.row)"
-                >编辑</el-link
-              >
+              <el-link :icon="Edit" type="warning" v-has="['pre_dept:update']"
+                @click="handleEdit(scope.row)">编辑</el-link>
               &nbsp;
-              <el-link
-                :icon="Delete"
-                v-if="!scope.row.children"
-                type="danger"
-                v-has="['pre_dept:delete']"
-                @click="handleDelete(scope.row)"
-                >删除</el-link
-              >
+              <el-link :icon="Delete" v-if="!scope.row.children" type="danger" v-has="['pre_dept:delete']"
+                @click="handleDelete(scope.row)">删除</el-link>
             </template>
           </el-table-column>
         </el-table>
@@ -66,14 +53,8 @@
     </el-card>
     <!-- 新增和修改的弹窗 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="50%" :close-on-click-modal="false">
-      <el-form
-        ref="entityFormRef"
-        :model="entityForm"
-        :rules="entityFormRules"
-        label-position="right"
-        label-width="80px"
-        @keyup.enter="handleSaveAndFlush"
-      >
+      <el-form ref="entityFormRef" :model="entityForm" :rules="entityFormRules" label-position="right"
+        label-width="80px" @keyup.enter="handleSaveAndFlush">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item prop="deptName" label="部门名称">
@@ -82,14 +63,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item prop="parentId" label="上级部门">
-              <el-cascader
-                v-model="entityForm.parentId"
-                :options="parentMenus"
-                :props="{ checkStrictly: true }"
-                @change="cascaderChange"
-                filterable
-                tabindex="2"
-              />
+              <el-cascader v-model="entityForm.parentId" :options="parentNodes" :props="{ checkStrictly: true }"
+                @change="cascaderChange" filterable tabindex="2" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -102,14 +77,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item prop="leaderMobile" label="联系方式">
-              <el-input
-                v-model.trim="entityForm.leaderMobile"
-                placeholder="领导联系方式"
-                type="text"
-                maxlength="11"
-                show-word-limit
-                tabindex="4"
-              />
+              <el-input v-model.trim="entityForm.leaderMobile" placeholder="领导联系方式" type="text" maxlength="11"
+                show-word-limit tabindex="4" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -122,13 +91,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item prop="description" label="描述">
-              <el-input
-                v-model.trim="entityForm.description"
-                placeholder="描述"
-                :rows="3"
-                type="textarea"
-                tabindex="6"
-              />
+              <el-input v-model.trim="entityForm.description" placeholder="描述" :rows="3" type="textarea" tabindex="6" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -205,8 +168,8 @@ const entityFormRules: FormRules = {
   description: [{ required: true, message: "请输入描述", trigger: "blur" }]
 }
 
-// 上级权限
-const parentMenus = ref<CascaderOption[]>()
+// 上级节点
+const parentNodes = ref<CascaderOption[]>()
 
 const cascaderChange = (data: CascaderValue) => {
   const arr1 = data as number[]
@@ -235,7 +198,12 @@ const getTableData = () => {
   treeDeptApi()
     .then((resp) => {
       tableData.value = resp.data
-      parentMenus.value = flatTreeToCascaderOption(resp.data, { value: "deptId", label: "deptName" })
+      parentNodes.value = flatTreeToCascaderOption(resp.data, { value: "deptId", label: "deptName" })
+      const temp: CascaderOption = {
+        value: 0,
+        label: "顶级部门"
+      }
+      parentNodes.value.unshift(temp)
     })
     .catch((err) => {
       console.log("err :>> ", err)

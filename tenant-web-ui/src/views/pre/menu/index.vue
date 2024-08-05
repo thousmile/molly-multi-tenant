@@ -78,27 +78,14 @@
           </el-table-column>
           <el-table-column label="操作" width="200">
             <template #default="scope">
-              <el-link
-                :icon="Plus"
-                v-if="scope.row.menuType === 0"
-                v-has="['pre_menu:create']"
-                type="primary"
-                @click="handleAdd(scope.row)"
-                >新增</el-link
-              >
+              <el-link :icon="Plus" v-if="scope.row.menuType === 0" v-has="['pre_menu:create']" type="primary"
+                @click="handleAdd(scope.row)">新增</el-link>
               &nbsp;
-              <el-link :icon="Edit" type="warning" v-has="['pre_menu:update']" @click="handleEdit(scope.row)"
-                >编辑</el-link
-              >
+              <el-link :icon="Edit" type="warning" v-has="['pre_menu:update']"
+                @click="handleEdit(scope.row)">编辑</el-link>
               &nbsp;
-              <el-link
-                :icon="Delete"
-                v-if="!scope.row.children"
-                type="danger"
-                v-has="['pre_menu:delete']"
-                @click="handleDelete(scope.row)"
-                >删除</el-link
-              >
+              <el-link :icon="Delete" v-if="!scope.row.children" type="danger" v-has="['pre_menu:delete']"
+                @click="handleDelete(scope.row)">删除</el-link>
             </template>
           </el-table-column>
         </el-table>
@@ -107,14 +94,8 @@
 
     <!-- 新增和修改的弹窗 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="50%" :close-on-click-modal="false">
-      <el-form
-        ref="entityFormRef"
-        :model="entityForm"
-        :rules="entityFormRules"
-        label-position="right"
-        label-width="80px"
-        @keyup.enter="handleSaveAndFlush"
-      >
+      <el-form ref="entityFormRef" :model="entityForm" :rules="entityFormRules" label-position="right"
+        label-width="80px" @keyup.enter="handleSaveAndFlush">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item prop="menuName" label="权限名称">
@@ -175,13 +156,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item prop="parentId" label="上级权限">
-              <el-cascader
-                v-model="entityForm.parentId"
-                :options="parentMenus"
-                :props="{ checkStrictly: true }"
-                @change="cascaderChange"
-                filterable
-              />
+              <el-cascader v-model="entityForm.parentId" :options="parentNodes" :props="{ checkStrictly: true }"
+                @change="cascaderChange" filterable />
             </el-form-item>
           </el-col>
         </el-row>
@@ -216,6 +192,7 @@ import SvgIconSelect from "@/components/SvgIconSelect/index.vue"
 import type { CascaderOption, CascaderValue } from "element-plus"
 
 import { ElMessage, ElMessageBox, FormInstance, FormRules, TableInstance } from "element-plus"
+import { flatTreeToCascaderOption } from "@/utils"
 
 const dictStore = useDictStoreHook()
 
@@ -271,27 +248,7 @@ const entityFormRules: FormRules = {
 }
 
 // 上级权限
-const parentMenus = ref<CascaderOption[]>()
-
-/** 将权限树形结构扁平化为一维数组，用于权限查询 */
-const flatTree = (arr: ISysMenu[]) => {
-  const result: CascaderOption[] = []
-  const deep = (arr1: ISysMenu[], arr2: CascaderOption[]) => {
-    arr1.forEach((item: ISysMenu) => {
-      const temp: CascaderOption = {
-        value: item.menuId,
-        label: item.menuName
-      }
-      if (item.menuType === 0) {
-        arr2.push(temp)
-        temp.children = []
-        item.children && deep(item.children, temp.children)
-      }
-    })
-  }
-  deep(arr, result)
-  return result
-}
+const parentNodes = ref<CascaderOption[]>()
 
 const cascaderChange = (data: CascaderValue) => {
   const arr1 = data as number[]
@@ -320,12 +277,12 @@ const getTableData = () => {
   treeMenuApi()
     .then((resp) => {
       tableData.value = resp.data
-      parentMenus.value = flatTree(resp.data)
+      parentNodes.value = flatTreeToCascaderOption(resp.data, { value: "id", label: "menuName" })
       const temp: CascaderOption = {
         value: 0,
         label: "顶级权限"
       }
-      parentMenus.value.push(temp)
+      parentNodes.value.unshift(temp)
     })
     .catch((err) => {
       console.log("err :>> ", err)

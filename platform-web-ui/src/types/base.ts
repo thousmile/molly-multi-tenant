@@ -12,6 +12,10 @@ export interface ISearchQuery {
   startDate?: string
   // 结束日期 YYYY-MM-DD
   endDate?: string
+  // 排序的方向, true: 顺序、false: 倒序
+  asc?: boolean
+  // 排序的字段,如: createUser,lastUpdateTime
+  orderByColumns?: string[]
 }
 
 // 简单租户

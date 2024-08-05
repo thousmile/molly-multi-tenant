@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.xaaef.molly.common.consts.MbpConst.ATTR_BASE_FIELDS;
 import static com.xaaef.molly.common.consts.MbpConst.CREATE_TIME;
 
 
@@ -135,6 +136,9 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity> exte
             } else {
                 wrapper.orderByDesc(orderByColumns);
             }
+        }
+        if (!params.isIncludeCauu()) {
+            wrapper.select(this.getEntityClass(), i -> !ATTR_BASE_FIELDS.contains(i.getProperty()));
         }
         // 搜索
         if (StringUtils.isNotBlank(params.getKeywords()) && columns != null && !columns.isEmpty()) {

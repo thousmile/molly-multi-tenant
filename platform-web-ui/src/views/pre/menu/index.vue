@@ -33,7 +33,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="sort" label="排序" width="80" />
-          <el-table-column prop="target" label="所属用户">
+          <el-table-column prop="target" label="所属用户" width="100">
             <template #default="scope">
               <el-tag v-if="scope.row.target === 0" effect="dark">
                 {{ dictStore.getMenuTarget(scope.row.target) }}
@@ -177,7 +177,7 @@
             <el-form-item prop="parentId" label="上级权限">
               <el-cascader
                 v-model="entityForm.parentId"
-                :options="parentMenus"
+                :options="parentNodes"
                 :props="{ checkStrictly: true }"
                 @change="cascaderChange"
                 filterable
@@ -222,6 +222,7 @@ import {
   type CascaderOption,
   type CascaderValue
 } from "element-plus"
+import { flatTreeToCascaderOption } from "@/utils"
 
 const dictStore = useDictStoreHook()
 
@@ -277,27 +278,7 @@ const entityFormRules: FormRules = {
 }
 
 // 上级权限
-const parentMenus = ref<CascaderOption[]>()
-
-/** 将权限树形结构扁平化为一维数组，用于权限查询 */
-const flatTree = (arr: ISysMenu[]) => {
-  const result: CascaderOption[] = []
-  const deep = (arr1: ISysMenu[], arr2: CascaderOption[]) => {
-    arr1.forEach((item: ISysMenu) => {
-      const temp: CascaderOption = {
-        value: item.menuId,
-        label: item.menuName
-      }
-      if (item.menuType === 0) {
-        arr2.push(temp)
-        temp.children = []
-        item.children && deep(item.children, temp.children)
-      }
-    })
-  }
-  deep(arr, result)
-  return result
-}
+const parentNodes = ref<CascaderOption[]>()
 
 const cascaderChange = (data: CascaderValue) => {
   const arr1 = data as number[]
@@ -326,12 +307,12 @@ const getTableData = () => {
   treeMenuApi()
     .then((resp) => {
       tableData.value = resp.data
-      parentMenus.value = flatTree(resp.data)
+      parentNodes.value = flatTreeToCascaderOption(resp.data, { value: "id", label: "menuName" })
       const temp: CascaderOption = {
         value: 0,
         label: "顶级权限"
       }
-      parentMenus.value.push(temp)
+      parentNodes.value.unshift(temp)
     })
     .catch((err) => {
       console.log("err :>> ", err)

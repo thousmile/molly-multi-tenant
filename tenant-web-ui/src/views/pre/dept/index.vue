@@ -84,7 +84,7 @@
             <el-form-item prop="parentId" label="上级部门">
               <el-cascader
                 v-model="entityForm.parentId"
-                :options="parentMenus"
+                :options="parentNodes"
                 :props="{ checkStrictly: true }"
                 @change="cascaderChange"
                 filterable
@@ -205,8 +205,8 @@ const entityFormRules: FormRules = {
   description: [{ required: true, message: "请输入描述", trigger: "blur" }]
 }
 
-// 上级权限
-const parentMenus = ref<CascaderOption[]>()
+// 上级节点
+const parentNodes = ref<CascaderOption[]>()
 
 const cascaderChange = (data: CascaderValue) => {
   const arr1 = data as number[]
@@ -235,7 +235,12 @@ const getTableData = () => {
   treeDeptApi()
     .then((resp) => {
       tableData.value = resp.data
-      parentMenus.value = flatTreeToCascaderOption(resp.data, { value: "deptId", label: "deptName" })
+      parentNodes.value = flatTreeToCascaderOption(resp.data, { value: "deptId", label: "deptName" })
+      const temp: CascaderOption = {
+        value: 0,
+        label: "顶级部门"
+      }
+      parentNodes.value.unshift(temp)
     })
     .catch((err) => {
       console.log("err :>> ", err)

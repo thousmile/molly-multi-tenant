@@ -26,6 +26,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "2.3.1",
     "@stomp/stompjs": "^7.0.0",
+    "@types/qs": "^6.9.15",
     "@types/uuid": "^9.0.6",
     "axios": "1.6.2",
     "dayjs": "1.11.10",
@@ -40,6 +41,7 @@
     "path-browserify": "1.0.1",
     "path-to-regexp": "6.2.1",
     "pinia": "2.1.7",
+    "qs": "^6.13.0",
     "screenfull": "6.0.2",
     "sockjs-client": "^1.6.1",
     "uuid": "^9.0.1",

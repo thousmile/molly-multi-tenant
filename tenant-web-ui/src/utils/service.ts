@@ -1,11 +1,12 @@
-import axios, {AxiosResponse, type AxiosInstance, type AxiosRequestConfig} from "axios"
-import {useUserStoreHook} from "@/store/modules/user"
-import {ElMessage, ElMessageBox} from "element-plus"
-import {get, merge} from "lodash-es"
-import {getToken} from "./cache/local-storage"
-import {useProjectStoreHook} from "@/store/modules/project"
-import {getEnvBaseURLPrefix} from "."
-import {ISimpleProject} from "@/types/base"
+import axios, { AxiosResponse, type AxiosInstance, type AxiosRequestConfig } from "axios"
+import { useUserStoreHook } from "@/store/modules/user"
+import { ElMessage, ElMessageBox } from "element-plus"
+import { get, merge } from "lodash-es"
+import { getToken } from "./cache/local-storage"
+import { useProjectStoreHook } from "@/store/modules/project"
+import { getEnvBaseURLPrefix } from "."
+import { ISimpleProject } from "@/types/base"
+import qs from "qs"
 
 /** 创建请求实例 */
 function createService() {
@@ -180,22 +181,22 @@ function httpRequest<T>(config: AxiosRequestConfig): Promise<T> {
 
 /** 单独抽离的get工具函数 */
 function httpGet<T, P>(url: string, params?: T): Promise<P> {
-  return httpRequest<P>({method: "get", url, params})
+  return httpRequest<P>({ method: "get", url, params, paramsSerializer: p => qs.stringify(p, { indices: false }) })
 }
 
 /** 单独抽离的post工具函数 */
 function httpPost<T, P>(url: string, data?: T): Promise<P> {
-  return httpRequest<P>({method: "post", url, data})
+  return httpRequest<P>({ method: "post", url, data })
 }
 
 /** 单独抽离的put工具函数 */
 function httpPut<T, P>(url: string, data?: T): Promise<P> {
-  return httpRequest<P>({method: "put", url, data})
+  return httpRequest<P>({ method: "put", url, data })
 }
 
 /** 单独抽离的delete工具函数 */
 function httpDelete<T, P>(url: string, params?: T): Promise<P> {
-  return httpRequest<P>({method: "delete", url, params})
+  return httpRequest<P>({ method: "delete", url, params, paramsSerializer: p => qs.stringify(p, { indices: false }) })
 }
 
-export {httpRequest, httpGet, httpPost, httpPut, httpDelete, axiosRequest}
+export { httpRequest, httpGet, httpPost, httpPut, httpDelete, axiosRequest }

@@ -24,11 +24,14 @@
               {{ dictStore.getNormalDisable(scope.row.status) }}
             </template>
           </el-table-column>
+          <el-table-column prop="createTime" label="创建时间">
+            <template #default="scope">
+              <operateUser :dateTime="scope.row.createTime" :entity="scope.row.createUserEntity" />
+            </template>
+          </el-table-column>
           <el-table-column prop="lastUpdateTime" label="修改时间">
             <template #default="scope">
-              <el-tooltip v-if="scope.row.lastUpdateTime" :content="scope.row.lastUpdateTime" placement="top">
-                <el-link> {{ showTimeAgo(scope.row.lastUpdateTime) }}</el-link>
-              </el-tooltip>
+              <operateUser :dateTime="scope.row.lastUpdateTime" :entity="scope.row.lastUpdateUserEntity" />
             </template>
           </el-table-column>
           <el-table-column label="操作" width="130">
@@ -42,27 +45,16 @@
       </div>
 
       <div class="pager-wrapper">
-        <el-pagination
-          v-model:current-page="params.pageIndex"
-          :page-size="params.pageSize"
-          :background="true"
-          layout="sizes, total, prev, pager, next, jumper"
-          :total="params.pageTotal"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
+        <el-pagination v-model:current-page="params.pageIndex" :page-size="params.pageSize" :background="true"
+          layout="sizes, total, prev, pager, next, jumper" :total="params.pageTotal" @size-change="handleSizeChange"
+          @current-change="handleCurrentChange" />
       </div>
     </el-card>
 
     <!-- 新增和修改的弹窗 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="30%" :close-on-click-modal="false">
-      <el-form
-        ref="entityFormRef"
-        :model="entityForm"
-        :rules="entityFormRules"
-        label-position="right"
-        label-width="80px"
-      >
+      <el-form ref="entityFormRef" :model="entityForm" :rules="entityFormRules" label-position="right"
+        label-width="80px">
         <el-form-item prop="deviceName" label="设备名称">
           <el-input v-model.trim="entityForm.deviceName" placeholder="设备名称" type="text" tabindex="1" />
         </el-form-item>
@@ -87,7 +79,6 @@ import { ElMessage, ElMessageBox, FormInstance, FormRules } from "element-plus"
 import { queryDeviceApi, saveDeviceApi, updateDeviceApi, deleteDeviceApi } from "@/api/device"
 import { cloneDeep } from "lodash-es"
 import { ICmsDevice } from "@/types/cms"
-import { showTimeAgo } from "@/hooks/useIndex"
 
 import { useDictStoreHook } from "@/store/modules/dict"
 const dictStore = useDictStoreHook()
@@ -108,7 +99,9 @@ const params = reactive({
   pageTotal: 0,
   pageIndex: 1,
   pageSize: 10,
-  keywords: ""
+  includeCauu: true,
+  keywords: "",
+  orderByColumns: ["createTime", "lastUpdateTime"]
 })
 
 /// 表单数据

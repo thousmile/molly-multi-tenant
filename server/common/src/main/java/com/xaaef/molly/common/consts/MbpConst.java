@@ -47,6 +47,17 @@ public class MbpConst {
     public final static String ATTR_LAST_UPDATE_USER = "lastUpdateUser";
 
     /**
+     * 基础属性字段
+     */
+    public final static Set<String> ATTR_BASE_FIELDS = Set.of(
+            ATTR_PROJECT_ID,
+            ATTR_CREATE_TIME,
+            ATTR_CREATE_USER,
+            ATTR_LAST_UPDATE_TIME,
+            ATTR_LAST_UPDATE_USER
+    );
+
+    /**
      * 不需要进行 拦截租户 的表名称
      * 用法:
      *

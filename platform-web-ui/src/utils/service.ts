@@ -9,6 +9,7 @@ import { getEnvBaseURLPrefix } from "."
 import { ISimpleProject, ISimpleTenant } from "@/types/base"
 import { defaultTenant } from "@/utils"
 import { v4 as uuidv4 } from "uuid"
+import qs from "qs"
 
 /** 创建请求实例 */
 function createService() {
@@ -200,7 +201,7 @@ function httpRequest<T>(config: AxiosRequestConfig): Promise<T> {
 
 /** 单独抽离的get工具函数 */
 function httpGet<T, P>(url: string, params?: T): Promise<P> {
-  return httpRequest<P>({ method: "get", url, params })
+  return httpRequest<P>({ method: "get", url, params, paramsSerializer: p => qs.stringify(p, { indices: false }) })
 }
 
 /** 单独抽离的post工具函数 */
@@ -215,7 +216,7 @@ function httpPut<T, P>(url: string, data?: T): Promise<P> {
 
 /** 单独抽离的delete工具函数 */
 function httpDelete<T, P>(url: string, params?: T): Promise<P> {
-  return httpRequest<P>({ method: "delete", url, params })
+  return httpRequest<P>({ method: "delete", url, params, paramsSerializer: p => qs.stringify(p, { indices: false }) })
 }
 
 /** 单独抽离的 文件下载 工具函数 */
