@@ -80,7 +80,7 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
             if (deptIds.isEmpty()) {
                 return;
             }
-            var mapDept = apiPmsDeptService.mapByDeptIds(deptIds);
+            var mapDept = apiPmsDeptService.mapFullNameByDeptIds(deptIds);
             list.forEach(p -> {
                 var dept = mapDept.getOrDefault(p.getDeptId(), null);
                 p.setDept(dept);

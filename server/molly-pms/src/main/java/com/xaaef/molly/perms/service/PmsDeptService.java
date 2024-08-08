@@ -7,6 +7,7 @@ import com.xaaef.molly.perms.entity.PmsDept;
 import com.xaaef.molly.tenant.base.service.BaseService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -49,5 +50,18 @@ public interface PmsDeptService extends BaseService<PmsDept> {
      */
     Set<PmsDept> listChildByDeptId(Long deptId);
 
+
+    /**
+     * 根据 部门ID 查询 部门的全名称
+     * 如: Google中国/研发部/web前端组
+     */
+    Map<Long, String> mapDeptFullName(Set<Long> deptIds);
+
+
+    /**
+     * 根据 部门ID 查询 部门的全名称
+     * 如: Google中国/研发部/web前端组
+     */
+    List<PmsDept> listDeptFullName(Set<Long> deptIds);
 
 }

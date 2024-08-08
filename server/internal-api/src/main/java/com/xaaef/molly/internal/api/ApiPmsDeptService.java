@@ -25,6 +25,13 @@ public interface ApiPmsDeptService {
 
 
     /**
+     * 根据 部门ID 查询 部门的全名称
+     * 如: Google中国/研发部/web前端组
+     */
+    Map<Long, PmsDeptDTO> mapFullNameByDeptIds(Set<Long> deptIds);
+
+
+    /**
      * 获取 子部门
      */
     Set<Long> listChildIdByDeptId(Long deptId);

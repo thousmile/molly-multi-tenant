@@ -2,10 +2,12 @@ package com.xaaef.molly.perms.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -107,6 +110,71 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
     }
 
 
+    @Override
+    public Map<Long, String> mapDeptFullName(Set<Long> deptIds) {
+        var w1 = new LambdaQueryWrapper<PmsDept>()
+                .select(List.of(PmsDept::getDeptId, PmsDept::getDeptName, PmsDept::getAncestors))
+                .in(PmsDept::getDeptId, deptIds);
+        var deptList = super.list(w1);
+        includeParentName(deptList);
+        return deptList.stream()
+                .collect(
+                        Collectors.toMap(
+                                PmsDept::getDeptId,
+                                PmsDept::getDeptName,
+                                (o1, o2) -> o2, HashMap::new
+                        )
+                );
+    }
+
+
+    @Override
+    public List<PmsDept> listDeptFullName(Set<Long> deptIds) {
+        var deptList = super.listByIds(deptIds);
+        includeParentName(deptList);
+        return deptList;
+    }
+
+
+    private void includeParentName(Collection<PmsDept> deptList) {
+        if (CollectionUtil.isNotEmpty(deptList)) {
+            // 获取全部 祖先ID
+            var ancestors = deptList.stream()
+                    .filter(a -> StrUtil.isNotBlank(a.getAncestors()))
+                    .map(a -> a.getAncestors().split(StrUtil.COMMA))
+                    .flatMap(Stream::of)
+                    .filter(StrUtil::isNotBlank)
+                    .map(Long::parseLong)
+                    .filter(a -> a > 0)
+                    .collect(Collectors.toSet());
+            if (!ancestors.isEmpty()) {
+                var w1 = new LambdaQueryWrapper<PmsDept>()
+                        .select(List.of(PmsDept::getDeptId, PmsDept::getDeptName))
+                        .in(PmsDept::getDeptId, ancestors);
+                var nameMaps = new HashMap<Long, String>();
+                deptList.forEach(a -> nameMaps.put(a.getDeptId(), a.getDeptName()));
+                baseMapper.selectList(w1).forEach(a -> nameMaps.put(a.getDeptId(), a.getDeptName()));
+                if (!nameMaps.isEmpty()) {
+                    deptList.forEach(d -> {
+                        if (StrUtil.isNotBlank(d.getAncestors())) {
+                            var parentIds = Arrays.stream(d.getAncestors().split(StrUtil.COMMA))
+                                    .map(Long::parseLong)
+                                    .filter(a -> a > 0)
+                                    .collect(Collectors.toCollection(LinkedHashSet::new));
+                            parentIds.add(d.getDeptId());
+                            var fullName = parentIds.stream()
+                                    .map(nameMaps::get)
+                                    .filter(StrUtil::isNotBlank)
+                                    .collect(Collectors.joining(StrUtil.SLASH));
+                            d.setDeptName(fullName);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean save(PmsDept entity) {
@@ -117,7 +185,7 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
             if (parentDept == null) {
                 throw new BizException(String.format("上级部门 %d 不存在!", entity.getParentId()));
             }
-            entity.setAncestors(parentDept.getAncestors() + "," + entity.getParentId());
+            entity.setAncestors(parentDept.getAncestors() + StrUtil.COMMA + entity.getParentId());
         }
         entity.setDeptId(null);
         return super.save(entity);
@@ -155,7 +223,7 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
         var newParentDept = getById(entity.getParentId());
         var oldDept = getById(entity.getDeptId());
         if (Objects.nonNull(newParentDept) && Objects.nonNull(oldDept)) {
-            var newAncestors = newParentDept.getAncestors() + "," + newParentDept.getDeptId();
+            var newAncestors = newParentDept.getAncestors() + StrUtil.COMMA + newParentDept.getDeptId();
             var oldAncestors = oldDept.getAncestors();
             entity.setAncestors(newAncestors);
             updateDeptChildren(entity.getDeptId(), newAncestors, oldAncestors);
