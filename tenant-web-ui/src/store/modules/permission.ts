@@ -1,12 +1,12 @@
-import { ref } from "vue"
+import {ref} from "vue"
 import store from "@/store"
-import { defineStore } from "pinia"
-import { type RouteRecordRaw } from "vue-router"
-import { constantRoutes } from "@/router"
-import { flatMultiLevelRoutes } from "@/router/helper"
+import {defineStore} from "pinia"
+import {type RouteRecordRaw} from "vue-router"
+import {constantRoutes} from "@/router"
+import {flatMultiLevelRoutes} from "@/router/helper"
 import routeSettings from "@/config/route"
-import { IPermsMenus } from "@/types/pms"
-import { isExternal } from "@/utils/validate"
+import {IPermsMenus} from "@/types/pms"
+import {isExternal} from "@/utils/validate"
 
 const Layout = () => import("@/layouts/index.vue")
 

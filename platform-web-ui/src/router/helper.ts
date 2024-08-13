@@ -1,12 +1,12 @@
 import {
-  type Router,
-  type RouteRecordNormalized,
-  type RouteRecordRaw,
   createRouter,
   createWebHashHistory,
-  createWebHistory
+  createWebHistory,
+  type Router,
+  type RouteRecordNormalized,
+  type RouteRecordRaw
 } from "vue-router"
-import { cloneDeep, omit } from "lodash-es"
+import {cloneDeep, omit} from "lodash-es"
 
 /** 路由模式 */
 export const history =

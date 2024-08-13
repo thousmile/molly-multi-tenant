@@ -1,6 +1,6 @@
-import { ISearchQuery } from "@/types/base"
-import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
-import { IMapDictData, IDictType, IDictData, IDictSearchQuery } from "@/types/dict"
+import {ISearchQuery} from "@/types/base"
+import {httpDelete, httpGet, httpPost, httpPut} from "@/utils/service"
+import {IDictData, IDictSearchQuery, IDictType, IMapDictData} from "@/types/dict"
 
 /** [Map]查询所有 */
 export const mapKeysApi = () => {

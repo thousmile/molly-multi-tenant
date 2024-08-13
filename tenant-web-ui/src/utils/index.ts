@@ -1,8 +1,8 @@
 import dayjs from "dayjs"
-import { removeConfigLayout } from "@/utils/cache/local-storage"
+import {removeConfigLayout} from "@/utils/cache/local-storage"
 import chinaAreaJson from "@/assets/ChinaArea.json"
-import { ISimpleProject } from "@/types/base"
-import { CascaderOption } from "element-plus"
+import {ISimpleProject} from "@/types/base"
+import {CascaderOption} from "element-plus"
 
 //#region 格式化日期时间
 export const DEFAULT_DATE_TIME_PATTERN = "YYYY-MM-DD HH:mm:ss"

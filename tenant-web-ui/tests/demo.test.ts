@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest"
+import {describe, expect, it} from "vitest"
 
 /**
  * @description 该文件所有示例均是为了向你演示 Vitest 最基本的用法

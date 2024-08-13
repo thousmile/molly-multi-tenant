@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -55,6 +56,35 @@ public interface PmsDeptMapper extends BaseMapper<PmsDept> {
     int insertByMenus(@Param("id") Long id,
                       @Param("menus") Set<Long> menus);
 
+
+    /**
+     * 根据 用户id 查询 部门列表
+     */
+    List<PmsDept> selectChildDeptByUserId(Long userId);
+
+
+    /**
+     * 根据 用户id 查询 部门id列表
+     */
+    Set<Long> selectChildDeptIdByUserId(Long userId);
+
+
+    /**
+     * 根据 用户id 查询 部门
+     */
+    PmsDept selectDeptByUserId(Long userId);
+
+
+    /**
+     * 查询 角色id 部门权限
+     */
+    List<PmsDept> selectDeptByRuleIds(Set<Long> roleIds);
+
+
+    /**
+     * 查询 角色 部门权限
+     */
+    Set<Long> selectDeptIdByRuleIds(Set<Long> roleIds);
 
 
 }

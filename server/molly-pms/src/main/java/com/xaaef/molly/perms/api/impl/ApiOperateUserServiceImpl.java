@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,10 +37,8 @@ public class ApiOperateUserServiceImpl implements ApiOperateUserService {
     @Override
     public Map<Long, OperateUserDTO> mapOperateUser(Set<Long> userIds) {
         final var props = apiSysTenantService.getByMultiTenantProperties();
-        final var dbNameList = Set.of(
-                props.getPrefix() + props.getDefaultTenantId(),
-                props.getPrefix() + TenantUtils.getTenantId()
-        );
+        final var dbNameList = new HashSet<>(Set.of(props.getPrefix() + props.getDefaultTenantId()));
+        dbNameList.add(props.getPrefix() + TenantUtils.getTenantId());
         return userMapper.selectSimpleListByUserIds(dbNameList, userIds)
                 .stream()
                 .map(a -> new OperateUserDTO()

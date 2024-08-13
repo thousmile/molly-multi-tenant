@@ -1,5 +1,5 @@
-import { IServerInfo } from "@/types/sys"
-import { httpGet } from "@/utils/service"
+import {IServerInfo} from "@/types/sys"
+import {httpGet} from "@/utils/service"
 
 /** 查询服务器信息 */
 export const getServerInfoApi = () => {

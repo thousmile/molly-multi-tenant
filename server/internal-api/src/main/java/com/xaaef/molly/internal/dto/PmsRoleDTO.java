@@ -37,4 +37,9 @@ public class PmsRoleDTO implements java.io.Serializable {
      */
     private String description;
 
+    /**
+     * 数据范围
+     */
+    private Integer dataScope;
+
 }

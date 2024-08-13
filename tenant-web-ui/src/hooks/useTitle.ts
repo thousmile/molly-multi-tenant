@@ -1,4 +1,4 @@
-import { ref, watch } from "vue"
+import {ref, watch} from "vue"
 
 /** 项目标题 */
 const VITE_APP_TITLE = import.meta.env.VITE_APP_TITLE ?? "V3 Admin Vite"

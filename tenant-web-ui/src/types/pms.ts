@@ -1,4 +1,4 @@
-import { IBaseEntity, ISimpleTenant } from "./base"
+import {IBaseEntity, ISimpleTenant} from "./base"
 
 /** 用户登录 */
 export interface ILoginData {
@@ -216,9 +216,17 @@ export interface IPmsRole extends IBaseEntity {
    */
   sort: number
   /**
+   * 数据权限
+   */
+  dataScope: number
+  /**
    * 角色描述
    */
   description: string
+  /**
+   * 部门ID
+   */
+  deptIds: Array<number>
 }
 
 /** 系统部门 */

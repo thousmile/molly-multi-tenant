@@ -1,9 +1,9 @@
-import { ref, watchEffect } from "vue"
+import {ref, watchEffect} from "vue"
 import store from "@/store"
-import { defineStore } from "pinia"
-import { useSettingsStore } from "./settings"
-import { type RouteLocationNormalized } from "vue-router"
-import { getVisitedViews, setVisitedViews, getCachedViews, setCachedViews } from "@/utils/cache/local-storage"
+import {defineStore} from "pinia"
+import {useSettingsStore} from "./settings"
+import {type RouteLocationNormalized} from "vue-router"
+import {getCachedViews, getVisitedViews, setCachedViews, setVisitedViews} from "@/utils/cache/local-storage"
 
 export type TagView = Partial<RouteLocationNormalized>
 

@@ -1,6 +1,6 @@
-import { onBeforeUnmount } from "vue"
-import mitt, { type Handler } from "mitt"
-import { type RouteLocationNormalized } from "vue-router"
+import {onBeforeUnmount} from "vue"
+import mitt, {type Handler} from "mitt"
+import {type RouteLocationNormalized} from "vue-router"
 
 /** 回调函数的类型 */
 type Callback = (route: RouteLocationNormalized) => void

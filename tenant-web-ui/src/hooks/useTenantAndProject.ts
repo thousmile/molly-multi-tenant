@@ -1,5 +1,5 @@
-import { computed } from "vue"
-import { useProjectStoreHook } from "@/store/modules/project"
+import {computed} from "vue"
+import {useProjectStoreHook} from "@/store/modules/project"
 
 const projectStore = useProjectStoreHook()
 

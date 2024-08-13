@@ -44,9 +44,9 @@ dromara:
 
 
 # mybatis-plus 日志打印
-#mybatis-plus:
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 
 # springdoc-openapi项目配置

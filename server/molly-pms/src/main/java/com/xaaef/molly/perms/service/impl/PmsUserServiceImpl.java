@@ -2,6 +2,7 @@ package com.xaaef.molly.perms.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.StrUtil;
@@ -89,8 +90,13 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
         var wrapper = super.getKeywordsQueryWrapper(params,
                 List.of(PmsUser::getUsername, PmsUser::getNickname));
         if (params.getDeptId() != null && params.getDeptId() > 0L) {
-            var childIds = deptService.listChildIdByDeptId(params.getDeptId());
-            wrapper.lambda().in(PmsUser::getDeptId, childIds);
+            if (CollectionUtil.contains(getLoginUser().getHaveDeptIds(), params.getDeptId())) {
+                wrapper.lambda().in(PmsUser::getDeptId, params.getDeptId());
+            } else {
+                wrapper.lambda().in(PmsUser::getDeptId, getLoginUser().getHaveDeptIds());
+            }
+        } else {
+            wrapper.lambda().in(PmsUser::getDeptId, getLoginUser().getHaveDeptIds());
         }
         Page<PmsUser> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
         Page<PmsUser> result = super.page(pageRequest, wrapper);

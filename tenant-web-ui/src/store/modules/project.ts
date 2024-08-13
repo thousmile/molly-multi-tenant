@@ -1,9 +1,9 @@
 import store from "@/store"
-import { defineStore } from "pinia"
-import { ref } from "vue"
-import { ISimpleProject } from "@/types/base"
-import { defaultProject } from "@/utils"
-import { setCurrentProject as setProject, getCurrentProject as getProject } from "@/utils/cache/local-storage"
+import {defineStore} from "pinia"
+import {ref} from "vue"
+import {ISimpleProject} from "@/types/base"
+import {defaultProject} from "@/utils"
+import {getCurrentProject as getProject, setCurrentProject as setProject} from "@/utils/cache/local-storage"
 
 export const useProjectStore = defineStore("project", () => {
   // 当前项目

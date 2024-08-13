@@ -9,6 +9,7 @@
         <result property="roleName" column="role_name"/>
         <result property="sort" column="sort"/>
         <result property="description" column="description"/>
+        <result property="dataScope" column="data_scope"/>
         <result property="createTime" column="create_time"/>
         <result property="createUser" column="create_user"/>
         <result property="lastUpdateTime" column="last_update_time"/>
@@ -32,15 +33,17 @@
 
 
     <resultMap id="SysRoleProxyResultMap" type="PmsRoleProxy">
-        <id property="userId" column="user_id" jdbcType="BIGINT"/>
-        <id property="roleId" column="role_id" jdbcType="BIGINT"/>
-        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
-        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <id property="roleId" column="role_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="sort" column="sort"/>
+        <result property="description" column="description"/>
+        <result property="dataScope" column="data_scope"/>
     </resultMap>
 
 
     <select id="selectListByUserIds" resultMap="SysRoleProxyResultMap">
-        SELECT r1.role_id, r1.role_name, r1.description, r2.user_id
+        SELECT r1.role_id, r1.role_name, r1.description, r1.data_scope, r2.user_id
         FROM pms_role AS r1
         RIGHT JOIN pms_user_role AS r2 ON r2.role_id = r1.role_id
         WHERE r2.user_id IN
@@ -64,6 +67,23 @@
             #{item}
         </foreach>
     </select>
+
+
+    <select id="selectDeptIdByRoleIds" resultType="com.xaaef.molly.common.domain.LinkedTarget">
+        SELECT dept_id AS targetId, role_id AS sourceId FROM pms_role_dept where role_id IN
+        <foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <insert id="insertByDepts">
+        insert into pms_role_dept (role_id, dept_id) values
+        <foreach collection='deptIds' item='item' index='index' separator=','>
+            (#{roleId},#{item})
+        </foreach>
+    </insert>
+
 
 
 </mapper>

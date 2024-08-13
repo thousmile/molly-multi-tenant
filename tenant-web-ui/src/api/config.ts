@@ -1,6 +1,6 @@
-import { ISearchQuery } from "@/types/base"
-import { ISysConfig } from "@/types/sys"
-import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
+import {ISearchQuery} from "@/types/base"
+import {ISysConfig} from "@/types/sys"
+import {httpDelete, httpGet, httpPost, httpPut} from "@/utils/service"
 
 /** 根据Id查询 */
 export const getConfigApi = (id: number) => {

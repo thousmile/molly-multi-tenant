@@ -1,5 +1,5 @@
-import { ILoginData, ILoginUserInfo, IOAuth2Token, IUserPerms } from "@/types/pms"
-import { httpGet, httpPost } from "@/utils/service"
+import {ILoginData, ILoginUserInfo, IOAuth2Token, IUserPerms} from "@/types/pms"
+import {httpGet, httpPost} from "@/utils/service"
 
 /** 获取公钥 */
 export const getPublicKeyApi = () => {

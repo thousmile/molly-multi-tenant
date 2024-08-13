@@ -98,6 +98,14 @@ public class PmsRoleController {
     }
 
 
+    @Operation(summary = "拥有的部门", description = "查询角色拥有的部门！")
+    @GetMapping("/depts/{roleId}")
+    public JsonResult<UpdateMenusVO> listHaveDepts(@PathVariable Long roleId) {
+        var data = baseService.listHaveDepts(roleId);
+        return JsonResult.success(data);
+    }
+
+
     @NoRepeatSubmit
     @Operation(summary = "关联菜单", description = "会删除原有的菜单！")
     @PostMapping("/menus")

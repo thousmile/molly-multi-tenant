@@ -1,5 +1,6 @@
 package com.xaaef.molly.corems.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -58,8 +59,13 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
         var wrapper = super.getKeywordsQueryWrapper(params,
                 List.of(CmsProject::getProjectName, CmsProject::getLinkman));
         if (params.getDeptId() != null && params.getDeptId() > 0L) {
-            var childIds = apiPmsDeptService.listChildIdByDeptId(params.getDeptId());
-            wrapper.lambda().in(CmsProject::getDeptId, childIds);
+            if (CollectionUtil.contains(getLoginUser().getHaveDeptIds(), params.getDeptId())) {
+                wrapper.lambda().in(CmsProject::getDeptId, params.getDeptId());
+            } else {
+                wrapper.lambda().in(CmsProject::getDeptId, getLoginUser().getHaveDeptIds());
+            }
+        } else {
+            wrapper.lambda().in(CmsProject::getDeptId, getLoginUser().getHaveDeptIds());
         }
         Page<CmsProject> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
         Page<CmsProject> result = super.page(pageRequest, wrapper);
@@ -152,10 +158,7 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
                 .orderByAsc(CmsProject::getSort, CmsProject::getCreateTime);
         // 非系统用户和管理员用户。根据所在部门，查询项目列表
         if (!isMasterUser() && !isAdminUser()) {
-            var childDeptIds = apiPmsDeptService.listChildIdByDeptId(getLoginUser().getDeptId());
-            if (!childDeptIds.isEmpty()) {
-                wrapper.in(CmsProject::getDeptId, childDeptIds);
-            }
+            wrapper.in(CmsProject::getDeptId, getLoginUser().getHaveDeptIds());
         }
         Page<CmsProject> pageRequest = Page.of(po.getPageIndex(), po.getPageSize());
         return super.page(pageRequest, wrapper);

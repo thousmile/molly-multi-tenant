@@ -1,4 +1,4 @@
-import { IBaseEntity, ISearchQuery } from "./base"
+import {IBaseEntity, ISearchQuery} from "./base"
 
 // 字典搜索分页查询
 export interface IDictSearchQuery extends ISearchQuery {

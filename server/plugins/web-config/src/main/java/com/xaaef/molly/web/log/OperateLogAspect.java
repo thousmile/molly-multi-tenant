@@ -82,6 +82,7 @@ public class OperateLogAspect {
             timeCost = System.currentTimeMillis() - startTime;
         } catch (Throwable ew) {
             ex = ew;
+            ew.printStackTrace();
             log.error(ew.getMessage());
             result = JsonResult.fail(ew.getMessage());
         } finally {

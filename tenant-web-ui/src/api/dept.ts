@@ -1,6 +1,6 @@
-import { ISearchQuery } from "@/types/base"
-import { IPmsDept } from "@/types/pms"
-import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
+import {ISearchQuery} from "@/types/base"
+import {IPmsDept} from "@/types/pms"
+import {httpDelete, httpGet, httpPost, httpPut} from "@/utils/service"
 
 /** 根据Id查询 */
 export const getDeptApi = (id: number) => {

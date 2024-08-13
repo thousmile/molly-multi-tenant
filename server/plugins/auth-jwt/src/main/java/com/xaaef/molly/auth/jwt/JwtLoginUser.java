@@ -146,6 +146,12 @@ public class JwtLoginUser implements UserDetails, Principal {
     private Collection<PmsRoleDTO> roles;
 
     /**
+     * 拥有的 部门ID
+     */
+    @Schema(description = "部门ID")
+    private Set<Long> haveDeptIds;
+
+    /**
      * 拥有的租户ID
      */
     @Schema(description = "拥有的租户ID")

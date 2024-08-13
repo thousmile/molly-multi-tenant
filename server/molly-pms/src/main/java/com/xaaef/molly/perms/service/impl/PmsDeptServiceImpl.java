@@ -136,6 +136,18 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
     }
 
 
+    @Override
+    public List<PmsDept> listChildDeptByUserId(Long userId) {
+        return baseMapper.selectChildDeptByUserId(userId);
+    }
+
+
+    @Override
+    public Set<Long> listChildDeptIdByUserId(Long userId) {
+        return baseMapper.selectChildDeptIdByUserId(userId);
+    }
+
+
     private void includeParentName(Collection<PmsDept> deptList) {
         if (CollectionUtil.isNotEmpty(deptList)) {
             // 获取全部 祖先ID

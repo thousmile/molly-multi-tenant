@@ -1,6 +1,6 @@
-import { ISearchQuery } from "@/types/base"
-import { IPmsUser, IUserListTenant } from "@/types/pms"
-import { httpPost, httpPut, httpGet, httpDelete } from "@/utils/service"
+import {ISearchQuery} from "@/types/base"
+import {IPmsUser, IUserListTenant} from "@/types/pms"
+import {httpDelete, httpGet, httpPost, httpPut} from "@/utils/service"
 
 /** 修改密码 */
 export const updatePasswordApi = (data: any) => {

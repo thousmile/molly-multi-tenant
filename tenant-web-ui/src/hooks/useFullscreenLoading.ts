@@ -1,4 +1,4 @@
-import { type LoadingOptions, ElLoading } from "element-plus"
+import {ElLoading, type LoadingOptions} from "element-plus"
 
 const defaultOptions = {
   lock: true,

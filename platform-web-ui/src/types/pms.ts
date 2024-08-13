@@ -217,6 +217,14 @@ export interface IPmsRole extends IBaseEntity {
    * 角色描述
    */
   description: string
+  /**
+   * 数据范围（1：全部数据权限 2：自定数据权限 3：仅本部门数据权限 4：本部门及以下数据权限）
+   */
+  dataScope: number
+  /**
+   * 自定义数据权限
+   */
+  deptIds: number[]
 }
 
 /** 系统部门 */

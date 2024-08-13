@@ -1,5 +1,7 @@
 package com.xaaef.molly.perms.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.vo.UpdateMenusVO;
 import com.xaaef.molly.tenant.base.service.BaseService;
@@ -17,6 +19,19 @@ import java.util.Set;
  */
 
 public interface PmsRoleService extends BaseService<PmsRole> {
+
+    IPage<PmsRole> pageKeywords(SearchPO params);
+
+
+    /**
+     * 已经拥有的部门
+     *
+     * @throws
+     * @author Wang Chen Chen<932560435@qq.com>
+     * @create 2024/8/13 14:49
+     */
+    UpdateMenusVO listHaveDepts(Long roleId);
+
 
     /**
      * 已经拥有的菜单

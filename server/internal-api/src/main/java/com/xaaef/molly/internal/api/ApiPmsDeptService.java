@@ -42,4 +42,16 @@ public interface ApiPmsDeptService {
      */
     Set<PmsDeptDTO> listChildByDeptId(Long deptId);
 
+
+    /**
+     * 获取 全部部门ID
+     */
+    Set<Long> listDeptIdByAll();
+
+
+    /**
+     * 获取 角色关联的部门id
+     */
+    Set<Long> listDeptIdByRuleId(Set<Long> ruleIds);
+
 }

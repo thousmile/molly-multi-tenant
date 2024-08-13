@@ -1,8 +1,8 @@
 import store from "@/store"
-import { defineStore } from "pinia"
-import { type Ref, ref, watch } from "vue"
-import { type LayoutSettings, layoutSettings } from "@/config/layouts"
-import { setConfigLayout, getControlSize, setControlSize } from "@/utils/cache/local-storage"
+import {defineStore} from "pinia"
+import {type Ref, ref, watch} from "vue"
+import {type LayoutSettings, layoutSettings} from "@/config/layouts"
+import {getControlSize, setConfigLayout, setControlSize} from "@/utils/cache/local-storage"
 
 type SettingsStore = {
   // 使用映射类型来遍历 layoutSettings 对象的键

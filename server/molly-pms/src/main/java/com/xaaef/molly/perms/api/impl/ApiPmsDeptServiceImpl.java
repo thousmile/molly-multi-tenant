@@ -1,9 +1,11 @@
 package com.xaaef.molly.perms.api.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xaaef.molly.common.domain.LinkedTarget;
 import com.xaaef.molly.internal.api.ApiPmsDeptService;
 import com.xaaef.molly.internal.dto.PmsDeptDTO;
 import com.xaaef.molly.perms.entity.PmsDept;
+import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import com.xaaef.molly.perms.service.PmsDeptService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,8 @@ import java.util.stream.Collectors;
 public class ApiPmsDeptServiceImpl implements ApiPmsDeptService {
 
     private final PmsDeptService deptService;
+
+    private final PmsRoleMapper roleMapper;
 
     @Override
     public Map<Long, PmsDeptDTO> mapByDeptIds(Set<Long> deptIds) {
@@ -84,5 +88,26 @@ public class ApiPmsDeptServiceImpl implements ApiPmsDeptService {
                 })
                 .collect(Collectors.toSet());
     }
+
+
+    @Override
+    public Set<Long> listDeptIdByAll() {
+        var wrapper = new LambdaQueryWrapper<PmsDept>()
+                .select(List.of(PmsDept::getDeptId));
+        return deptService.list(wrapper)
+                .stream()
+                .map(PmsDept::getDeptId)
+                .collect(Collectors.toSet());
+    }
+
+
+    @Override
+    public Set<Long> listDeptIdByRuleId(Set<Long> ruleIds) {
+        return roleMapper.selectDeptIdByRoleIds(ruleIds)
+                .stream()
+                .map(LinkedTarget::getTargetId)
+                .collect(Collectors.toSet());
+    }
+
 
 }

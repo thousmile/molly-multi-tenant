@@ -64,4 +64,16 @@ public interface PmsDeptService extends BaseService<PmsDept> {
      */
     List<PmsDept> listDeptFullName(Set<Long> deptIds);
 
+
+    /**
+     * 根据 用户id 查询 部门列表
+     */
+    List<PmsDept> listChildDeptByUserId(Long userId);
+
+
+    /**
+     * 根据 用户id 查询 部门id列表
+     */
+    Set<Long> listChildDeptIdByUserId(Long userId);
+
 }

@@ -1,5 +1,6 @@
 package com.xaaef.molly.perms.api.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.xaaef.molly.internal.api.ApiPmsRoleService;
 import com.xaaef.molly.internal.dto.PmsRoleDTO;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;
@@ -32,11 +33,8 @@ public class ApiPmsRoleServiceImpl implements ApiPmsRoleService {
     public Set<PmsRoleDTO> listByUserId(Long userId) {
         return roleMapper.selectListByUserIds(Set.of(userId))
                 .stream()
-                .map(r -> new PmsRoleDTO()
-                        .setRoleId(r.getRoleId())
-                        .setRoleName(r.getRoleName())
-                        .setDescription(r.getDescription())
-                ).collect(Collectors.toSet());
+                .map(source -> BeanUtil.copyProperties(source, PmsRoleDTO.class))
+                .collect(Collectors.toSet());
     }
 
 

@@ -1,8 +1,8 @@
-import { computed, ref } from "vue"
+import {computed, ref} from "vue"
 import store from "@/store"
-import { defineStore } from "pinia"
-import { mapKeysApi } from "@/api/dict"
-import { IMapDictData } from "@/types/dict"
+import {defineStore} from "pinia"
+import {mapKeysApi} from "@/api/dict"
+import {IMapDictData} from "@/types/dict"
 
 export const useDictStore = defineStore("dict", () => {
   // 字典 map

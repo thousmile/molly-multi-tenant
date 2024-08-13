@@ -21,13 +21,8 @@
           <el-table-column prop="name" label="名称" />
           <el-table-column prop="description" label="描述">
             <template #default="scope">
-              <el-popover
-                placement="top-start"
-                :width="300"
-                trigger="hover"
-                v-if="scope.row.description"
-                :content="scope.row.description"
-              >
+              <el-popover placement="top-start" :width="300" trigger="hover" v-if="scope.row.description"
+                :content="scope.row.description">
                 <template #reference>
                   <el-link> {{ showStringOverflow(scope.row.description) }}</el-link>
                 </template>
@@ -57,39 +52,22 @@
       </div>
 
       <div class="pager-wrapper">
-        <el-pagination
-          v-model:current-page="params.pageIndex"
-          :page-size="params.pageSize"
-          :background="true"
-          layout="sizes, total, prev, pager, next, jumper"
-          :total="params.pageTotal"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
+        <el-pagination v-model:current-page="params.pageIndex" :page-size="params.pageSize" :background="true"
+          layout="sizes, total, prev, pager, next, jumper" :total="params.pageTotal" @size-change="handleSizeChange"
+          @current-change="handleCurrentChange" />
       </div>
     </el-card>
 
     <!-- 新增和修改的弹窗 -->
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="30%" :close-on-click-modal="false">
-      <el-form
-        ref="entityFormRef"
-        :model="entityForm"
-        :rules="entityFormRules"
-        label-position="right"
-        label-width="80px"
-      >
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="50%" :close-on-click-modal="false">
+      <el-form ref="entityFormRef" :model="entityForm" :rules="entityFormRules" label-position="right"
+        label-width="80px">
         <el-form-item prop="name" label="名称">
           <el-input v-model.trim="entityForm.name" placeholder="名称" type="text" tabindex="1" />
         </el-form-item>
         <el-form-item prop="description" label="描述">
-          <el-input
-            v-model="entityForm.description"
-            placeholder="描述"
-            :rows="5"
-            :maxlength="100"
-            type="textarea"
-            tabindex="3"
-          />
+          <el-input v-model="entityForm.description" placeholder="描述" :rows="5" :maxlength="100" type="textarea"
+            tabindex="3" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -101,36 +79,8 @@
     </el-dialog>
 
     <!-- 修改权限 -->
-    <el-dialog v-model="menusDialogVisible" :title="menusDialogTitle" width="30%" :close-on-click-modal="false">
-      <el-row :gutter="20">
-        <el-col :span="14">
-          <el-input v-model="filterMenuText" clearable placeholder="根据菜单名称筛选" />
-        </el-col>
-        <el-col :span="5">
-          <el-button type="success" :icon="Sort" @click="switchExpandAndCollapse">{{
-            expandAndCollapse ? "折叠" : "展开"
-          }}</el-button>
-        </el-col>
-        <el-col :span="5">
-          <el-button type="success" :icon="checkAll ? 'CloseBold' : 'Select'" @click="switchCheckAll">{{
-            checkAll ? "取消" : "全选"
-          }}</el-button>
-        </el-col>
-      </el-row>
-      <br />
-      <div :style="{ height: '400px', overflowY: 'scroll' }">
-        <el-tree
-          ref="treeRef"
-          :data="menusData?.all"
-          :check-strictly="true"
-          :default-expand-all="expandAndCollapse"
-          :filter-node-method="filterNode"
-          show-checkbox
-          node-key="id"
-          highlight-current
-          :props="{ children: 'children', label: 'name' }"
-        />
-      </div>
+    <el-dialog v-model="menusDialogVisible" :title="menusDialogTitle" width="50%" :close-on-click-modal="false">
+      <custom-tree v-if="menusData" :data="menusData.all" ref="menusRef" />
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="menusDialogVisible = false">取消</el-button>
@@ -142,8 +92,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch } from "vue"
-import { Plus, Edit, Delete, Search, EditPen, Sort } from "@element-plus/icons-vue"
+import { ref, reactive, onMounted } from "vue"
+import { Plus, Edit, Delete, Search, EditPen } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox, FormInstance, FormRules, ElTree } from "element-plus"
 import {
   queryTemplateApi,
@@ -155,8 +105,9 @@ import {
 } from "@/api/template"
 import { cloneDeep } from "lodash-es"
 import { ISysTemplate } from "@/types/sys"
-import { ISimpleMenu, IUpdateMenus } from "@/types/base"
+import { IUpdateMenus } from "@/types/base"
 import { showStringOverflow } from "@/hooks/useIndex"
+import CustomTree from "@/components/CustomTree/index.vue"
 
 /** 加载 */
 const loading = ref(false)
@@ -174,58 +125,8 @@ const menusDialogVisible = ref(false)
 
 const menusDialogTitle = ref("")
 
-const filterMenuText = ref("")
-
+const menusRef = ref<any>()
 const menusData = ref<IUpdateMenus>()
-
-const treeRef = ref<InstanceType<typeof ElTree>>()
-
-const expandAndCollapse = ref(true)
-
-const checkAll = ref(true)
-
-// 获取 全部菜单ID
-const getMenuIdAll = () => {
-  const result: number[] = []
-  const deep = (arr1: ISimpleMenu[], arr2: number[]) => {
-    arr1.forEach((item: ISimpleMenu) => {
-      arr2.push(item.id)
-      if (item.children && item.children.length > 0) {
-        deep(item.children, arr2)
-      }
-    })
-  }
-  deep(menusData.value!.all, result)
-  return result
-}
-
-// 展开和折叠
-const switchExpandAndCollapse = () => {
-  expandAndCollapse.value = !expandAndCollapse.value
-  menusData.value!.all.forEach((data) => {
-    treeRef.value!.store.nodesMap[data.id].expanded = expandAndCollapse.value
-  })
-}
-
-// 全选和取消全选
-const switchCheckAll = () => {
-  checkAll.value = !checkAll.value
-  if (checkAll.value) {
-    const result: number[] = getMenuIdAll()
-    treeRef.value!.setCheckedKeys(result, false)
-  } else {
-    treeRef.value!.setCheckedKeys([], false)
-  }
-}
-
-watch(filterMenuText, (val) => {
-  treeRef.value!.filter(val)
-})
-
-const filterNode = (value: string, data: any) => {
-  if (!value) return true
-  return data.name.includes(value)
-}
 
 const params = reactive({
   pageTotal: 0,
@@ -304,21 +205,15 @@ const handleEditMenu = (data: ISysTemplate) => {
       console.log("err :>> ", err)
     })
     .finally(() => {
-      const have: number[] = menusData.value!.have
-      if (have.length > 0) {
-        checkAll.value = true
-      } else {
-        checkAll.value = false
-      }
-      treeRef.value!.setCheckedKeys(have, false)
-      expandAndCollapse.value = true
+      // 调用子组件的方法，重新渲染 tree
+      menusRef.value!.setCheckedKeys(menusData.value!.have)
       loading.value = false
     })
 }
 
 // 修改权限
 const handleUpdateMenus = () => {
-  const menuIds: number[] = treeRef.value!.getCheckedKeys(false) as number[]
+  const menuIds: number[] = menusRef.value!.getCheckedKeys()
   if (menuIds && menuIds.length < 1) {
     ElMessage({
       message: "至少选择一个权限",

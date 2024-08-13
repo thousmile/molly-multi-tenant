@@ -18,6 +18,10 @@
             <column name="sort" remarks="排序" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="data_scope" type="tinyint" defaultValue="4"
+                    remarks="数据范围（1：全部数据权限 2：自定数据权限 3：仅本部门数据权限 4：本部门及以下数据权限）">
+                <constraints nullable="false"/>
+            </column>
             <column name="description" remarks="部门描述" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -50,6 +54,18 @@
         </createTable>
     </changeSet>
 
+
+    <!-- [ 权限 ] 角色和部门表 -->
+    <changeSet context="tenant" author="WangChenChen (generated)" id="1699414131175-3">
+        <createTable remarks="[ 权限 ] 角色和部门表" tableName="pms_role_dept">
+            <column name="role_id" remarks="角色ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dept_id" remarks="部门ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 
     <!--[ 权限 ] 部门表-->
     <changeSet context="tenant" author="WangChenChen (generated)" id="1699414139574-1">

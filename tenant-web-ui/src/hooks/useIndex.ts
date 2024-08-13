@@ -1,5 +1,5 @@
-import { computed } from "vue"
-import { chinaAreaDeepQuery, expiredDateAgo, timeAgo } from "@/utils"
+import {computed} from "vue"
+import {chinaAreaDeepQuery, expiredDateAgo, timeAgo} from "@/utils"
 
 // 以前的时间
 const showTimeAgo = computed(() => {

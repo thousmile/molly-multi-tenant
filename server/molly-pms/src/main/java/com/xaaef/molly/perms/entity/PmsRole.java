@@ -1,6 +1,7 @@
 package com.xaaef.molly.perms.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.common.valid.ValidCreate;
@@ -11,6 +12,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
+
+import java.util.Set;
 
 /**
  * <p>
@@ -60,5 +63,19 @@ public class PmsRole extends BaseEntity {
     @Schema(description = "角色描述")
     @NotBlank(message = "角色描述,必须填写", groups = {ValidCreate.class})
     private String description;
+
+    /**
+     * 数据范围（1：全部数据权限 2：自定数据权限 3：仅本部门数据权限 4：本部门及以下数据权限）
+     */
+    @Schema(description = "数据范围", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "数据范围,必须填写", groups = {ValidCreate.class})
+    private Integer dataScope;
+
+    /**
+     * 自定义数据权限
+     */
+    @Schema(description = "自定义数据权限")
+    @TableField(exist = false)
+    private Set<Long> deptIds;
 
 }

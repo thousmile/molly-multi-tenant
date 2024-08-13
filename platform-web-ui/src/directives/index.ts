@@ -1,6 +1,5 @@
-import { type App } from "vue"
-import { type Directive } from "vue"
-import { useUserStoreHook } from "@/store/modules/user"
+import {type App, type Directive} from "vue"
+import {useUserStoreHook} from "@/store/modules/user"
 
 /** 挂载自定义指令 */
 export function loadDirectives(app: App) {

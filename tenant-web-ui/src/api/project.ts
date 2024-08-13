@@ -1,6 +1,6 @@
-import { ISearchQuery, ISimpleProject } from "@/types/base"
-import { ICmsProject } from "@/types/cms"
-import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
+import {ISearchQuery, ISimpleProject} from "@/types/base"
+import {ICmsProject} from "@/types/cms"
+import {httpDelete, httpGet, httpPost, httpPut} from "@/utils/service"
 
 /** 根据Id查询 */
 export const getProjectApi = (id: number) => {

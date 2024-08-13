@@ -12,6 +12,7 @@ import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.auth.service.LineCaptchaService;
 import com.xaaef.molly.auth.service.RsaAsymmetricCryptoService;
 import com.xaaef.molly.auth.service.UserLoginService;
+import com.xaaef.molly.common.consts.DataScopeConst;
 import com.xaaef.molly.common.domain.CustomRequestInfo;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.StatusEnum;
@@ -62,6 +63,8 @@ public class UserLoginServiceImpl implements UserLoginService {
     public final LineCaptchaService captchaService;
 
     private final ApiPmsRoleService roleService;
+
+    private final ApiPmsDeptService deptService;
 
     private final ApiSysMenuService menuService;
 
@@ -197,6 +200,11 @@ public class UserLoginServiceImpl implements UserLoginService {
             return;
         }
         target.setRoles(roles);
+
+        // 根据角色，获取部门权限
+        var deptIds = listDeptIdByRoles(target);
+        target.setHaveDeptIds(deptIds);
+
         // 判断当前 登录的用户，是不是管理员
         // 系统管理员。那么就获取所有除了租户的菜单。
         // 租户管理员。根据租户关联的模板，获取所有的菜单
@@ -219,6 +227,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
         // 非管理员。就获取，角色关联的权限
         var roleIds = roles.stream().map(PmsRoleDTO::getRoleId).collect(Collectors.toSet());
+
         // 再根据，角色 获取关联的菜单ID
         var menuIds = roleService.listMenuIdByRoleIds(roleIds);
         if (!menuIds.isEmpty()) {
@@ -228,6 +237,46 @@ public class UserLoginServiceImpl implements UserLoginService {
                     .collect(Collectors.toSet());
             target.setAuthorities(authorities);
         }
+    }
+
+
+    public Set<Long> listDeptIdByRoles(JwtLoginUser target) {
+        if (target.getUserType() == UserType.SYSTEM || target.getAdminFlag() == AdminFlag.YES) {
+            return deptService.listDeptIdByAll();
+        }
+        if (target.getRoles().isEmpty()) {
+            return Set.of();
+        }
+        // 角色列表中是否包含 1.全部数据权限
+        var isAll = target.getRoles().stream().anyMatch(a -> Objects.equals(a.getDataScope(), DataScopeConst.All));
+        if (isAll) {
+            return deptService.listDeptIdByAll();
+        }
+
+        var depsIds = new HashSet<Long>();
+        // 角色列表中是否包含 2.自定数据权限
+        var roleIds = target.getRoles().stream()
+                .filter(a -> Objects.equals(a.getDataScope(), DataScopeConst.CUSTOM))
+                .map(PmsRoleDTO::getRoleId).collect(Collectors.toSet());
+        if (!roleIds.isEmpty()) {
+            var v1 = deptService.listDeptIdByRuleId(roleIds);
+            depsIds.addAll(v1);
+        }
+
+        // 角色列表中是否包含 3.仅本部门数据权限
+        var isOnlyMe = target.getRoles().stream().anyMatch(a -> Objects.equals(a.getDataScope(), DataScopeConst.ONLY_ME));
+        if (isOnlyMe) {
+            depsIds.add(target.getDeptId());
+        }
+
+        // 角色列表中是否包含 4：本部门及以下数据权限
+        var isMeAndChild = target.getRoles().stream().anyMatch(a -> Objects.equals(a.getDataScope(), DataScopeConst.ME_AND_CHILD));
+        if (isMeAndChild) {
+            var v1 = deptService.listChildIdByDeptId(target.getDeptId());
+            depsIds.addAll(v1);
+        }
+
+        return depsIds;
     }
 
 

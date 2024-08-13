@@ -1,14 +1,22 @@
 package com.xaaef.molly.perms.service.impl;
 
-import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.xaaef.molly.common.consts.DataScopeConst;
+import com.xaaef.molly.common.domain.LinkedTarget;
 import com.xaaef.molly.common.exception.BizException;
+import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiSysMenuService;
 import com.xaaef.molly.internal.dto.SysMenuDTO;
+import com.xaaef.molly.perms.entity.PmsDept;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.entity.PmsRoleProxy;
+import com.xaaef.molly.perms.mapper.PmsDeptMapper;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;
 import com.xaaef.molly.perms.service.PmsRoleService;
 import com.xaaef.molly.perms.vo.UpdateMenusVO;
@@ -41,18 +49,87 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
 
     private final ApiSysMenuService menuService;
 
+    private final PmsDeptMapper deptMapper;
+
     private final MultiTenantManager tenantManager;
 
 
     @Override
-    public UpdateMenusVO listHaveMenus(Long roleId) {
-        PmsRole dbRole = getById(roleId);
-        if (dbRole == null) {
-            throw new BizException(String.format("角色ID %d 不存在！", roleId));
-        }
-        // 当前角色，已经拥有的菜单ID
-        var haveHashSet = baseMapper.selectMenuIdByRoleId(roleId);
+    public IPage<PmsRole> pageKeywords(SearchPO params) {
+        var result = super.pageKeywords(
+                params, List.of(PmsRole::getRoleName, PmsRole::getDescription)
+        );
+        includeDept(result.getRecords());
+        return result;
+    }
 
+
+    @Override
+    public UpdateMenusVO listHaveDepts(Long roleId) {
+        var result = new UpdateMenusVO()
+                .setAll(new ArrayList<>())
+                .setHave(new HashSet<>());
+        var w1 = new LambdaQueryWrapper<PmsDept>()
+                .select(List.of(PmsDept::getDeptId, PmsDept::getDeptName,
+                        PmsDept::getParentId, PmsDept::getSort));
+        final var deptList = deptMapper.selectList(w1);
+        if (!deptList.isEmpty()) {
+            // 获取全部的菜单
+            var all = deptList.stream()
+                    .map(r -> new TreeNode<>(
+                            r.getDeptId(), r.getParentId(),
+                            r.getDeptName(), r.getSort())
+                    )
+                    .collect(Collectors.toList());
+            result.setAll(TreeUtil.build(all, 0L));
+        }
+        if (roleId > 0) {
+            final var haveList = baseMapper.selectDeptIdByRoleIds(Set.of(roleId));
+            if (!haveList.isEmpty()) {
+                var haveDeptIds = haveList.stream().map(LinkedTarget::getTargetId).collect(Collectors.toSet());
+                result.setHave(haveDeptIds);
+            }
+        }
+        return result;
+    }
+
+
+    private void includeDept(Collection<PmsRole> list) {
+        if (CollectionUtil.isNotEmpty(list)) {
+            var roleIds = list
+                    .stream()
+                    .filter(r -> Objects.equals(r.getDataScope(), DataScopeConst.CUSTOM))
+                    .map(PmsRole::getRoleId)
+                    .collect(Collectors.toSet());
+            if (!roleIds.isEmpty()) {
+                var deptMaps = baseMapper.selectDeptIdByRoleIds(roleIds)
+                        .stream()
+                        .collect(
+                                Collectors.groupingBy(
+                                        LinkedTarget::getSourceId,
+                                        Collectors.mapping(LinkedTarget::getTargetId, Collectors.toSet()
+                                        )
+                                )
+                        );
+                list.forEach(r -> {
+                    var deptIds = deptMaps.getOrDefault(r.getRoleId(), new HashSet<>());
+                    r.setDeptIds(deptIds);
+                });
+            }
+        }
+    }
+
+
+    @Override
+    public UpdateMenusVO listHaveMenus(Long roleId) {
+        var result = new UpdateMenusVO()
+                .setAll(new ArrayList<>())
+                .setHave(new HashSet<>());
+        if (roleId > 0) {
+            // 当前角色，已经拥有的菜单ID
+            var haveHashSet = baseMapper.selectMenuIdByRoleId(roleId);
+            result.setHave(haveHashSet);
+        }
         Set<SysMenuDTO> menus = null;
 
         // 判断当前是否为，默认租户
@@ -66,7 +143,6 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
             menus = menuService.listMenuByNonTenant();
         }
 
-        List<Tree<Long>> roots = new ArrayList<>();
         if (!menus.isEmpty()) {
             // 获取全部的菜单
             var all = menus.stream()
@@ -75,9 +151,10 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
                             r.getMenuName(), r.getSort())
                     )
                     .collect(Collectors.toList());
-            roots.addAll(TreeUtil.build(all, 0L));
+            result.setAll(TreeUtil.build(all, 0L));
         }
-        return UpdateMenusVO.builder().have(haveHashSet).all(roots).build();
+
+        return result;
     }
 
 
@@ -103,9 +180,7 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
         var longSetMap = new HashMap<Long, Set<PmsRole>>();
         collect.forEach((key, values) -> {
             var roles = values.stream()
-                    .map(r -> new PmsRole(
-                            r.getRoleId(), r.getRoleName(), null, r.getDescription())
-                    )
+                    .map(source -> BeanUtil.copyProperties(source, PmsRole.class))
                     .collect(Collectors.toSet());
             longSetMap.put(key, roles);
         });
@@ -122,7 +197,41 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
         }
         // 删除当前角色，关联的权限
         baseMapper.deleteHaveMenus(roleId);
+        // 删除当前角色，关联的部门权限
+        baseMapper.deleteHaveDepts(roleId);
         return super.removeById(id);
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean save(PmsRole entity) {
+        if (entity.getDataScope() == 2) {
+            if (CollectionUtil.isEmpty(entity.getDeptIds())) {
+                throw new RuntimeException("自定义数据权限，最少需要选择一个部门");
+            }
+            var b1 = super.save(entity);
+            var b2 = baseMapper.insertByDepts(entity.getRoleId(), entity.getDeptIds()) > 0;
+            return b1 && b2;
+        }
+        return super.save(entity);
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean updateById(PmsRole entity) {
+        if (entity.getDataScope() == 2) {
+            if (CollectionUtil.isEmpty(entity.getDeptIds())) {
+                throw new RuntimeException("自定义数据权限，最少需要选择一个部门");
+            }
+            baseMapper.deleteHaveDepts(entity.getRoleId());
+            var b1 = super.updateById(entity);
+            var b2 = baseMapper.insertByDepts(entity.getRoleId(), entity.getDeptIds()) > 0;
+            return b1 && b2;
+        }
+        baseMapper.deleteHaveDepts(entity.getRoleId());
+        return super.updateById(entity);
     }
 
 

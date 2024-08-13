@@ -71,7 +71,7 @@ export interface IOperateUserEntity {
 }
 
 // 简单菜单
-export interface ISimpleMenu {
+export interface ITreeNode {
   /** 菜单ID */
   id: number
   /** 菜单名称 */
@@ -81,7 +81,7 @@ export interface ISimpleMenu {
   /** 排序 */
   weight: number
   /** 子菜单 */
-  children: ISimpleMenu[]
+  children: ITreeNode[]
 }
 
 // 修改菜单
@@ -89,7 +89,7 @@ export interface IUpdateMenus {
   /** 拥有的菜单ID */
   have: number[]
   /** 全部的菜单 */
-  all: ISimpleMenu[]
+  all: ITreeNode[]
 }
 
 // 推送消息

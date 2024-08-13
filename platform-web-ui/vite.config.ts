@@ -1,12 +1,12 @@
 /// <reference types="vitest" />
 
-import { type ConfigEnv, type UserConfigExport, loadEnv } from "vite"
+import {type ConfigEnv, loadEnv, type UserConfigExport} from "vite"
 import UnoCSS from "unocss/vite"
-import path, { resolve } from "path"
+import path, {resolve} from "path"
 import vue from "@vitejs/plugin-vue"
 import svgLoader from "vite-svg-loader"
 import vueJsx from "@vitejs/plugin-vue-jsx"
-import { createSvgIconsPlugin } from "vite-plugin-svg-icons"
+import {createSvgIconsPlugin} from "vite-plugin-svg-icons"
 
 /** 配置项文档：https://cn.vitejs.dev/config */
 export default (configEnv: ConfigEnv): UserConfigExport => {

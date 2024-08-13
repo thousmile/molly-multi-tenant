@@ -1,6 +1,6 @@
-import { ISearchQuery, ISimpleTenant } from "@/types/base"
-import { ISysTenant, ICreateTenant, ICreateTenantAdmin } from "@/types/sys"
-import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
+import {ISearchQuery, ISimpleTenant} from "@/types/base"
+import {ICreateTenant, ICreateTenantAdmin, ISysTenant} from "@/types/sys"
+import {httpDelete, httpGet, httpPost, httpPut} from "@/utils/service"
 
 // 简单查询
 export const simpleQueryTenantApi = (params: ISearchQuery) => {

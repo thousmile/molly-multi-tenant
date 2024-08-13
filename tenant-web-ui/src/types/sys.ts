@@ -1,4 +1,4 @@
-import { IBaseEntity } from "./base"
+import {IBaseEntity} from "./base"
 
 /** 租户模板 */
 export interface ISysTemplate extends IBaseEntity {

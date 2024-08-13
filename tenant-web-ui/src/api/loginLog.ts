@@ -1,6 +1,6 @@
-import { ISearchQuery } from "@/types/base"
-import { ILoginLog, IOperLog } from "@/types/lms"
-import { httpPost, httpGet } from "@/utils/service"
+import {ISearchQuery} from "@/types/base"
+import {ILoginLog, IOperLog} from "@/types/lms"
+import {httpGet, httpPost} from "@/utils/service"
 
 /** 根据Id查询 */
 export const getLoginLogApi = (id: String) => {

@@ -1,15 +1,15 @@
 /** 统一处理 localStorage */
 
 import CacheKey from "@/constants/cache-key"
-import { type SidebarOpened, type SidebarClosed } from "@/constants/app-key"
-import { type ThemeName } from "@/hooks/useTheme"
-import { type TagView } from "@/store/modules/tags-view"
-import { type LayoutSettings } from "@/config/layouts"
-import { ILoginData } from "@/types/pms"
-import { encode, decode } from "js-base64"
-import { ISimpleProject } from "@/types/base"
-import { defaultProject, hashCode } from ".."
-import { isJSON } from "../validate"
+import {type SidebarClosed, type SidebarOpened} from "@/constants/app-key"
+import {type ThemeName} from "@/hooks/useTheme"
+import {type TagView} from "@/store/modules/tags-view"
+import {type LayoutSettings} from "@/config/layouts"
+import {ILoginData} from "@/types/pms"
+import {decode, encode} from "js-base64"
+import {ISimpleProject} from "@/types/base"
+import {defaultProject, hashCode} from ".."
+import {isJSON} from "../validate"
 
 //#region token
 export const getToken = () => {

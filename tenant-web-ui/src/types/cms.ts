@@ -1,5 +1,5 @@
-import { IBaseEntity } from "./base"
-import { IPmsDept } from "./pms"
+import {IBaseEntity} from "./base"
+import {IPmsDept} from "./pms"
 
 /** 项目 */
 export interface ICmsProject extends IBaseEntity {

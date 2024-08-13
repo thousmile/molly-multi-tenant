@@ -1,9 +1,9 @@
 import store from "@/store"
-import { defineStore } from "pinia"
-import { ref } from "vue"
-import { ISimpleTenant } from "@/types/base"
-import { useUserStoreHook } from "./user"
-import { getSimpleTenantApi } from "@/api/tenant"
+import {defineStore} from "pinia"
+import {ref} from "vue"
+import {ISimpleTenant} from "@/types/base"
+import {useUserStoreHook} from "./user"
+import {getSimpleTenantApi} from "@/api/tenant"
 
 export const useTenantStore = defineStore("tenant", () => {
   // 当前租户

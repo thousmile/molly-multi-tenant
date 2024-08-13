@@ -1,5 +1,5 @@
-import { type Ref, onBeforeUnmount, ref } from "vue"
-import { debounce } from "lodash-es"
+import {onBeforeUnmount, type Ref, ref} from "vue"
+import {debounce} from "lodash-es"
 
 type Observer = {
   watermarkElMutationObserver?: MutationObserver

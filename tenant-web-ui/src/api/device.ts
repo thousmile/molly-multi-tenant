@@ -1,6 +1,6 @@
-import { ISearchQuery } from "@/types/base"
-import { ICmsDevice } from "@/types/cms"
-import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
+import {ISearchQuery} from "@/types/base"
+import {ICmsDevice} from "@/types/cms"
+import {httpDelete, httpGet, httpPost, httpPut} from "@/utils/service"
 
 /** 根据Id查询 */
 export const getDeviceApi = (id: number) => {

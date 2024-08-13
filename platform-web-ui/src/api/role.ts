@@ -1,6 +1,6 @@
-import { ISearchQuery, IUpdateMenus } from "@/types/base"
-import { IPmsRole } from "@/types/pms"
-import { httpDelete, httpGet, httpPost, httpPut } from "@/utils/service"
+import {ISearchQuery, IUpdateMenus} from "@/types/base"
+import {IPmsRole} from "@/types/pms"
+import {httpDelete, httpGet, httpPost, httpPut} from "@/utils/service"
 
 /** 根据Id查询 */
 export const getRoleApi = (id: number) => {
@@ -40,4 +40,9 @@ export const getRoleMenusApi = (data: number) => {
 /** 修改拥有的权限 */
 export const updateRoleMenusApi = (data: any) => {
   return httpPost<any, IJsonResult<Boolean>>("/pms/role/menus", data)
+}
+
+/** 拥有的部门 */
+export const getRoleDeptsApi = (data: number) => {
+  return httpGet<ISearchQuery, IJsonResult<IUpdateMenus>>(`/pms/role/depts/${data}`)
 }
