@@ -56,9 +56,7 @@ public class PmsRoleController {
     @Operation(summary = "分页", description = "分页 查询所有")
     @GetMapping("/query")
     public JsonResult<Pagination<PmsRole>> pageQuery(SearchPO params) {
-        var page = baseService.pageKeywords(
-                params, List.of(PmsRole::getRoleName, PmsRole::getDescription)
-        );
+        var page = baseService.pageKeywords(params);
         return JsonResult.success(page.getTotal(), page.getRecords());
     }
 

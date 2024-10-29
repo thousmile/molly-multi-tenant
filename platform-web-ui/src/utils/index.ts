@@ -173,13 +173,14 @@ export const chinaAreaDeepQuery = (areaCode: number) => {
 }
 
 /** 将权限树形结构扁平化为一维数组，用于权限查询 */
-export const flatTreeToCascaderOption = (arr: any[], {value = "id", label = "label", children = "children"}) => {
+export const flatTreeToCascaderOption = (arr: any[], { value = "id", label = "label", disabled = "disabled", children = "children" }) => {
   const result: CascaderOption[] = []
   const deep = (arr1: any[], arr2: CascaderOption[]) => {
     arr1.forEach((item: any) => {
       const temp: CascaderOption = {
         value: item[value],
-        label: item[label]
+        label: item[label],
+        disabled: item[disabled]
       }
       arr2.push(temp)
       if (item[children] && item[children].length > 0) {

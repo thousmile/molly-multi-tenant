@@ -51,31 +51,57 @@ public class PmsDeptServiceImpl extends BaseServiceImpl<PmsDeptMapper, PmsDept> 
     private final ApiCmsProjectService projectService;
 
     @Override
-    public IPage<PmsDept> pageKeywords(SearchParentPO po) {
-        var wrapper = super.getKeywordsQueryWrapper(
-                po,
-                List.of(
-                        PmsDept::getDeptName, PmsDept::getDescription,
-                        PmsDept::getLeader, PmsDept::getLeaderMobile
-                )
-        );
-        if (po.getParentId() != null) {
-            wrapper.lambda().eq(PmsDept::getParentId, po.getParentId());
+    public IPage<PmsDept> pageKeywords(SearchParentPO params) {
+        var dept = new PmsDept();
+        if (StrUtil.isNotBlank(params.getKeywords())) {
+            dept.setDeptName(params.getKeywords());
         }
-        Page<PmsDept> pageRequest = Page.of(po.getPageIndex(), po.getPageSize());
-        return super.page(pageRequest, wrapper);
+        if (params.getParentId() != null && params.getParentId() > 0) {
+            dept.setParentId(params.getParentId());
+        }
+        Page<PmsDept> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
+        var result = baseMapper.selectDeptPage(pageRequest, dept);
+        if (params.isIncludeCauu()) {
+            reflectionFill(result.getRecords());
+        }
+        return result;
     }
 
 
     @Override
     public List<Tree<Long>> treeNode() {
-        var nodeList = this.list().stream().map(r -> {
-            var node = new TreeNode<>(r.getDeptId(), r.getParentId(), r.getDeptName(), r.getSort());
-            var targetMap = new HashMap<String, Object>();
-            BeanUtil.beanToMap(r, targetMap, CopyOptions.create().setIgnoreNullValue(true));
-            node.setExtra(targetMap);
-            return node;
-        }).collect(Collectors.toList());
+        final var deptList = baseMapper.selectDeptList(new PmsDept());
+        // 获取 部门的 所有祖籍节点
+        var ancestors = deptList.stream()
+                .filter(a -> StrUtil.isNotBlank(a.getAncestors()))
+                .map(a -> a.getAncestors().split(StrUtil.COMMA))
+                .flatMap(Stream::of)
+                .filter(StrUtil::isNotBlank)
+                .map(Long::parseLong)
+                .filter(a -> a > 0)
+                .collect(Collectors.toSet());
+        // 移除已经存在的节点
+        if (!ancestors.isEmpty()) {
+            var c1 = deptList.stream().map(PmsDept::getDeptId).collect(Collectors.toSet());
+            ancestors.removeAll(c1);
+        }
+        var disableMaps = new HashMap<Long, Boolean>();
+        if (!ancestors.isEmpty()) {
+            this.listByIds(ancestors)
+                    .forEach(d -> {
+                        disableMaps.put(d.getDeptId(), true);
+                        deptList.add(d);
+                    });
+        }
+        var nodeList = deptList.stream()
+                .map(r -> {
+                    var node = new TreeNode<>(r.getDeptId(), r.getParentId(), r.getDeptName(), r.getSort());
+                    var targetMap = new HashMap<String, Object>();
+                    BeanUtil.beanToMap(r, targetMap, CopyOptions.create().setIgnoreNullValue(true));
+                    targetMap.put("disabled", disableMaps.getOrDefault(r.getDeptId(), false));
+                    node.setExtra(targetMap);
+                    return node;
+                }).collect(Collectors.toList());
         return TreeUtil.build(nodeList, 0L);
     }
 

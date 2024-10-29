@@ -38,7 +38,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- graalvm native-maven-plugin -->
-        <native-maven.version>0.9.28</native-maven.version>
+        <native-maven.version>0.10.3</native-maven.version>
         <!-- 优化的雪花算法（雪花漂移），它生成的ID更短、速度更快 -->
         <idgenerator.version>1.0.6</idgenerator.version>
         <!-- x-file-storage文件上传 文档地址 https://x-file-storage.xuyanwu.cn -->
@@ -54,13 +54,13 @@
         <!-- Excel文件操作 -->
         <apache-poi.version>5.3.0</apache-poi.version>
         <!-- 小而美的工具库 -->
-        <hutool.version>5.8.28</hutool.version>
+        <hutool.version>5.8.32</hutool.version>
         <!-- 简单、方便的OpenAPI接口文档 -->
         <knife4j.version>4.5.0</knife4j.version>
         <!-- MyBatis 的增强工具，基友搭配，效率翻倍 -->
-        <mybatis-plus.version>3.5.7</mybatis-plus.version>
+        <mybatis-plus.version>3.5.8</mybatis-plus.version>
         <!-- JavaEE 颠覆者 -->
-        <spring-boot.version>3.2.8</spring-boot.version>
+        <spring-boot.version>3.2.11</spring-boot.version>
     </properties>
 
 

@@ -9,7 +9,7 @@ import com.xaaef.molly.common.valid.ValidCreate;
 import com.xaaef.molly.common.valid.ValidDelete;
 import com.xaaef.molly.common.valid.ValidUpdate;
 import com.xaaef.molly.internal.dto.PmsDeptDTO;
-import com.xaaef.molly.tenant.base.BaseEntity;
+import com.xaaef.molly.tenant.base.ParamBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -36,7 +36,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class CmsProject extends BaseEntity {
+public class CmsProject extends ParamBaseEntity {
 
     /**
      * 项目ID

@@ -12,7 +12,6 @@ import com.xaaef.molly.auth.service.JwtTokenService;
 import com.xaaef.molly.auth.service.LineCaptchaService;
 import com.xaaef.molly.auth.service.RsaAsymmetricCryptoService;
 import com.xaaef.molly.auth.service.UserLoginService;
-import com.xaaef.molly.common.consts.DataScopeConst;
 import com.xaaef.molly.common.domain.CustomRequestInfo;
 import com.xaaef.molly.common.enums.AdminFlag;
 import com.xaaef.molly.common.enums.StatusEnum;
@@ -38,6 +37,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.xaaef.molly.common.consts.DataScopeConst.*;
 
 /**
  * <p>
@@ -248,7 +248,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             return Set.of();
         }
         // 角色列表中是否包含 1.全部数据权限
-        var isAll = target.getRoles().stream().anyMatch(a -> Objects.equals(a.getDataScope(), DataScopeConst.All));
+        var isAll = target.getRoles().stream().anyMatch(a -> Objects.equals(a.getDataScope(), DATA_SCOPE_ALL));
         if (isAll) {
             return deptService.listDeptIdByAll();
         }
@@ -256,7 +256,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         var depsIds = new HashSet<Long>();
         // 角色列表中是否包含 2.自定数据权限
         var roleIds = target.getRoles().stream()
-                .filter(a -> Objects.equals(a.getDataScope(), DataScopeConst.CUSTOM))
+                .filter(a -> Objects.equals(a.getDataScope(), DATA_SCOPE_CUSTOM))
                 .map(PmsRoleDTO::getRoleId).collect(Collectors.toSet());
         if (!roleIds.isEmpty()) {
             var v1 = deptService.listDeptIdByRuleId(roleIds);
@@ -264,13 +264,13 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
 
         // 角色列表中是否包含 3.仅本部门数据权限
-        var isOnlyMe = target.getRoles().stream().anyMatch(a -> Objects.equals(a.getDataScope(), DataScopeConst.ONLY_ME));
+        var isOnlyMe = target.getRoles().stream().anyMatch(a -> Objects.equals(a.getDataScope(), DATA_SCOPE_DEPT));
         if (isOnlyMe) {
             depsIds.add(target.getDeptId());
         }
 
         // 角色列表中是否包含 4：本部门及以下数据权限
-        var isMeAndChild = target.getRoles().stream().anyMatch(a -> Objects.equals(a.getDataScope(), DataScopeConst.ME_AND_CHILD));
+        var isMeAndChild = target.getRoles().stream().anyMatch(a -> Objects.equals(a.getDataScope(), DATA_SCOPE_DEPT_AND_CHILD));
         if (isMeAndChild) {
             var v1 = deptService.listChildIdByDeptId(target.getDeptId());
             depsIds.addAll(v1);

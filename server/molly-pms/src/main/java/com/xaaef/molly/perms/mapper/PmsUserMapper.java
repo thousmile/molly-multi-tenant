@@ -1,7 +1,9 @@
 package com.xaaef.molly.perms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.perms.entity.PmsUser;
+import com.xaaef.molly.tenant.ds.DataScope;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,5 +33,21 @@ public interface PmsUserMapper extends BaseMapper<PmsUser> {
     List<PmsUser> selectSimpleListByUserIds(
             @Param("dbNameList") Set<String> dbNameList,
             @Param("userIdList") Set<Long> userIdList);
+
+
+
+    /**
+     * 根据条件列表查询数据
+     */
+    @DataScope()
+    List<PmsUser> selectUserList(@Param("p") PmsUser user);
+
+
+    /**
+     * 根据条件分页查询数据
+     */
+    @DataScope()
+    IPage<PmsUser> selectUserPage(IPage<?> page, @Param("p") PmsUser user);
+
 
 }

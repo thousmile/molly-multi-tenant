@@ -2,12 +2,13 @@ package com.xaaef.molly.perms.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.auth.jwt.JwtLoginUser;
 import com.xaaef.molly.auth.jwt.JwtSecurityUtils;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
 
 import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
 import static com.xaaef.molly.common.consts.ConfigDataConst.DEFAULT_USER_PASSWORD;
+import static com.xaaef.molly.common.consts.MbpConst.CREATE_TIME;
 import static com.xaaef.molly.common.enums.AdminFlag.NO;
 import static com.xaaef.molly.common.enums.MenuTypeEnum.BUTTON;
 import static com.xaaef.molly.common.enums.MenuTypeEnum.MENU;
@@ -87,19 +89,16 @@ public class PmsUserServiceImpl extends BaseServiceImpl<PmsUserMapper, PmsUser> 
 
     @Override
     public IPage<PmsUser> pageKeywords(UserQueryPO params) {
-        var wrapper = super.getKeywordsQueryWrapper(params,
-                List.of(PmsUser::getUsername, PmsUser::getNickname));
-        if (params.getDeptId() != null && params.getDeptId() > 0L) {
-            if (CollectionUtil.contains(getLoginUser().getHaveDeptIds(), params.getDeptId())) {
-                wrapper.lambda().in(PmsUser::getDeptId, params.getDeptId());
-            } else {
-                wrapper.lambda().in(PmsUser::getDeptId, getLoginUser().getHaveDeptIds());
-            }
-        } else {
-            wrapper.lambda().in(PmsUser::getDeptId, getLoginUser().getHaveDeptIds());
+        var userParams = new PmsUser();
+        if (NumberUtil.isValidNumber(params.getDeptId())) {
+            userParams.setDeptId(params.getDeptId());
+        }
+        if (StringUtils.isNotBlank(params.getKeywords())) {
+            userParams.setNickname(params.getKeywords());
         }
         Page<PmsUser> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
-        Page<PmsUser> result = super.page(pageRequest, wrapper);
+        pageRequest.addOrder(OrderItem.desc(CREATE_TIME));
+        IPage<PmsUser> result = baseMapper.selectUserPage(pageRequest, userParams);
         if (params.isIncludeCauu()) {
             reflectionFill(result.getRecords());
         }

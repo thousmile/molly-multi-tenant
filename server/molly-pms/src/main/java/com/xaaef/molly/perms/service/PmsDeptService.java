@@ -24,7 +24,7 @@ public interface PmsDeptService extends BaseService<PmsDept> {
     /**
      * 分页查询
      */
-    IPage<PmsDept> pageKeywords(SearchParentPO po);
+    IPage<PmsDept> pageKeywords(SearchParentPO params);
 
 
     /**

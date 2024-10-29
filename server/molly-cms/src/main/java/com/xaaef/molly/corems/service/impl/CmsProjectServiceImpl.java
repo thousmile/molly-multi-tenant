@@ -1,6 +1,5 @@
 package com.xaaef.molly.corems.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -22,12 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.*;
+import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.encryptPassword;
+import static com.xaaef.molly.auth.jwt.JwtSecurityUtils.matchesPassword;
 import static com.xaaef.molly.common.consts.ConfigDataConst.DEFAULT_PROJECT_PASSWORD;
 import static com.xaaef.molly.common.consts.MbpConst.PROJECT_ID;
 
@@ -56,19 +55,15 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
 
     @Override
     public IPage<CmsProject> pageKeywords(ProjectQueryPO params) {
-        var wrapper = super.getKeywordsQueryWrapper(params,
-                List.of(CmsProject::getProjectName, CmsProject::getLinkman));
+        var project = new CmsProject();
+        if (StrUtil.isNotBlank(params.getKeywords())) {
+            project.setProjectName(params.getKeywords());
+        }
         if (params.getDeptId() != null && params.getDeptId() > 0L) {
-            if (CollectionUtil.contains(getLoginUser().getHaveDeptIds(), params.getDeptId())) {
-                wrapper.lambda().in(CmsProject::getDeptId, params.getDeptId());
-            } else {
-                wrapper.lambda().in(CmsProject::getDeptId, getLoginUser().getHaveDeptIds());
-            }
-        } else {
-            wrapper.lambda().in(CmsProject::getDeptId, getLoginUser().getHaveDeptIds());
+            project.setDeptId(params.getDeptId());
         }
         Page<CmsProject> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
-        Page<CmsProject> result = super.page(pageRequest, wrapper);
+        var result = baseMapper.selectProjectPage(pageRequest, project);
         if (params.isIncludeCauu()) {
             reflectionFill(result.getRecords());
         }
@@ -143,25 +138,14 @@ public class CmsProjectServiceImpl extends BaseServiceImpl<CmsProjectMapper, Cms
 
 
     @Override
-    public IPage<CmsProject> simplePageKeywords(SearchPO po) {
-        var wrapper = super.getKeywordsQueryWrapper(po,
-                        List.of(CmsProject::getProjectName, CmsProject::getLinkman)
-                )
-                .lambda()
-                .select(
-                        List.of(
-                                CmsProject::getProjectId, CmsProject::getProjectName,
-                                CmsProject::getLinkman, CmsProject::getAreaCode, CmsProject::getAddress
-                        )
-                )
-                .eq(CmsProject::getStatus, StatusEnum.NORMAL.getCode())
-                .orderByAsc(CmsProject::getSort, CmsProject::getCreateTime);
-        // 非系统用户和管理员用户。根据所在部门，查询项目列表
-        if (!isMasterUser() && !isAdminUser()) {
-            wrapper.in(CmsProject::getDeptId, getLoginUser().getHaveDeptIds());
+    public IPage<CmsProject> simplePageKeywords(SearchPO params) {
+        var project = new CmsProject();
+        if (StrUtil.isNotBlank(params.getKeywords())) {
+            project.setProjectName(params.getKeywords());
         }
-        Page<CmsProject> pageRequest = Page.of(po.getPageIndex(), po.getPageSize());
-        return super.page(pageRequest, wrapper);
+        project.setStatus(StatusEnum.NORMAL.getCode());
+        Page<CmsProject> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
+        return baseMapper.selectSimpleProjectPage(pageRequest, project);
     }
 
 

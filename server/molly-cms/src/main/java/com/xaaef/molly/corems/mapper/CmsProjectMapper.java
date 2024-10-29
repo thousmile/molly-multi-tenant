@@ -2,11 +2,14 @@ package com.xaaef.molly.corems.mapper;
 
 import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.corems.entity.CmsProject;
 import com.xaaef.molly.corems.entity.TenantAndProject;
+import com.xaaef.molly.tenant.ds.DataScope;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 
@@ -41,5 +44,26 @@ public interface CmsProjectMapper extends BaseMapper<CmsProject> {
 
     // 根据 租户的数据名称  查询 项目列表。如: molly_master 、molly_google
     Set<TenantAndProject> selectListByTenantDbName(Collection<String> tenantDbNameList);
+
+
+    /**
+     * 根据条件分页查询数据
+     */
+    @DataScope()
+    List<CmsProject> selectProjectList(@Param("p") CmsProject user);
+
+
+    /**
+     * 根据条件分页查询数据
+     */
+    @DataScope()
+    IPage<CmsProject> selectProjectPage(IPage<?> page, @Param("p") CmsProject user);
+
+
+    /**
+     * 根据条件分页查询数据
+     */
+    @DataScope()
+    IPage<CmsProject> selectSimpleProjectPage(IPage<?> page, @Param("p") CmsProject user);
 
 }

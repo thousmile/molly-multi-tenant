@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xaaef.molly.perms.mapper.PmsUserMapper">
 
-    <resultMap id="baseResultMap" type="PmsUser">
+    <resultMap id="BaseResultMap" type="PmsUser">
         <id property="userId" column="user_id"/>
         <result property="avatar" column="avatar"/>
         <result property="username" column="username"/>
@@ -30,13 +30,44 @@
     </insert>
 
 
-    <select id="selectSimpleListByUserIds" resultMap="baseResultMap">
+    <select id="selectSimpleListByUserIds" resultMap="BaseResultMap">
         <foreach collection='dbNameList' item='item' index='index1' separator='UNION'>
             SELECT user_id,avatar,nickname FROM ${item}.pms_user WHERE user_id IN
             <foreach collection='userIdList' item='userId' index='index2' open='(' separator=',' close=')'>
                 #{userId}
             </foreach>
         </foreach>
+    </select>
+
+
+    <sql id="DataScopeWhere">
+        <where>
+            <if test="p.userId != null and p.userId != 0">
+                AND u.user_id = #{p.userId}
+            </if>
+            <if test="p.nickname != null and p.nickname !=''">
+                AND CONCAT(u.`username`,u.nickname) LIKE CONCAT('%',#{p.nickname},'%')
+            </if>
+            <if test="p.deptId != null and p.deptId != 0">
+                AND (u.dept_id = #{p.deptId} OR u.dept_id IN ( SELECT t.dept_id FROM pms_dept t WHERE find_in_set(#{p.deptId}, ancestors) ))
+            </if>
+            <!-- 数据范围过滤 -->
+            ${p.params.dataScope}
+        </where>
+    </sql>
+
+
+    <select id="selectUserList" resultMap="BaseResultMap">
+        select u.* from pms_user as u
+        left join pms_dept as d on u.dept_id = d.dept_id
+        <include refid="DataScopeWhere"/>
+    </select>
+
+
+    <select id="selectUserPage" resultMap="BaseResultMap">
+        select u.* from pms_user as u
+        left join pms_dept as d on u.dept_id = d.dept_id
+        <include refid="DataScopeWhere"/>
     </select>
 
 

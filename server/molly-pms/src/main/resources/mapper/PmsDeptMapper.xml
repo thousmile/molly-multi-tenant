@@ -51,25 +51,30 @@
 
 
     <select id="selectChildDeptByUserId" resultMap="BaseResultMap">
-        SELECT * FROM pms_dept
+        SELECT *
+        FROM pms_dept
         WHERE dept_id = (SELECT u1.dept_id FROM pms_user AS u1 WHERE u1.user_id = #{userId})
         UNION
-        SELECT * FROM pms_dept
+        SELECT *
+        FROM pms_dept
         WHERE find_in_set((SELECT u1.dept_id FROM pms_user AS u1 WHERE u1.user_id = #{userId}), ancestors)
     </select>
 
 
     <select id="selectChildDeptIdByUserId" resultType="java.lang.Long">
-        SELECT dept_id FROM pms_dept
+        SELECT dept_id
+        FROM pms_dept
         WHERE dept_id = (SELECT u1.dept_id FROM pms_user AS u1 WHERE u1.user_id = #{userId})
         UNION
-        SELECT dept_id FROM pms_dept
+        SELECT dept_id
+        FROM pms_dept
         WHERE find_in_set((SELECT u1.dept_id FROM pms_user AS u1 WHERE u1.user_id = #{userId}), ancestors)
     </select>
 
 
     <select id="selectDeptByUserId" resultMap="BaseResultMap">
-        SELECT * FROM pms_dept
+        SELECT *
+        FROM pms_dept
         WHERE dept_id = (SELECT u1.dept_id FROM pms_user AS u1 WHERE u1.user_id = #{userId})
     </select>
 
@@ -77,10 +82,10 @@
     <select id="selectDeptByRuleIds" resultMap="BaseResultMap">
         SELECT * FROM pms_dept
         WHERE dept_id IN (
-            SELECT dept_id FROM pms_role_dept WHERE role_id IN
-            <foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
-                #{item}
-            </foreach>
+        SELECT dept_id FROM pms_role_dept WHERE role_id IN
+        <foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
         )
     </select>
 
@@ -90,6 +95,42 @@
         <foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
             #{item}
         </foreach>
+    </select>
+
+
+    <sql id="DataScopeWhere">
+        <where>
+            <if test="p.deptId != null and p.deptId != 0">
+                AND d.dept_id = #{p.deptId}
+            </if>
+            <if test="p.parentId != null and p.parentId != 0">
+                AND d.parent_id = #{p.parentId}
+            </if>
+            <if test="p.deptName != null and p.deptName != ''">
+                AND CONCAT(d.dept_name,d.leader,d.description) LIKE CONCAT('%',#{p.deptName},'%')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${p.params.dataScope}
+        </where>
+    </sql>
+
+    <select id="selectDeptPage" parameterType="PmsDept" resultMap="BaseResultMap">
+        select d.* from pms_dept as d
+        <include refid="DataScopeWhere"/>
+        order by d.parent_id, d.sort
+    </select>
+
+
+    <select id="selectDeptList" parameterType="PmsDept" resultMap="BaseResultMap">
+        select d.* from pms_dept as d
+        <include refid="DataScopeWhere"/>
+        order by d.parent_id, d.sort
+    </select>
+
+
+    <select id="selectDeptIdList" parameterType="PmsDept" resultType="java.lang.Long">
+        select d.dept_id from pms_dept as d
+        <include refid="DataScopeWhere"/>
     </select>
 
 

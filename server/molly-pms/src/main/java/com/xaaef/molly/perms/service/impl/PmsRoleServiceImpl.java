@@ -4,20 +4,19 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.xaaef.molly.common.consts.DataScopeConst;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xaaef.molly.common.domain.LinkedTarget;
 import com.xaaef.molly.common.exception.BizException;
 import com.xaaef.molly.common.po.SearchPO;
 import com.xaaef.molly.common.util.TenantUtils;
 import com.xaaef.molly.internal.api.ApiSysMenuService;
 import com.xaaef.molly.internal.dto.SysMenuDTO;
-import com.xaaef.molly.perms.entity.PmsDept;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.entity.PmsRoleProxy;
-import com.xaaef.molly.perms.mapper.PmsDeptMapper;
 import com.xaaef.molly.perms.mapper.PmsRoleMapper;
+import com.xaaef.molly.perms.service.PmsDeptService;
 import com.xaaef.molly.perms.service.PmsRoleService;
 import com.xaaef.molly.perms.vo.UpdateMenusVO;
 import com.xaaef.molly.tenant.base.service.impl.BaseServiceImpl;
@@ -30,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.xaaef.molly.common.consts.DataScopeConst.DATA_SCOPE_CUSTOM;
 
 
 /**
@@ -49,18 +50,30 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
 
     private final ApiSysMenuService menuService;
 
-    private final PmsDeptMapper deptMapper;
+    private final PmsDeptService deptService;
 
     private final MultiTenantManager tenantManager;
 
 
     @Override
     public IPage<PmsRole> pageKeywords(SearchPO params) {
-        var result = super.pageKeywords(
-                params, List.of(PmsRole::getRoleName, PmsRole::getDescription)
-        );
+        Page<PmsRole> pageRequest = Page.of(params.getPageIndex(), params.getPageSize());
+        var sysRole = new PmsRole();
+        if (StrUtil.isNotBlank(params.getKeywords())) {
+            sysRole.setDescription(params.getKeywords());
+        }
+        var result = baseMapper.selectRolePage(pageRequest, sysRole);
         includeDept(result.getRecords());
+        if (params.isIncludeCauu()) {
+            reflectionFill(result.getRecords());
+        }
         return result;
+    }
+
+
+    @Override
+    public List<PmsRole> list() {
+        return baseMapper.selectRoleList(new PmsRole());
     }
 
 
@@ -69,20 +82,7 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
         var result = new UpdateMenusVO()
                 .setAll(new ArrayList<>())
                 .setHave(new HashSet<>());
-        var w1 = new LambdaQueryWrapper<PmsDept>()
-                .select(List.of(PmsDept::getDeptId, PmsDept::getDeptName,
-                        PmsDept::getParentId, PmsDept::getSort));
-        final var deptList = deptMapper.selectList(w1);
-        if (!deptList.isEmpty()) {
-            // 获取全部的菜单
-            var all = deptList.stream()
-                    .map(r -> new TreeNode<>(
-                            r.getDeptId(), r.getParentId(),
-                            r.getDeptName(), r.getSort())
-                    )
-                    .collect(Collectors.toList());
-            result.setAll(TreeUtil.build(all, 0L));
-        }
+        result.setAll(deptService.treeNode());
         if (roleId > 0) {
             final var haveList = baseMapper.selectDeptIdByRoleIds(Set.of(roleId));
             if (!haveList.isEmpty()) {
@@ -98,7 +98,7 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
         if (CollectionUtil.isNotEmpty(list)) {
             var roleIds = list
                     .stream()
-                    .filter(r -> Objects.equals(r.getDataScope(), DataScopeConst.CUSTOM))
+                    .filter(r -> Objects.equals(r.getDataScope(), DATA_SCOPE_CUSTOM))
                     .map(PmsRole::getRoleId)
                     .collect(Collectors.toSet());
             if (!roleIds.isEmpty()) {
@@ -206,7 +206,7 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean save(PmsRole entity) {
-        if (entity.getDataScope() == 2) {
+        if (Objects.equals(entity.getDataScope(), DATA_SCOPE_CUSTOM)) {
             if (CollectionUtil.isEmpty(entity.getDeptIds())) {
                 throw new RuntimeException("自定义数据权限，最少需要选择一个部门");
             }
@@ -221,7 +221,7 @@ public class PmsRoleServiceImpl extends BaseServiceImpl<PmsRoleMapper, PmsRole> 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateById(PmsRole entity) {
-        if (entity.getDataScope() == 2) {
+        if (Objects.equals(entity.getDataScope(), DATA_SCOPE_CUSTOM)) {
             if (CollectionUtil.isEmpty(entity.getDeptIds())) {
                 throw new RuntimeException("自定义数据权限，最少需要选择一个部门");
             }

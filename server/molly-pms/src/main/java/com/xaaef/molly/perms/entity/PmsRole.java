@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.common.valid.ValidCreate;
 import com.xaaef.molly.common.valid.ValidUpdate;
-import com.xaaef.molly.tenant.base.BaseEntity;
+import com.xaaef.molly.tenant.base.ParamBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,7 +33,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class PmsRole extends BaseEntity {
+public class PmsRole extends ParamBaseEntity {
 
     /**
      * 角色 ID
@@ -65,7 +65,7 @@ public class PmsRole extends BaseEntity {
     private String description;
 
     /**
-     * 数据范围（1：全部数据权限 2：自定数据权限 3：仅本部门数据权限 4：本部门及以下数据权限）
+     * 数据范围（1：全部数据权限 2：自定数据权限 3：仅本部门数据权限 4：本部门及以下数据权限 5：仅自己的权限）
      */
     @Schema(description = "数据范围", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "数据范围,必须填写", groups = {ValidCreate.class})

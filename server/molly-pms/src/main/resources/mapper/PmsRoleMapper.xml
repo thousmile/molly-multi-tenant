@@ -16,9 +16,9 @@
         <result property="lastUpdateUser" column="last_update_user"/>
     </resultMap>
 
-
     <sql id="Base_Column_List">
-        role_id,role_name,
+        role_id
+        ,role_name,
         sort,`description`,create_time,
         create_user,last_update_time,last_update_user
     </sql>
@@ -56,7 +56,7 @@
     <select id="selectListByUserId" resultMap="SysRoleProxyResultMap">
         SELECT r1.role_id, r1.role_name, r1.description
         FROM pms_role AS r1
-        RIGHT JOIN pms_user_role AS r2 ON r2.role_id = r1.role_id
+                 RIGHT JOIN pms_user_role AS r2 ON r2.role_id = r1.role_id
         WHERE r2.user_id = #{userId}
     </select>
 
@@ -84,6 +84,50 @@
         </foreach>
     </insert>
 
+
+    <sql id="SelectRoleVo">
+        select distinct r.role_id,
+                        r.role_name,
+                        r.sort,
+                        r.description,
+                        r.data_scope,
+                        r.create_time,
+                        r.create_user,
+                        r.last_update_time,
+                        r.last_update_user
+        from pms_role r
+                 left join pms_user_role ur on ur.role_id = r.role_id
+                 left join pms_user u on u.user_id = ur.user_id
+                 left join pms_dept d on u.dept_id = d.dept_id
+    </sql>
+
+
+    <sql id="DataScopeWhere">
+        <where>
+            <if test="p.roleId != null and p.roleId != 0">
+                AND r.role_id = #{p.roleId}
+            </if>
+            <if test="p.description != null and p.description != ''">
+                AND CONCAT(r.`role_name`,r.description) LIKE CONCAT('%',#{p.description},'%')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${p.params.dataScope}
+        </where>
+    </sql>
+
+
+    <select id="selectRoleList" resultMap="BaseResultMap">
+        <include refid="SelectRoleVo"/>
+        <include refid="DataScopeWhere"/>
+        order by r.sort,r.create_time
+    </select>
+
+
+    <select id="selectRolePage" resultMap="BaseResultMap">
+        <include refid="SelectRoleVo"/>
+        <include refid="DataScopeWhere"/>
+        order by r.sort,r.create_time
+    </select>
 
 
 </mapper>

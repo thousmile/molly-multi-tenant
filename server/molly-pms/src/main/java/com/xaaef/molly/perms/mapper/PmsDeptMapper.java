@@ -1,7 +1,9 @@
 package com.xaaef.molly.perms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.perms.entity.PmsDept;
+import com.xaaef.molly.tenant.ds.DataScope;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -85,6 +87,25 @@ public interface PmsDeptMapper extends BaseMapper<PmsDept> {
      * 查询 角色 部门权限
      */
     Set<Long> selectDeptIdByRuleIds(Set<Long> roleIds);
+
+
+    /**
+     * 根据条件分页查询数据
+     */
+    @DataScope()
+    IPage<PmsDept> selectDeptPage(IPage<?> page, @Param("p") PmsDept role);
+
+
+    /**
+     * 根据条件列表查询数据
+     */
+    @DataScope()
+    List<PmsDept> selectDeptList(@Param("p") PmsDept dept);
+
+
+    @DataScope()
+    Set<Long> selectDeptIdList(@Param("p") PmsDept dept);
+
 
 
 }

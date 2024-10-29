@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.xaaef.molly.common.consts.RegexConst;
 import com.xaaef.molly.common.valid.ValidCreate;
 import com.xaaef.molly.common.valid.ValidUpdate;
-import com.xaaef.molly.tenant.base.BaseEntity;
+import com.xaaef.molly.tenant.base.ParamBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -37,7 +37,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class PmsUser extends BaseEntity {
+public class PmsUser extends ParamBaseEntity {
 
     /**
      * 用户ID

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xaaef.molly.common.consts.RegexConst;
 import com.xaaef.molly.common.valid.ValidCreate;
 import com.xaaef.molly.common.valid.ValidUpdate;
-import com.xaaef.molly.tenant.base.BaseEntity;
+import com.xaaef.molly.tenant.base.ParamBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -34,7 +34,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class PmsDept extends BaseEntity {
+public class PmsDept extends ParamBaseEntity {
 
     /**
      * 部门 ID

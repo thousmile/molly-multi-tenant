@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.Statements;
 import net.sf.jsqlparser.util.TablesNamesFinder;
 import org.apache.ibatis.executor.statement.StatementHandler;
@@ -92,7 +93,7 @@ public class SchemaInterceptor implements InnerInterceptor {
     }
 
 
-    private final static TablesNamesFinder TABLES_NAMES_FINDER = new TablesNamesFinder();
+    private final static TablesNamesFinder<Statement> TABLES_NAMES_FINDER = new TablesNamesFinder<>();
 
 
     /**
@@ -106,9 +107,8 @@ public class SchemaInterceptor implements InnerInterceptor {
             log.error("getTableListName: \n{}", e.getMessage());
             return Set.of();
         }
-        return statements.getStatements()
-                .stream()
-                .map(TABLES_NAMES_FINDER::getTableList)
+        return statements.stream()
+                .map(TABLES_NAMES_FINDER::getTables)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
     }

@@ -1,9 +1,11 @@
 package com.xaaef.molly.perms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xaaef.molly.common.domain.LinkedTarget;
 import com.xaaef.molly.perms.entity.PmsRole;
 import com.xaaef.molly.perms.entity.PmsRoleProxy;
+import com.xaaef.molly.tenant.ds.DataScope;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -76,6 +78,22 @@ public interface PmsRoleMapper extends BaseMapper<PmsRole> {
      */
     int insertByDepts(@Param("roleId") Long roleId,
                       @Param("deptIds") Set<Long> deptIds);
+
+
+
+    /**
+     * 根据条件列表查询数据
+     */
+    @DataScope()
+    List<PmsRole> selectRoleList(@Param("p") PmsRole role);
+
+
+    /**
+     * 根据条件分页查询数据
+     */
+    @DataScope()
+    IPage<PmsRole> selectRolePage(IPage<?> page, @Param("p") PmsRole role);
+
 
 
 }
