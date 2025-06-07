@@ -34,15 +34,15 @@
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <maven-compiler.version>3.13.0</maven-compiler.version>
+        <maven-compiler.version>3.14.0</maven-compiler.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- graalvm native-maven-plugin -->
-        <native-maven.version>0.10.3</native-maven.version>
+        <native-maven.version>0.10.5</native-maven.version>
         <!-- 优化的雪花算法（雪花漂移），它生成的ID更短、速度更快 -->
         <idgenerator.version>1.0.6</idgenerator.version>
         <!-- x-file-storage文件上传 文档地址 https://x-file-storage.xuyanwu.cn -->
-        <storage.version>2.1.0</storage.version>
+        <storage.version>2.2.1</storage.version>
         <!-- 离线 ip 转 真实地址 -->
         <ip2region.version>2.6.6</ip2region.version>
         <!-- 七牛云文件上传 -->
@@ -52,15 +52,15 @@
         <!-- 服务器运行状态查询， 如: CPU、磁盘、内存 -->
         <oshi.version>6.4.13</oshi.version>
         <!-- Excel文件操作 -->
-        <apache-poi.version>5.3.0</apache-poi.version>
+        <apache-poi.version>5.4.1</apache-poi.version>
         <!-- 小而美的工具库 -->
-        <hutool.version>5.8.32</hutool.version>
+        <hutool.version>5.8.38</hutool.version>
         <!-- 简单、方便的OpenAPI接口文档 -->
         <knife4j.version>4.5.0</knife4j.version>
         <!-- MyBatis 的增强工具，基友搭配，效率翻倍 -->
-        <mybatis-plus.version>3.5.8</mybatis-plus.version>
+        <mybatis-plus.version>3.5.12</mybatis-plus.version>
         <!-- JavaEE 颠覆者 -->
-        <spring-boot.version>3.2.11</spring-boot.version>
+        <spring-boot.version>3.3.12</spring-boot.version>
     </properties>
 
 
@@ -137,6 +137,13 @@
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-dependencies</artifactId>
                 <version>${knife4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-bom</artifactId>
+                <version>${mybatis-plus.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
